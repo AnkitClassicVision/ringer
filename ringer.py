@@ -51,7 +51,14 @@ CONFIG_DIR_NAME = TOOL_NAME
 CONFIG_FILE_NAME = "config.toml"
 DEFAULT_ENGINE_NAME = "codex"
 DEFAULT_TIMEOUT_S = 900
-CHECK_TIMEOUT_S = 60
+CHECK_TIMEOUT_S = int(os.environ.get("RINGER_CHECK_TIMEOUT_S", "60"))
+DISK_PRESSURE_STATE_DIR = Path(
+    os.environ.get("RINGER_DISK_GUARD_STATE_DIR", "/home/ankit114/.local/state/disk-guard")
+)
+DISK_PRESSURE_MARKER = DISK_PRESSURE_STATE_DIR / "DISK_PRESSURE"
+BLOCKED_LAUNCHES_PATH = DISK_PRESSURE_STATE_DIR / "blocked-launches.jsonl"
+RINGER_MIN_FREE_BYTES = int(os.environ.get("RINGER_MIN_FREE_BYTES", str(60 * 1024**3)))
+RINGER_MIN_FREE_FRACTION = float(os.environ.get("RINGER_MIN_FREE_FRACTION", "0.15"))
 DEFAULT_DASHBOARD_PORT_BASE = 8787
 DEFAULT_HUD_PORT = 8700
 DEFAULT_CATALOG_SOURCE = "https://openrouter.ai/api/v1/models"
@@ -108,6 +115,9 @@ class EngineConfig:
     full_access_args: tuple[str, ...]
     sandbox_args: tuple[str, ...]
     token_regex: str | None = DEFAULT_TOKEN_REGEX
+    # Explicit capability gate for custom model harnesses under auth-first routing.
+    # Restricted Anthropic/OpenAI/GLM families still require their trusted wrappers.
+    auth_routing_trusted: bool = False
     # Fills the {model} placeholder in args_template when a task does not set
     # its own "model" — this is what makes a harness engine (OpenCode) model
     # agnostic instead of hard-coding one model into the command line.
@@ -272,13 +282,14 @@ def as_string_tuple(value: Any, *, key: str) -> tuple[str, ...]:
 
 
 def built_in_codex_engine() -> EngineConfig:
-    resolved = shutil.which(DEFAULT_ENGINE_NAME) or DEFAULT_ENGINE_NAME
+    resolved = str(Path(__file__).resolve().parent / "engines" / "codex-oauth.sh")
     return EngineConfig(
         name=DEFAULT_ENGINE_NAME,
         bin=resolved,
         args_template=(
             "exec",
             "--skip-git-repo-check",
+            "--ignore-user-config",
             "{access_args}",
             "{engine_args}",
             "-C",
@@ -343,12 +354,28 @@ def load_engines(raw: Any) -> dict[str, EngineConfig]:
         bin_path = str(section.get("bin", default_bin)).strip()
         if not bin_path:
             raise ValueError(f"engines.{clean_name}.bin must not be empty")
+        if clean_name == DEFAULT_ENGINE_NAME:
+            trusted_codex = (Path(__file__).resolve().parent / "engines" / "codex-oauth.sh").resolve()
+            if Path(bin_path).expanduser().resolve() != trusted_codex:
+                raise ValueError(
+                    "engines.codex.bin must use the trusted engines/codex-oauth.sh wrapper"
+                )
         args_template = as_string_tuple(
             section.get("args_template", list(base.args_template) if base else None),
             key=f"engines.{clean_name}.args_template",
         )
         if not args_template:
             raise ValueError(f"engines.{clean_name}.args_template must not be empty")
+        if clean_name == DEFAULT_ENGINE_NAME:
+            args_without_isolation = tuple(
+                arg for arg in args_template if arg != "--ignore-user-config"
+            )
+            isolation_index = 1 if args_without_isolation[:1] == ("exec",) else 0
+            args_template = (
+                args_without_isolation[:isolation_index]
+                + ("--ignore-user-config",)
+                + args_without_isolation[isolation_index:]
+            )
         full_access_args = as_string_tuple(
             section.get("full_access_args", list(base.full_access_args) if base else []),
             key=f"engines.{clean_name}.full_access_args",
@@ -368,6 +395,15 @@ def load_engines(raw: Any) -> dict[str, EngineConfig]:
         model_default = str(
             section.get("model_default", base.model_default if base else "")
         ).strip()
+        auth_routing_trusted_raw = section.get(
+            "auth_routing_trusted",
+            base.auth_routing_trusted if base else False,
+        )
+        if not isinstance(auth_routing_trusted_raw, bool):
+            raise ValueError(
+                f"engines.{clean_name}.auth_routing_trusted must be a TOML boolean"
+            )
+        auth_routing_trusted = auth_routing_trusted_raw
         engines[clean_name] = EngineConfig(
             name=clean_name,
             bin=bin_path,
@@ -375,6 +411,7 @@ def load_engines(raw: Any) -> dict[str, EngineConfig]:
             full_access_args=full_access_args,
             sandbox_args=sandbox_args,
             token_regex=token_regex,
+            auth_routing_trusted=auth_routing_trusted,
             model_default=model_default,
         )
     return engines
@@ -451,6 +488,132 @@ class TaskSpec:
 
 
 @dataclass(frozen=True)
+class EffectiveModel:
+    model: str
+    source: str
+
+
+def engine_uses_model_placeholder(engine: EngineConfig) -> bool:
+    return any("{model}" in item for item in engine.args_template)
+
+
+def engine_uses_engine_args_placeholder(engine: EngineConfig) -> bool:
+    return "{engine_args}" in engine.args_template
+
+
+def engine_args_model_selector(engine_args: tuple[str, ...]) -> tuple[str, bool, bool]:
+    """Return the last CLI model selector plus present/malformed flags."""
+    model = ""
+    selector_present = False
+    malformed = False
+    index = 0
+    while index < len(engine_args):
+        arg = engine_args[index]
+        value: str | None = None
+        if arg in {"-m", "--model"}:
+            selector_present = True
+            if index + 1 >= len(engine_args):
+                malformed = True
+                index += 1
+                continue
+            value = engine_args[index + 1]
+            if value.strip().startswith("-"):
+                malformed = True
+                index += 1
+                continue
+            index += 2
+        elif arg.startswith("--model="):
+            selector_present = True
+            value = arg.split("=", 1)[1]
+            index += 1
+        elif arg in {"-c", "--config"}:
+            if index + 1 >= len(engine_args):
+                index += 1
+                continue
+            config_value = engine_args[index + 1]
+            match = re.fullmatch(r"\s*model\s*=\s*(.*?)\s*", config_value)
+            if match:
+                selector_present = True
+                value = match.group(1)
+            elif re.fullmatch(r"\s*model\s*", config_value):
+                selector_present = True
+                malformed = True
+            index += 2
+        elif arg.startswith("--config="):
+            config_value = arg.split("=", 1)[1]
+            match = re.fullmatch(r"\s*model\s*=\s*(.*?)\s*", config_value)
+            if match:
+                selector_present = True
+                value = match.group(1)
+            elif re.fullmatch(r"\s*model\s*", config_value):
+                selector_present = True
+                malformed = True
+            index += 1
+        else:
+            index += 1
+        if value is not None:
+            value = value.strip()
+            if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+                value = value[1:-1].strip()
+            if not value or value.startswith("-"):
+                malformed = True
+            else:
+                model = value
+    return model, selector_present, malformed
+
+
+def codex_config_override_is_malformed(engine_args: tuple[str, ...]) -> bool:
+    """Validate Codex CLI -c/--config key=value argument pairs."""
+    index = 0
+    while index < len(engine_args):
+        arg = engine_args[index]
+        if (arg.startswith("-c") and arg != "-c") or (
+            arg.startswith("-m") and arg != "-m"
+        ) or re.match(r"^\s*model\s*=", arg):
+            return True
+        if arg.startswith("--config="):
+            value = arg.split("=", 1)[1].strip()
+            if not value or "=" not in value:
+                return True
+            key, _separator, _configured_value = value.partition("=")
+            if not key.strip():
+                return True
+            index += 1
+            continue
+        if arg not in {"-c", "--config"}:
+            index += 1
+            continue
+        if index + 1 >= len(engine_args):
+            return True
+        value = engine_args[index + 1].strip()
+        if not value or value.startswith("-") or "=" not in value:
+            return True
+        key, _separator, _configured_value = value.partition("=")
+        if not key.strip():
+            return True
+        index += 2
+    return False
+
+
+def resolve_effective_model(task: TaskSpec, engine: EngineConfig | None) -> EffectiveModel:
+    """Resolve the selected model and attribution source using manifest precedence."""
+    if task.model:
+        return EffectiveModel(task.model, "task-model")
+    if engine is not None:
+        if not engine_uses_model_placeholder(engine) and engine_uses_engine_args_placeholder(
+            engine
+        ):
+            model, _selector_present, malformed = engine_args_model_selector(task.engine_args)
+            if malformed:
+                return EffectiveModel("", "malformed-engine-args")
+            if model:
+                return EffectiveModel(model, "engine-args")
+        if engine.model_default:
+            return EffectiveModel(engine.model_default, "engine-default")
+    return EffectiveModel("", "unpinned")
+
+
+@dataclass(frozen=True)
 class Manifest:
     run_name: str
     workdir: Path
@@ -458,6 +621,7 @@ class Manifest:
     worktrees: bool
     repo: Path | None
     tasks: tuple[TaskSpec, ...]
+    worktree_lfs: str = "materialize"
     source_path: Path | None = None
 
     @classmethod
@@ -473,6 +637,7 @@ class Manifest:
             worktrees=manifest.worktrees,
             repo=manifest.repo,
             tasks=manifest.tasks,
+            worktree_lfs=manifest.worktree_lfs,
             source_path=path,
         )
 
@@ -501,6 +666,9 @@ class Manifest:
         if duplicates:
             raise ValueError(f"duplicate task keys: {', '.join(duplicates)}")
         worktrees = bool(obj.get("worktrees", False))
+        worktree_lfs = str(obj.get("worktree_lfs", "materialize")).strip().lower()
+        if worktree_lfs not in {"materialize", "skip"}:
+            raise ValueError("worktree_lfs must be 'materialize' or 'skip'")
         if worktrees:
             reserved_logs_dir = (workdir / "logs").resolve()
             collisions = []
@@ -520,6 +688,7 @@ class Manifest:
             worktrees=worktrees,
             repo=repo,
             tasks=tasks,
+            worktree_lfs=worktree_lfs,
         )
 
     def with_max_parallel(self, value: int | None) -> "Manifest":
@@ -534,6 +703,7 @@ class Manifest:
             worktrees=self.worktrees,
             repo=self.repo,
             tasks=self.tasks,
+            worktree_lfs=self.worktree_lfs,
             source_path=self.source_path,
         )
 
@@ -983,6 +1153,7 @@ class StateWriter:
                 log_tail = tail_lines(runtime.log_path, line_count=3)
                 log_tail_full = tail_lines(runtime.log_path, line_count=40)
                 engine = self.engines.get(runtime.task.engine)
+                effective_model = resolve_effective_model(runtime.task, engine)
                 process_name = engine.process_name if engine else runtime.task.engine
                 tasks.append(
                     {
@@ -990,7 +1161,8 @@ class StateWriter:
                         "status": runtime.status,
                         "verdict": runtime.final_verdict,
                         "engine": runtime.task.engine,
-                        "model": runtime.task.model or (engine.model_default if engine else ""),
+                        "model": effective_model.model,
+                        "model_source": effective_model.source,
                         "spec": runtime.task.spec,
                         "spec_short": runtime.spec_short,
                         "verified": runtime.task.verified,
@@ -1730,10 +1902,14 @@ def catalog_explore_candidates(
     tested_models: set[str],
     limit: int = 10,
 ) -> list[dict[str, Any]]:
+    tested_model_keys = {
+        model_log_text(model).removeprefix("openrouter/") for model in tested_models
+    }
     candidates = [
         model
         for model in catalog_models
-        if str(model.get("id", "")) not in tested_models and catalog_model_is_text_candidate(model)
+        if model_log_text(model.get("id")).removeprefix("openrouter/") not in tested_model_keys
+        and catalog_model_is_text_candidate(model)
     ]
     return sorted(
         candidates,
@@ -4399,7 +4575,7 @@ class EvalLogger:
             db_row = {
                 key: value
                 for key, value in row.items()
-                if key not in {"model", "task_type", "retry"}
+                if key not in {"model", "model_source", "task_type", "retry"}
             }
             try:
                 self._conn.execute(
@@ -4754,13 +4930,21 @@ class ModelIdentityRegistry:
         if identity is not None:
             return identity
         meta = self.engine_meta.get(engine_key)
+        if raw_model_key.startswith("openrouter/") and engine_key != "opencode":
+            return ModelIdentity(
+                model_display=raw_model_key.removeprefix("openrouter/"),
+                harness="Pi",
+                access="OpenRouter API",
+                confidence="fallback",
+                source="active unlisted OpenRouter slug",
+            )
         if engine_key == "opencode" and raw_model_key.startswith("openrouter/"):
             return ModelIdentity(
                 model_display=raw_model_key.removeprefix("openrouter/"),
                 harness=(meta.harness if meta else "OpenCode"),
                 access=(meta.access if meta else "OpenRouter API"),
-                confidence="fallback",
-                source="unlisted OpenRouter slug",
+                confidence="historical",
+                source="historical unlisted OpenRouter slug",
             )
         if meta is not None and lookup_key:
             return ModelIdentity(
@@ -6988,6 +7172,9 @@ class RingerRunner:
             taskdir.parent.mkdir(parents=True, exist_ok=True)
             if taskdir.exists():
                 return False, f"worktree taskdir already exists: {taskdir}"
+            worktree_env = os.environ.copy()
+            if self.manifest.worktree_lfs == "skip":
+                worktree_env["GIT_LFS_SKIP_SMUDGE"] = "1"
             proc = await asyncio.create_subprocess_exec(
                 "git",
                 "-C",
@@ -6999,6 +7186,7 @@ class RingerRunner:
                 stdin=asyncio.subprocess.DEVNULL,
                 stdout=asyncio.subprocess.PIPE,
                 stderr=asyncio.subprocess.STDOUT,
+                env=worktree_env,
             )
             stdout, _ = await proc.communicate()
             if proc.returncode != 0:
@@ -7183,11 +7371,12 @@ class RingerRunner:
         duration_ms: int,
     ) -> None:
         engine = self.config.engines.get(runtime.task.engine)
-        resolved_model = runtime.task.model or (engine.model_default if engine else "")
+        effective_model = resolve_effective_model(runtime.task, engine)
         notes_parts = [
             f"retry={'true' if retrying else 'false'}",
             f"worker_returncode={worker.returncode}",
-            f"model={resolved_model}",
+            f"model={effective_model.model}",
+            f"model_source={effective_model.source}",
             f"task_type={runtime.task.task_type}",
         ]
         if worker.error:
@@ -7210,7 +7399,8 @@ class RingerRunner:
                 "worker_tokens": worker.tokens,
                 "notes": "\n".join(notes_parts),
                 "orchestrator": self.identity,
-                "model": resolved_model,
+                "model": effective_model.model,
+                "model_source": effective_model.source,
                 "task_type": runtime.task.task_type,
                 "retry": retrying,
             }
@@ -7433,13 +7623,221 @@ def preflight_engine_bins(manifest: Manifest, config: AppConfig) -> None:
             )
 
 
+def restricted_model_family(model: str) -> str | None:
+    """Classify model selectors that must use a protected auth/subscription lane."""
+    lower = model.strip().lower()
+    if not lower:
+        return None
+    segments = [segment for segment in re.split(r"[/:]", lower) if segment]
+    if lower.startswith(("zai-coding-plan/", "openrouter/z-ai/", "z-ai/")) or any(
+        re.fullmatch(r"glm(?:[.-]?[0-9].*|-.*)?", segment) for segment in segments
+    ):
+        return "glm"
+    if "anthropic" in segments or any(
+        re.fullmatch(r"(?:claude|fable|haiku|sonnet|opus)(?:(?:[.-]|[0-9]).*)?", segment)
+        for segment in segments
+    ):
+        return "anthropic"
+    if "openai" in segments or any(
+        re.fullmatch(
+            r"(?:(?:gpt|chatgpt|codex)(?:(?:[.-]|[0-9]).*)?|o[0-9]+(?:[.-].*)?)",
+            segment,
+        )
+        for segment in segments
+    ):
+        return "openai"
+    if "google" in segments or any(
+        re.fullmatch(r"(?:gemini)(?:(?:[.-]|[0-9]).*)?", segment)
+        for segment in segments
+    ):
+        return "google"
+    return None
+
+
+def validate_auth_first_model_route(
+    task: TaskSpec,
+    engine: EngineConfig,
+    *,
+    engine_args_model: str,
+    engine_args_has_model_selector: bool,
+    enforce_generic_controls: bool,
+) -> None:
+    """Fail closed when a restricted family is paired with an untrusted lane."""
+    trusted_dir = (Path(__file__).resolve().parent / "engines").resolve()
+    try:
+        engine_path = Path(engine.bin).expanduser().resolve()
+    except OSError:
+        engine_path = Path(engine.bin)
+    trusted_wrapper = (
+        engine_path.parent == trusted_dir
+        and engine_path.name in {
+            "codex-oauth.sh", "claude-oauth.sh", "gemini-oauth.sh", "opencode-auth-policy.sh",
+            "pi-openrouter-ringer.sh",
+        }
+    )
+    takes_model = engine_uses_model_placeholder(engine)
+    template_model, template_has_model_selector, template_model_malformed = (
+        engine_args_model_selector(engine.args_template)
+    )
+    if template_model_malformed:
+        raise ValueError(
+            f"task {task.key}: engine {engine.name} has a malformed model selector in args_template"
+        )
+    static_route_models: list[str] = []
+    for token in engine.args_template:
+        if "{" in token:
+            continue
+        stripped = token.strip()
+        lower = stripped.lower()
+        if "openrouter/" in lower:
+            if stripped != lower or not re.fullmatch(
+                r"openrouter/[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._:+-]*",
+                lower,
+            ):
+                raise ValueError(
+                    f"task {task.key}: engine {engine.name} has an embedded OpenRouter "
+                    "selector in args_template; it must be one exact standalone lowercase "
+                    "openrouter/<publisher>/<model> token"
+                )
+            static_route_models.append(stripped)
+        elif restricted_model_family(stripped) is not None:
+            static_route_models.append(stripped)
+    model_capable = (
+        takes_model
+        or template_has_model_selector
+        or engine_args_has_model_selector
+        or bool(static_route_models)
+    )
+    if (
+        enforce_generic_controls
+        and model_capable
+        and not trusted_wrapper
+        and not engine.auth_routing_trusted
+    ):
+        raise ValueError(
+            f"task {task.key}: custom model engine {engine.name} requires "
+            "auth_routing_trusted=true; restricted families still require trusted wrappers"
+        )
+    if (
+        enforce_generic_controls
+        and engine_uses_engine_args_placeholder(engine)
+        and not trusted_wrapper
+    ):
+        route_override = re.compile(
+            r"^(?:--[a-z0-9_.-]*(?:provider|profile|backend|config|setting|agent|attach|"
+            r"base[-_.]?url|endpoint|host|url|gateway|server|remote)[a-z0-9_.-]*(?:=|$)"
+            r"|[a-z0-9_.-]*(?:provider|profile|backend|config|setting|agent|attach|"
+            r"base[-_.]?url|endpoint|host|url|gateway|server|remote)[a-z0-9_.-]*="
+            r"|-(?:a|b|c|p|s)(?:.+)?$)",
+            re.IGNORECASE,
+        )
+        if any(route_override.match(token.strip()) for token in task.engine_args):
+            raise ValueError(
+                f"task {task.key}: custom engine {engine.name} has a manifest-controlled "
+                "provider/profile/backend/config/settings/agent/attach/endpoint override"
+            )
+
+    expected_wrapper = {
+        "anthropic": "claude-oauth.sh",
+        "openai": "codex-oauth.sh",
+        "google": "gemini-oauth.sh",
+    }
+    candidates: list[str] = []
+    for candidate in (
+        task.model,
+        engine.model_default,
+        engine_args_model,
+        template_model,
+        *static_route_models,
+    ):
+        if candidate and "{" not in candidate and candidate not in candidates:
+            candidates.append(candidate)
+    for model in candidates:
+        lower_model = model.strip().lower()
+        if lower_model.startswith("openrouter/"):
+            if model.strip() != lower_model or not re.fullmatch(
+                r"openrouter/[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._:+-]*",
+                lower_model,
+            ):
+                raise ValueError(
+                    f"task {task.key}: OpenRouter text model {model!r} must be an exact "
+                    "lowercase openrouter/<publisher>/<model> selector"
+                )
+            if engine_path != trusted_dir / "pi-openrouter-ringer.sh":
+                raise ValueError(
+                    f"task {task.key}: OpenRouter text model {model!r} requires the "
+                    "trusted engines/pi-openrouter-ringer.sh wrapper"
+                )
+            continue
+        family = restricted_model_family(model)
+        if family is None:
+            continue
+        if family == "glm":
+            coding_plan_suffix = lower_model.removeprefix("zai-coding-plan/glm-")
+            if (
+                lower_model.startswith("zai-coding-plan/glm-")
+                and coding_plan_suffix
+                and "/" not in coding_plan_suffix
+            ):
+                wrapper = "opencode-auth-policy.sh"
+            else:
+                raise ValueError(
+                    f"task {task.key}: restricted glm model {model!r} requires "
+                    "the Z.AI Coding Plan selector zai-coding-plan/glm-*"
+                )
+        else:
+            wrapper = expected_wrapper[family]
+        if engine_path != trusted_dir / wrapper:
+            raise ValueError(
+                f"task {task.key}: restricted {family} model {model!r} requires "
+                f"the trusted engines/{wrapper} wrapper"
+            )
+    if enforce_generic_controls and not trusted_wrapper and engine_path.name.lower() in {
+        "opencode", "opencode.exe", "claude", "claude.exe", "codex", "codex.exe"
+    }:
+        raise ValueError(
+            f"task {task.key}: direct model harness {engine_path.name!r} requires its trusted auth-policy wrapper"
+        )
+
+
 def validate_manifest_engines(manifest: Manifest, config: AppConfig) -> None:
     missing = sorted({task.engine for task in manifest.tasks if task.engine not in config.engines})
     if missing:
         raise ValueError(f"unknown worker engine(s): {', '.join(missing)}")
+    trusted_dir = (Path(__file__).resolve().parent / "engines").resolve()
+    auth_routing_enabled = any(
+        Path(candidate.bin).expanduser().resolve().parent == trusted_dir
+        and Path(candidate.bin).name in {
+            "codex-oauth.sh", "claude-oauth.sh", "gemini-oauth.sh", "opencode-auth-policy.sh",
+            "pi-openrouter-ringer.sh",
+        }
+        for candidate in config.engines.values()
+    )
     for task in manifest.tasks:
         engine = config.engines[task.engine]
-        takes_model = any("{model}" in item for item in engine.args_template)
+        takes_model = engine_uses_model_placeholder(engine)
+        if (engine.name == "codex" or Path(engine.bin).name == "codex") and (
+            codex_config_override_is_malformed(task.engine_args)
+        ):
+            raise ValueError(
+                f"task {task.key}: Codex engine_args contains malformed -c/--config "
+                "or unsupported compact selector; use split -c/--config key=value or "
+                "-m/--model value forms"
+            )
+        _engine_args_model, engine_args_has_model_selector, malformed_model_selector = (
+            engine_args_model_selector(task.engine_args)
+        )
+        if malformed_model_selector:
+            raise ValueError(
+                f"task {task.key}: engine_args contains a malformed model selector; "
+                "-m, --model, and '-c/--config model=...' require a non-empty model value "
+                "that is not another option"
+            )
+        if takes_model and engine_args_has_model_selector:
+            raise ValueError(
+                f"task {task.key}: engine {engine.name} has a {{model}} placeholder, so "
+                "engine_args must not contain -m, --model, or '-c/--config model=...' selectors"
+            )
         if takes_model and not (task.model or engine.model_default):
             raise ValueError(
                 f"task {task.key}: engine {engine.name} needs a model — set the task's "
@@ -7450,6 +7848,13 @@ def validate_manifest_engines(manifest: Manifest, config: AppConfig) -> None:
                 f"task {task.key}: \"model\" is set but engine {engine.name} has no "
                 "{model} placeholder in its args_template, so it would be silently ignored"
             )
+        validate_auth_first_model_route(
+            task,
+            engine,
+            engine_args_model=_engine_args_model,
+            engine_args_has_model_selector=engine_args_has_model_selector,
+            enforce_generic_controls=auth_routing_enabled,
+        )
 
 
 def read_dashboard_html() -> str:
@@ -7728,6 +8133,7 @@ def dry_run(
     print(f"Workdir: {manifest.workdir}")
     print(f"Max parallel: {manifest.max_parallel}")
     print(f"Worktrees: {manifest.worktrees} repo={manifest.repo}")
+    print(f"Worktree LFS: {manifest.worktree_lfs}")
     print(f"State dir: {config.state_dir}")
     print(f"Eval backend: {config.eval.backend}")
     print(f"Dashboard: {'on' if dashboard_enabled else 'off'}")
@@ -8046,6 +8452,133 @@ async def run_manifest(
         unregister_active_run(runner.run_id)
 
 
+class DiskPressureError(RuntimeError):
+    """Raised before worker or worktree creation when disk headroom is unsafe."""
+
+
+def repo_checkout_bytes(repo: Path | None) -> int:
+    if repo is None or not repo.is_dir():
+        return 0
+    # A worktree materializes the TRACKED tree at HEAD — never untracked files
+    # and never .git (shared). Measuring the working directory with du counted
+    # ~46 GiB of untracked episode media on a repo whose real checkout is
+    # ~1.7 GiB, projecting 96 GiB for two lanes and falsely blocking launches
+    # (2026-07-31). Sum blob sizes at HEAD instead; fall back to du only when
+    # git cannot answer (non-repo dir, timeout).
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(repo), "ls-tree", "-r", "-l", "HEAD"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        if result.returncode == 0:
+            total = 0
+            for line in result.stdout.splitlines():
+                parts = line.split(None, 4)
+                if len(parts) >= 4 and parts[3].isdigit():
+                    total += int(parts[3])
+            if total > 0:
+                return total
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        pass
+    try:
+        result = subprocess.run(
+            [
+                "du",
+                "-sx",
+                "--block-size=1",
+                "--exclude=.git",
+                "--",
+                str(repo),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        return int(result.stdout.split()[0]) if result.returncode == 0 else 0
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        return 0
+
+
+def projected_worktree_bytes(manifest: Manifest) -> int:
+    if not manifest.worktrees:
+        return 0
+    return repo_checkout_bytes(manifest.repo) * len(manifest.tasks)
+
+
+def record_blocked_launch(
+    manifest: Manifest,
+    *,
+    reason: str,
+    free_bytes: int,
+    required_headroom_bytes: int,
+    projected_bytes: int,
+) -> None:
+    receipt = {
+        "blocked_at": datetime.now(timezone.utc).isoformat(),
+        "run_name": manifest.run_name,
+        "reason": reason,
+        "free_bytes": free_bytes,
+        "required_headroom_bytes": required_headroom_bytes,
+        "projected_bytes": projected_bytes,
+        "task_count": len(manifest.tasks),
+        "worktrees": manifest.worktrees,
+        "worktree_lfs": manifest.worktree_lfs,
+    }
+    append_text(BLOCKED_LAUNCHES_PATH, json.dumps(receipt, sort_keys=True) + "\n")
+
+
+def preflight_disk_headroom(
+    manifest: Manifest,
+    *,
+    disk_usage: shutil._ntuple_diskusage | None = None,
+    projected_bytes: int | None = None,
+    pressure_marker: Path | None = None,
+    record_block: bool = True,
+) -> dict[str, int | float | bool]:
+    usage = disk_usage or shutil.disk_usage("/")
+    projection = (
+        projected_worktree_bytes(manifest)
+        if projected_bytes is None
+        else projected_bytes
+    )
+    required = max(RINGER_MIN_FREE_BYTES, int(usage.total * RINGER_MIN_FREE_FRACTION))
+    marker = pressure_marker if pressure_marker is not None else DISK_PRESSURE_MARKER
+    marker_active = marker.exists()
+    remaining = usage.free - projection
+    reason = ""
+    if marker_active:
+        reason = "disk pressure marker is active"
+    elif usage.free < required:
+        reason = "current free space is below the required headroom"
+    elif remaining < required:
+        reason = "projected worktrees would consume the required headroom"
+    if reason:
+        if record_block:
+            record_blocked_launch(
+                manifest,
+                reason=reason,
+                free_bytes=usage.free,
+                required_headroom_bytes=required,
+                projected_bytes=projection,
+            )
+        raise DiskPressureError(
+            f"{reason}: free={usage.free / 1024**3:.1f} GiB, "
+            f"projected={projection / 1024**3:.1f} GiB, "
+            f"required_remaining={required / 1024**3:.1f} GiB"
+        )
+    return {
+        "free_bytes": usage.free,
+        "projected_bytes": projection,
+        "required_headroom_bytes": required,
+        "remaining_bytes": remaining,
+        "pressure_marker_active": marker_active,
+    }
+
+
 def hud_is_alive(port: int) -> bool:
     try:
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/runs", timeout=0.4) as response:
@@ -8273,6 +8806,7 @@ def main(argv: list[str] | None = None) -> int:
                 force_browser=args.browser,
             )
             return 0
+        preflight_disk_headroom(manifest)
         preflight_engine_bins(manifest, config)
         if args.command == "run":
             start_catalog_auto_refresh()
