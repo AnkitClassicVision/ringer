@@ -181,6 +181,8 @@ class SetupErrorDiagnosticsTests(unittest.TestCase):
                 "setup failures (no worker was spawned):", combined_output
             )
             self.assertIn(expected_reason, combined_output)
+            if registered_worktree:
+                self.assertIn("uncommitted work before force-removing it", combined_output)
 
             # The reason reaches the worker log, where post-mortems look first.
             worker_log_candidates = list(workdir.rglob("*.log"))

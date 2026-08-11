@@ -58,6 +58,8 @@ Render-as-check outputs are created after `expect_files` is asserted. Keep check
 
 Generated-image tasks are different: workers produce the PNGs directly, so image outputs belong in `expect_files`.
 
+Seedance video tasks are also direct media-generation tasks. Start from `seedance.manifest.json`, keep both `video.mp4` and `generation.json` in `expect_files`, and use `checks/check_generated_video.py` to verify the MP4 signature plus the metadata byte count and SHA-256. The `seedance` engine calls OpenRouter's paid Video API directly; it is not an OpenCode text lane. Lint the filled manifest before choosing to run it, and treat the `usage` object in `generation.json` as the cost record.
+
 For any image command that can exceed about two minutes under OpenCode, use `nohup` plus polling. Long foreground bash calls can be killed by the tool before the image API returns; a background log and poll loop makes the task idempotent and debuggable.
 
 No text in generated images. Use HTML-authored animations and diagrams for readable labels because browser-rendered text is crisp and checkable.

@@ -11,10 +11,10 @@ Create a steering directory with a `profiles/` subdirectory, then set it in `con
 ```toml
 [steering]
 dir = "~/.ringer/steering"
-inject_candidates = true
+inject_candidates = false
 ```
 
-`RINGER_STEERING_DIR` overrides `steering.dir` when set. Paths expand `~`. `inject_candidates` defaults to `true`; set it to `false` to omit candidate rules from worker prompts while still injecting confirmed and stale-pending-reverify worker rules.
+`RINGER_STEERING_DIR` overrides `steering.dir` when set. Paths expand `~`. `inject_candidates` defaults to `false`; set it to `true` only to include candidate rules. The value must be a real TOML boolean, not a quoted string.
 
 The configured directory has this shape:
 
@@ -209,9 +209,8 @@ The filename uses the UTC date. Each row contains:
 | `verdict` | string | `PASS`, `FAIL`, `TIMEOUT`, or `ERROR` |
 | `duration_ms` | integer | Attempt duration in milliseconds |
 | `worker_tokens` | integer or null | Tokens reported for this attempt |
-| `check_excerpt` | string | First 500 characters of raw check output |
 
-Observation rows are evidence inputs only. Writing one never changes a profile.
+Observation rows are evidence inputs only. They intentionally omit raw check-output excerpts, which remain in task logs and eval records. Writing one never changes a profile.
 
 ## Fail-open guarantee
 

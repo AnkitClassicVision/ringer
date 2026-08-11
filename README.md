@@ -134,6 +134,8 @@ Lint reads the manifest; `--baseline` executes it — every task's `check` runs 
 
 Each check runs in a fresh scratch dir (a detached worktree when the manifest uses worktrees) through the same verifier as a real run. Reading the results: an assertion that demands the NEW behavior workers will build is *expected* to FAIL baseline; an assertion about UNCHANGED behavior that fails baseline is a bug in the check itself, and at run time it would burn a worker's attempts against something no model can satisfy. Fix the check before spawning.
 
+For automation that must stop on a bad baseline, add `--baseline-strict`. It runs the same no-worker preflight but exits nonzero when any check reports FAIL or ERROR.
+
 ## Make your agent actually use this
 
 Between swarms, agents drift back to invisible inline work. Reminders decay, so enforcement ships with the product.
@@ -164,30 +166,29 @@ args_template = ["run", "{spec}", "--dir", "{taskdir}"]
 
 Per-task `"engine": "mymodel"` routes work to it — the invariants (stdin closed, process-group kill, executed verification, raw logs) apply to every engine identically.
 
-### The universal harness: OpenCode + OpenRouter
+### Seedance video through OpenRouter
 
-Unless a model ships its own first-class harness (Codex does), OpenCode is the harness that runs it — one engine block covers every OpenRouter-served model. `config.sample.toml` includes a ready-to-uncomment engine whose `{model}` placeholder is filled per task from the manifest's `"model"` field, with `model_default` as the fallback. The shipped default is OpenRouter's `z-ai/glm-5.2` — roughly $0.74/M input and $2.33/M output (2026-07), about 20-30x cheaper output than frontier coding models; a complete write-code-and-pass-the-check task lands around a penny.
+Ringer also ships a first-class `seedance` engine for OpenRouter's asynchronous Video API. It is a paid media-generation lane, not an OpenCode text model or catalog-only alias. See [Seedance video generation](docs/SEEDANCE-VIDEO.md) for configuration, manifest flags, auth resolution, cost metadata, and the checked asset-swarm example.
 
-OpenCode ships no OS sandbox, so the engine's `bin` points at an absolute path to `engines/opencode-sandboxed.sh` (ringer does not resolve engine bins relative to the repo): a macOS Seatbelt wrapper that leaves network and reads open but confines writes to the task dir, a per-run scratch dir (wired as the agent's `TMPDIR`/`XDG_CACHE_HOME`), and OpenCode's own state/config dirs. Its `--dangerously-skip-permissions` flag only silences OpenCode's interactive prompts; Seatbelt is the actual containment. Task paths reach the profile as `sandbox-exec -D` parameters rather than string interpolation, so a task dir with quotes or parens can't inject sandbox rules. `--no-sandbox` is wired as the engine's `full_access_args`, so ringer's `allow_full_access` gate still governs escapes. Non-macOS installs need their own sandbox (or full-access mode).
+### Auth-first model routing
 
-Setting it up takes about five minutes:
+Ringer now fails closed for the three protected model families:
+
+- Anthropic, Claude, Haiku, Sonnet, Opus, and Fable use `engines/claude-oauth.sh`. The wrapper clears inherited API routes, requires Claude Code to report first-party `claude.ai` authentication, normalizes supported family aliases, and forces safe mode without user/project/local settings.
+- OpenAI, GPT, o-series, and Codex use `engines/codex-oauth.sh`. The wrapper clears inherited API routes, requires `codex login status` to report a ChatGPT login, and forces `--ignore-user-config`.
+- GLM uses `zai-coding-plan/glm-*` through `engines/opencode-auth-policy.sh`. The wrapper pins the official Z.AI Coding Plan provider and endpoint, isolates config/plugins, and rejects OpenRouter, direct Z.AI, local Ollama, and bare GLM selectors. Coding Plan uses subscription API authentication rather than OAuth.
+
+Ringer validates the family-to-wrapper pairing before launch. Custom model harnesses require the explicit `auth_routing_trusted = true` capability, manifest-controlled provider/profile/backend/config/settings/agent/attach overrides are blocked, and protected families still cannot use those custom lanes.
+
+The guarded OpenCode harness remains available for permitted unrelated provider families. On macOS it delegates to `engines/opencode-sandboxed.sh`; on Linux it invokes OpenCode directly after removing wrapper-only arguments. OpenCode's permission flag is not an OS sandbox, so Linux installations still need scoped manifests or platform containment.
 
 ```bash
-# 1) Install the OpenCode CLI (pick one)
-curl -fsSL https://opencode.ai/install | bash
-# or: npm install -g opencode-ai
-# or: brew install anomalyco/tap/opencode
-
-# 2) Connect OpenRouter — create a key at https://openrouter.ai/settings/keys
-opencode auth login   # select OpenRouter, paste the key
-
-# 3) In ~/.config/ringer/config.toml, uncomment [engines.opencode] and set
-#    bin to the ABSOLUTE path of engines/opencode-sandboxed.sh in this clone.
-#    (Linux/WSL: the wrapper is macOS-only — set bin to the opencode binary
-#    itself; there is no OS write-confinement then, so keep manifests scoped.)
+codex login
+claude auth login
+opencode auth login   # select Z.AI Coding Plan for GLM
 ```
 
-Route with per-task `"engine": "opencode"`, pick the model with per-task `"model": "openrouter/<any-model>"`, and set reasoning effort via `engine_args`: `["--variant", "low|high|max"]`. A sensible split: mechanical or tightly-specced tasks on the cheap lane, gnarly ones on your frontier engine — the executed check catches shortfalls either way, and `swarm_runs` rows tell you whether the cheap lane's pass rate holds.
+Route Anthropic with `"engine": "claude"`, OpenAI with `"engine": "codex"`, and GLM with `"engine": "glm-coding-plan"` plus a `zai-coding-plan/glm-*` model. Unsupported subscription models fail closed rather than falling back to API billing.
 
 ### The plan lane: Grok Build CLI
 
@@ -241,7 +242,7 @@ A native desktop build (Tauri, under `hud/`) exists as a v0.1.1 prototype; the w
 
 ## Self-update
 
-Ringer checks `origin/main` at process start, before it dispatches the requested command. Checks are throttled to once per hour by default. You can also run `./ringer.py self-update` for an immediate, human-readable check that ignores the throttle.
+Ringer does not check or update by default. Set `[update] auto = true` only for a checkout explicitly allowed to check `origin/main` at process start. Those opt-in checks are throttled to once per hour. You can also run `./ringer.py self-update` for an immediate, human-readable check that ignores the throttle; errors return nonzero.
 
 An automatic update applies only when the checkout containing `ringer.py` is on `main`, has no tracked changes, and `origin/main` can be reached with a fast-forward-only update. Untracked files do not block it. After applying, Ringer restarts the original invocation so the requested command runs on the new code.
 

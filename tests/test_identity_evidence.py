@@ -105,23 +105,27 @@ access = "OpenRouter API"
         output = "OpenAI Codex v0.144.0\n--------\nmodel: gpt-5.6-sol\nprovider: openai\n"
         self.assertEqual("gpt-5.6-sol", parse_reported_model(output, engine.model_report_regex))
 
-    def test_reported_model_wins_and_resolved_model_is_fallback(self) -> None:
+    def test_reported_model_wins_and_expected_command_model_is_retained(self) -> None:
         rows = self.log_attempts(
+            WorkerResult(0, False, 12, reported_model="gpt-5.6-sol"),
             WorkerResult(0, False, 12, reported_model="gpt-5.7"),
             WorkerResult(0, False, 12),
         )
-        self.assertEqual("gpt-5.7", rows[0]["model"])
-        self.assertEqual("gpt-5.7", rows[0]["reported_model"])
-        self.assertEqual("gpt-5.6-sol", rows[0]["expected_model"])
-        self.assertEqual("gpt-5.6-sol", rows[1]["model"])
-        self.assertIsNone(rows[1]["reported_model"])
-        self.assertIsNone(rows[1]["expected_model"])
+        self.assertEqual("gpt-5.6-sol", rows[0]["model"])
+        self.assertEqual("gpt-5.6-sol", rows[0]["reported_model"])
+        self.assertIsNone(rows[0]["expected_model"])
+        self.assertEqual("gpt-5.7", rows[1]["model"])
+        self.assertEqual("gpt-5.7", rows[1]["reported_model"])
+        self.assertEqual("gpt-5.6-sol", rows[1]["expected_model"])
+        self.assertEqual("gpt-5.6-sol", rows[2]["model"])
+        self.assertIsNone(rows[2]["reported_model"])
+        self.assertIsNone(rows[2]["expected_model"])
 
     def test_mismatch_appends_identity_warning_to_worker_log(self) -> None:
         self.log_attempts(WorkerResult(0, False, 12, reported_model="gpt-5.7"))
         log = (self.root / "work" / "task" / "worker.log").read_text(encoding="utf-8")
         self.assertIn(
-            "[ringer.py] identity: harness reported gpt-5.7 but manifest/config expected gpt-5.6-sol",
+            "[ringer.py] identity: harness reported gpt-5.7 but command/manifest expected gpt-5.6-sol",
             log,
         )
 

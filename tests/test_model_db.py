@@ -67,7 +67,12 @@ def write_registry(path: Path) -> None:
 [engines.codex]
 harness = "Codex CLI"
 access = "OAuth plan"
-default_model_key = "gpt-5.5"
+default_model_key = "codex-cli-default"
+
+[engines.codex.models."codex-cli-default"]
+display = "Codex CLI default (unpinned)"
+confidence = "verified"
+source = "fixture"
 
 [engines.codex.models."gpt-5.5"]
 display = "GPT-5.5"
@@ -212,7 +217,36 @@ class ModelDbTests(unittest.TestCase):
         self.assertEqual(2, self.count_attempts())
         with sqlite3.connect(self.db_path) as conn:
             self.assertEqual(1, conn.execute("SELECT COUNT(*) FROM catalog_models").fetchone()[0])
-            self.assertEqual(2, conn.execute("SELECT COUNT(*) FROM identity").fetchone()[0])
+            self.assertEqual(3, conn.execute("SELECT COUNT(*) FROM identity").fetchone()[0])
+
+    def test_rebuild_preserves_expected_model_only_for_reported_mismatches(self) -> None:
+        matching = attempt(run_id="matching", model="gpt-command")
+        matching.update({"reported_model": "gpt-command", "expected_model": None})
+        mismatch = attempt(run_id="mismatch", model="gpt-report")
+        mismatch.update({"reported_model": "gpt-report", "expected_model": "gpt-command"})
+        no_report = attempt(run_id="no-report", model="gpt-command")
+        no_report.update({"reported_model": None, "expected_model": None})
+        write_jsonl(self.log_path, [matching, mismatch, no_report])
+
+        rebuild_read_model_db(
+            self.db_path,
+            self.log_path,
+            catalog_path=self.catalog_path,
+            registry_path=self.registry_path,
+        )
+
+        with sqlite3.connect(self.db_path) as conn:
+            rows = conn.execute(
+                "SELECT run_id, model, reported_model, expected_model FROM attempts ORDER BY id"
+            ).fetchall()
+        self.assertEqual(
+            [
+                ("matching", "gpt-command", "gpt-command", None),
+                ("mismatch", "gpt-report", "gpt-report", "gpt-command"),
+                ("no-report", "gpt-command", None, None),
+            ],
+            rows,
+        )
 
     def test_sync_consumes_only_new_bytes_and_rebuilds_after_truncation(self) -> None:
         write_jsonl(self.log_path, [attempt(run_id="run-1")])
@@ -424,11 +458,13 @@ class ModelDbTests(unittest.TestCase):
         registry = load_model_identity_registry(self.registry_path)
 
         codex = registry.resolve("codex", "")
+        pinned_codex = registry.resolve("codex", "gpt-5.5")
         listed = registry.resolve("opencode", "openrouter/z-ai/glm-5.2")
         unlisted = registry.resolve("opencode", "openrouter/vendor/model")
         unknown = registry.resolve("custom-engine", "custom-model")
 
-        self.assertEqual(("GPT-5.5", "Codex CLI", "OAuth plan"), (codex.model_display, codex.harness, codex.access))
+        self.assertEqual(("Codex CLI default (unpinned)", "Codex CLI", "OAuth plan"), (codex.model_display, codex.harness, codex.access))
+        self.assertEqual(("GPT-5.5", "Codex CLI", "OAuth plan"), (pinned_codex.model_display, pinned_codex.harness, pinned_codex.access))
         self.assertEqual(("GLM 5.2", "OpenCode", "OpenRouter API"), (listed.model_display, listed.harness, listed.access))
         self.assertEqual(("openrouter/vendor/model", "OpenCode", "OpenRouter API"), (unlisted.model_display, unlisted.harness, unlisted.access))
         # Unknown engine + model: display the MODEL slug, never the engine name.
@@ -440,6 +476,7 @@ class ModelDbTests(unittest.TestCase):
             [
                 attempt(run_id="run-1", engine="codex", model="", task_type="site-build"),
                 attempt(run_id="run-2", engine="opencode", model="openrouter/vendor/model"),
+                attempt(run_id="run-3", engine="codex", model="gpt-5.5", task_type="code-fix"),
             ],
         )
         out = io.StringIO()
@@ -455,7 +492,7 @@ class ModelDbTests(unittest.TestCase):
         self.assertEqual("(unattributed legacy rows)", legacy["model_display"])
         self.assertEqual("codex", legacy["engine"])
         self.assertTrue(legacy["unattributed"])
-        self.assertNotIn("GPT-5.5", json.dumps(payload))
+        self.assertEqual("GPT-5.5", by_model["gpt-5.5"]["model_display"])
         self.assertEqual("Model", by_model["openrouter/vendor/model"]["model_display"])
         self.assertEqual("OpenCode", by_model["openrouter/vendor/model"]["harness"])
         self.assertEqual("OpenRouter API", by_model["openrouter/vendor/model"]["access"])

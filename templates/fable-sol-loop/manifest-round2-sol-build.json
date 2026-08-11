@@ -1,0 +1,28 @@
+{
+  "run_name": "{{RUN_SLUG}}-fable-sol-loop",
+  "workdir": "{{ROUND2_WORKDIR}}",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "sol-build",
+      "engine": "codex",
+      "model": "gpt-5.6-sol",
+      "task_type": "code-feature",
+      "timeout_s": 2400,
+      "full_access": false,
+      "engine_args": [
+        "-c",
+        "model_reasoning_effort=ultra",
+        "-c",
+        "sandbox_workspace_write.writable_roots={{WRITABLE_ROOTS_JSON}}"
+      ],
+      "expect_files": [
+        "status.json",
+        "notes.md"
+      ],
+      "spec": "{{SOL_BUILD_PROMPT}}\n\nChange only the declared owned paths, execute the locked verification, preserve all source boundaries, and produce the validator-controlled status packet rather than guessing missing evidence.",
+      "check": "python3 {{KIT_DIR_SHELL}}/checks/validate_sol_status.py --packet status.json --decision sources/decision-packet.json --repo {{SOURCE_REPO_SHELL}} --skip-notice skip-notice.json",
+      "verified": "The Sol packet is structurally safe, READY proof is re-executed, HOLD remains a passing controlled output, git ownership is enforced, and the objective review gate is recorded."
+    }
+  ]
+}

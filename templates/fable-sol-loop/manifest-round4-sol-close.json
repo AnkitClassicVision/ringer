@@ -1,0 +1,27 @@
+{
+  "run_name": "{{RUN_SLUG}}-fable-sol-loop",
+  "workdir": "{{ROUND4_WORKDIR}}",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "sol-close",
+      "engine": "codex",
+      "model": "gpt-5.6-sol",
+      "task_type": "code-fix",
+      "timeout_s": 2400,
+      "full_access": false,
+      "engine_args": [
+        "-c",
+        "model_reasoning_effort=ultra",
+        "-c",
+        "sandbox_workspace_write.writable_roots={{WRITABLE_ROOTS_JSON}}"
+      ],
+      "expect_files": [
+        "receipt.json"
+      ],
+      "spec": "{{SOL_CLOSE_PROMPT}}\n\nUse only staged review inputs and declared owned paths, re-execute locked proof, avoid external services and credentials, and emit the validator-controlled receipt without inventing evidence.",
+      "check": "if test -s sources/review.json && test -s sources/skip-notice.json; then echo 'WHY: stage exactly one review input, not both'; exit 1; elif test -s sources/review.json; then python3 {{KIT_DIR_SHELL}}/checks/validate_receipt.py --packet receipt.json --decision sources/decision-packet.json --status sources/status.json --repo {{SOURCE_REPO_SHELL}} --review sources/review.json; elif test -s sources/skip-notice.json; then python3 {{KIT_DIR_SHELL}}/checks/validate_receipt.py --packet receipt.json --decision sources/decision-packet.json --status sources/status.json --repo {{SOURCE_REPO_SHELL}} --skip-notice sources/skip-notice.json; else echo 'WHY: stage exactly one of sources/review.json or sources/skip-notice.json'; exit 1; fi",
+      "verified": "The receipt maps closure to Fable findings or the generated skip notice, re-executes the locked verification, enforces git ownership, and proves Sol did not accept its own work."
+    }
+  ]
+}

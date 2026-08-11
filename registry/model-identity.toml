@@ -10,12 +10,11 @@
 [engines.codex]
 harness = "Codex CLI"
 access = "OAuth plan"
-default_model_key = "gpt-5.5"
 
 [engines.codex.models."gpt-5.5"]
 display = "GPT-5.5"
 lab = "OpenAI"
-confidence = "verified"     # snapshot gpt-5.5-2026-04-23, Codex CLI default; see capability file
+confidence = "verified"
 source = "https://developers.openai.com/codex/models"
 last_verified = 2026-07-10
 
@@ -74,27 +73,80 @@ access = "OpenRouter API"
 [engines.opencode.models."openrouter/z-ai/glm-5.2"]
 display = "GLM 5.2"
 lab = "Z.ai (Zhipu AI)"
-confidence = "verified"
+confidence = "unverified"
 source = "manifest model field; OpenRouter slug z-ai/glm-5.2"
-last_verified = 2026-07-10
 
 [engines.opencode.models."openrouter/moonshotai/kimi-k2.7-code"]
 display = "Kimi K2.7 Code"
 lab = "Moonshot AI"
-confidence = "verified"
+confidence = "unverified"
 source = "manifest model field; OpenRouter slug moonshotai/kimi-k2.7-code"
-last_verified = 2026-07-10
 
 [engines.opencode.models."openrouter/nvidia/nemotron-3-super-120b-a12b:free"]
 display = "Nemotron 3 Super 120B (free)"
 lab = "NVIDIA"
-confidence = "verified"
+confidence = "unverified"
 source = "manifest model field; OpenRouter slug nvidia/nemotron-3-super-120b-a12b:free"
-last_verified = 2026-07-10
 
 [engines.opencode.models."openrouter/meta-llama/llama-3.3-70b-instruct:free"]
 display = "Llama 3.3 70B Instruct (free)"
 lab = "Meta"
-confidence = "verified"
+confidence = "unverified"
 source = "manifest model field; OpenRouter slug meta-llama/llama-3.3-70b-instruct:free"
-last_verified = 2026-07-10
+
+[engines.glm-coding-plan]
+harness = "OpenCode"
+access = "Z.AI Coding Plan"
+default_model_key = "zai-coding-plan/glm-5.2"
+
+[engines.glm-coding-plan.models."zai-coding-plan/glm-5.2"]
+display = "GLM 5.2"
+lab = "Z.ai (Zhipu AI)"
+confidence = "unverified"
+source = "source-shipped Z.AI Coding Plan config selector; trained-model identity not independently verified"
+
+[engines.claude]
+harness = "Claude Code"
+access = "Claude Code OAuth"
+default_model_key = "sonnet"
+
+[engines.claude.models.sonnet]
+display = "Claude family alias (sonnet)"
+lab = "Anthropic?"
+alias = true
+confidence = "unverified"
+source = "source-shipped Claude Code OAuth config alias; exact trained-model identity unresolved"
+
+[engines.xai]
+harness = "OpenCode"
+access = "xAI API"
+default_model_key = "xai/grok-4.5"
+
+[engines.xai.models."xai/grok-4.5"]
+display = "Grok 4.5"
+lab = "xAI"
+confidence = "unverified"
+source = "source-shipped direct xAI adapter and configuration selector; direct-route identity not independently verified"
+
+[engines.seedance]
+harness = "OpenRouter Video API"
+access = "OpenRouter API"
+default_model_key = "bytedance/seedance-2.0"
+
+[engines.seedance.models."bytedance/seedance-2.0"]
+display = "Seedance 2.0"
+lab = "ByteDance"
+confidence = "unverified"
+source = "OpenRouter Video API catalog response; aggregator evidence only"
+
+[engines.seedance.models."bytedance/seedance-2.0-fast"]
+display = "Seedance 2.0 Fast"
+lab = "ByteDance"
+confidence = "unverified"
+source = "OpenRouter Video API manifest override; manifest-only evidence"
+
+[engines.seedance.models."bytedance/seedance-1-5-pro"]
+display = "Seedance 1.5 Pro"
+lab = "ByteDance"
+confidence = "unverified"
+source = "OpenRouter Video API manifest override; manifest-only evidence"

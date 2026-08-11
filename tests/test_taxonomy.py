@@ -195,6 +195,19 @@ source = "fixture"
         self.assertEqual("vendor?", registry.resolve("opencode", "openrouter/vendor/model").lab)
         self.assertEqual("(unverified)", registry.resolve("custom", "model").lab)
 
+    def test_source_shipped_routes_preserve_access_and_evidence_boundaries(self) -> None:
+        registry = load_model_identity_registry(ROOT / "registry" / "model-identity.toml")
+
+        glm = registry.resolve("glm-coding-plan", "zai-coding-plan/glm-5.2")
+        claude = registry.resolve("claude", "sonnet")
+        xai = registry.resolve("xai", "xai/grok-4.5")
+        seedance = registry.resolve("seedance", "bytedance/seedance-2.0")
+
+        self.assertEqual(("OpenCode", "Z.AI Coding Plan", "unverified"), (glm.harness, glm.access, glm.confidence))
+        self.assertEqual(("Claude Code", "Claude Code OAuth", True, "unverified"), (claude.harness, claude.access, claude.alias, claude.confidence))
+        self.assertEqual(("OpenCode", "xAI API", "unverified"), (xai.harness, xai.access, xai.confidence))
+        self.assertEqual(("ByteDance", "unverified"), (seedance.lab, seedance.confidence))
+
     def test_attempt_logging_records_explicit_effort_and_null_when_absent(self) -> None:
         log_path = self.root / "attempts.jsonl"
         engine = EngineConfig(

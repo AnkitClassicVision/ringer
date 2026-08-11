@@ -37,6 +37,7 @@ from ringer import (  # noqa: E402
     parse_steering_profile,
     print_steering_notes,
     resolve_steering_profile,
+    steering_worker_rules,
     steering_profile_candidates,
 )
 
@@ -128,7 +129,7 @@ def write_profile(path: Path, *, model: str, version: str = "1.0.0") -> None:
     )
 
 
-def test_engine(model_default: str = "openrouter/z-ai/glm-5.2") -> EngineConfig:
+def make_test_engine(model_default: str = "openrouter/z-ai/glm-5.2") -> EngineConfig:
     return EngineConfig(
         name="mock",
         bin=sys.executable,
@@ -150,7 +151,7 @@ def make_config(root: Path, steering_dir: Path) -> AppConfig:
         hud_app_path=None,
         allow_full_access=False,
         eval=EvalConfig(backend="jsonl", jsonl_path=root / "eval.jsonl"),
-        engines={"mock": test_engine()},
+        engines={"mock": make_test_engine()},
         artifact=ArtifactConfig(
             enabled=False,
             out_template=str(root / "live.html"),
@@ -250,7 +251,7 @@ class SteeringInjectionTests(unittest.TestCase):
         assert parsed is not None
         self.profile = parsed
 
-    def test_worker_injection_contract(self) -> None:
+    def test_default_worker_injection_excludes_candidates(self) -> None:
         original = "Build the requested artifact."
         injected, rule_ids = inject_steering_spec(original, self.profile)
 
@@ -260,7 +261,7 @@ class SteeringInjectionTests(unittest.TestCase):
             )
         )
         self.assertIn("- Keep verification executable", injected)
-        self.assertIn("- (candidate) Inspect the existing implementation", injected)
+        self.assertNotIn("(candidate)", injected)
         self.assertIn(
             "- (unverified on current model version) Recheck version-sensitive behavior",
             injected,
@@ -268,17 +269,29 @@ class SteeringInjectionTests(unittest.TestCase):
         self.assertNotIn("Apply the discarded approach", injected)
         self.assertNotIn("Put the acceptance criteria", injected)
         self.assertTrue(injected.endswith("[End steering profile]\n\n" + original))
+        self.assertEqual(("keep-checks-executable", "reverify-version"), rule_ids)
+
+    def test_explicit_candidate_injection_includes_candidates(self) -> None:
+        injected, rule_ids = inject_steering_spec(
+            "Original", self.profile, inject_candidates=True
+        )
+        self.assertIn("- (candidate) Inspect the existing implementation", injected)
         self.assertEqual(
-            ("keep-checks-executable", "inspect-first", "reverify-version"),
-            rule_ids,
+            ("keep-checks-executable", "inspect-first", "reverify-version"), rule_ids
         )
 
-    def test_candidates_can_be_disabled(self) -> None:
-        injected, rule_ids = inject_steering_spec(
-            "Original", self.profile, inject_candidates=False
+    def test_worker_rule_default_and_explicit_candidate_boundaries(self) -> None:
+        self.assertEqual(
+            ("keep-checks-executable", "reverify-version"),
+            tuple(rule.id for rule in steering_worker_rules(self.profile)),
         )
-        self.assertNotIn("(candidate)", injected)
-        self.assertEqual(("keep-checks-executable", "reverify-version"), rule_ids)
+        self.assertEqual(
+            ("keep-checks-executable", "inspect-first", "reverify-version"),
+            tuple(
+                rule.id
+                for rule in steering_worker_rules(self.profile, inject_candidates=True)
+            ),
+        )
 
     def test_only_driver_rules_produces_no_block(self) -> None:
         driver_profile = SteeringProfile(
@@ -459,7 +472,6 @@ class SteeringObservationTests(unittest.TestCase):
                     "verdict",
                     "duration_ms",
                     "worker_tokens",
-                    "check_excerpt",
                 },
                 set(row),
             )
@@ -468,7 +480,7 @@ class SteeringObservationTests(unittest.TestCase):
             self.assertEqual(["keep-checks-executable"], row["rules_injected"])
             self.assertEqual(2, row["attempt"])
             self.assertTrue(row["retry"])
-            self.assertEqual(500, len(row["check_excerpt"]))
+            self.assertNotIn("check_excerpt", row)
 
     def test_observation_write_failure_is_logged_and_does_not_raise(self) -> None:
         with tempfile.TemporaryDirectory() as temp_root:
@@ -567,11 +579,7 @@ class SteeringIntegrationFailOpenTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual([1, 2], [row["attempt"] for row in rows])
             self.assertEqual([False, True], [row["retry"] for row in rows])
             self.assertEqual(
-                [
-                    "keep-checks-executable",
-                    "inspect-first",
-                    "reverify-version",
-                ],
+                ["keep-checks-executable", "reverify-version"],
                 rows[1]["rules_injected"],
             )
 

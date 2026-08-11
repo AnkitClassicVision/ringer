@@ -203,6 +203,52 @@ class BaselineModeTests(unittest.TestCase):
                 f"baseline leaked worktrees:\n{worktree_list}",
             )
 
+    def test_baseline_strict_returns_nonzero_for_failures(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_root:
+            root = Path(temp_root)
+            manifest_path = root / "manifest.json"
+            manifest_path.write_text(
+                json.dumps(
+                    {
+                        "run_name": "baseline-strict-test",
+                        "workdir": str(root / "work"),
+                        "tasks": [
+                            {
+                                "key": "must-fail",
+                                "spec": "Baseline runs this local check without spawning any worker.",
+                                "check": "echo WHY: expected baseline failure; exit 1",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    "ringer.py",
+                    "run",
+                    str(manifest_path),
+                    "--no-dashboard",
+                    "--baseline-strict",
+                ],
+                cwd=ROOT,
+                env={
+                    **os.environ,
+                    "HOME": str(root / "home"),
+                    "XDG_CONFIG_HOME": str(root / "xdg-config"),
+                    "RINGER_HOME": str(root / "ringer-home"),
+                    "RINGER_NO_SELF_UPDATE": "1",
+                },
+                text=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                check=False,
+                timeout=30,
+            )
+            self.assertEqual(1, proc.returncode, proc.stdout + proc.stderr)
+            self.assertIn("baseline: 0 pass, 1 fail, 0 error", proc.stdout)
+
 
 class BaselineContainmentTests(unittest.TestCase):
     def test_task_key_cannot_escape_baseline_scratch_root(self) -> None:

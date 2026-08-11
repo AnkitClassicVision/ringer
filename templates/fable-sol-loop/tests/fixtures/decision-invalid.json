@@ -1,0 +1,42 @@
+{
+  "intent": "This invalid packet deliberately leaves an unknown routed to an invented authority for negative proof.",
+  "architecture": {
+    "components": [
+      "Invalid routing fixture"
+    ],
+    "boundaries": [
+      "No implementation should rely on this fixture"
+    ]
+  },
+  "owned_paths": [
+    "owned"
+  ],
+  "fable_owned_surfaces": [],
+  "unknowns": [
+    {
+      "id": "U-BAD",
+      "description": "An unknown with a route that the contract does not recognize.",
+      "route": "sol_guesses"
+    }
+  ],
+  "implementation_contract": {
+    "build_units": [
+      {
+        "id": "U1-output",
+        "owned_paths": [
+          "owned/output.txt"
+        ],
+        "done_criteria": "The owned output contains exactly the expected ready marker.",
+        "verification_command": "python3 -c \"from pathlib import Path; assert Path('owned/output.txt').read_text(encoding='utf-8') == 'ready'\""
+      }
+    ]
+  },
+  "forbidden_actions": [
+    "Do not commit or push repository changes.",
+    "Do not deploy or modify production.",
+    "Do not perform external sends or writes.",
+    "Do not access secrets or credentials.",
+    "Do not use any provider fallback when OAuth is unavailable.",
+    "Do not let Sol accept its own work."
+  ]
+}

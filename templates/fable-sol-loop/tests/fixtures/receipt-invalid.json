@@ -1,0 +1,31 @@
+{
+  "outcome": "DONE",
+  "findings_closed": [
+    {
+      "id": "F-1",
+      "source": "review",
+      "evidence": "This fixture is intentionally invalid because it reports a forbidden action."
+    }
+  ],
+  "verification_reruns": [
+    {
+      "command": "python3 -c \"from pathlib import Path; assert Path('owned/output.txt').read_text(encoding='utf-8') == 'ready'\"",
+      "result": {
+        "passed": true,
+        "exit_code": 0,
+        "summary": "The verification result itself is valid so the boundary failure is isolated."
+      }
+    }
+  ],
+  "review_ran": true,
+  "skip_reasons": [],
+  "open_items": [],
+  "boundary_attestation": {
+    "forbidden_actions_taken": [
+      "git push"
+    ],
+    "external_actions_taken": [],
+    "sol_accepted_own_work": false,
+    "statement": "This negative fixture must be rejected because a forbidden action is reported."
+  }
+}

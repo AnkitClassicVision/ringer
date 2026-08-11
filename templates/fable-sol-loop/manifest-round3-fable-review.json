@@ -1,0 +1,21 @@
+{
+  "run_name": "{{RUN_SLUG}}-fable-sol-loop",
+  "workdir": "{{ROUND3_WORKDIR}}",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "fable-review",
+      "engine": "claude-lean",
+      "model": "fable",
+      "task_type": "code-review",
+      "timeout_s": 1800,
+      "full_access": false,
+      "expect_files": [
+        "review.json"
+      ],
+      "spec": "{{FABLE_REVIEW_PROMPT}}\n\nReview only staged round artifacts, cite evidence for each finding, do not access external services or credentials, and return only the documented review packet outcome.",
+      "check": "python3 {{KIT_DIR_SHELL}}/checks/validate_fable_review.py --packet review.json --status sources/status.json --decision sources/decision-packet.json --evidence-root sources",
+      "verified": "The conditional Fable verdict follows APPROVE, REVISE, or single-QUESTION ESCALATE semantics and every finding points to a staged round-two artifact."
+    }
+  ]
+}

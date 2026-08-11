@@ -117,6 +117,9 @@ class EngineConfig:
     sandbox_args: tuple[str, ...]
     token_regex: str | None = DEFAULT_TOKEN_REGEX
     model_report_regex: str | None = None
+    # Explicit capability gate for custom model harnesses under auth-first routing.
+    # Restricted Anthropic/OpenAI/GLM families still require their trusted wrappers.
+    auth_routing_trusted: bool = False
     # Fills the {model} placeholder in args_template when a task does not set
     # its own "model" — this is what makes a harness engine (OpenCode) model
     # agnostic instead of hard-coding one model into the command line.
@@ -161,12 +164,12 @@ class ArtifactConfig:
 @dataclass(frozen=True)
 class SteeringConfig:
     dir: Path | None = None
-    inject_candidates: bool = True
+    inject_candidates: bool = False
 
 
 @dataclass(frozen=True)
 class UpdateConfig:
-    auto: bool = True
+    auto: bool = False
     check_interval_s: int = DEFAULT_UPDATE_CHECK_INTERVAL_S
 
 
@@ -216,10 +219,10 @@ def load_steering_config(raw: Any) -> SteeringConfig:
         directory = optional_path(env_dir) if env_dir and env_dir.strip() else optional_path(
             section.get("dir")
         )
-        return SteeringConfig(
-            dir=directory,
-            inject_candidates=bool(section.get("inject_candidates", True)),
-        )
+        inject_candidates = section.get("inject_candidates", False)
+        if not isinstance(inject_candidates, bool):
+            raise ValueError("steering.inject_candidates must be a TOML boolean")
+        return SteeringConfig(dir=directory, inject_candidates=inject_candidates)
     except Exception:
         return SteeringConfig()
 
@@ -346,7 +349,7 @@ def resolve_steering_profile(
 
 
 def steering_worker_rules(
-    profile: SteeringProfile, *, inject_candidates: bool = True
+    profile: SteeringProfile, *, inject_candidates: bool = False
 ) -> tuple[SteeringRule, ...]:
     try:
         return tuple(
@@ -366,7 +369,7 @@ def inject_steering_spec(
     spec: str,
     profile: SteeringProfile | None,
     *,
-    inject_candidates: bool = True,
+    inject_candidates: bool = False,
 ) -> tuple[str, tuple[str, ...]]:
     """Prepend qualifying worker rules, returning the original spec on any error."""
     try:
@@ -455,11 +458,16 @@ class AppConfig:
         engines = load_engines(data.get("engines"))
         artifact_config = load_artifact_config(data.get("artifact"), state_dir)
         update_config = load_update_config(data.get("update"))
+        steering_raw = data.get("steering")
+        if isinstance(steering_raw, dict) and "inject_candidates" in steering_raw and not isinstance(
+            steering_raw["inject_candidates"], bool
+        ):
+            raise ValueError("steering.inject_candidates must be a TOML boolean")
         try:
-            steering_config = load_steering_config(data.get("steering"))
+            steering_config = load_steering_config(steering_raw)
         except Exception:
-            # Steering is optional and must never make the base config unusable,
-            # including when its loader itself is replaced or extended later.
+            # Steering is optional: an unavailable profile loader must not stop a
+            # run. Config type validation above remains fail-closed.
             steering_config = SteeringConfig()
         return cls(
             path=config_path if config_path.exists() else None,
@@ -499,10 +507,13 @@ def load_update_config(raw: Any) -> UpdateConfig:
         raw = {}
     if not isinstance(raw, dict):
         raise ValueError("update must be a TOML table")
+    auto = raw.get("auto", False)
+    if not isinstance(auto, bool):
+        raise ValueError("update.auto must be a TOML boolean")
     interval = int(raw.get("check_interval_s", DEFAULT_UPDATE_CHECK_INTERVAL_S))
     if interval <= 0:
         raise ValueError("update.check_interval_s must be positive")
-    return UpdateConfig(auto=bool(raw.get("auto", True)), check_interval_s=interval)
+    return UpdateConfig(auto=auto, check_interval_s=interval)
 
 
 def self_update_state_path(state_dir: Path) -> Path:
@@ -870,13 +881,14 @@ def as_string_tuple(value: Any, *, key: str) -> tuple[str, ...]:
 
 
 def built_in_codex_engine() -> EngineConfig:
-    resolved = shutil.which(DEFAULT_ENGINE_NAME) or DEFAULT_ENGINE_NAME
+    resolved = str(Path(__file__).resolve().parent / "engines" / "codex-oauth.sh")
     return EngineConfig(
         name=DEFAULT_ENGINE_NAME,
         bin=resolved,
         args_template=(
             "exec",
             "--skip-git-repo-check",
+            "--ignore-user-config",
             "{access_args}",
             "{model_args}",
             "{engine_args}",
@@ -943,12 +955,28 @@ def load_engines(raw: Any) -> dict[str, EngineConfig]:
         bin_path = str(section.get("bin", default_bin)).strip()
         if not bin_path:
             raise ValueError(f"engines.{clean_name}.bin must not be empty")
+        if clean_name == DEFAULT_ENGINE_NAME:
+            trusted_codex = (Path(__file__).resolve().parent / "engines" / "codex-oauth.sh").resolve()
+            if Path(bin_path).expanduser().resolve() != trusted_codex:
+                raise ValueError(
+                    "engines.codex.bin must use the trusted engines/codex-oauth.sh wrapper"
+                )
         args_template = as_string_tuple(
             section.get("args_template", list(base.args_template) if base else None),
             key=f"engines.{clean_name}.args_template",
         )
         if not args_template:
             raise ValueError(f"engines.{clean_name}.args_template must not be empty")
+        if clean_name == DEFAULT_ENGINE_NAME:
+            args_without_isolation = tuple(
+                arg for arg in args_template if arg != "--ignore-user-config"
+            )
+            isolation_index = 1 if args_without_isolation[:1] == ("exec",) else 0
+            args_template = (
+                args_without_isolation[:isolation_index]
+                + ("--ignore-user-config",)
+                + args_without_isolation[isolation_index:]
+            )
         full_access_args = as_string_tuple(
             section.get("full_access_args", list(base.full_access_args) if base else []),
             key=f"engines.{clean_name}.full_access_args",
@@ -982,6 +1010,15 @@ def load_engines(raw: Any) -> dict[str, EngineConfig]:
         model_default = str(
             section.get("model_default", base.model_default if base else "")
         ).strip()
+        auth_routing_trusted_raw = section.get(
+            "auth_routing_trusted",
+            base.auth_routing_trusted if base else False,
+        )
+        if not isinstance(auth_routing_trusted_raw, bool):
+            raise ValueError(
+                f"engines.{clean_name}.auth_routing_trusted must be a TOML boolean"
+            )
+        auth_routing_trusted = auth_routing_trusted_raw
         engines[clean_name] = EngineConfig(
             name=clean_name,
             bin=bin_path,
@@ -990,6 +1027,7 @@ def load_engines(raw: Any) -> dict[str, EngineConfig]:
             sandbox_args=sandbox_args,
             token_regex=token_regex,
             model_report_regex=model_report_regex,
+            auth_routing_trusted=auth_routing_trusted,
             model_default=model_default,
         )
     return engines
@@ -1063,6 +1101,149 @@ class TaskSpec:
             model=model.strip(),
             task_type=task_type.strip(),
         )
+
+
+@dataclass(frozen=True)
+class EffectiveModel:
+    model: str
+    source: str
+
+
+def engine_uses_model_placeholder(engine: EngineConfig) -> bool:
+    return any("{model}" in item for item in engine.args_template)
+
+
+def engine_uses_engine_args_placeholder(engine: EngineConfig) -> bool:
+    return "{engine_args}" in engine.args_template
+
+
+def engine_args_model_selector(engine_args: tuple[str, ...]) -> tuple[str, bool, bool]:
+    """Return the last CLI model selector plus present/malformed flags."""
+    model = ""
+    selector_present = False
+    malformed = False
+    index = 0
+    while index < len(engine_args):
+        arg = engine_args[index]
+        value: str | None = None
+        if arg in {"-m", "--model"}:
+            selector_present = True
+            if index + 1 >= len(engine_args):
+                malformed = True
+                index += 1
+                continue
+            value = engine_args[index + 1]
+            if value.strip().startswith("-"):
+                malformed = True
+                index += 1
+                continue
+            index += 2
+        elif arg.startswith("--model="):
+            selector_present = True
+            value = arg.split("=", 1)[1]
+            index += 1
+        elif arg in {"-c", "--config"}:
+            if index + 1 >= len(engine_args):
+                index += 1
+                continue
+            config_value = engine_args[index + 1]
+            match = re.fullmatch(r"\s*model\s*=\s*(.*?)\s*", config_value)
+            if match:
+                selector_present = True
+                value = match.group(1)
+            elif re.fullmatch(r"\s*model\s*", config_value):
+                selector_present = True
+                malformed = True
+            index += 2
+        elif arg.startswith("--config="):
+            config_value = arg.split("=", 1)[1]
+            match = re.fullmatch(r"\s*model\s*=\s*(.*?)\s*", config_value)
+            if match:
+                selector_present = True
+                value = match.group(1)
+            elif re.fullmatch(r"\s*model\s*", config_value):
+                selector_present = True
+                malformed = True
+            index += 1
+        else:
+            index += 1
+        if value is not None:
+            value = value.strip()
+            if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+                value = value[1:-1].strip()
+            if not value or value.startswith("-"):
+                malformed = True
+            else:
+                model = value
+    return model, selector_present, malformed
+
+
+def codex_config_override_is_malformed(engine_args: tuple[str, ...]) -> bool:
+    """Validate Codex CLI -c/--config key=value argument pairs."""
+    index = 0
+    while index < len(engine_args):
+        arg = engine_args[index]
+        if (arg.startswith("-c") and arg != "-c") or (
+            arg.startswith("-m") and arg != "-m"
+        ) or re.match(r"^\s*model\s*=", arg):
+            return True
+        if arg.startswith("--config="):
+            value = arg.split("=", 1)[1].strip()
+            if not value or "=" not in value:
+                return True
+            key, _separator, _configured_value = value.partition("=")
+            if not key.strip():
+                return True
+            index += 1
+            continue
+        if arg not in {"-c", "--config"}:
+            index += 1
+            continue
+        if index + 1 >= len(engine_args):
+            return True
+        value = engine_args[index + 1].strip()
+        if not value or value.startswith("-") or "=" not in value:
+            return True
+        key, _separator, _configured_value = value.partition("=")
+        if not key.strip():
+            return True
+        index += 2
+    return False
+
+
+def resolve_effective_model(
+    task: TaskSpec,
+    engine: EngineConfig | None,
+    *,
+    command: list[str] | None = None,
+    reported_model: str | None = None,
+) -> EffectiveModel:
+    """Resolve attribution from observed output, then the actual composed argv.
+
+    A manifest pin is an expectation, not stronger evidence than what the harness
+    says it ran.  The command is inspected after template expansion so a final
+    selector wins exactly as the worker CLI sees it.
+    """
+    reported = model_log_text(reported_model)
+    if reported:
+        return EffectiveModel(reported, "harness-reported")
+    if command:
+        model, _present, malformed = engine_args_model_selector(tuple(command))
+        if malformed:
+            return EffectiveModel("", "malformed-command-selector")
+        if model:
+            return EffectiveModel(model, "command-selector")
+    if not command:
+        model, _present, malformed = engine_args_model_selector(task.engine_args)
+        if malformed:
+            return EffectiveModel("", "malformed-engine-args")
+        if model:
+            return EffectiveModel(model, "engine-args")
+    if task.model:
+        return EffectiveModel(task.model, "task-model")
+    if engine is not None and engine.model_default:
+        return EffectiveModel(engine.model_default, "engine-default")
+    return EffectiveModel("", "unpinned")
 
 
 @dataclass(frozen=True)
@@ -1447,6 +1628,10 @@ class TaskRuntime:
     # 0.0s carries no diagnostics anywhere the operator looks.
     setup_error: str | None = None
     last_worker_command: list[str] = field(default_factory=list)
+    # The last harness identity is stronger attribution evidence than the
+    # composed argv. Clear this on every no-report attempt so retries cannot
+    # make state and final artifacts claim a stale model.
+    last_reported_model: str | None = None
     steering: dict[str, Any] | None = None
 
     def elapsed_s(self, now: float) -> float:
@@ -1621,17 +1806,20 @@ class StateWriter:
                 log_tail = tail_lines(runtime.log_path, line_count=3)
                 log_tail_full = tail_lines(runtime.log_path, line_count=40)
                 engine = self.engines.get(runtime.task.engine)
+                effective_model = resolve_effective_model(
+                    runtime.task,
+                    engine,
+                    command=runtime.last_worker_command,
+                    reported_model=runtime.last_reported_model,
+                )
                 process_name = engine.process_name if engine else runtime.task.engine
                 task_state = {
                     "key": runtime.task.key,
                     "status": runtime.status,
                     "verdict": runtime.final_verdict,
                     "engine": runtime.task.engine,
-                    "model": (
-                        runtime.task.model
-                        or (engine.model_default if engine else "")
-                        or effective_model_from_command(runtime.last_worker_command)
-                    ),
+                    "model": effective_model.model,
+                    "model_source": effective_model.source,
                     "spec": runtime.task.spec,
                     "spec_short": runtime.spec_short,
                     "verified": runtime.task.verified,
@@ -2383,11 +2571,16 @@ def catalog_explore_candidates(
     tested_models: set[str],
     limit: int = 10,
 ) -> list[dict[str, Any]]:
+    tested_model_keys = {
+        model_log_text(model).removeprefix("openrouter/") for model in tested_models
+    }
     candidates = [
         model
         for model in catalog_models
         if str(model.get("id", "")).strip() not in tested_models
         and str(model.get("id", "")).strip() not in RESERVED_FIXTURE_MODELS
+        and model_log_text(model.get("id")).removeprefix("openrouter/")
+        not in tested_model_keys
         and catalog_model_is_text_candidate(model)
     ]
     return sorted(
@@ -5106,7 +5299,7 @@ class EvalLogger:
             db_row = {
                 key: value
                 for key, value in row.items()
-                if key not in {"model", "reasoning_effort", "task_type", "retry"}
+                if key not in {"model", "model_source", "reasoning_effort", "task_type", "retry"}
             }
             try:
                 self._conn.execute(
@@ -8128,6 +8321,7 @@ class RingerRunner:
                 with self.lock:
                     runtime.worker_pid = None
                     runtime.status = "verifying"
+                    runtime.last_reported_model = model_log_text(worker.reported_model) or None
                     if worker.tokens is not None:
                         runtime.tokens = (runtime.tokens or 0) + worker.tokens
                 verify = await self.verifier.verify(runtime.task, runtime.taskdir)
@@ -8240,8 +8434,9 @@ class RingerRunner:
                     )
                     return False, (
                         f"worktree taskdir already exists (left by a previous "
-                        f"failed run?): {taskdir} — remove it with "
-                        f"`{remove_cmd}` and re-run"
+                        f"failed run?): {taskdir}. WARNING: inspect or preserve any "
+                        f"uncommitted work before force-removing it. After confirming it "
+                        f"is disposable, run `{remove_cmd}` and re-run"
                     )
                 return False, (
                     f"taskdir already exists but is not a registered git "
@@ -8503,21 +8698,33 @@ class RingerRunner:
         duration_ms: int,
     ) -> None:
         engine = self.config.engines.get(runtime.task.engine)
-        resolved_model = resolved_task_model(
+        reported_model = model_log_text(worker.reported_model) or None
+        with self.lock:
+            # Keep direct callers and setup-error paths consistent with the
+            # normal attempt loop, which updates this before verification.
+            runtime.last_reported_model = reported_model
+        expected = resolve_effective_model(
+            runtime.task, engine, command=runtime.last_worker_command
+        )
+        effective_model = resolve_effective_model(
             runtime.task,
             engine,
-            runtime.last_worker_command,
+            command=runtime.last_worker_command,
+            reported_model=reported_model,
         )
-        reported_model = model_log_text(worker.reported_model) or None
-        mismatch = bool(reported_model and resolved_model and reported_model != resolved_model)
-        stamped_model = reported_model or resolved_model
-        expected_model = resolved_model if mismatch else None
-        if mismatch:
+        # The expected selector is comparison evidence only.  Without a
+        # harness report, it would merely duplicate the resolved fallback.
+        expected_model = (
+            expected.model
+            if reported_model and expected.model and reported_model != expected.model
+            else None
+        )
+        if reported_model and expected.model and reported_model != expected.model:
             with contextlib.suppress(Exception):
                 append_text(
                     runtime.log_path,
                     f"[ringer.py] identity: harness reported {reported_model} "
-                    f"but manifest/config expected {resolved_model}\n",
+                    f"but command/manifest expected {expected.model}\n",
                 )
         reasoning_effort = effective_reasoning_effort_from_command(
             runtime.last_worker_command
@@ -8525,7 +8732,8 @@ class RingerRunner:
         notes_parts = [
             f"retry={'true' if retrying else 'false'}",
             f"worker_returncode={worker.returncode}",
-            f"model={stamped_model}",
+            f"model_source={effective_model.source}",
+            f"model={effective_model.model}",
             f"task_type={runtime.task.task_type}",
         ]
         if worker.error:
@@ -8537,7 +8745,7 @@ class RingerRunner:
         with contextlib.suppress(Exception):
             self._write_steering_observation(
                 runtime,
-                resolved_model=stamped_model,
+                resolved_model=effective_model.model,
                 retrying=retrying,
                 worker=worker,
                 verify=verify,
@@ -8558,7 +8766,8 @@ class RingerRunner:
                 "worker_tokens": worker.tokens,
                 "notes": "\n".join(notes_parts),
                 "orchestrator": self.identity,
-                "model": stamped_model,
+                "model": effective_model.model,
+                "model_source": effective_model.source,
                 "reported_model": reported_model,
                 "expected_model": expected_model,
                 "reasoning_effort": reasoning_effort,
@@ -8610,7 +8819,6 @@ class RingerRunner:
                 "verdict": verdict,
                 "duration_ms": duration_ms,
                 "worker_tokens": worker.tokens,
-                "check_excerpt": verify.raw_output_excerpt[:500],
             }
             path = (
                 steering_dir
@@ -8792,14 +9000,8 @@ def parse_reported_model(text: str, model_report_regex: str | None) -> str | Non
 
 def effective_model_from_command(command: list[str]) -> str:
     """Return the model selected by a composed worker argv, if present."""
-    for index, item in enumerate(command):
-        if item in {"-m", "--model"}:
-            if index + 1 >= len(command):
-                return ""
-            return command[index + 1]
-        if item.startswith("--model="):
-            return item.removeprefix("--model=")
-    return ""
+    model, _present, malformed = engine_args_model_selector(tuple(command))
+    return "" if malformed else model
 
 
 def effective_reasoning_effort_from_command(command: list[str]) -> str | None:
@@ -8820,11 +9022,7 @@ def resolved_task_model(
     engine: EngineConfig | None,
     command: list[str] | None = None,
 ) -> str:
-    return (
-        task.model
-        or (engine.model_default if engine else "")
-        or effective_model_from_command(command or [])
-    )
+    return resolve_effective_model(task, engine, command=command).model
 
 
 def build_worker_command(
@@ -8862,6 +9060,36 @@ def build_worker_command(
             .replace("{model}", resolved_model)
         )
     return command
+
+
+_VALIDATION_TASKDIR_SENTINEL = "--ringer-validation-taskdir"
+_VALIDATION_SPEC_SENTINEL = "--ringer-validation-spec"
+
+
+def compose_validation_worker_argv(
+    engine: EngineConfig,
+    *,
+    full_access: bool,
+    engine_args: tuple[str, ...] = (),
+    model: str = "",
+) -> tuple[str, ...]:
+    """Compose argv for validation without interpreting task paths or prompt text.
+
+    This intentionally delegates list-placeholder expansion and {model}
+    resolution to build_worker_command.  The inert sentinels make an
+    accidentally positional {spec}/{taskdir} value fail model-selector
+    validation rather than treating user-controlled content as routing.
+    """
+    return tuple(
+        build_worker_command(
+            engine,
+            taskdir=Path(_VALIDATION_TASKDIR_SENTINEL),
+            spec=_VALIDATION_SPEC_SENTINEL,
+            full_access=full_access,
+            engine_args=engine_args,
+            model=model,
+        )
+    )
 
 
 def print_steering_notes(manifest: Manifest, config: AppConfig) -> None:
@@ -8940,23 +9168,310 @@ def preflight_engine_bins(manifest: Manifest, config: AppConfig) -> None:
             )
 
 
+def restricted_model_family(model: str) -> str | None:
+    """Classify model selectors that must use a protected auth/subscription lane."""
+    lower = model.strip().lower()
+    if not lower:
+        return None
+    segments = [segment for segment in re.split(r"[/:]", lower) if segment]
+    if lower.startswith(("zai-coding-plan/", "openrouter/z-ai/", "z-ai/")) or any(
+        re.fullmatch(r"glm(?:[.-]?[0-9].*|-.*)?", segment) for segment in segments
+    ):
+        return "glm"
+    if "anthropic" in segments or any(
+        re.fullmatch(r"(?:claude|fable|haiku|sonnet|opus)(?:(?:[.-]|[0-9]).*)?", segment)
+        for segment in segments
+    ):
+        return "anthropic"
+    if "openai" in segments or any(
+        re.fullmatch(
+            r"(?:(?:gpt|chatgpt|codex)(?:(?:[.-]|[0-9]).*)?|o[0-9]+(?:[.-].*)?)",
+            segment,
+        )
+        for segment in segments
+    ):
+        return "openai"
+    return None
+
+
+def normalize_route_selector_value(value: str) -> str:
+    """Normalize a static provider/backend value without interpreting templates."""
+    normalized = value.strip()
+    if (
+        len(normalized) >= 2
+        and normalized[0] == normalized[-1]
+        and normalized[0] in {"'", '"'}
+    ):
+        normalized = normalized[1:-1].strip()
+    return normalized
+
+
+def protected_route_selector_key(key: str) -> bool:
+    """Whether a route-policy key selects a provider/backend family."""
+    normalized = key.strip().lstrip("-").lower().replace("_", "-").replace(".", "-")
+    return normalized.endswith(("provider", "backend"))
+
+
+def protected_route_selectors(args: tuple[str, ...]) -> list[tuple[str, str]]:
+    """Extract static provider/backend selectors from supported argv spellings.
+
+    This intentionally understands the same split, equals, bare-assignment,
+    and -c/--config assignment forms that the broader route policy blocks.
+    Dynamic template values are returned but cannot select a protected family.
+    """
+    selectors: list[tuple[str, str]] = []
+
+    def add_assignment(assignment: str) -> None:
+        cleaned = normalize_route_selector_value(assignment)
+        key, separator, value = cleaned.partition("=")
+        if separator and protected_route_selector_key(key):
+            selectors.append((key.strip(), normalize_route_selector_value(value)))
+
+    index = 0
+    while index < len(args):
+        arg = args[index].strip()
+        if arg in {"-c", "--config"}:
+            if index + 1 < len(args):
+                add_assignment(args[index + 1])
+                index += 2
+                continue
+        elif arg.startswith("--config="):
+            add_assignment(arg.split("=", 1)[1])
+            index += 1
+            continue
+        elif arg.startswith("-c") and arg != "-c":
+            add_assignment(arg[2:])
+            index += 1
+            continue
+
+        key, separator, value = arg.partition("=")
+        if separator and protected_route_selector_key(key):
+            selectors.append((key.strip(), normalize_route_selector_value(value)))
+            index += 1
+            continue
+        if protected_route_selector_key(arg) and index + 1 < len(args):
+            selectors.append((arg, normalize_route_selector_value(args[index + 1])))
+            index += 2
+            continue
+        index += 1
+    return selectors
+
+
+def model_selector_count(args: tuple[str, ...]) -> int:
+    """Count explicit -m/--model/-c model selectors in an argv tuple."""
+    count = 0
+    index = 0
+    while index < len(args):
+        arg = args[index]
+        if arg in {"-m", "--model"} or arg.startswith("--model="):
+            count += 1
+            index += 2 if arg in {"-m", "--model"} else 1
+            continue
+        if arg in {"-c", "--config"}:
+            if index + 1 < len(args) and re.fullmatch(
+                r"\s*model\s*=.*", args[index + 1]
+            ):
+                count += 1
+            index += 2
+            continue
+        if arg.startswith("--config="):
+            if re.fullmatch(r"\s*model\s*=.*", arg.split("=", 1)[1]):
+                count += 1
+            index += 1
+            continue
+        index += 1
+    return count
+
+
+def validate_auth_first_model_route(
+    task: TaskSpec,
+    engine: EngineConfig,
+    *,
+    composed_argv: tuple[str, ...],
+) -> None:
+    """Fail closed when a restricted family is paired with an untrusted lane."""
+    trusted_dir = (Path(__file__).resolve().parent / "engines").resolve()
+    try:
+        engine_path = Path(engine.bin).expanduser().resolve()
+    except OSError:
+        engine_path = Path(engine.bin)
+    trusted_wrapper = (
+        engine_path.parent == trusted_dir
+        and engine_path.name in {
+            "codex-oauth.sh", "claude-oauth.sh", "opencode-auth-policy.sh"
+        }
+    )
+    takes_model = engine_uses_model_placeholder(engine)
+    composed_model, composed_has_model_selector, _composed_model_malformed = (
+        engine_args_model_selector(composed_argv)
+    )
+    static_restricted_models = [
+        token.strip()
+        for token in engine.args_template
+        if "{" not in token and restricted_model_family(token.strip()) is not None
+    ]
+    model_capable = (
+        takes_model
+        or "{model_args}" in engine.args_template
+        or composed_has_model_selector
+        or bool(static_restricted_models)
+    )
+    if model_capable and not trusted_wrapper and not engine.auth_routing_trusted:
+        raise ValueError(
+            f"task {task.key}: custom model engine {engine.name} requires "
+            "auth_routing_trusted=true; restricted families still require trusted wrappers"
+        )
+    if engine_uses_engine_args_placeholder(engine) and not trusted_wrapper:
+        route_override = re.compile(
+            r"^(?:--[a-z0-9_.-]*(?:provider|profile|backend|config|setting|agent|attach|"
+            r"base[-_.]?url|endpoint|host|url|gateway|server|remote)[a-z0-9_.-]*(?:=|$)"
+            r"|[a-z0-9_.-]*(?:provider|profile|backend|config|setting|agent|attach|"
+            r"base[-_.]?url|endpoint|host|url|gateway|server|remote)[a-z0-9_.-]*="
+            r"|-(?:a|b|c|p|s)(?:.+)?$)",
+            re.IGNORECASE,
+        )
+        if any(route_override.match(token.strip()) for token in task.engine_args):
+            raise ValueError(
+                f"task {task.key}: custom engine {engine.name} has a manifest-controlled "
+                "provider/profile/backend/config/settings/agent/attach/endpoint override"
+            )
+
+    expected_wrapper = {
+        "anthropic": "claude-oauth.sh",
+        "openai": "codex-oauth.sh",
+        "glm": "opencode-auth-policy.sh",
+    }
+    protected_routes = (
+        protected_route_selectors(engine.args_template)
+        + protected_route_selectors(task.engine_args)
+        + protected_route_selectors(composed_argv)
+    )
+    for selector, route_value in protected_routes:
+        family = restricted_model_family(route_value)
+        if family is None:
+            continue
+        wrapper = expected_wrapper[family]
+        if engine_path != trusted_dir / wrapper:
+            raise ValueError(
+                f"task {task.key}: restricted {family} route selector {selector!r}="
+                f"{route_value!r} requires the trusted engines/{wrapper} wrapper"
+            )
+    candidates: list[str] = []
+    for candidate in (
+        task.model,
+        engine.model_default,
+        composed_model,
+        *static_restricted_models,
+    ):
+        if candidate and "{" not in candidate and candidate not in candidates:
+            candidates.append(candidate)
+    for model in candidates:
+        family = restricted_model_family(model)
+        if family is None:
+            continue
+        wrapper = expected_wrapper[family]
+        if family == "glm":
+            lower_model = model.strip().lower()
+            suffix = lower_model.removeprefix("zai-coding-plan/glm-")
+            if (
+                not lower_model.startswith("zai-coding-plan/glm-")
+                or not suffix
+                or "/" in suffix
+            ):
+                raise ValueError(
+                    f"task {task.key}: restricted glm model {model!r} requires "
+                    "the Z.AI Coding Plan selector zai-coding-plan/glm-*"
+                )
+        if engine_path != trusted_dir / wrapper:
+            raise ValueError(
+                f"task {task.key}: restricted {family} model {model!r} requires "
+                f"the trusted engines/{wrapper} wrapper"
+            )
+    if not trusted_wrapper and engine_path.name.lower() in {
+        "opencode", "opencode.exe", "claude", "claude.exe", "codex", "codex.exe"
+    }:
+        raise ValueError(
+            f"task {task.key}: direct model harness {engine_path.name!r} requires its trusted auth-policy wrapper"
+        )
+
+
 def validate_manifest_engines(manifest: Manifest, config: AppConfig) -> None:
     missing = sorted({task.engine for task in manifest.tasks if task.engine not in config.engines})
     if missing:
         raise ValueError(f"unknown worker engine(s): {', '.join(missing)}")
+    trusted_dir = (Path(__file__).resolve().parent / "engines").resolve()
+    auth_routing_enabled = any(
+        Path(candidate.bin).expanduser().resolve().parent == trusted_dir
+        and Path(candidate.bin).name in {
+            "codex-oauth.sh", "claude-oauth.sh", "opencode-auth-policy.sh"
+        }
+        for candidate in config.engines.values()
+    )
     for task in manifest.tasks:
         engine = config.engines[task.engine]
-        requires_model = any("{model}" in item for item in engine.args_template)
-        accepts_model = requires_model or "{model_args}" in engine.args_template
-        if requires_model and not (task.model or engine.model_default):
+        takes_model = engine_uses_model_placeholder(engine)
+        accepts_model = takes_model or "{model_args}" in engine.args_template
+        if takes_model and not (task.model or engine.model_default):
             raise ValueError(
                 f"task {task.key}: engine {engine.name} needs a model — set the task's "
                 f"\"model\" field or engines.{engine.name}.model_default in config.toml"
+            )
+        composed_argv = compose_validation_worker_argv(
+            engine,
+            full_access=task.full_access,
+            engine_args=task.engine_args,
+            model=task.model,
+        )
+        if (engine.name == "codex" or Path(engine.bin).name == "codex") and (
+            codex_config_override_is_malformed(composed_argv)
+        ):
+            raise ValueError(
+                f"task {task.key}: composed Codex command contains malformed -c/--config "
+                "or unsupported compact selector; use split -c/--config key=value or "
+                "-m/--model value forms"
+            )
+        _composed_model, _composed_has_model_selector, malformed_model_selector = (
+            engine_args_model_selector(composed_argv)
+        )
+        if malformed_model_selector:
+            raise ValueError(
+                f"task {task.key}: composed worker command contains a malformed model selector; "
+                "-m, --model, and '-c/--config model=...' require a non-empty model value "
+                "that is not another option"
+            )
+        if model_selector_count(composed_argv) > 1:
+            raise ValueError(
+                f"task {task.key}: composed worker command contains a second model selector"
+            )
+        _engine_args_model, engine_args_has_model_selector, engine_args_malformed = (
+            engine_args_model_selector(task.engine_args)
+        )
+        if engine_args_malformed:
+            raise ValueError(
+                f"task {task.key}: engine_args contains a malformed model selector; "
+                "-m, --model, and '-c/--config model=...' require a non-empty model value "
+                "that is not another option"
+            )
+        if takes_model and engine_args_has_model_selector:
+            raise ValueError(
+                f"task {task.key}: engine {engine.name} has a {{model}} placeholder, so "
+                "engine_args must not contain -m, --model, or '-c/--config model=...' selectors"
+            )
+        if "{model_args}" in engine.args_template and engine_args_has_model_selector:
+            raise ValueError(
+                f"task {task.key}: engine {engine.name} has a {{model_args}} placeholder, so "
+                "engine_args must not contain a second model selector"
             )
         if task.model and not accepts_model:
             raise ValueError(
                 f"task {task.key}: \"model\" is set but engine {engine.name} has no "
                 "{model} placeholder in its args_template, so it would be silently ignored"
+            )
+        if auth_routing_enabled:
+            validate_auth_first_model_route(
+                task,
+                engine,
+                composed_argv=composed_argv,
             )
 
 
@@ -9188,7 +9703,9 @@ def shorten(value: str, limit: int) -> str:
     return clean[: max(0, limit - 3)] + "..."
 
 
-async def run_baseline(manifest: Manifest, *, config: AppConfig) -> int:
+async def run_baseline(
+    manifest: Manifest, *, config: AppConfig | None, strict: bool = False
+) -> int:
     """Execute every task's CHECK against the unmodified tree. Spawn nothing.
 
     The point: a check assertion that encodes NEW behavior is *expected* to
@@ -9297,7 +9814,7 @@ async def run_baseline(manifest: Manifest, *, config: AppConfig) -> int:
         "behavior means the check itself is broken and will burn worker attempts\n"
         "against something no model can satisfy — fix the check before spawning."
     )
-    return 0
+    return 1 if strict and (failures or errors) else 0
 
 
 def append_text(path: Path, text: str) -> None:
@@ -9932,6 +10449,11 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     run_parser.add_argument(
+        "--baseline-strict",
+        action="store_true",
+        help="with --baseline, return nonzero when any baseline check FAILs or ERRORs",
+    )
+    run_parser.add_argument(
         "--allow-noncanonical-route",
         action="store_true",
         help="allow a registry-marked noncanonical model route for a deliberate bakeoff",
@@ -10043,7 +10565,7 @@ def main(argv: list[str] | None = None) -> int:
                 return 1
             if result.status == "error":
                 print(f"Self-update check failed: {result.reason}.")
-                return 0
+                return 2
             print(f"Self-update skipped: {result.reason or 'not available'}.")
             return 0
         if args.command == "install-agent":
@@ -10114,10 +10636,16 @@ def main(argv: list[str] | None = None) -> int:
                 force_browser=args.browser,
             )
             return 0
-        if getattr(args, "baseline", False):
+        if getattr(args, "baseline", False) or getattr(args, "baseline_strict", False):
             # Deliberately before preflight_engine_bins: baseline spawns no
             # workers, so a missing engine binary must not block it.
-            return asyncio.run(run_baseline(manifest, config=config))
+            return asyncio.run(
+                run_baseline(
+                    manifest,
+                    config=config,
+                    strict=bool(getattr(args, "baseline_strict", False)),
+                )
+            )
         preflight_engine_bins(manifest, config)
         if args.command == "run":
             start_catalog_auto_refresh()

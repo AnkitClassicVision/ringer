@@ -25,9 +25,9 @@ allow_full_access = false
 [update]
 # Check origin/main before command dispatch and let a long-running HUD check
 # again on this interval. Updates apply only as a clean ff-only move on main.
-# Set auto=false to disable both automatic paths; `./ringer.py self-update`
-# remains available as an explicit check.
-# auto = true
+# Automatic network/update checks are disabled by default. Set true only when
+# this checkout is intentionally allowed to check and fast-forward itself.
+auto = false
 # check_interval_s = 3600
 # For one command, pass --no-self-update. To disable automatic checks in an
 # environment or service, set RINGER_NO_SELF_UPDATE=1.
@@ -37,7 +37,8 @@ allow_full_access = false
 # directory automatically as attempts finish.
 # [steering]
 # dir = "~/.ringer/steering"
-# inject_candidates = true
+# Candidate steering is opt-in; TOML booleans only.
+inject_candidates = false
 
 [eval]
 # Safe public default: write one JSON object per attempt to a local JSONL file.
@@ -52,9 +53,9 @@ jsonl_path = "~/.ringer/runs.jsonl"
 # env_file = "~/.supabase.env"
 
 [engines.codex]
-# Public default resolves this with shutil.which("codex"). Set an absolute path
-# here only for machine-specific installs.
-bin = "codex"
+# Point this at the checkout's OAuth wrapper. It strips API-key/base-URL routes,
+# requires `codex login status` to report ChatGPT, and forces user-config isolation.
+bin = "/absolute/path/to/ringer/engines/codex-oauth.sh"
 
 # Placeholders:
 # - {taskdir}: task working directory
@@ -71,6 +72,7 @@ bin = "codex"
 args_template = [
   "exec",
   "--skip-git-repo-check",
+  "--ignore-user-config",
   "{access_args}",
   "{model_args}",
   "{engine_args}",
@@ -105,6 +107,7 @@ model_report_regex = "(?m)^model:[ \\t]*([^ \\t\\r\\n]+)[ \\t]*\\r?$"
 # [engines.grok]
 # bin = "grok"
 # model_default = "grok-composer-2.5-fast"
+# auth_routing_trusted = true  # explicit custom-harness capability; protected families still blocked
 # args_template = [
 #   "--cwd",
 #   "{taskdir}",
@@ -136,39 +139,68 @@ model_report_regex = "(?m)^model:[ \\t]*([^ \\t\\r\\n]+)[ \\t]*\\r?$"
 # sandbox_args = []
 # full_access_args = []
 
-# OpenCode + OpenRouter — the universal model harness. One engine block runs
-# ANY OpenRouter-served model: the {model} placeholder is filled per task from
-# the manifest's "model" field, falling back to model_default below. Example
-# default: GLM-5.2 (z-ai/glm-5.2, roughly $0.74/M input, $2.33/M output as of
-# 2026-07) — the cheap-intelligence lane.
-# OpenCode has no OS sandbox, so `bin` points at engines/opencode-sandboxed.sh
-# (macOS Seatbelt: network + reads open, writes confined to the task dir, a
-# per-run scratch dir, and OpenCode's state/config dirs). Auth: put your
-# OpenRouter key where your OpenCode version expects it — commonly
-# ~/.local/share/opencode/auth.json ({"openrouter": {"type": "api", "key": "..."}});
-# confirm the path with your installed CLI.
-# Per-task engine_args can set reasoning effort ("--variant", "low|high|max").
-# Uncomment and set an absolute path for `bin` to enable.
-# [engines.opencode]
-# bin = "/absolute/path/to/ringer/engines/opencode-sandboxed.sh"
-# model_default = "openrouter/z-ai/glm-5.2"
-# args_template = [
-#   "{taskdir}",
-#   "{access_args}",
-#   "run",
-#   "-m",
-#   "{model}",
-#   "--dangerously-skip-permissions",
-#   "--format",
-#   "json",
-#   "{engine_args}",
-#   "--dir",
-#   "{taskdir}",
-#   "{spec}",
-# ]
-# sandbox_args = []
-# full_access_args = ["--no-sandbox"]
-# token_regex = '"tokens":\{"total":([0-9]+)'
+# Policy-guarded OpenCode lane. Anthropic and OpenAI are rejected; GLM is
+# permitted only through Z.AI Coding Plan. Caller/global/project config and
+# plugins cannot redirect the protected lane. Coding Plan is subscription API
+# authentication rather than OAuth; configure it interactively with
+# `opencode auth login`.
+[engines.opencode]
+bin = "/absolute/path/to/ringer/engines/opencode-auth-policy.sh"
+model_default = "zai-coding-plan/glm-5.2"
+args_template = [
+  "{taskdir}",
+  "{access_args}",
+  "run",
+  "-m",
+  "{model}",
+  "--dangerously-skip-permissions",
+  "--format",
+  "json",
+  "{engine_args}",
+  "--dir",
+  "{taskdir}",
+  "{spec}",
+]
+sandbox_args = []
+full_access_args = ["--no-sandbox"]
+token_regex = '"tokens":\\{"total":([0-9]+)'
+
+[engines.glm-coding-plan]
+bin = "/absolute/path/to/ringer/engines/opencode-auth-policy.sh"
+model_default = "zai-coding-plan/glm-5.2"
+args_template = ["{taskdir}", "{access_args}", "run", "-m", "{model}", "--dangerously-skip-permissions", "--format", "json", "{engine_args}", "--dir", "{taskdir}", "{spec}"]
+sandbox_args = []
+full_access_args = ["--no-sandbox"]
+token_regex = '"tokens":\\{"total":([0-9]+)'
+
+# Claude Code OAuth lane. The wrapper verifies claude.ai first-party auth,
+# scrubs API routes, and forces safe mode with no user/project/local settings.
+[engines.claude]
+bin = "/absolute/path/to/ringer/engines/claude-oauth.sh"
+model_default = "sonnet"
+args_template = ["-p", "--model", "{model}", "--permission-mode", "acceptEdits", "--output-format", "text", "--no-session-persistence", "{engine_args}", "{spec}"]
+sandbox_args = []
+full_access_args = []
+token_regex = ""
+
+# ByteDance Seedance through OpenRouter's first-class Video API. This is a
+# media-generation engine, not an OpenCode text-model alias. Set bin to this
+# clone's executable adapter path. Auth is resolved by the adapter.
+[engines.seedance]
+bin = "/absolute/path/to/ringer/engines/openrouter-video.py"
+model_default = "bytedance/seedance-2.0"
+auth_routing_trusted = true
+args_template = [
+  "--taskdir",
+  "{taskdir}",
+  "--model",
+  "{model}",
+  "--prompt",
+  "{spec}",
+  "{engine_args}",
+]
+sandbox_args = []
+full_access_args = []
 
 [artifact]
 # Zero-LLM, self-contained HTML artifacts rendered directly from state — no model calls, no

@@ -1,0 +1,45 @@
+{
+  "status": "HOLD",
+  "build_units": [
+    {
+      "id": "U1-output",
+      "state": "PARTIAL",
+      "verification_command": "python3 -c \"from pathlib import Path; assert Path('owned/output.txt').read_text(encoding='utf-8') == 'ready'\"",
+      "verification_result": {
+        "passed": false,
+        "exit_code": null,
+        "summary": "Verification is intentionally pending the consequential boundary decision."
+      }
+    }
+  ],
+  "deviations": [],
+  "holds": [
+    {
+      "id": "H-1",
+      "unknown": "U-BOUNDARY",
+      "consequence": "Proceeding would select a user-visible contract without the correct decision owner.",
+      "evidence": "The staged decision packet does not resolve the visible contract choice.",
+      "options": [
+        {
+          "option": "Keep the current marker",
+          "tradeoff": "Preserves behavior but may miss the intended user-visible label."
+        },
+        {
+          "option": "Route to Fable",
+          "tradeoff": "Adds one review boundary but preserves decision rights."
+        }
+      ],
+      "owner": "fable",
+      "safe_remaining_work": "Repository inspection and all non-consequential scaffolding have been completed."
+    }
+  ],
+  "probes": [],
+  "diff_summary": {
+    "paths_touched": [
+      "owned/output.txt"
+    ],
+    "files_changed": 1,
+    "insertions": 1,
+    "deletions": 0
+  }
+}

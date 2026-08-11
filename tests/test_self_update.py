@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import subprocess
 import sys
@@ -8,6 +10,7 @@ import tempfile
 import unittest
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -18,10 +21,12 @@ from ringer import (  # noqa: E402
     EvalConfig,
     UpdateConfig,
     hud_should_restart,
+    load_update_config,
     maybe_self_update,
     perform_self_update,
     self_update_state_path,
 )
+import ringer  # noqa: E402
 
 
 class SelfUpdateTests(unittest.TestCase):
@@ -228,6 +233,27 @@ class SelfUpdateTests(unittest.TestCase):
         )
         result = maybe_self_update(self.argv, config=disabled, runner=self.fail_runner, environ={})
         self.assertEqual("disabled by config", result.reason)
+
+    def test_load_update_config_defaults_auto_to_false_and_rejects_non_boolean(self) -> None:
+        self.assertFalse(load_update_config(None).auto)
+        for value in ("true", 1, None):
+            with self.subTest(value=value):
+                with self.assertRaisesRegex(ValueError, "update.auto must be a TOML boolean"):
+                    load_update_config({"auto": value})
+
+    def test_explicit_self_update_returns_nonzero_when_update_errors(self) -> None:
+        with (
+            mock.patch.object(ringer, "maybe_self_update"),
+            mock.patch.object(ringer.AppConfig, "load", return_value=self.config),
+            mock.patch.object(
+                ringer,
+                "perform_self_update",
+                return_value=ringer.SelfUpdateResult("error", reason="fixture update error"),
+            ) as update,
+            contextlib.redirect_stdout(io.StringIO()),
+        ):
+            self.assertEqual(2, ringer.main(["self-update"]))
+        update.assert_called_once()
 
     def test_fetch_failure_is_recorded_and_does_not_raise(self) -> None:
         missing = self.root / "missing-origin.git"
