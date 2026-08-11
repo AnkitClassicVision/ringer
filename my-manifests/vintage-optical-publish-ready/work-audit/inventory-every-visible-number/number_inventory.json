@@ -1,0 +1,984 @@
+{
+  "audit_scope": {
+    "report": "vintage-optical-morton/2026-07-30",
+    "artifacts": [
+      "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30/onepager.html",
+      "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30/onepager.pdf"
+    ],
+    "visibility": "internal_only_unroomed",
+    "external_actions_taken": "none",
+    "counting_rule": "Each visible atomic digit-bearing token is an occurrence. Source IDs and Fix Card IDs are counted as whole tokens. Spelled-out numeric words are also counted. The HTML and PDF render the same content, so matching occurrences are recorded once with both surfaces rather than doubled.",
+    "url_rule": "Numeric strings that exist only inside href targets, SVG geometry, CSS, metadata, or ARIA text are not visible page occurrences. No URL is printed as visible text; therefore the visible URL-only-token count is zero."
+  },
+  "visible_occurrences": [
+    {
+      "token": "605",
+      "category": "address_number",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D001", "location": "hero subject line"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Street number in the displayed practice address, not an analytic quantity.",
+      "lineage_label": "Practice address"
+    },
+    {
+      "token": "S01",
+      "category": "source_identifier",
+      "occurrence_count": 7,
+      "occurrences": [
+        {"id": "D002", "location": "hero subject citation"},
+        {"id": "D013", "location": "The Read, score-summary citation"},
+        {"id": "D016", "location": "The Read, evidence-boundary citation"},
+        {"id": "D043", "location": "Practice Competitiveness citation"},
+        {"id": "D067", "location": "Digital Presence citation"},
+        {"id": "D107", "location": "F-003 action citation"},
+        {"id": "D114", "location": "footer Method citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the official subject website; its digits identify a source and are not a measured value."
+    },
+    {
+      "token": "S02",
+      "category": "source_identifier",
+      "occurrence_count": 4,
+      "occurrences": [
+        {"id": "D003", "location": "hero subject citation"},
+        {"id": "D101", "location": "F-002 action citation"},
+        {"id": "D108", "location": "F-003 action citation"},
+        {"id": "D115", "location": "footer Method citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the official subject hours/location page."
+    },
+    {
+      "token": "N00",
+      "category": "source_identifier",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D004", "location": "hero subject citation"},
+        {"id": "D113", "location": "F-003 evidence link"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered Nominatim subject-geocode receipt ID; 00 is an identifier suffix, not a zero-valued observation."
+    },
+    {
+      "token": "54",
+      "category": "substantive_score",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D005", "location": "hero Client Opportunity score"},
+        {"id": "D010", "location": "The Read score summary"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Repeated display of the derived Client Opportunity Score.",
+      "lineage_label": "Client Opportunity score"
+    },
+    {
+      "token": "100",
+      "category": "formula_token",
+      "occurrence_count": 8,
+      "occurrences": [
+        {"id": "D006", "location": "hero Client Opportunity scale denominator"},
+        {"id": "D027", "location": "Market Demand-Supply scale denominator"},
+        {"id": "D042", "location": "Room to Win scale denominator"},
+        {"id": "D046", "location": "Practice Competitiveness scale denominator"},
+        {"id": "D066", "location": "Digital Presence scale denominator"},
+        {"id": "D074", "location": "Dry eye specialty scale denominator"},
+        {"id": "D079", "location": "Myopia specialty scale denominator"},
+        {"id": "D083", "location": "Specialty-contact scale denominator"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Display scale denominator for high-good scores. It is not eight separate measured facts; the same 0-to-100 score scale is repeated."
+    },
+    {
+      "token": "S14",
+      "category": "source_identifier",
+      "occurrence_count": 8,
+      "occurrences": [
+        {"id": "D007", "location": "hero score context citation"},
+        {"id": "D024", "location": "Your Market intro citation"},
+        {"id": "D028", "location": "Market Demand-Supply citation"},
+        {"id": "D031", "location": "population citation"},
+        {"id": "D034", "location": "under-18 citation"},
+        {"id": "D037", "location": "age-65-plus citation"},
+        {"id": "D077", "location": "myopia specialty citation"},
+        {"id": "D116", "location": "footer Method citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for Census QuickFacts."
+    },
+    {
+      "token": "S16",
+      "category": "source_identifier",
+      "occurrence_count": 7,
+      "occurrences": [
+        {"id": "D008", "location": "hero score context citation"},
+        {"id": "D015", "location": "The Read score-summary citation"},
+        {"id": "D018", "location": "The Read evidence-boundary citation"},
+        {"id": "D069", "location": "Digital Presence citation"},
+        {"id": "D105", "location": "F-002 evidence link"},
+        {"id": "D109", "location": "F-003 action citation"},
+        {"id": "D119", "location": "footer Limits citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the dated, partial Google Maps sample."
+    },
+    {
+      "token": "43",
+      "category": "substantive_score",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D009", "location": "The Read score summary"},
+        {"id": "D041", "location": "Room to Win score"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Repeated display of Room to Win, derived as 100 minus the internal Competitive Pressure Index.",
+      "lineage_label": "Room to Win score"
+    },
+    {
+      "token": "58",
+      "category": "substantive_score",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D011", "location": "The Read score summary"},
+        {"id": "D045", "location": "Practice Competitiveness score"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Repeated display of the derived Practice Competitiveness Score.",
+      "lineage_label": "Practice Competitiveness score"
+    },
+    {
+      "token": "57",
+      "category": "substantive_score",
+      "occurrence_count": 3,
+      "occurrences": [
+        {"id": "D012", "location": "The Read Digital Presence summary"},
+        {"id": "D026", "location": "Market Demand-Supply score"},
+        {"id": "D065", "location": "Digital Presence score"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Three visible occurrences represent two different derived scores: Market Demand-Supply and Digital Presence. The hidden internal Competitive Pressure Index also equals 57 but is not a visible page occurrence.",
+      "lineage_labels": ["Market Demand-Supply score", "Digital Presence score"]
+    },
+    {
+      "token": "S06",
+      "category": "source_identifier",
+      "occurrence_count": 8,
+      "occurrences": [
+        {"id": "D014", "location": "The Read score-summary citation"},
+        {"id": "D017", "location": "The Read evidence-boundary citation"},
+        {"id": "D044", "location": "Practice Competitiveness citation"},
+        {"id": "D068", "location": "Digital Presence citation"},
+        {"id": "D087", "location": "Opportunity unknown-inputs citation set 1"},
+        {"id": "D091", "location": "Opportunity unknown-inputs citation set 2"},
+        {"id": "D099", "location": "F-001 evidence link"},
+        {"id": "D102", "location": "F-002 action citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the public booking vendor flow."
+    },
+    {
+      "token": "S03",
+      "category": "source_identifier",
+      "occurrence_count": 5,
+      "occurrences": [
+        {"id": "D019", "location": "The Read action citation"},
+        {"id": "D070", "location": "dry-eye specialty citation"},
+        {"id": "D084", "location": "Opportunity unknown-inputs citation set 1"},
+        {"id": "D088", "location": "Opportunity unknown-inputs citation set 2"},
+        {"id": "D095", "location": "F-001 action citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the official dry-eye service page."
+    },
+    {
+      "token": "S04",
+      "category": "source_identifier",
+      "occurrence_count": 5,
+      "occurrences": [
+        {"id": "D020", "location": "The Read action citation"},
+        {"id": "D075", "location": "myopia specialty citation"},
+        {"id": "D085", "location": "Opportunity unknown-inputs citation set 1"},
+        {"id": "D089", "location": "Opportunity unknown-inputs citation set 2"},
+        {"id": "D096", "location": "F-001 action citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the official myopia-management page."
+    },
+    {
+      "token": "S05",
+      "category": "source_identifier",
+      "occurrence_count": 5,
+      "occurrences": [
+        {"id": "D021", "location": "The Read action citation"},
+        {"id": "D080", "location": "specialty-contact citation"},
+        {"id": "D086", "location": "Opportunity unknown-inputs citation set 1"},
+        {"id": "D090", "location": "Opportunity unknown-inputs citation set 2"},
+        {"id": "D097", "location": "F-001 action citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the official specialty-contact page."
+    },
+    {
+      "token": "1",
+      "category": "structural_section_number",
+      "occurrence_count": 3,
+      "occurrences": [
+        {"id": "D022", "location": "Your Market section spine", "structural_reason": "Ordinal section label only; it carries no magnitude or evidence claim."},
+        {"id": "D049", "location": "Focus On Eyes TIER 1 label", "structural_reason": "Peer-taxonomy label; it names the direct-peer class and is not a count, rank measurement, or score."},
+        {"id": "D053", "location": "Tri-County + VCC TIER 1 label", "structural_reason": "Peer-taxonomy label; it names the direct-peer class and is not a count, rank measurement, or score."}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "All three uses are display organization or taxonomy, not quantitative evidence."
+    },
+    {
+      "token": "20",
+      "category": "substantive_duration_count",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D023", "location": "Your Market catchment limitation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Selected exurban primary catchment duration, displayed only to state that city data is not a measured 20-minute catchment.",
+      "lineage_label": "Primary catchment duration"
+    },
+    {
+      "token": "S15",
+      "category": "source_identifier",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D025", "location": "Your Market intro citation"},
+        {"id": "D118", "location": "footer Limits citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for Census ACS documentation."
+    },
+    {
+      "token": "17,557",
+      "category": "substantive_raw_public_fact",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D029", "location": "Your Market population cell"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Raw 2024 Census QuickFacts population estimate for Morton city, not the drive-time catchment.",
+      "lineage_label": "Morton 2024 population estimate"
+    },
+    {
+      "token": "2024",
+      "category": "year_copyright",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D030", "location": "population metric label"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Reference year attached to the 17,557 city population estimate; it is substantive context, not a score.",
+      "lineage_label": "Morton 2024 population estimate"
+    },
+    {
+      "token": "25.9%",
+      "category": "substantive_raw_public_fact",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D032", "location": "Your Market under-age-18 metric"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Raw Census QuickFacts city percentage used only as a directional family-demand proxy.",
+      "lineage_label": "Morton under 18 share"
+    },
+    {
+      "token": "18",
+      "category": "substantive_raw_public_fact",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D033", "location": "Under age 18 metric label"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Age threshold defining the 25.9% Census measure, not a separate population value.",
+      "lineage_label": "Morton under 18 share"
+    },
+    {
+      "token": "23.1%",
+      "category": "substantive_raw_public_fact",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D035", "location": "Your Market age-65-plus metric"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Raw Census QuickFacts city percentage used only as a directional age-demand proxy.",
+      "lineage_label": "Morton age 65 plus (65 or older) share"
+    },
+    {
+      "token": "65",
+      "category": "substantive_raw_public_fact",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D036", "location": "Age 65 or older metric label"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Age threshold defining the 23.1% Census measure, not a separate population value.",
+      "lineage_label": "Morton age 65 plus (65 or older) share"
+    },
+    {
+      "token": "2",
+      "category": "structural_section_number",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D038", "location": "Your Competition section spine", "structural_reason": "Ordinal section label only; it carries no magnitude or evidence claim."},
+        {"id": "D056", "location": "Bard + Illinois Eye TIER 2 label", "structural_reason": "Peer-taxonomy label for substitutes/context; it is not a count, rank measurement, or score."}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Both uses organize the page or peer taxonomy."
+    },
+    {
+      "token": "R01",
+      "category": "source_identifier",
+      "occurrence_count": 3,
+      "occurrences": [
+        {"id": "D039", "location": "Room to Win citation"},
+        {"id": "D052", "location": "4.07-minute route citation"},
+        {"id": "D117", "location": "footer Method citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered OSRM route receipt ID for Vintage Optical to Focus On Eyes."
+    },
+    {
+      "token": "R05",
+      "category": "source_identifier",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D040", "location": "Room to Win citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered OSRM route receipt ID for Vintage Optical to Bard Optical East Peoria."
+    },
+    {
+      "token": "R03",
+      "category": "source_identifier",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D047", "location": "bounded-peer-set limitation citation"},
+        {"id": "D059", "location": "complete-census limitation citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered OSRM route receipt ID for Tri-County Eye Center."
+    },
+    {
+      "token": "R04",
+      "category": "source_identifier",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D048", "location": "bounded-peer-set limitation citation"},
+        {"id": "D060", "location": "complete-census limitation citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered OSRM route receipt ID for Vision Care Center Washington."
+    },
+    {
+      "token": "4.07",
+      "category": "substantive_route_fact",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D050", "location": "Focus On Eyes peer note"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Stored OSRM point-to-point duration from Vintage Optical to Focus On Eyes.",
+      "lineage_label": "Focus On Eyes route minutes"
+    },
+    {
+      "token": "S07",
+      "category": "source_identifier",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D051", "location": "Focus On Eyes peer-note citation"},
+        {"id": "D081", "location": "specialty-contact citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the official Focus On Eyes website."
+    },
+    {
+      "token": "S08",
+      "category": "source_identifier",
+      "occurrence_count": 4,
+      "occurrences": [
+        {"id": "D054", "location": "Tri-County + VCC peer citation"},
+        {"id": "D061", "location": "peer-page limitation citation"},
+        {"id": "D071", "location": "dry-eye specialty citation"},
+        {"id": "D120", "location": "footer Limits citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the official Tri-County Eye Center website."
+    },
+    {
+      "token": "S10",
+      "category": "source_identifier",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D055", "location": "Tri-County + VCC peer citation"},
+        {"id": "D076", "location": "myopia specialty citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the Vision Care Center myopia-control page."
+    },
+    {
+      "token": "S11",
+      "category": "source_identifier",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D057", "location": "Bard + Illinois Eye peer citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the Bard Optical East Peoria page."
+    },
+    {
+      "token": "S12",
+      "category": "source_identifier",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D058", "location": "Bard + Illinois Eye peer citation"},
+        {"id": "D063", "location": "peer-page limitation citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the Illinois Eye Center Washington page."
+    },
+    {
+      "token": "S09",
+      "category": "source_identifier",
+      "occurrence_count": 3,
+      "occurrences": [
+        {"id": "D062", "location": "peer-page limitation citation"},
+        {"id": "D072", "location": "dry-eye specialty citation"},
+        {"id": "D121", "location": "footer Limits citation"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Registered source ID for the official Vision Care Center website."
+    },
+    {
+      "token": "3",
+      "category": "structural_section_number",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D064", "location": "Your Opportunity section spine", "structural_reason": "Ordinal section label only; it carries no magnitude or evidence claim."}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Display-only section ordinal."
+    },
+    {
+      "token": "52",
+      "category": "substantive_score",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "D073", "location": "dry-eye / ocular-surface specialty score"},
+        {"id": "D078", "location": "myopia-management specialty score"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Two different specialty lanes independently compute to the same directional score.",
+      "lineage_labels": ["Dry eye / ocular surface specialty score", "Myopia management specialty score"]
+    },
+    {
+      "token": "51",
+      "category": "substantive_score",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D082", "location": "specialty-contact-lenses score"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Derived directional specialty-contact-lenses score.",
+      "lineage_label": "Specialty contact lenses score"
+    },
+    {
+      "token": "30",
+      "category": "substantive_duration_count",
+      "occurrence_count": 7,
+      "occurrences": [
+        {"id": "D092", "location": "First 30 Days heading"},
+        {"id": "D094", "location": "F-001 action measurement window"},
+        {"id": "D098", "location": "F-001 owner/timing line"},
+        {"id": "D103", "location": "F-002 owner/timing line"},
+        {"id": "D104", "location": "F-002 proof measurement window"},
+        {"id": "D110", "location": "F-003 owner/timing line"},
+        {"id": "D112", "location": "F-003 proof measurement window"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Repeated measurement timing for the first-step Fix Cards.",
+      "lineage_label": "30-day Fix Card measurement window"
+    },
+    {
+      "token": "30",
+      "category": "formula_token",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D111", "location": "F-003 review-velocity denominator"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Time denominator in review velocity = new verified reviews / 30 days; it uses the same 30-day measurement window.",
+      "lineage_label": "F-003 channel baseline math"
+    },
+    {
+      "token": "F-001",
+      "category": "fix_card_id",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D093", "location": "Specialty Conversion Fix Card header"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Stable card identifier. 001 encodes card identity/order, not a measured value."
+    },
+    {
+      "token": "F-002",
+      "category": "fix_card_id",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D100", "location": "Access Diagnostic Fix Card header"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Stable card identifier. 002 encodes card identity/order, not a measured value."
+    },
+    {
+      "token": "F-003",
+      "category": "fix_card_id",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D106", "location": "Channel Baseline Fix Card header"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Stable card identifier. 003 encodes card identity/order, not a measured value."
+    },
+    {
+      "token": "2026",
+      "category": "year_copyright",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "D122", "location": "footer copyright"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Copyright year only; it is not evidence for any analytic claim."
+    },
+    {
+      "token": "Three",
+      "category": "substantive_duration_count",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "W001", "location": "Your Opportunity heading"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Count of the three specialty lanes displayed.",
+      "lineage_label": "Displayed specialty lane count"
+    },
+    {
+      "token": "three",
+      "category": "substantive_duration_count",
+      "occurrence_count": 2,
+      "occurrences": [
+        {"id": "W002", "location": "Fix Card plan note: Exactly three GROW Fix Cards"},
+        {"id": "W003", "location": "F-001 heading: Tag the three existing lanes"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "The first occurrence counts rendered Fix Cards; the second counts the displayed specialty lanes.",
+      "lineage_labels": ["Displayed Fix Card count", "Displayed specialty lane count"]
+    },
+    {
+      "token": "one",
+      "category": "substantive_duration_count",
+      "occurrence_count": 1,
+      "occurrences": [
+        {"id": "W004", "location": "F-001 proof requirement"}
+      ],
+      "surfaces": ["html", "pdf"],
+      "explanation": "Required count of consolidated proof tables for the F-001 baseline.",
+      "lineage_label": "F-001 proof table count"
+    }
+  ],
+  "substantive_lineage": [
+    {
+      "label": "Market Demand-Supply score",
+      "display_value": "57 / 100",
+      "canonical_value": 57,
+      "unit": "score points on a 0-100 high-good scale",
+      "category": "derived_score_directional_band",
+      "source_ids": ["S14", "S15", "R01", "R02", "R03", "R04", "R05", "R06"],
+      "source_paths": ["scores.json", "data/market_inputs.json", "data/route_receipts.json", "data/evidence.md", "data/scoring_notes.md", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/CALCULATIONS.md"],
+      "formula": "round(0.25*65 + 0.20*50 + 0.15*65 + 0.15*50 + 0.15*65 + 0.10*35)",
+      "derivation": "Weighted sum = 56.75; nearest-whole-point rounding = 57.",
+      "explanation": "Directionally supportive city age/income signals are balanced by neutral unknown supply and growth components plus limited market-data confidence.",
+      "why_on_page": "Summarizes market demand-supply conditions while making the mixed, public-only method visible.",
+      "confidence": "medium / displayed grade C",
+      "limitations": "City statistics are not drive-time catchment measurements; complete supply, provider, VDU, growth, and patient-choice inputs are missing. Neutral 50 bands preserve unknowns rather than proving average conditions.",
+      "status": "PASS"
+    },
+    {
+      "label": "Competitive Pressure index",
+      "display_value": "57 / 100 (not displayed; internal input to Room to Win)",
+      "canonical_value": 57,
+      "unit": "score points on a 0-100 high-pressure scale",
+      "category": "derived_score_directional_band_hidden",
+      "source_ids": ["S02", "S06", "S07", "S08", "S09", "S10", "S11", "S12", "R01", "R02", "R03", "R04", "R05", "R06"],
+      "source_paths": ["scores.json", "data/competitor_set.json", "data/route_receipts.json", "data/evidence.md", "data/scoring_notes.md", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/CALCULATIONS.md"],
+      "formula": "round(0.40*50 + 0.25*65 + 0.20*65 + 0.15*50)",
+      "derivation": "Weighted sum = 56.75; nearest-whole-point rounding = 57.",
+      "explanation": "Named routes and public service overlap support elevated directional pressure, while incomplete supply and access evidence stay neutral.",
+      "why_on_page": "It is intentionally hidden because higher pressure is worse; its high-good inversion, Room to Win, is the client-facing score.",
+      "confidence": "medium / displayed stack grade C",
+      "limitations": "The named routed peer set is not a complete office/provider census or population-weighted patient-choice set.",
+      "status": "PASS"
+    },
+    {
+      "label": "Room to Win score",
+      "display_value": "43 / 100",
+      "canonical_value": 43,
+      "unit": "score points on a 0-100 high-good scale",
+      "category": "derived_score_directional_band",
+      "source_ids": ["R01", "R02", "R03", "R04", "R05", "R06", "S07", "S08", "S09", "S10", "S11", "S12"],
+      "source_paths": ["scores.json", "data/competitor_set.json", "data/route_receipts.json", "data/scoring_notes.md", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/CALCULATIONS.md"],
+      "formula": "100 - competitive_pressure_index",
+      "derivation": "100 - 57 = 43.",
+      "explanation": "High-good inversion of the internal pressure score; 43 is labeled tight.",
+      "why_on_page": "Presents competitive headroom in the same higher-is-better direction as every other displayed score.",
+      "confidence": "medium / displayed stack grade C",
+      "limitations": "Any material change to the incomplete pressure evidence moves Room to Win in the opposite direction.",
+      "status": "PASS"
+    },
+    {
+      "label": "Practice Competitiveness score",
+      "display_value": "58 / 100",
+      "canonical_value": 58,
+      "unit": "score points on a 0-100 high-good scale",
+      "category": "derived_score_directional_band",
+      "source_ids": ["S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09", "S10", "S16", "R01", "N00"],
+      "source_paths": ["scores.json", "data/competitor_set.json", "data/evidence.md", "data/scoring_notes.md", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/CALCULATIONS.md"],
+      "formula": "round(0.20*50 + 0.20*65 + 0.20*50 + 0.15*65 + 0.15*65 + 0.10*50)",
+      "derivation": "Weighted sum = 57.50; nearest-whole-point rounding = 58.",
+      "explanation": "Published booking, access, service breadth, and conversion clarity support positive bands; visibility, reputation, and convenience remain neutral or unmeasured.",
+      "why_on_page": "Shows the practice's directional public competitiveness beside Room to Win.",
+      "confidence": "medium / displayed stack grade C",
+      "limitations": "No peer-normalized rank grid, review export, live access, conversion, capacity, or operating-performance data.",
+      "status": "PASS"
+    },
+    {
+      "label": "Client Opportunity score",
+      "display_value": "54 / 100",
+      "canonical_value": 54,
+      "unit": "score points on a 0-100 high-good scale",
+      "category": "derived_score_directional_band",
+      "source_ids": ["S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09", "S10", "S11", "S12", "S14", "S15", "S16", "R01", "R02", "R03", "R04", "R05", "R06"],
+      "source_paths": ["scores.json", "data/market_inputs.json", "data/competitor_set.json", "data/evidence.md", "data/scoring_notes.md", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/CALCULATIONS.md"],
+      "formula": "round(0.20*57 + 0.20*50 + 0.20*50 + 0.15*50 + 0.15*65 + 0.10*50)",
+      "derivation": "Weighted sum = 53.65; nearest-whole-point rounding = 54.",
+      "explanation": "The computed market score and a fixable digital-measurement gap raise the score; white space, differentiation upside, access fixability, and execution simplicity remain neutral until measured.",
+      "why_on_page": "Hero metric summarizing actionable owner upside without treating missing operating proof as opportunity.",
+      "confidence": "medium / displayed grade C",
+      "limitations": "No leakage, capacity, specialty economics, staffing, or execution cadence is assumed.",
+      "status": "PASS"
+    },
+    {
+      "label": "Digital Presence score",
+      "display_value": "57 / 100",
+      "canonical_value": 57,
+      "unit": "score points on a 0-100 high-good scale",
+      "category": "derived_score_directional_band",
+      "source_ids": ["S01", "S02", "S03", "S04", "S05", "S06", "S08", "S09", "S10", "S16"],
+      "source_paths": ["scores.json", "data/sources.json", "data/evidence.md", "data/scoring_notes.md"],
+      "formula": "round(0.25*50 + 0.20*50 + 0.20*65 + 0.15*65 + 0.10*65 + 0.10*50)",
+      "derivation": "Weighted sum = 56.75; nearest-whole-point rounding = 57.",
+      "explanation": "Public bookability, site structure, and specialty content are directionally supportive; findability, reputation, and social/local proof remain neutral.",
+      "why_on_page": "Separates the existing digital surface from unmeasured findability and trust baselines.",
+      "confidence": "medium / displayed grade C",
+      "limitations": "No rank grid, peer-normalized review export, Core Web Vitals, conversion, or verified social/local-proof comparison.",
+      "status": "PASS"
+    },
+    {
+      "label": "Dry eye / ocular surface specialty score",
+      "display_value": "52 / 100",
+      "canonical_value": 52,
+      "unit": "score points on a 0-100 high-good scale",
+      "category": "derived_specialty_score_directional_band",
+      "source_ids": ["S03", "S08", "S09", "S14", "S15"],
+      "source_paths": ["scores.json", "data/market_inputs.json", "data/competitor_set.json", "data/evidence.md", "data/scoring_notes.md", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/CALCULATIONS.md"],
+      "formula": "round(0.20*65 + 0.15*35 + 0.15*65 + 0.15*50 + 0.15*50 + 0.10*50 + 0.10*35)",
+      "derivation": "Weighted sum = 51.50; nearest-whole-point rounding = 52.",
+      "explanation": "City age proxy and a verified current offer support research; direct peer overlap, limited evidence, and unknown capacity/economics constrain the score.",
+      "why_on_page": "Marks dry eye as research-next, not a forecast or proven gap.",
+      "confidence": "limited public directional / C",
+      "limitations": "Catchment demand, conversion, capacity, referrals, outcomes, and economics are unmeasured.",
+      "status": "PASS"
+    },
+    {
+      "label": "Myopia management specialty score",
+      "display_value": "52 / 100",
+      "canonical_value": 52,
+      "unit": "score points on a 0-100 high-good scale",
+      "category": "derived_specialty_score_directional_band",
+      "source_ids": ["S04", "S09", "S10", "S14", "S15"],
+      "source_paths": ["scores.json", "data/market_inputs.json", "data/competitor_set.json", "data/evidence.md", "data/scoring_notes.md", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/CALCULATIONS.md"],
+      "formula": "round(0.20*65 + 0.15*35 + 0.15*65 + 0.15*50 + 0.15*50 + 0.10*50 + 0.10*35)",
+      "derivation": "Weighted sum = 51.50; nearest-whole-point rounding = 52.",
+      "explanation": "City child-share proxy and a verified current offer support research; published regional overlap, limited evidence, and unknown delivery/economics constrain the score.",
+      "why_on_page": "Marks myopia management as research-next, not a forecast or proven gap.",
+      "confidence": "limited public directional / C",
+      "limitations": "Catchment family demand, starts, retention, capacity, referrals, outcomes, and economics are unmeasured.",
+      "status": "PASS"
+    },
+    {
+      "label": "Specialty contact lenses score",
+      "display_value": "51 / 100",
+      "canonical_value": 51,
+      "unit": "score points on a 0-100 high-good scale",
+      "category": "derived_specialty_score_directional_band",
+      "source_ids": ["S05", "S07", "S08", "S12"],
+      "source_paths": ["scores.json", "data/competitor_set.json", "data/evidence.md", "data/scoring_notes.md", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/CALCULATIONS.md"],
+      "formula": "round(0.20*50 + 0.15*50 + 0.15*65 + 0.15*50 + 0.15*50 + 0.10*50 + 0.10*35)",
+      "derivation": "Weighted sum = 50.75; nearest-whole-point rounding = 51.",
+      "explanation": "The public specialty-contact offer is verified, while local demand, competitive gap, access/capacity, referral fit, economics, and most evidence remain neutral or limited.",
+      "why_on_page": "Marks specialty contacts as research-next, not a forecast or proven gap.",
+      "confidence": "limited public directional / C",
+      "limitations": "No catchment demand, specialty-depth peer audit, fitting volume, capacity, referrals, outcomes, or economics.",
+      "status": "PASS"
+    },
+    {
+      "label": "Morton 2024 population estimate",
+      "display_value": "17,557",
+      "canonical_value": 17557,
+      "unit": "persons",
+      "category": "raw_public_fact",
+      "source_ids": ["S14"],
+      "source_paths": ["data/market_inputs.json", "data/sources.json", "data/evidence.md"],
+      "formula": null,
+      "derivation": "Directly copied from Census QuickFacts into city_context_only.population_estimate_2024.",
+      "explanation": "Morton city population estimate for 2024.",
+      "why_on_page": "Provides city context for the directional demand read.",
+      "confidence": "high",
+      "limitations": "City-boundary estimate only; it is not a 20-minute drive-time catchment population.",
+      "status": "PASS"
+    },
+    {
+      "label": "Morton under 18 share",
+      "display_value": "25.9%",
+      "canonical_value": 25.9,
+      "unit": "percent of Morton city population; threshold under age 18",
+      "category": "raw_public_fact",
+      "source_ids": ["S14"],
+      "source_paths": ["data/market_inputs.json", "data/sources.json", "data/evidence.md"],
+      "formula": null,
+      "derivation": "Directly copied from Census QuickFacts into city_context_only.under_18_percent_2020_2024.",
+      "explanation": "City age-share statistic used as a directional family-demand proxy.",
+      "why_on_page": "Shows the public fact behind the family-demand direction.",
+      "confidence": "high for the city fact; medium as a demand proxy",
+      "limitations": "Not catchment-weighted and does not establish myopia demand, starts, or conversion.",
+      "status": "PASS"
+    },
+    {
+      "label": "Morton age 65 plus (65 or older) share",
+      "display_value": "23.1%",
+      "canonical_value": 23.1,
+      "unit": "percent of Morton city population; threshold age 65 or older",
+      "category": "raw_public_fact",
+      "source_ids": ["S14"],
+      "source_paths": ["data/market_inputs.json", "data/sources.json", "data/evidence.md"],
+      "formula": null,
+      "derivation": "Directly copied from Census QuickFacts into city_context_only.age_65_plus_percent_2020_2024.",
+      "explanation": "City age-share statistic used as a directional age-related eye-care demand proxy.",
+      "why_on_page": "Shows the public fact behind the senior-demand direction.",
+      "confidence": "high for the city fact; medium as a demand proxy",
+      "limitations": "Not catchment-weighted and does not establish dry-eye cases, utilization, or conversion.",
+      "status": "PASS"
+    },
+    {
+      "label": "Primary catchment duration",
+      "display_value": "20-minute drive-time catchment",
+      "canonical_value": 20,
+      "unit": "minutes",
+      "category": "method_duration_and_limitation",
+      "source_ids": ["S14", "R03", "R04"],
+      "source_paths": ["scores.json", "data/market_inputs.json", "data/competitor_set.json", "data/evidence.md", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/CALCULATIONS.md"],
+      "formula": "Exurban market type -> 20-minute primary window under canonical catchment table.",
+      "derivation": "The canonical calculations table assigns exurban markets a 20-minute primary and 30-minute extended window; the run classifies Morton as exurban directionally.",
+      "explanation": "The page uses 20 minutes to warn that city facts do not describe the selected drive-time catchment.",
+      "why_on_page": "Prevents city-versus-catchment substitution.",
+      "confidence": "medium",
+      "limitations": "No polygon isochrone, catchment density surface, patient-origin set, or trip-tolerance study was completed.",
+      "status": "PASS"
+    },
+    {
+      "label": "Focus On Eyes route minutes",
+      "display_value": "4.07",
+      "canonical_value": 4.07,
+      "unit": "minutes",
+      "category": "raw_route_fact",
+      "source_ids": ["R01", "S07"],
+      "source_paths": ["data/route_receipts.json", "data/competitor_set.json", "data/sources.json", "data/evidence.md"],
+      "formula": "OSRM duration 244.3 seconds / 60 = 4.071666..., stored and displayed as 4.07 minutes.",
+      "derivation": "Stored R01 OSRM point-to-point route response from the subject origin to Focus On Eyes.",
+      "explanation": "Nearest displayed direct peer route duration.",
+      "why_on_page": "Supports the directional statement that a close Morton peer exists.",
+      "confidence": "high for the stored route observation",
+      "limitations": "Single practice-origin route with no live traffic or time-of-day model; not an isochrone or patient-origin choice set.",
+      "status": "PASS"
+    },
+    {
+      "label": "30-day Fix Card measurement window",
+      "display_value": "30",
+      "canonical_value": 30,
+      "unit": "days",
+      "category": "substantive_duration_count",
+      "source_ids": ["S01", "S02", "S03", "S04", "S05", "S06", "S16", "N00"],
+      "source_paths": ["scores.json", "data/scoring_notes.md", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/CALCULATIONS.md", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/RUNBOOK_COMPETITIVE_ANALYSIS.md"],
+      "formula": null,
+      "derivation": "Each of the three canonical do-now Fix Cards has time_to_value = 30_days and proof built around a 30-day baseline; CALCULATIONS describes fixability as 30-90 days.",
+      "explanation": "Measurement horizon, not a forecast period or promised performance result.",
+      "why_on_page": "Makes the bounded first action and evidence window concrete.",
+      "confidence": "high as the prescribed measurement window",
+      "limitations": "No improvement magnitude, patient count, revenue, or completion guarantee is implied.",
+      "status": "PASS"
+    },
+    {
+      "label": "Displayed Fix Card count",
+      "display_value": "Exactly three GROW Fix Cards",
+      "canonical_value": 3,
+      "unit": "cards",
+      "category": "substantive_count",
+      "source_ids": [],
+      "source_paths": ["scores.json", "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/RUNBOOK_COMPETITIVE_ANALYSIS.md"],
+      "formula": "count(scores.json.fix_it_playbook.cards) = 3",
+      "derivation": "The do_now array lists F-001, F-002, and F-003; the runbook limits the do-now list to max 3 cards.",
+      "explanation": "Count of rendered first-step cards.",
+      "why_on_page": "Signals a deliberately bounded action list.",
+      "confidence": "high",
+      "limitations": "Count does not measure impact or completion.",
+      "status": "PASS"
+    },
+    {
+      "label": "Displayed specialty lane count",
+      "display_value": "three existing specialty lanes",
+      "canonical_value": 3,
+      "unit": "lanes",
+      "category": "substantive_count",
+      "source_ids": ["S03", "S04", "S05"],
+      "source_paths": ["scores.json", "data/evidence.md"],
+      "formula": "count(scores.json.specialty_options) = 3",
+      "derivation": "The specialty_options array contains dry eye / ocular surface, myopia management, and specialty contact lenses.",
+      "explanation": "Count of displayed research-next lanes and the lanes to tag in F-001.",
+      "why_on_page": "Bounds the specialty baseline to already published offers.",
+      "confidence": "high",
+      "limitations": "Count does not prove lane ownership, performance, demand, or capacity.",
+      "status": "PASS"
+    },
+    {
+      "label": "F-001 proof table count",
+      "display_value": "one table",
+      "canonical_value": 1,
+      "unit": "consolidated lane-baseline table",
+      "category": "substantive_count",
+      "source_ids": ["S03", "S04", "S05", "S06"],
+      "source_paths": ["scores.json"],
+      "formula": null,
+      "derivation": "Directly stated in F-001 proof: a single table must contain the required fields for every lane.",
+      "explanation": "Proof-artifact count, not a clinical or operating measurement.",
+      "why_on_page": "Defines a concrete acceptance artifact for the baseline.",
+      "confidence": "high",
+      "limitations": "The table does not yet exist on the page; it is a future proof requirement and missing counts must remain null.",
+      "status": "PASS"
+    },
+    {
+      "label": "Practice address",
+      "display_value": "605 S Main St",
+      "canonical_value": 605,
+      "unit": "street address number",
+      "category": "raw_public_identity_fact",
+      "source_ids": ["S02", "N00"],
+      "source_paths": ["scores.json", "data/competitor_set.json", "data/route_receipts.json", "data/sources.json", "data/evidence.md"],
+      "formula": null,
+      "derivation": "Official subject location page plus exact-address Nominatim match.",
+      "explanation": "Practice identity/location number.",
+      "why_on_page": "Identifies the analyzed location.",
+      "confidence": "high",
+      "limitations": "The geocoder is not the official listing; S02 is the official location authority.",
+      "status": "PASS"
+    },
+    {
+      "label": "F-001 specialty conversion math",
+      "display_value": "inquiry-to-book; book-to-start; completion",
+      "canonical_value": "booked evaluations / inquiries; starts / booked evaluations; completed plans / starts",
+      "unit": "rates",
+      "category": "formula_definition",
+      "source_ids": ["S03", "S04", "S05", "S06"],
+      "source_paths": ["scores.json"],
+      "formula": "inquiry_to_book_rate = booked_evaluations / inquiries; book_to_start_rate = starts / booked_evaluations; completion_rate = completed_plans / starts",
+      "derivation": "Direct rendering of F-001 impact_math with shorter display labels.",
+      "explanation": "Plug-in measurement formulas; no counts or results are asserted.",
+      "why_on_page": "Defines how the future lane baseline will be calculated.",
+      "confidence": "high as formula definitions",
+      "limitations": "Denominators may be zero or missing; missing counts must remain null. No forecast is present.",
+      "status": "PASS"
+    },
+    {
+      "label": "F-002 access diagnostic math",
+      "display_value": "access gap; gap rate",
+      "canonical_value": "unanswered_or_abandoned_calls + incomplete_booking_attempts + requests_without_acceptable_slots; access_gap / total_access_attempts",
+      "unit": "count and rate",
+      "category": "formula_definition",
+      "source_ids": ["S02", "S06", "S16"],
+      "source_paths": ["scores.json"],
+      "formula": "access_gap_count = unanswered_or_abandoned_calls + booking_attempts_without_completion + requests_without_acceptable_slot; realized_gap_rate = access_gap_count / total_access_attempts",
+      "derivation": "Direct rendering of F-002 impact_math with equivalent plain-language variable names.",
+      "explanation": "Diagnostic formulas; the page asserts no current gap count or rate.",
+      "why_on_page": "Defines what must be measured before changing hours or staffing.",
+      "confidence": "high as formula definitions",
+      "limitations": "Requires mutually understood disposition rules and a nonzero total-attempt denominator. No leakage is assumed.",
+      "status": "PASS"
+    },
+    {
+      "label": "F-003 channel baseline math",
+      "display_value": "listing accuracy; review velocity per 30 days; referral or recall book rate",
+      "canonical_value": "correct tracked listings / tracked listings; new verified reviews / 30 days; booked / eligible inquiries or contacts",
+      "unit": "rates and reviews per 30 days",
+      "category": "formula_definition",
+      "source_ids": ["S01", "S02", "S16", "N00"],
+      "source_paths": ["scores.json"],
+      "formula": "listing_accuracy_rate = correct_tracked_listings / tracked_listings; review_velocity = new_verified_reviews / 30_days; referral_book_rate = booked_referred_patients / referral_inquiries; recall_book_rate = booked_recall_patients / eligible_recall_contacts",
+      "derivation": "Rendered F-003 math combines the two canonical referral/recall formulas into 'booked / eligible inquiries or contacts.'",
+      "explanation": "Baseline formulas; no listing defect, review velocity, referral rate, or recall rate is asserted.",
+      "why_on_page": "Defines measurable channel hygiene before broader awareness work.",
+      "confidence": "high as formula definitions",
+      "limitations": "Tracked-surface scope, verified-review rules, eligibility rules, and zero-denominator handling must be defined before calculation.",
+      "status": "PASS"
+    }
+  ],
+  "coverage": {
+    "status": "PASS",
+    "html_digit_bearing_occurrences": 122,
+    "pdf_digit_bearing_occurrences": 122,
+    "html_pdf_digit_token_multiset_match": true,
+    "spelled_numeric_word_occurrences": 4,
+    "total_visible_numeric_occurrences": 126,
+    "classification_counts": {
+      "substantive_score": 12,
+      "substantive_raw_public_fact": 5,
+      "substantive_route_fact": 1,
+      "substantive_duration_count": 12,
+      "structural_section_number": 6,
+      "fix_card_id": 3,
+      "source_identifier": 75,
+      "address_number": 1,
+      "year_copyright": 2,
+      "formula_token": 9,
+      "url_only_token": 0
+    },
+    "visible_distinct_source_ids": ["N00", "R01", "R03", "R04", "R05", "S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09", "S10", "S11", "S12", "S14", "S15", "S16"],
+    "not_visibly_cited_but_registered_source_ids": ["R02", "R06", "S13"],
+    "score_recomputations": {
+      "market_demand_supply": {"unrounded": 56.75, "displayed": 57, "match": true},
+      "competitive_pressure_internal": {"unrounded": 56.75, "canonical": 57, "visible": false, "match": true},
+      "room_to_win": {"calculation": "100 - 57", "displayed": 43, "match": true},
+      "practice_competitiveness": {"unrounded": 57.5, "displayed": 58, "match": true},
+      "client_opportunity": {"unrounded": 53.65, "displayed": 54, "match": true},
+      "digital_presence": {"unrounded": 56.75, "displayed": 57, "match": true},
+      "dry_eye": {"unrounded": 51.5, "displayed": 52, "match": true},
+      "myopia_management": {"unrounded": 51.5, "displayed": 52, "match": true},
+      "specialty_contact_lenses": {"unrounded": 50.75, "displayed": 51, "match": true}
+    },
+    "structural_explanation_complete": true,
+    "nonvisible_url_tokens_excluded": true,
+    "unexplained_substantive": []
+  }
+}

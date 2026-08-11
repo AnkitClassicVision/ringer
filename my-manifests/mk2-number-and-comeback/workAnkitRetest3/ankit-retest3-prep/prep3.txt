@@ -1,0 +1,13 @@
+=== LINE BINDING ===
+BOUND_VERSION=124 pathway=94abad8b-fbe2-4e67-9c64-d9b586dd2653 time_out=None
+=== BOUND-VERSION OPENER NODE CHECK ===
+GOALASK userWait=True prompt_len=2195 has_zh_name=True
+=== ANKIT CONV CLEANUP ===
+ANKIT_CONVS_BEFORE=0
+ANKIT_CONVS_AFTER=0
+CLEANUP_DONE
+=== ANKIT APPTS (patient 4362694474 store 711) ===
+HTTP 200
+ok: True count: 1
+{'id': None, 'start': '2026-08-11T14:00:00Z', 'store': None, 'status': 'created', 'type': None}
+APPTS_DONE

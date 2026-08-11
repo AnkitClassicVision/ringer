@@ -1,0 +1,21 @@
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN=1 WALL_MS=6171 N_MSGS=1 NODE=n_ask SAID=Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.
+
+Many vision insurance be
+TURN=2 WALL_MS=3064 N_MSGS=1 NODE=n_date_conflict SAID=I want to make sure I get the right day. Did you mean Friday 08/07 or Monday 08/17? You can also reply with a different date.
+TURN=3 WALL_MS=3071 N_MSGS=1 NODE=n_date_conflict SAID=I want to make sure I get the right day. Did you mean Friday 08/07 or Friday 08/14? You can also reply with a different date.
+RESULT label=s1-attrib turns=3 total_wall_ms=12306 filler_hits=0 candidate=0
+GWLOG_LINES=8
+GW 2026-08-04 02:22:30,381 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:22:30,632 INFO raw_fetch msgs=2
+GW 2026-08-04 02:22:30,633 INFO raw_resolve from=('conflict', '08/07/2026', '08/17/2026', 'next friday Friday the 7th', 'the 17th Monday the 17th')
+GW 2026-08-04 02:22:30,633 INFO date_source=conflict
+GW 2026-08-04 02:22:33,459 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:22:33,695 INFO raw_fetch msgs=4
+GW 2026-08-04 02:22:33,696 INFO raw_resolve from=('conflict', '08/07/2026', '08/14/2026', 'friday Friday the 7th', 'the 14th Friday the 14th')
+GW 2026-08-04 02:22:33,696 INFO date_source=conflict
+TIMER_RC=0
+ATTRIB_DONE

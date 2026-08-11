@@ -1,0 +1,24 @@
+{
+  "run_name": "vintage-optical-onepager",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/work-layout-fix",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "fix-onepager-vertical-balance",
+      "engine": "codex",
+      "task_type": "site-build",
+      "timeout_s": 1200,
+      "expect_files": [
+        "notes.md",
+        "onepager-preview.html"
+      ],
+      "engine_args": [
+        "-c",
+        "sandbox_workspace_write.writable_roots=[\"/mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29\"]"
+      ],
+      "spec": "You are the bounded layout-fix worker for the Vintage Optical canonical one-page competitive analysis. The final Chrome-rendered page passed technical checks but visual QA found a material layout defect: after the First 30 Days cards, roughly three inches of dead white space appear before the bottom CTA and footer. The page looks unfinished even though nothing clips.\n\nOWNERSHIP: modify only /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29/onepager.html. In the current scratch directory write only ./notes.md and ./onepager-preview.html. Do not modify scores, evidence, sources, intake, runlog, README, PDFs, images, or any other path. Do not commit, push, send, publish, deploy, call MCP/Apps, or capture memory.\n\nREAD FIRST: the owned onepager.html plus /mnt/d_drive/repos/optometry-competition-analyzer-rubric/client-onepager/DESIGN_SPEC.md.\n\nFIX CONTRACT: redistribute the existing four body sections vertically so the content occupies the page between The Read and the CTA instead of bunching at the top. Prefer flex growth or explicit balanced row sizing on .body/.section, plus modestly larger body text and padding where space allows. Keep the CTA and footer at the bottom. Preserve the existing story order, all wording, every score, all H1-H3 labels, all citations and exact hrefs, Letter page size, color system, and one-page overflow boundary. Do not add new claims or decorative cards. Maintain practical text size and avoid turning the page into a sparse poster or a dense wall.\n\nPROOF TARGET: no large uninterrupted white band between First 30 Days and the CTA in the next PDF render, while all content remains inside one Letter page.\n\nHOW TO VERIFY: copy the edited onepager.html to ./onepager-preview.html. Write ./notes.md with headings Files changed, Visual defect addressed, Verification, and Remaining gate. Then run python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/checks/validate_build.py --dest /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29 --research-scores /home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/work-research/score-and-brief/scores_recommendation.json --ledger /mnt/d_drive/repos/vintage-optical-competitive-analysis/RESEARCH/Paul_Velting_Vintage_Optical/04_evidence_ledger.csv --notes notes.md. Fix every WHY failure without touching another file. The deterministic Chromium render remains a separate local-shell Ringer round.",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/checks/validate_build.py --dest /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29 --research-scores /home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/work-research/score-and-brief/scores_recommendation.json --ledger /mnt/d_drive/repos/vintage-optical-competitive-analysis/RESEARCH/Paul_Velting_Vintage_Optical/04_evidence_ledger.csv --notes notes.md && cmp onepager-preview.html /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29/onepager.html && echo 'PASS: layout-fix artifact matches canonical HTML'",
+      "verified": "the onepager HTML preserves the evidence and score contract while addressing the visually confirmed vertical-balance defect; final proof remains the next Chromium render"
+    }
+  ]
+}

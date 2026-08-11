@@ -1,0 +1,907 @@
+--- /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work2/raw-text-authority-v2/bland_gateway_live.py	2026-07-29 18:20:13.282870519 -0400
++++ bland_gateway_prod.py	2026-08-03 19:53:05.074391919 -0400
+@@ -159,6 +159,12 @@
+ CONSUMER_ACCEPT_LEGACY = _env_bool("ECP_CONSUMER_ACCEPT_LEGACY", True)
+ _DATE_ORDINAL_FALLBACK = _env_bool("ECP_DATE_ORDINAL_FALLBACK", False)
+ _RAW_TEXT_DATES = _env_bool("ECP_RAW_TEXT_DATES", False)
++_LLM_INTENT = os.environ.get("ECP_LLM_INTENT", "off").strip().lower()
++_LLM_MODEL_ID = os.environ.get(
++    "ECP_LLM_MODEL_ID",
++    "us.anthropic.claude-haiku-4-5-20251001-v1:0",
++)
++_BEDROCK_CLIENT = None
+ CAPABILITY_MANIFEST = load_manifest()
+ 
+ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+@@ -333,6 +339,117 @@
+         return datetime.now(timezone(timedelta(hours=-5)))
+ 
+ 
++def _bedrock():
++    global _BEDROCK_CLIENT
++    if _BEDROCK_CLIENT is not None:
++        return _BEDROCK_CLIENT
++    if boto3 is None:
++        return None
++    try:
++        import botocore.config
++        _BEDROCK_CLIENT = boto3.client(
++            "bedrock-runtime",
++            region_name="us-east-1",
++            config=botocore.config.Config(
++                connect_timeout=1,
++                read_timeout=3,
++                retries={"max_attempts": 0},
++            ),
++        )
++    except Exception:
++        return None
++    return _BEDROCK_CLIENT
++
++
++def llm_interpret_intent(user_text, today) -> dict | None:
++    header = (
++        f"Today is {today.strftime('%A')} {today.strftime('%m/%d/%Y')} "
++        "(America/New_York clinic time)."
++    )
++    prompt = f"""{header}
++Extract only the operative appointment-date WORDS from one patient message.
++Output only compact JSON: {{"phrase":"patient's date words or empty"}}
++Keep the patient's words and qualifiers. You may expand texting shorthand and drop filler.
++Never calculate or output a calendar date. Ignore negated, busy, historical, and address dates.
++Use the last request when the patient corrects themself. No date request means an empty phrase.
++Examples:
++"I'm busy today, how about next week Wednesday?" -> {{"phrase":"wednesday next week"}}
++"no not friday, monday works" -> {{"phrase":"monday"}}
++"I cannot do July 28; Wednesday is better" -> {{"phrase":"wednesday"}}
++"july 28, no wait, august 3" -> {{"phrase":"august 3"}}
++"tues nxt wk" -> {{"phrase":"tuesday next week"}}
++"as soon as possible works for me" -> {{"phrase":"as soon as possible"}}
++"No I need later in the day what do you ahve on thirwday and friday?" -> {{"phrase":"thursday or friday"}}
++"下周三" -> {{"phrase":"下周三"}}
++"yes" -> {{"phrase":""}}
++Patient SMS: {str(user_text or "")[:2000]}"""
++    client = _bedrock()
++    if client is None:
++        return None
++    try:
++        response = client.converse(
++            modelId=_LLM_MODEL_ID,
++            messages=[{"role": "user", "content": [{"text": prompt}]}],
++            inferenceConfig={"temperature": 0, "maxTokens": 60},
++        )
++        text = response["output"]["message"]["content"][0]["text"].strip()
++        text = re.sub(r"^```(?:json)?\s*", "", text, flags=re.IGNORECASE)
++        text = re.sub(r"\s*```$", "", text).strip()
++        payload = json.loads(text)
++    except Exception:
++        return None
++    if not isinstance(payload, dict):
++        return None
++    phrase = str(payload.get("phrase", ""))[:80].strip()
++    tokens = phrase.split()
++    if len(tokens) > 12 or (
++        sum(character.isdigit() for character in phrase) > 12
++        and sum(character.isdigit() for character in phrase) * 2 > len(phrase)
++    ):
++        return None
++    if not phrase:
++        return {"intent": "none"}
++    outcome = extract_date_from_text(phrase)
++    if outcome is None:
++        return {"intent": "none"}
++    if isinstance(outcome, str):
++        return {"intent": "date", "date": outcome}
++    if outcome[0] == "range":
++        return {"intent": "range", "date": outcome[1], "date2": outcome[2]}
++    if outcome[0] == "conflict":
++        return {
++            "intent": "ambiguous",
++            "date": outcome[1],
++            "date2": outcome[2],
++            "optionA": outcome[3],
++            "optionB": outcome[4],
++        }
++    if outcome[0] == "either":
++        return {
++            "intent": "either",
++            "date": outcome[1],
++            "date2": outcome[2],
++            "optionA": outcome[3],
++            "optionB": outcome[4],
++        }
++    return {"intent": "none"}
++
++
++def _log_llm_agreement(latest_user_text, det_class, raw_from):
++    """Shadow-mode scorer: one Bedrock opinion, one log line, nothing else."""
++    verdict = llm_interpret_intent(latest_user_text, _eastern_today())
++    agree = verdict is not None and (
++        (verdict["intent"] == "date" and det_class == "date"
++         and raw_from == verdict.get("date"))
++        or (verdict["intent"] == "ambiguous" and det_class == "conflict")
++        or (verdict["intent"] == "either" and det_class == "either")
++        or (verdict["intent"] in ("range", "asap") and det_class == "range")
++        or (verdict["intent"] == "none" and det_class == "none")
++    )
++    log.info("llm_intent=%s det=%s agree=%s",
++             verdict["intent"] if verdict else "error", det_class, agree)
++
++
+ def _hours_cfg() -> dict:
+     return json.loads(os.environ.get("CVC_HOURS_JSON", "{}") or "{}")
+ 
+@@ -634,6 +751,146 @@
+     return None
+ 
+ 
++_WEEKDAY_WORDS = (
++    "monday", "tuesday", "wednesday", "thursday", "friday", "saturday",
++    "sunday",
++)
++_CAL_VOCAB = _WEEKDAY_WORDS + ("tomorrow", "today") + (
++    "january", "february", "march", "april", "august", "september",
++    "october", "november", "december", "june", "july",
++)
++# Real words a typo pass could wrongly turn into a calendar word.
++_FUZZY_BLOCK = {"money", "monkey", "sunny"}
++
++
++def _osa_distance(a: str, b: str, cap: int) -> int:
++    # Optimal-string-alignment distance: an adjacent transposition ("friady")
++    # costs 1, so the threshold can stay tight without losing swap typos.
++    # Calendar words are tiny; a full matrix is clearer than a rolling one.
++    if abs(len(a) - len(b)) > cap:
++        return cap + 1
++    d = [[0] * (len(b) + 1) for _ in range(len(a) + 1)]
++    for i in range(len(a) + 1):
++        d[i][0] = i
++    for j in range(len(b) + 1):
++        d[0][j] = j
++    for i in range(1, len(a) + 1):
++        for j in range(1, len(b) + 1):
++            cost = 0 if a[i - 1] == b[j - 1] else 1
++            d[i][j] = min(d[i - 1][j] + 1, d[i][j - 1] + 1,
++                          d[i - 1][j - 1] + cost)
++            if (i > 1 and j > 1 and a[i - 1] == b[j - 2]
++                    and a[i - 2] == b[j - 1]):
++                d[i][j] = min(d[i][j], d[i - 2][j - 2] + 1)
++    return d[len(a)][len(b)]
++
++
++def _fuzzy_calendar_token(token: str) -> str:
++    # "thirwday and friday" (live miss 2026-07-29): a misspelled weekday is
++    # invisible to every regex below, so the whole day-change is lost and the
++    # search silently reuses the stale prior date. Repair obvious typos only.
++    # Review catch 2026-07-29: distance 2 on short words swallowed ordinary
++    # English ("total"->today, "midday"->monday, "sturdy"->saturday), so short
++    # tokens get distance 1 (transpositions count 1 via OSA) and only length
++    # >= 7 earns distance 2.
++    if not token.isalpha() or len(token) < 5:
++        return token
++    if token in _CAL_VOCAB or token in _FUZZY_BLOCK:
++        return token
++    cap = 2 if len(token) >= 7 else 1
++    for word in _CAL_VOCAB:
++        if word[0] == token[0] and _osa_distance(token, word, cap) <= cap:
++            return word
++    return token
++
++
++def _tail_negated(normalized: str, start: int) -> bool:
++    # A negation governs only its immediate scope ("can't do friday"), never
++    # the rest of the message. A leading discourse "No" that rejects OUR offer
++    # ("No I need ... what do you have on friday?") must not kill the days the
++    # patient goes on to request (live miss 2026-07-29).
++    before = re.sub(r"\b(?:no wait|wait|actually)\b", " ", normalized[:start])
++    tail = " ".join(before.split()[-8:])
++    scope_terms = (
++        "cannot", "can not", "cant", "wont", "will not", "dont", "do not",
++        "not", "no", "never", "except", "anything but", "rather than",
++        "instead of", "ago", "last time", "birthday", "born",
++        # "I'm busy thursday and friday" names days to AVOID, not to book;
++        # "I already have appointments Monday and Tuesday" names EXISTING ones.
++        "busy", "work", "working", "unavailable", "out of town",
++        "avoid", "avoiding", "already", "scheduled", "booked",
++        "appointment", "appointments",
++    )
++    return any(
++        re.search(rf"\b{re.escape(term)}\b", tail) for term in scope_terms
++    )
++
++
++def _pair_followed_by_refusal(normalized: str, end: int) -> bool:
++    # "Monday and Tuesday do not work; Friday does" — the pair is being
++    # EXCLUDED, and the tell sits after it (review catch 2026-07-29). Any
++    # negation-ish token in the 6 tokens after the pair skips the intercept;
++    # the clause-level kill rules then decide.
++    head = " ".join(normalized[end:].split()[:6])
++    return bool(re.search(
++        r"\b(?:not|dont|do not|doesnt|does not|cant|can not|cannot|wont|"
++        r"will not|never|no\s+good|are\s+out|is\s+out|busy)\b",
++        head,
++    ))
++
++
++def _either_day_pair(normalized: str):
++    # "thursday or friday" is a PREFERENCE SET, not a conflict: the patient
++    # explicitly offers two days and expects one option on each. Detect the
++    # pair up front; downstream returns one slot per requested day.
++    if re.search(r"\b(?:no wait|wait|actually)\b", normalized):
++        return None
++    day_word = (
++        r"(monday|mon|tuesday|tues|tue|wednesday|weds|wed|thursday|thurs|"
++        r"thur|thu|friday|fri|saturday|sat|sunday|sun|tomorrow|today)"
++    )
++    match = re.search(
++        rf"\b{day_word}\s*,?\s+(?:and|or)\s+{day_word}\b", normalized
++    )
++    if not match or _tail_negated(normalized, match.start()):
++        return None
++    if _pair_followed_by_refusal(normalized, match.end()):
++        return None
++    expand = {
++        "mon": "monday", "tue": "tuesday", "tues": "tuesday",
++        "wed": "wednesday", "weds": "wednesday", "thu": "thursday",
++        "thur": "thursday", "thurs": "thursday", "fri": "friday",
++        "sat": "saturday", "sun": "sunday",
++    }
++    qualifier = ""
++    before = " ".join(normalized[:match.start()].split()[-4:])
++    after = " ".join(normalized[match.end():].split()[:3])
++    for candidate in ("next week", "this week"):
++        if candidate in before or candidate in after:
++            qualifier = candidate
++            break
++    resolved = []
++    for word in (match.group(1), match.group(2)):
++        word = expand.get(word, word)
++        # The resolver's qualified grammar is day-first ("thursday next week").
++        result = (
++            resolve_relative_date(f"{word} {qualifier}".strip())
++            or resolve_relative_date(f"{qualifier} {word}".strip())
++            or resolve_relative_date(word)
++        )
++        if not result:
++            return None
++        resolved.append(result)
++    if resolved[0] == resolved[1]:
++        return None
++
++    def label(ds):
++        return f"{datetime.strptime(ds, '%m/%d/%Y').strftime('%A')} {ds}"
++
++    return ("either", resolved[0], resolved[1],
++            label(resolved[0]), label(resolved[1]))
++
++
+ def extract_date_from_text(text) -> str | tuple | None:
+     normalized = re.sub(
+         r"[^A-Za-z0-9\s/\-:,;.?!\u3400-\u4dbf\u4e00-\u9fff]",
+@@ -644,15 +901,36 @@
+     normalized = re.sub(r"\bcan\s+t\b", "can not", normalized)
+     normalized = re.sub(r"\bwon\s+t\b", "will not", normalized)
+     normalized = re.sub(r"\bdon\s+t\b", "do not", normalized)
++    normalized = re.sub(r"\bdoesn\s+t\b", "does not", normalized)
++    normalized = re.sub(r"\b(?:isn|aren|couldn|shouldn|wouldn)\s+t\b",
++                        "not", normalized)
+     shorthand = {
+         "nxt": "next", "wk": "week", "wks": "weeks",
+         "tmrw": "tomorrow", "tmr": "tomorrow", "2day": "today",
+         "2moro": "tomorrow", "2morrow": "tomorrow",
+     }
+     normalized = " ".join(shorthand.get(token, token) for token in normalized.split())
++    normalized = " ".join(
++        _fuzzy_calendar_token(token) for token in normalized.split()
++    )
++    # A leading "No" answering OUR last offer is a discourse marker, not a
++    # negation of the days the patient goes on to name ("No I need something
++    # friday"). Strip it only when the next word shows a fresh request; "no
++    # friday works" keeps its negation.
++    normalized = re.sub(
++        r"^(?:no|nope|nah)[,.!]*\s+(?=(?:i|we|im|id|lets|let|can|could|what|"
++        r"how|do|does|is|are|need|want|please|prefer|the|that|this|actually|"
++        r"maybe)\b)",
++        "",
++        normalized,
++    )
+     if not normalized:
+         return None
+ 
++    either = _either_day_pair(normalized)
++    if either:
++        return either
++
+     explicit = re.compile(
+         r"\b(" + _ORDINAL_MONTHS + r")\s+(\d{1,2})(st|nd|rd|th)?"
+         r"(?:\s*,?\s*(\d{4}))?\b"
+@@ -660,6 +938,11 @@
+     history_terms = (
+         "ago", "last time", "renewed", "paid", "birthday", "born",
+         "since", "back in", "history",
++        # "I already have appointments Monday and Tuesday" names EXISTING
++        # bookings, not requested days (review catch 2026-07-29). A killed
++        # clause falls back to model vars, which is the safe direction.
++        "already", "scheduled", "booked", "have an appointment",
++        "have appointments",
+     )
+     address_terms = (
+         "avenue", "ave", "street", "road", "rd", "blvd", "boulevard",
+@@ -668,7 +951,7 @@
+     negators = (
+         "cannot", "can not", "cant", "wont", "will not", "dont", "do not",
+         "not", "no", "never", "except", "anything but", "rather than",
+-        "instead of",
++        "instead of", "busy", "avoid", "avoiding", "skip", "without",
+     )
+     candidates = []
+     order = 0
+@@ -684,8 +967,19 @@
+         clause_killed = any(
+             re.search(rf"\b{re.escape(term)}\b", clause)
+             for term in history_terms + address_terms
++        ) or re.search(
++            # "Monday and Tuesday do not work" excludes those days; without
++            # this the pair read them as a request (review catch 2026-07-29).
++            r"\b(?:do not|dont|does not|will not|wont|cant|can not|cannot|"
++            r"not)\s+work\b|\b(?:are|is)\s+out\b|\bno\s+good\b",
++            clause,
+         )
+         offset = 0
++        # A comma segment with no date of its own is TRANSPARENT: its
++        # negation context carries into the next segment ("I can't, because
++        # of my work schedule, do Friday"). A date-bearing segment resets the
++        # carry so "I can't do july 28, wednesday is better" keeps wednesday.
++        carry_context = ""
+         for segment_index, segment in enumerate(clause.split(",")):
+             segment = segment.strip()
+             if not segment:
+@@ -695,12 +989,22 @@
+             def killed(start):
+                 if clause_killed:
+                     return True
+-                before = segment[:start]
++                # Scope a negator to the last 8 tokens before the date,
++                # across transparent segments. Wider scopes kill days the
++                # patient then requests (live miss 2026-07-29); correction
++                # markers are stripped so "july 28, no wait, august 3"
++                # keeps its correction.
++                merged = f"{carry_context} {segment[:start]}"
++                merged = re.sub(r"\b(?:no wait|wait|actually)\b", " ", merged)
++                tail = " ".join(merged.split()[-8:])
+                 return any(
+-                    re.search(rf"\b{re.escape(term)}\b", before)
++                    re.search(rf"\b{re.escape(term)}\b", tail)
+                     for term in negators
+                 )
+ 
++            candidates_before = len(candidates)
++            date_seen = False
++
+             occupied = []
+             for match in explicit.finditer(segment):
+                 day = int(match.group(2))
+@@ -713,6 +1017,8 @@
+                 if match.group(4):
+                     phrase += f" {match.group(4)}"
+                 result = resolve_relative_date(phrase)
++                if result:
++                    date_seen = True
+                 if result and not killed(match.start()):
+                     candidates.append(("explicit", clause_index, segment_index,
+                                        offset + match.start(), order, result,
+@@ -722,6 +1028,8 @@
+ 
+             for match in re.finditer(r"(\d{1,2})月(\d{1,2})[号日]", segment):
+                 result = resolve_relative_date(f"{match.group(1)}/{match.group(2)}")
++                if result:
++                    date_seen = True
+                 if result and not killed(match.start()):
+                     candidates.append(("explicit", clause_index, segment_index,
+                                        offset + match.start(), order, result,
+@@ -749,6 +1057,7 @@
+                         month += 1
+                         if month == 13:
+                             year, month = year + 1, 1
++                date_seen = True
+                 if not killed(match.start()):
+                     candidates.append(("bare", clause_index, segment_index,
+                                        offset + match.start(), order, result,
+@@ -766,11 +1075,17 @@
+                     if re.fullmatch(r"\d+", window):
+                         continue
+                     result = resolve_relative_date(window)
++                    if result:
++                        date_seen = True
+                     if result and not killed(first.start()):
+                         candidates.append(("window", clause_index, segment_index,
+                                            offset + first.start(), order, result,
+                                            window))
+                         order += 1
++            if date_seen or len(candidates) > candidates_before:
++                carry_context = ""
++            else:
++                carry_context = f"{carry_context} {segment}"
+             offset += len(segment) + 1
+ 
+     def describe(item):
+@@ -846,11 +1161,47 @@
+         return max(bare_survivors, key=lambda item: item[1:5])[5]
+     window_survivors = [item for item in candidates if item[0] == "window"]
+     if window_survivors:
+-        return min(window_survivors, key=lambda item: item[4])[5]
++        winner = min(window_survivors, key=lambda item: item[4])
++        # "next Friday" said early in the week is genuinely ambiguous: half of
++        # patients mean the imminent Friday, half mean next week's (live
++        # mis-read 2026-07-29: patient meant Aug 7, resolver's grammar says the
++        # 31st). When the two readings differ, ask instead of guessing.
++        def _phrase(ds, label):
++            resolved = datetime.strptime(ds, "%m/%d/%Y")
++            return (f"{label} {resolved.strftime('%A')} the "
++                    f"{resolved.day}{_ordinal_suffix(resolved.day)}")
++
++        next_wd = re.fullmatch(r"next\s+(\S+)", str(winner[6]))
++        if next_wd and next_wd.group(1) in _WEEKDAYS:
++            imminent = resolve_relative_date(next_wd.group(1))
++            week_after = resolve_relative_date(f"{next_wd.group(1)} next week")
++            if imminent and week_after and imminent != week_after:
++                return ("conflict", imminent, week_after,
++                        _phrase(imminent, "this coming"),
++                        _phrase(week_after, "next week"))
++        # "next weekend" carries the same coin-flip as "next Friday": the
++        # imminent weekend or the one after. Ask, never guess.
++        if str(winner[6]).strip() == "next weekend":
++            imminent = resolve_relative_date("this weekend")
++            week_after = resolve_relative_date("next weekend")
++            if imminent and week_after and imminent != week_after:
++                return ("conflict", imminent, week_after,
++                        _phrase(imminent, "this coming"),
++                        _phrase(week_after, "the following"))
++        return winner[5]
++    # Soonest-intent with no date named: search the coming week instead of
++    # bouncing the patient to "which day?". The offer's real dates answer them.
++    if re.search(r"\b(as soon as possible|asap|next available|first available|"
++                 r"first opening|next opening|soonest|earliest)\b", normalized):
++        start = resolve_relative_date("tomorrow")
++        if start:
++            end = (datetime.strptime(start, "%m/%d/%Y")
++                   + timedelta(days=6)).strftime("%m/%d/%Y")
++            return ("range", start, end)
+     return None
+ 
+ 
+-def resolve_from_conversation(messages) -> tuple:
++def _latest_user_text(messages) -> str:
+     user_messages = []
+     for message in messages or []:
+         if not isinstance(message, dict):
+@@ -859,13 +1210,21 @@
+         if str(role or "").upper() == "USER":
+             user_messages.append(message)
+     if not user_messages:
+-        return None, None
++        return ""
+     if all(message.get("created_at") for message in user_messages):
+         chosen = max(user_messages, key=lambda message: str(message["created_at"]))
+     else:
+         chosen = user_messages[-1]
+-    latest = str(chosen.get("message", chosen.get("content", "")) or "")[:2000]
++    return str(chosen.get("message", chosen.get("content", "")) or "")[:2000]
++
++
++def resolve_from_conversation(messages) -> tuple:
++    latest = _latest_user_text(messages)
++    if not latest:
++        return None, None
+     resolved = extract_date_from_text(latest)
++    if isinstance(resolved, tuple) and resolved and resolved[0] == "range":
++        return resolved[1], resolved[2]
+     return (resolved, resolved) if resolved else (None, None)
+ 
+ 
+@@ -926,8 +1285,68 @@
+     return None
+ 
+ 
++def _last_user_segment(blob: str) -> str:
++    # {{lastUserMessage}} rendered ~541 chars for a 68-char message on chat
++    # sessions (live 2026-07-29): it can carry prior turns and agent text, and
++    # feeding those to the parser resurrects cross-turn conflicts. Reduce the
++    # blob to the LAST user-authored piece; on any unknown shape, return the
++    # blob unchanged (no worse than before).
++    blob = blob.strip()
++    if blob[:1] in "[{":
++        try:
++            parsed = json.loads(blob)
++            items = parsed if isinstance(parsed, list) else [parsed]
++            last = ""
++            for item in items:
++                if not isinstance(item, dict):
++                    continue
++                role = str(item.get("role", item.get("sender", ""))).lower()
++                if role in ("user", "patient", "customer", "human"):
++                    last = str(item.get("content", item.get("message", ""))
++                               or "")
++            if last.strip():
++                log.info("live_text_shape=json last_len=%d", len(last))
++                return last.strip()
++        except (json.JSONDecodeError, TypeError):
++            pass
++    marks = list(re.finditer(
++        r"\b(user|patient|customer|human|assistant|agent|ai|bot)\s*[:\-|]",
++        blob, re.IGNORECASE))
++    user_marks = [m for m in marks
++                  if m.group(1).lower() in ("user", "patient", "customer",
++                                            "human")]
++    if not user_marks:
++        log.info("live_text_shape=plain marks=%d", len(marks))
++        return blob
++    last_user = user_marks[-1]
++    nxt = next((m for m in marks if m.start() > last_user.end()), None)
++    segment = blob[last_user.end(): nxt.start() if nxt else len(blob)].strip()
++    log.info("live_text_shape=markers marks=%d last_len=%d",
++             len(marks), len(segment))
++    return segment or blob
++
++
+ def clamp_availability_range(body: dict) -> None:
+     call_id = str(body.pop("callID", "") or "").strip()
++    # The pathway passes the CURRENT patient message directly ({{lastUserMessage}}).
++    # Conversation-history fetches lag one turn behind on chat sessions (live
++    # miss 2026-07-29: turn 2 resolved turn 1's message), so the in-body text
++    # is authoritative and the fetch is only a fallback for older pathway
++    # versions. An unrendered "{{...}}" template means the variable does not
++    # exist on this version — treat as absent.
++    live_text = str(body.pop("user_text", "") or "").strip()
++    if "{{" in live_text:
++        live_text = ""
++    if live_text:
++        live_text = _last_user_segment(live_text)
++    # Highest-fidelity current-turn source: a verbatim-copy extraction
++    # variable. Extraction runs ON the turn being processed, so unlike the
++    # history fetch and {{lastUserMessage}} (both measured racing one turn
++    # behind, 2026-07-29) it always carries the live message. Staleness
++    # (extraction not firing) is caught downstream by the history check.
++    verbatim_text = str(body.pop("user_verbatim", "") or "").strip()
++    if "{{" in verbatim_text:
++        verbatim_text = ""
+     first_requested = str(body.get("first_available", "")).strip().lower() in (
+         "1", "true", "yes",
+     )
+@@ -936,25 +1355,171 @@
+     if (
+         _RAW_TEXT_DATES
+         and TENANT_ID.strip().lower() == "mott"
+-        and call_id
++        and (call_id or live_text)
+         and not first_requested
+     ):
+         try:
+-            msgs = _fetch_conversation(call_id)
++            # BOTH sources race one turn behind on their own (measured live
++            # 2026-07-29: the history fetch lags on chat sessions, and
++            # {{lastUserMessage}} sometimes renders the previous turn).
++            # Newest-of-both: a live blob whose text is nowhere in the
++            # fetched history IS the current turn; a blob matching an older
++            # message is stale, and the fetched latest wins.
++            msgs = _fetch_conversation(call_id) if call_id else None
+             log.info("raw_fetch msgs=%s", len(msgs) if msgs else "none")
++            history_texts = [
++                str(m.get("message", m.get("content", "")) or "").strip()
++                for m in msgs or []
++                if str(m.get("sender", m.get("role", ""))).upper() == "USER"
++            ]
++            if verbatim_text and verbatim_text not in history_texts[:-1]:
++                # Either it IS the current turn (committed nowhere yet) or it
++                # equals the newest committed message — both mean it is the
++                # message being answered right now. Matching an OLDER message
++                # means the extraction went stale; fall through.
++                log.info("verbatim=current")
++                msgs = [{"sender": "USER", "message": verbatim_text,
++                         "created_at": "9"}]
++            elif live_text:
++                residue = live_text
++                for m in msgs or []:
++                    known = str(m.get("message", m.get("content", ""))
++                                or "").strip()
++                    if known:
++                        residue = residue.replace(known, " ")
++                residue = re.sub(r"\s+", " ", residue).strip()
++                if sum(ch.isalnum() for ch in residue) >= 3:
++                    # Text the committed history has never seen = the turn
++                    # being processed right now.
++                    log.info("live_text=current residue_len=%d", len(residue))
++                    msgs = [{"sender": "USER", "message": residue,
++                             "created_at": "9"}]
++                else:
++                    log.info("live_text=stale")
+             raw_from, raw_to = resolve_from_conversation(msgs) if msgs else (None, None)
+-            if raw_from is None:
++            if not msgs or not _latest_user_text(msgs):
+                 # The webhook fires before Bland commits the patient's newest
+-                # message, so the first fetch often misses it (measured: 2 msgs
+-                # then 4 msgs one turn later). One short wait and refetch turns
+-                # a dropped-qualifier model value ("friday" for "next Friday")
+-                # into a deterministic raw parse.
+-                time.sleep(1.5)
++                # message, so the first fetch can miss it (measured: 2 msgs then
++                # 4 one turn later). Retry ONLY on that lag signature — a user
++                # message that is present but simply has no parseable date will
++                # not grow one by waiting, and every second here counts against
++                # Bland's webhook timeout (a stacked worst case aborted a live
++                # turn into the safe-failure exit, 2026-07-29).
++                time.sleep(1.2)
+                 msgs = _fetch_conversation(call_id)
+                 log.info("raw_refetch msgs=%s", len(msgs) if msgs else "none")
+                 if msgs:
+                     raw_from, raw_to = resolve_from_conversation(msgs)
+             if msgs:
++                latest_user_text = _latest_user_text(msgs)
++                det_class = (
++                    "conflict"
++                    if isinstance(raw_from, tuple)
++                    and raw_from
++                    and raw_from[0] == "conflict"
++                    else "either"
++                    if isinstance(raw_from, tuple)
++                    and raw_from
++                    and raw_from[0] == "either"
++                    else "range"
++                    if raw_from and raw_to and raw_from != raw_to
++                    else "date"
++                    if raw_from
++                    else "none"
++                )
++                if (
++                    _LLM_INTENT == "shadow"
++                    and TENANT_ID.strip().lower() == "mott"
++                    and latest_user_text
++                ):
++                    # Shadow costs ZERO patient latency: fire-and-forget thread
++                    # that only logs. The synchronous version pushed the webhook
++                    # past Bland's timeout when stacked with fetch+EyeCloud.
++                    def _shadow(text=latest_user_text, det=det_class, rf=raw_from):
++                        try:
++                            _log_llm_agreement(text, det, rf)
++                        except Exception:
++                            pass
++                    threading.Thread(target=_shadow, daemon=True).start()
++                elif (
++                    _LLM_INTENT == "authoritative"
++                    and TENANT_ID.strip().lower() == "mott"
++                    and latest_user_text
++                    and raw_from is None
++                ):
++                    # Authoritative consults the LLM ONLY when the deterministic
++                    # parser came up empty — the sole case its answer is used,
++                    # and the only case worth the added seconds.
++                    verdict = llm_interpret_intent(
++                        latest_user_text, _eastern_today()
++                    )
++                    agree = verdict is not None and (
++                        (
++                            verdict["intent"] == "date"
++                            and det_class == "date"
++                            and raw_from == verdict.get("date")
++                        )
++                        or (
++                            verdict["intent"] == "ambiguous"
++                            and det_class == "conflict"
++                        )
++                        or (
++                            verdict["intent"] == "either"
++                            and det_class == "either"
++                        )
++                        or (
++                            verdict["intent"] in ("range", "asap")
++                            and det_class == "range"
++                        )
++                        or (
++                            verdict["intent"] == "none"
++                            and det_class == "none"
++                        )
++                    )
++                    log.info(
++                        "llm_intent=%s det=%s agree=%s",
++                        verdict["intent"] if verdict else "error",
++                        det_class,
++                        agree,
++                    )
++                    if _LLM_INTENT == "authoritative" and raw_from is None and verdict:
++                        if verdict["intent"] == "date":
++                            body["from"] = body["to"] = verdict["date"]
++                            log.info("date_source=llm")
++                        elif verdict["intent"] == "range":
++                            body["from"], body["to"] = (
++                                verdict["date"],
++                                verdict["date2"],
++                            )
++                            log.info("date_source=llm")
++                        elif verdict["intent"] == "asap":
++                            start = _eastern_today() + timedelta(days=1)
++                            body["from"] = start.strftime("%m/%d/%Y")
++                            body["to"] = (
++                                start + timedelta(days=6)
++                            ).strftime("%m/%d/%Y")
++                            log.info("date_source=llm")
++                        elif verdict["intent"] == "either":
++                            days = sorted(
++                                (verdict["date"], verdict["date2"]),
++                                key=lambda ds: datetime.strptime(
++                                    ds, "%m/%d/%Y"
++                                ),
++                            )
++                            body["from"], body["to"] = days[0], days[1]
++                            body["either_days"] = (
++                                verdict["date"], verdict["date2"],
++                            )
++                            log.info("date_source=llm_either")
++                        elif verdict["intent"] == "ambiguous":
++                            body["date_conflict"] = (
++                                "conflict",
++                                verdict["date"],
++                                verdict["date2"],
++                                verdict["optionA"],
++                                verdict["optionB"],
++                            )
++                            log.info("date_source=llm_conflict")
+                 log.info("raw_resolve from=%s", raw_from)
+                 if (
+                     isinstance(raw_from, tuple)
+@@ -963,6 +1528,18 @@
+                 ):
+                     body["date_conflict"] = raw_from
+                     log.info("date_source=conflict")
++                elif (
++                    isinstance(raw_from, tuple)
++                    and raw_from
++                    and raw_from[0] == "either"
++                ):
++                    days = sorted(
++                        (raw_from[1], raw_from[2]),
++                        key=lambda ds: datetime.strptime(ds, "%m/%d/%Y"),
++                    )
++                    body["from"], body["to"] = days[0], days[1]
++                    body["either_days"] = (raw_from[1], raw_from[2])
++                    log.info("date_source=either")
+                 elif raw_from:
+                     body["from"], body["to"] = raw_from, raw_to
+                     log.info("date_source=raw")
+@@ -974,8 +1551,8 @@
+     # closed days simply return no slots, so no business-day logic is needed.
+     # Otherwise from/to go through resolve_relative_date; bad/inverted "to"
+     # collapses to same-day; spans are capped at 14 days.
+-    from datetime import datetime, timedelta
+-
++    # (No local datetime import here: it would shadow the module import and
++    # make every use ABOVE it in this function an UnboundLocalError.)
+     first = str(body.pop("first_available", "")).strip().lower()
+     if first in ("1", "true", "yes"):
+         start = _eastern_today() + timedelta(days=1)
+@@ -1492,8 +2069,23 @@
+ 
+ def build_argv(path: str, body: dict) -> tuple[list[str], bool]:
+     verb, flagmap, is_write = ENDPOINTS[path]
++    # date_conflict/either_days are INTERNAL signals derived by clamp below.
++    # A caller-supplied value is an injection attempt (and reached CVC too,
++    # review find F2 2026-07-29): discard before clamp so only our own
++    # tenant-gated derivation can ever populate them.
++    body.pop("date_conflict", None)
++    body.pop("either_days", None)
+     if path == "/availability":
+         clamp_availability_range(body)
++    # clamp may attach routing signals that are for the HANDLER, not the CLI.
++    # The strict flag loop below rejects unknown keys (which is how the
++    # conflict signal silently rode the error lane until 2026-07-29), so pull
++    # them aside and put them back for the caller after argv is built.
++    deferred_signals = {
++        key: body.pop(key)
++        for key in ("date_conflict", "either_days")
++        if key in body
++    }
+     argv = [CLI, "appt", verb, "--agent", "--reason", f"bland-{verb}"]
+     pref = str(body.pop("time_pref", "")).strip().lower()
+     # An explicit clock time from the caller ("after 2") outranks a band
+@@ -1585,6 +2177,7 @@
+         argv.append("--confirm")
+         if Path(AWS_ENV_WRAPPER).exists():
+             argv = [AWS_ENV_WRAPPER, "--"] + argv
++    body.update(deferred_signals)
+     return argv, confirm
+ 
+ 
+@@ -1601,6 +2194,28 @@
+             raise PermissionError(f"test mode: new-patient last name must start with {TEST_LAST_PREFIX}")
+ 
+ 
++def _either_day_slots(slots, days):
++    # Patient asked "day A or day B": keep only those days' slots and order
++    # them one-per-day (slot_1 = first requested day, slot_2 = the other) so
++    # the offer covers BOTH days instead of two times on the first.
++    def slot_date(slot):
++        if not isinstance(slot, dict):
++            return ""
++        return str(slot.get("start", "")).split(" ")[0]
++
++    wanted = [str(day) for day in days if day]
++    mine = [slot for slot in slots if slot_date(slot) in wanted]
++    picks, used = [], set()
++    for day in wanted:
++        for index, slot in enumerate(mine):
++            if index not in used and slot_date(slot) == day:
++                picks.append(slot)
++                used.add(index)
++                break
++    rest = [slot for index, slot in enumerate(mine) if index not in used]
++    return picks + rest
++
++
+ def availability_envelope(result):
+     slots = result if isinstance(result, list) else []
+     first = slots[0] if slots else {}
+@@ -2200,6 +2815,26 @@
+                 status = 400
+                 return self._send(status, {"error": str(exc)})
+ 
++            date_conflict_signal = None
++            either_days_signal = None
++            if isinstance(cli_body, dict):
++                date_conflict_signal = cli_body.pop("date_conflict", None)
++                either_days_signal = cli_body.pop("either_days", None)
++                # Internal signals are always tuples we constructed; anything
++                # else is malformed and must not crash the request (F1).
++                if not isinstance(date_conflict_signal, (tuple, list)):
++                    date_conflict_signal = None
++                if not isinstance(either_days_signal, (tuple, list)):
++                    either_days_signal = None
++            if self.path == "/availability" and date_conflict_signal:
++                # Two dates disagree: answer ok:true with the conflict tuple
++                # and NO search, so the pathway's date_conflict_detected edge
++                # routes to the clarify node with both options populated.
++                conflict_env = availability_envelope([])
++                conflict_env["date_conflict"] = list(date_conflict_signal)
++                status = 200
++                return self._send(status, {"ok": True, "result": conflict_env})
++
+             env = dict(os.environ)
+             # Route ONLY the EyeCloud CLI's EyeCloud HTTPS through the trusted office
+             # exit node (PerimeterX blocks raw AWS IPs). Everything AWS must stay
+@@ -2425,6 +3060,8 @@
+                         result["verify_note"] = "read_after_write_unconfirmed"
+                         log.warning("book read-after-write unconfirmed; success downgraded")
+                 if self.path == "/availability":
++                    if either_days_signal and isinstance(result, list):
++                        result = _either_day_slots(result, either_days_signal)
+                     result = availability_envelope(result)
+                     # Sticky-preference dead-end (live 2026-07-21): a morning
+                     # pref carried over from an earlier turn filtered a
+@@ -2439,7 +3076,10 @@
+                             relax_body = {k: v for k, v in body.items() if k != "time_pref"}
+                             argv_r, _ = build_argv(self.path, relax_body)
+                             p_r = run_cli(argv_r, env)
+-                            relaxed = availability_envelope(cli_json_result(p_r)) if p_r.returncode == 0 else None
++                            relaxed_raw = cli_json_result(p_r) if p_r.returncode == 0 else None
++                            if either_days_signal and isinstance(relaxed_raw, list):
++                                relaxed_raw = _either_day_slots(relaxed_raw, either_days_signal)
++                            relaxed = availability_envelope(relaxed_raw) if p_r.returncode == 0 else None
+                             if relaxed and relaxed["count"]:
+                                 relaxed["time_pref_relaxed"] = pref
+                                 result = relaxed
+@@ -2451,9 +3091,14 @@
+                         try:
+                             argv2, _ = build_argv(self.path, {**body, "store": alt})
+                             p2 = run_cli(argv2, env)
+-                            alt_res = availability_envelope(
+-                                json.loads(p2.stdout.strip()) if p2.returncode == 0 and p2.stdout.strip() else []
+-                            )
++                            alt_raw = (json.loads(p2.stdout.strip())
++                                       if p2.returncode == 0 and p2.stdout.strip() else [])
++                            # "Monday or Friday" must not surface a Tuesday
++                            # from the alternate office (review catch
++                            # 2026-07-29): same per-day filter as the primary.
++                            if either_days_signal and isinstance(alt_raw, list):
++                                alt_raw = _either_day_slots(alt_raw, either_days_signal)
++                            alt_res = availability_envelope(alt_raw)
+                             result.update(
+                                 {
+                                     "alt_store": alt,

@@ -1,0 +1,23 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD20",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-round14-fix",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1800,
+      "expect_files": [
+        "build_goalloop.py",
+        "check_goalloop_graph.py",
+        "pathway-goalloop-draft.json",
+        "frozen-extractors.json",
+        "DEBUG.md"
+      ],
+      "spec": "ROLE: fix worker for the Mott goal-loop Bland pathway, round 14 - one edge label. Work entirely inside your CWD; never modify anything outside it; no network, no git, no MCP/Apps/skills; do not mint, attach, deploy, or call any API. CONTEXT - measured live on v109: with Monday 08/17 offers standing, the ask 'What is the earliest I can do that day?' was routed to a preference-based search (extraction had inconsistently emitted bare 'monday', resolving to the wrong Monday 08/10) instead of the offered-date search whose body pins from/to to the standing offer and would have answered correctly regardless of extraction. The deterministic fix is routing, not extraction. THE FIX - copy every artifact from /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD17/gl-round13-fix/ into CWD and change ONLY: (1) the n_goal_response edge to n_goal_search_offered_time: extend its label (and mirrored description) with ' - or asks for the earliest, soonest, or first available time on that date'. (2) VALIDATOR: add ASSERTION 14 keeping 1-13 intact: the offered_time edge label contains 'earliest'. Structured FAIL citing 'assertion 14'; must PASS your draft and FAIL the untouched round-13 draft at /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD17/gl-round13-fix/pathway-goalloop-draft.json citing assertion 14. (3) build_goalloop.py regenerates deterministically; fixture-conformant.json updated. (4) DEBUG.md: the measured evidence, the exact label change, regeneration command; must mention the words extract, prompt, and compress-context is inherited (a one-line note that no prompt compression changed this round satisfies the doc check).",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_round14_fix.py ./check_goalloop_graph.py ./pathway-goalloop-draft.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD17/gl-round13-fix/pathway-goalloop-draft.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/capture-v96/graph.json ./frozen-extractors.json ./DEBUG.md",
+      "verified": "Round 14 routes earliest-on-that-day asks to the offered-date-pinned search via one label extension, with assertion 14 pinning it and every prior floor intact."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+ ! OPEN item OPEN-1: listed separately; pre-approved item warns but does not automatically fail
+ ! OPEN item OPEN-2: listed separately; pre-approved item warns but does not automatically fail
+PASS: all numbered assertions through [39] satisfied
+local graph /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workEve/pathway-d7-builder/pathway-v94-1-draft.json: 50 nodes, 134 edges
+provider currently has 95 versions, latest = 95
+
+WRITE: creating one new unattached version
+created version 96
+
+READBACK
+  matches local exactly: 50 nodes, 134 edges, routing and extraction identical
+
+ATTACHMENT
+  numbers pointing at version 96: none, unattached as intended
+
+external_actions_taken=1 (one version create)
+VERSION=96
+GUARD_RESULT=MINTED version=96
+REMINDER: the Bland dashboard editor base is UNVERSIONED and may be stale - never edit there; regenerate from the transform chain.

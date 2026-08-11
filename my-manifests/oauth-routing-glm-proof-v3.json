@@ -1,0 +1,17 @@
+{
+  "run_name": "oauth-routing-glm-proof-v3",
+  "workdir": "/home/ankit114/.ringer/work/oauth-routing-glm-proof-v3",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "glm-coding-plan",
+      "engine": "glm-coding-plan",
+      "model": "zai-coding-plan/glm-5.2",
+      "spec": "Create ./proof.txt containing exactly GLM_CODING_PLAN_OK followed by a newline. Do not inspect credentials, network settings, or unrelated files. Then stop.",
+      "check": "test \"$(cat proof.txt)\" = GLM_CODING_PLAN_OK",
+      "expect_files": ["proof.txt"],
+      "timeout_s": 300,
+      "verified": "GLM executed through the pinned Z.AI Coding Plan subscription route after credential-store migration."
+    }
+  ]
+}

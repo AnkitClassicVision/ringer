@@ -1,0 +1,5 @@
+GET_PATHWAY_HTTP=401
+GET_VERSIONS_HTTP=401
+SCAN pathway.json:
+SCAN versions.json:
+SCAN_DONE

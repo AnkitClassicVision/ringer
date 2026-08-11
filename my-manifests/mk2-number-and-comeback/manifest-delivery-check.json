@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workDeliveryCheck",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "delivery-check",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 300,
+      "expect_files": ["delivery.txt"],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > delivery.txt 2>&1\nimport json, os, re, urllib.request\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    p = json.loads(raw); raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\nmask = lambda s: re.sub(r\"\\d{5,}\", lambda m: \"***\" + m.group(0)[-4:], str(s))\nfor cid in (\"b8b4add0-5ef6-4887-9e35-59a028aa96c9\", \"8a124841-e9d4-4e7c-8594-7599c79b6b05\", \"b5920ad5-21f2-455c-b1f5-4be6959fb938\"):\n    req = urllib.request.Request(\"https://api.bland.ai/v1/sms/conversations/\" + cid, headers={\"Authorization\": raw, \"User-Agent\": \"mybcat-cli\"})\n    with urllib.request.urlopen(req, timeout=60) as r:\n        d = json.loads(r.read().decode())\n    d = d.get(\"data\") if isinstance(d.get(\"data\"), dict) else d\n    print(\"CONV ...%s node=%s user=%s\" % (cid[-6:], d.get(\"current_node_id\"), mask(d.get(\"user_number\"))))\n    for m in d.get(\"messages\") or []:\n        if isinstance(m, dict):\n            print(\"  [%s] %s status=%s err=%s len=%d\" % (str(m.get(\"created_at\", \"\"))[:19], m.get(\"sender\", \"?\"), m.get(\"status\", \"?\"), m.get(\"error_code\"), len(str(m.get(\"message\", \"\")))))\nprint(\"DELIVERY_DONE\")\nPY\nrc=$?\ncat delivery.txt\nexit $rc",
+      "check": "grep -q 'DELIVERY_DONE' delivery.txt || { echo 'FAIL: probe did not finish'; tail -3 delivery.txt; exit 1; }; test \"$(grep -c '^CONV ' delivery.txt)\" -eq 3 || { echo 'FAIL: expected 3 conversations inspected'; exit 1; }; grep -q 'status=' delivery.txt || { echo 'FAIL: no message status lines'; exit 1; }; echo \"MEASURED: $(grep -c 'status=failed\\|status=undelivered' delivery.txt) failed-status messages across 3 threads\"",
+      "verified": "Message-level delivery statuses and carrier error codes for the two flagged pilot threads (opt-out thread and the possibly-undelivered opener) plus one healthy control thread, proving whether the ...9fb938 patient ever received the opener and whether the opt-out thread's failure is just the expected post-STOP carrier block."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT1probe",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "t1-deployed-resolver-probe",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["probe.txt"],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u - <<'PY' > probe.txt 2>&1\nimport json, os, urllib.error, urllib.request\nGW = \"https://mott-booking-gw.mail.mybcat.com\"\nauth = os.environ[\"GW_TOKEN\"].strip()\nif not auth.lower().startswith(\"bearer\"):\n    auth = \"Bearer \" + auth\nfor phrase in (\"thursday\", \"the following thursday\", \"following thursday\", \"thursday next week\"):\n    body = {\"store\": \"711\", \"from\": phrase, \"to\": phrase, \"slot_minutes\": \"15\", \"after\": \"none\", \"before\": \"none\", \"time_pref\": \"none\"}\n    req = urllib.request.Request(GW + \"/availability\", data=json.dumps(body).encode(), method=\"POST\", headers={\"Content-Type\": \"application/json\", \"User-Agent\": \"mybcat-cli\", \"Authorization\": auth})\n    try:\n        with urllib.request.urlopen(req, timeout=120) as r:\n            payload = json.loads(r.read().decode() or \"{}\")\n        res = (payload.get(\"result\") or {})\n        slots = res.get(\"slots\") or []\n        starts = sorted({str(s.get(\"start\", \"\"))[:10] for s in slots if s.get(\"start\")})\n        print(\"DEPLOYED_RESOLVE(%s)=count=%s dates=%s\" % (phrase, res.get(\"count\"), \",\".join(starts) if starts else \"none\"))\n    except urllib.error.HTTPError as e:\n        print(\"DEPLOYED_RESOLVE(%s)=HTTP_%s %s\" % (phrase, e.code, e.read().decode(errors=\"replace\")[:120]))\n    except Exception as e:\n        print(\"DEPLOYED_RESOLVE(%s)=ERROR %s\" % (phrase, type(e).__name__))\nprint(\"PROBE_DONE\")\nPY\nrc=$?; cat probe.txt; exit $rc",
+      "check": "n=$(grep -cE '^DEPLOYED_RESOLVE\\(' probe.txt); [ \"$n\" -eq 4 ] || { echo \"FAIL: expected 4 DEPLOYED_RESOLVE lines, got $n\"; cat probe.txt; exit 1; }; grep -q 'PROBE_DONE' probe.txt || { echo 'FAIL: probe did not finish'; exit 1; }; grep -qE '^DEPLOYED_RESOLVE\\(thursday\\)=count=' probe.txt || { echo 'FAIL: baseline thursday call did not return a result envelope'; head -4 probe.txt; exit 1; }; echo 'PASS: deployed resolver answers on the record:'; grep '^DEPLOYED_RESOLVE' probe.txt",
+      "verified": "Production's own resolve_relative_date interrogated through four read-only availability calls off-hours: the returned slot dates per phrase settle whether the deployed vocabulary matches the local snapshot (drift) or the 08/06 came from message-selection or phrase reduction upstream."
+    }
+  ]
+}

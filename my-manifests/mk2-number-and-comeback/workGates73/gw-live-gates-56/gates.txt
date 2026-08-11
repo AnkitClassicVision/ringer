@@ -1,0 +1,12 @@
+GATE=anchor-exact STATUS=200 first=08/07/2026 11:15 am count=7 exact=True oob=None unresolved=None err=
+GATE=anchor-offgrid STATUS=200 first=08/07/2026 11:15 am count=7 exact=False oob=None unresolved=None err=
+GATE=specificity STATUS=200 first=08/27/2026 10:30 am count=25 exact=None oob=None unresolved=None err=
+GATE=ordinal STATUS=200 first=08/27/2026 10:30 am count=25 exact=None oob=None unresolved=None err=
+GATE=anaphora STATUS=200 first=08/17/2026 01:00 pm count=18 exact=None oob=None unresolved=None err=
+GATE=away-override STATUS=200 first=08/19/2026 10:30 am count=28 exact=None oob=None unresolved=None err=
+GATE=week-of-reg STATUS=200 first=08/17/2026 01:00 pm count=18 exact=None oob=None unresolved=None err=
+GATE=relative-reg STATUS=200 first=08/19/2026 10:30 am count=28 exact=None oob=None unresolved=None err=
+GATE=latest-reg STATUS=200 first=08/06/2026 05:15 pm count=24 exact=None oob=None unresolved=None err=
+GATE=default-window STATUS=200 first=08/05/2026 03:15 pm count=87 exact=None oob=False unresolved=None err=
+GATE=oob-3am STATUS=200 first=08/06/2026 10:30 am count=24 exact=None oob=True unresolved=None err=
+EXPECT_RELATIVE_DATE=08/19/2026

@@ -1,0 +1,232 @@
+{
+  "subject": {
+    "name": "Vintage Optical",
+    "public_address": "605 S Main St, Morton, IL 61550",
+    "public_origin": {
+      "latitude": 40.6049094,
+      "longitude": -89.467024,
+      "address": "605 S Main St, Morton, IL 61550",
+      "source_id": "GOOGLE_MAPS_SAMPLE_20260730",
+      "captured_at": "2026-07-30T12:54:08.602Z"
+    }
+  },
+  "method": {
+    "allocation_method": "area_weighted_block_group_intersection_epsg5070",
+    "projected_crs": "EPSG:5070",
+    "geographic_unit": "2024 TIGER Illinois block groups",
+    "included_county_fips": [
+      "107",
+      "113",
+      "143",
+      "179",
+      "203"
+    ],
+    "acs_vintage": "2024 ACS 5-year",
+    "acs_sentinel_handling": "Negative missing estimates are null and are never treated as zero.",
+    "income_context": "Household-weighted mean of valid block-group median household incomes. This is an approximation, not a true catchment median.",
+    "diabetes_method": "Adult-population and tract-area weighted crude prevalence",
+    "diabetes_source_year": 2023,
+    "diabetes_release": "CDC PLACES 2025 release",
+    "isochrone_profile": "auto",
+    "isochrone_limitation": "Modeled drive time with no live traffic."
+  },
+  "canonical_full_vdu": null,
+  "windows": [
+    {
+      "minutes": 5,
+      "population_raw": 6623.6403002434,
+      "population_display": 6624,
+      "households_raw": 2721.5402135946088,
+      "households_display": 2722,
+      "children_under_18_raw": 1712.0935947499806,
+      "children_under_18_display": 1712,
+      "population_40_to_64_raw": 1810.5570795993406,
+      "population_40_to_64_display": 1811,
+      "population_65_plus_raw": 1310.9571520731326,
+      "population_65_plus_display": 1311,
+      "approximate_household_weighted_income_context_raw": 93888.1900674753,
+      "approximate_household_weighted_income_context_display": 93888,
+      "income_context_label": "approximation, not a true catchment median",
+      "diabetes_crude_pct_raw": 9.598346221380305,
+      "diabetes_crude_pct": 9.6,
+      "diabetes_crude_pct_display": 9.6,
+      "intersecting_block_group_count": 12,
+      "intersecting_tract_count": 5,
+      "acs_vintage": "2024 ACS 5-year",
+      "allocation_method": "area_weighted_block_group_intersection_epsg5070",
+      "source_ids": [
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025"
+      ],
+      "canonical_full_vdu": null
+    },
+    {
+      "minutes": 10,
+      "population_raw": 19322.109512595165,
+      "population_display": 19322,
+      "households_raw": 7872.553089499892,
+      "households_display": 7873,
+      "children_under_18_raw": 4571.032902793531,
+      "children_under_18_display": 4571,
+      "population_40_to_64_raw": 5843.462951754857,
+      "population_40_to_64_display": 5843,
+      "population_65_plus_raw": 4290.82482289517,
+      "population_65_plus_display": 4291,
+      "approximate_household_weighted_income_context_raw": 93730.40100459656,
+      "approximate_household_weighted_income_context_display": 93730,
+      "income_context_label": "approximation, not a true catchment median",
+      "diabetes_crude_pct_raw": 10.887653760992071,
+      "diabetes_crude_pct": 10.9,
+      "diabetes_crude_pct_display": 10.9,
+      "intersecting_block_group_count": 30,
+      "intersecting_tract_count": 14,
+      "acs_vintage": "2024 ACS 5-year",
+      "allocation_method": "area_weighted_block_group_intersection_epsg5070",
+      "source_ids": [
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025"
+      ],
+      "canonical_full_vdu": null
+    },
+    {
+      "minutes": 15,
+      "population_raw": 54767.99053377332,
+      "population_display": 54768,
+      "households_raw": 23792.894784921555,
+      "households_display": 23793,
+      "children_under_18_raw": 11706.872043678228,
+      "children_under_18_display": 11707,
+      "population_40_to_64_raw": 17430.702079834235,
+      "population_40_to_64_display": 17431,
+      "population_65_plus_raw": 10939.233509907586,
+      "population_65_plus_display": 10939,
+      "approximate_household_weighted_income_context_raw": 76518.8382017695,
+      "approximate_household_weighted_income_context_display": 76519,
+      "income_context_label": "approximation, not a true catchment median",
+      "diabetes_crude_pct_raw": 12.39234881071381,
+      "diabetes_crude_pct": 12.4,
+      "diabetes_crude_pct_display": 12.4,
+      "intersecting_block_group_count": 89,
+      "intersecting_tract_count": 42,
+      "acs_vintage": "2024 ACS 5-year",
+      "allocation_method": "area_weighted_block_group_intersection_epsg5070",
+      "source_ids": [
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025"
+      ],
+      "canonical_full_vdu": null
+    },
+    {
+      "minutes": 20,
+      "population_raw": 173057.9514559951,
+      "population_display": 173058,
+      "households_raw": 75243.65191797323,
+      "households_display": 75244,
+      "children_under_18_raw": 38651.69834345294,
+      "children_under_18_display": 38652,
+      "population_40_to_64_raw": 53102.157990763924,
+      "population_40_to_64_display": 53102,
+      "population_65_plus_raw": 32473.263486348664,
+      "population_65_plus_display": 32473,
+      "approximate_household_weighted_income_context_raw": 68303.27784211404,
+      "approximate_household_weighted_income_context_display": 68303,
+      "income_context_label": "approximation, not a true catchment median",
+      "diabetes_crude_pct_raw": 13.187335478830967,
+      "diabetes_crude_pct": 13.2,
+      "diabetes_crude_pct_display": 13.2,
+      "intersecting_block_group_count": 193,
+      "intersecting_tract_count": 72,
+      "acs_vintage": "2024 ACS 5-year",
+      "allocation_method": "area_weighted_block_group_intersection_epsg5070",
+      "source_ids": [
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025"
+      ],
+      "canonical_full_vdu": null
+    },
+    {
+      "minutes": 30,
+      "population_raw": 283661.4081230436,
+      "population_display": 283661,
+      "households_raw": 120939.95432176416,
+      "households_display": 120940,
+      "children_under_18_raw": 64831.21376034646,
+      "children_under_18_display": 64831,
+      "population_40_to_64_raw": 86558.2837443598,
+      "population_40_to_64_display": 86558,
+      "population_65_plus_raw": 53257.93371957987,
+      "population_65_plus_display": 53258,
+      "approximate_household_weighted_income_context_raw": 77711.22227441112,
+      "approximate_household_weighted_income_context_display": 77711,
+      "income_context_label": "approximation, not a true catchment median",
+      "diabetes_crude_pct_raw": 12.296111115913178,
+      "diabetes_crude_pct": 12.3,
+      "diabetes_crude_pct_display": 12.3,
+      "intersecting_block_group_count": 255,
+      "intersecting_tract_count": 90,
+      "acs_vintage": "2024 ACS 5-year",
+      "allocation_method": "area_weighted_block_group_intersection_epsg5070",
+      "source_ids": [
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025"
+      ],
+      "canonical_full_vdu": null
+    }
+  ],
+  "partial_diagnostic": {
+    "label": "partial_diagnostic_not_canonical_vdu",
+    "formula": "population + 0.35 * children_under_18 + 0.30 * population_40_to_64 + 0.60 * population_65_plus",
+    "omitted_canonical_terms": [
+      "diabetes_prevalence_indexed_population",
+      "commercial_pay_indexed_population"
+    ],
+    "canonical_full_vdu": null,
+    "windows": [
+      {
+        "minutes": 5,
+        "value_raw": 8552.614473529575,
+        "value_display": 8553,
+        "canonical_full_vdu": null
+      },
+      {
+        "minutes": 10,
+        "value_raw": 25249.50480783646,
+        "value_display": 25250,
+        "canonical_full_vdu": null
+      },
+      {
+        "minutes": 15,
+        "value_raw": 70658.14647895552,
+        "value_display": 70658,
+        "canonical_full_vdu": null
+      },
+      {
+        "minutes": 20,
+        "value_raw": 222000.65136524203,
+        "value_display": 222001,
+        "canonical_full_vdu": null
+      },
+      {
+        "minutes": 30,
+        "value_raw": 364274.5782942207,
+        "value_display": 364275,
+        "canonical_full_vdu": null
+      }
+    ]
+  }
+}

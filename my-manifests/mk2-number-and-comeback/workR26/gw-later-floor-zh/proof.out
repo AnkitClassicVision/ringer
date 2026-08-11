@@ -1,0 +1,8 @@
+CASE=later-floored AFTER_GT=12:15 (verbatim='Any other later time ?', context='08/07/2026 12:15 pm', after/before none -> effective after strictly later than 12:15 pm)
+CASE=earlier-ceilinged BEFORE=12:00 (verbatim='anything earlier?', context='08/07/2026 12:00 pm')
+CASE=later-this-week-not-time UNCHANGED=true (verbatim='later this week works', context same - no time floor)
+CASE=latest-still-wins UNCHANGED=true (verbatim='last appointment please', time_pref='latest' - floor must not fire)
+CASE=zh-afternoon AFTER=12:00 (verbatim='下午')
+CASE=zh-morning BEFORE=12:00 (verbatim='早上')
+CASE=zh-evening AFTER=16:00 (verbatim='晚上')
+CASE=zh-later AFTER_GT=12:15 (verbatim='晚一点', context='08/07/2026 12:15 pm')

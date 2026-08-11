@@ -1,0 +1,6 @@
+EXPECT53_FORTNIGHT_LO=08/19/2026
+EXPECT53_FORTNIGHT_HI=08/21/2026
+EXPECT53_ORD27=08/27/2026
+GATE53=fortnight-no-article STATUS=200 first=08/19/2026 10:30 am count=28 unresolved=None err=
+GATE53=spelled-twentyseventh STATUS=200 first=08/27/2026 10:30 am count=25 unresolved=None err=
+GATE53=tail-end-next-month STATUS=200 first=08/05/2026 11:00 am count=230 unresolved=True err=

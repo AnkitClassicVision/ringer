@@ -1,0 +1,25 @@
+{
+  "source_id": "GOOGLE_MAPS_SAMPLE_20260730",
+  "captured_at": "2026-07-30T12:54:08.602Z",
+  "collection_method": "direct public Google Maps browser DOM observation",
+  "url": "https://www.google.com/maps/place/Vintage+Optical/@40.6049094,-89.467024,17z/",
+  "observed": {
+    "name": "Vintage Optical",
+    "category": "Optometrist",
+    "rating": 4.9,
+    "review_count": null,
+    "address": "605 S Main St, Morton, IL 61550",
+    "website": "https://vintageopt.com/",
+    "booking_link_visible": true,
+    "booking_domain": "scheduleyourexam.com",
+    "public_listing_latitude": 40.6049094,
+    "public_listing_longitude": -89.467024,
+    "owner_post_date_visible": "2026-04-09"
+  },
+  "limitations": [
+    "Google displayed a limited public view without a review count.",
+    "This is one dated direct observation, not a rank grid or complete query set.",
+    "The rating is platform-specific and cannot be combined with aggregator counts without a documented deduplication method.",
+    "The map pin is used as the public routing origin for the listed street address, not as patient-origin evidence."
+  ]
+}

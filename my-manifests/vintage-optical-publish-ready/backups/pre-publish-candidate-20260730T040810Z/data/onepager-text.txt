@@ -1,0 +1,120 @@
+   I N T E R N A L - O N LY                                                               Public-data working draft                                                                      UNROOMED / NOT FOR EXTERNAL USE
+
+
+
+           MyBCAT                    PRACTICE GROWTH INTELLIGENCE
+
+                                                                                                                                                                                                                        CLIENT
+Vintage Optical: measure the                                                                                                                                                                54                          OPPORTUNITY
+                                                                                                                                                                                                                        HIGHER = BETTER
+
+lanes before scaling them.                                                                                                                                                                     / 100
+                                                                                                                                                                                                                        Public data · Confidence C S14 S16
+
+
+Competitive Growth Analysis for Vintage Optical, 605 S Main St, Morton, Illinois. S01 S02 N00
+
+
+                  THE READ
+                  Room to Win is tight at 43, while Client Opportunity is 54, Practice Competitiveness is 58, and Digital Presence is 57; every displayed score uses higher = better. S01
+    ◆             S06 S16 The scores diverge because Vintage already publishes broad services and a booking path, while complete local supply, peer reputation, access conversion, capacity,
+                  and economics remain unmeasured. S01 S06 S16 The action is lane by lane: establish conversion, access, and channel baselines before making growth claims. S03 S04 S05
+
+
+
+
+1
+                  YOUR MARKET
+                  Supportive city context, incomplete catchment proof.
+                  Morton city data supports a mixed demand read, but city values do not describe the 20-minute drive-time catchment. S14 S15
+
+
+
+                  57 / 100                                                                 17,557                                                  25.9%                                                  23.1%
+                  MARKET DEMAND-SUPPLY                                                     2024 CITY ESTIMATE                                      UNDER AGE 18                                           AGE 65 OR OLDER
+                  Higher = better · mixed · public-only method. S14                        City context only. S14                                  Directional family-demand proxy. S14                   Directional age-demand proxy. S14
+
+
+
+
+2
+                  YOUR COMPETITION
+                  Nearby choices are real; total supply is still unknown.
+                  Room to Win R01 R05                                         43 / 100 higher = better                 TIER 1              Focus On Eyes                             Direct Morton peer, 4.07 routed minutes. S07 R01
+
+                                                                                                                       TIER 1              Tri-County + VCC                          Regional peers with dry-eye or myopia overlap. S08 S10
+                  Practice Competitiveness S01 S06                            58 / 100 higher = better                 TIER 2              Bard + Illinois Eye                       Retail and medical-surgical substitutes. S11 S12
+
+
+                    Known routed alternatives are a bounded peer set, not a complete supply                             A complete office and provider census could move Room to Win materially in either direction. R03 R04 Public peer pages
+                    census or patient-origin choice set. R03 R04                                                        prove stated services, not utilization or patient draw. S08 S09 S12
+
+
+
+
+3
+                  YOUR OPPORTUNITY
+                  Three existing specialty lanes are research-next, not forecasts.
+                                                                          Dry eye / ocular surface                                                                                                     52 / 100
+                     57 / 100
+                                                                                                                                                                                                                                            RESEARCH NEXT
+                                                                          Existing offer plus city age proxy; direct peer overlap constrains the gap. S03 S08 S09                                       higher = better
+
+
+                     DIGITAL PRESENCE                                     Myopia management
+                                                                          Existing offer plus city child-share proxy; a regional peer publishes overlap. S04 S10 S14
+                                                                                                                                                                                                       52 / 100                             RESEARCH NEXT
+                     Higher = better · mixed · Confidence                                                                                                                                               higher = better
+                     C
+
+                     The site publishes service pages and                 Specialty contact lenses
+                                                                          The public offer is verified; demand, competitive gap, capacity, and economics are not. S05 S07
+                                                                                                                                                                                                       51 / 100                             RESEARCH NEXT
+                     a booking flow; findability, reputation,                                                                                                                                           higher = better
+                     and social proof lack peer-normalized
+                     baselines. S01 S06 S16
+
+
+
+                     Unknown until measured: all volume, conversion, capacity, collection, and economics inputs. S03 S04 S05 S06 Public pages verify offers and access paths, not starts, completed visits, throughput, or financial
+                     performance. S03 S04 S05 S06
+
+
+First 30 Days                                                                                                                                                                Exactly three GROW Fix Cards · measured baselines before growth claims
+
+
+   F-001 · SPECIALTY CONVERSION                          CONFIDENCE: HIGH                F-002 · ACCESS DIAGNOSTIC                             CONFIDENCE: HIGH              F-003 · CHANNEL BASELINE                              CONFIDENCE: MEDIUM
+
+   Tag the three existing lanes.                                                         Measure the access gap.                                                             Audit listings and source flow.
+   ACTION: build a 30-day table for dry eye, myopia, and specialty                       ACTION: track calls, booking attempts, live slots, cancellations, no-               ACTION: reconcile the current address across tracked surfaces,
+   contacts before adding services or claiming lane ownership. S03                       shows, and requests without an acceptable slot before changing hours                correct only observed mismatches, and baseline reviews, referrals,
+   S04 S05                                                                               or staffing. S02 S06                                                                and recall before broader awareness work. S01 S02 S16
+   OWNER: practice staff · 30 days · no dependency                                       OWNER: practice staff · 30 days · no dependency                                     OWNER: practice staff · 30 days · no dependency
+
+    MATH: inquiry-to-book = booked evaluations / inquiries; book-to-start =                MATH: access gap = unanswered or abandoned calls + incomplete                       MATH: listing accuracy = correct tracked listings / tracked listings; review
+    starts / booked evaluations; completion = completed plans / starts.                    booking attempts + requests without acceptable slots; gap rate = access             velocity = new verified reviews / 30 days; referral or recall book rate =
+                                                                                           gap / total access attempts.                                                        booked / eligible inquiries or contacts.
+   PROOF: one table shows inquiries, booked evaluations, starts, completions,
+   available slots, and an owner for every lane; missing counts stay null.               PROOF: the 30-day table reports call disposition, booking completion, next          PROOF: a dated audit logs the address on each surface, records corrections
+                                                                                         available slot by visit type, cancellations, no-shows, and unmet requests.          only when found, and includes 30-day review, referral, and recall counts
+                                                                                                                                                                             with owners.
+
+
+
+
+   S06                                                                                    S16                                                                                 N00
+
+
+
+
+Review the evidence boundary before using this analysis.                                                                                                                                                  Book a MyBCAT working session
+Project Room is empty, so this remains an internal public-data draft. No external delivery or action is authorized.
+
+
+
+Method: public-only, manual directional bands with high-good client scores and Confidence C; official pages support identity, published services, hours, and booking paths; Census supports city context; stored OSRM links support point-to-point route
+observations. S01 S02 S14 R01
+Limits: Morton city demographics are not a drive-time catchment; routed peers are not a complete supply census; the dated Maps result is not a peer-normalized reputation export; published offers do not prove conversion, capacity, outcomes, or
+economics. S15 S16 S08 S09
+Source IDs link to the registered public evidence. Internal-only · Unroomed · Not for external use · © 2026 MyBCAT
+

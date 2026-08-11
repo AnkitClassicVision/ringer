@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-publish-ready",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-release-verdict-verified",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "verify-final-release-verdict-artifact",
+      "engine": "local-shell",
+      "task_type": "review",
+      "timeout_s": 60,
+      "expect_files": ["release-verdict.json", "release-verdict.md"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/copy_release_verdict.py --source-dir /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-release-judge/synthesize-final-release-verdict",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_release_verdict.py --dir .",
+      "verified": "the completed final release verdict passes the strengthened semantic and canary-leak gate without model rewriting"
+    }
+  ]
+}

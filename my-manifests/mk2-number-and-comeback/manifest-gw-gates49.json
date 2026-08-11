@@ -1,0 +1,19 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWgates49",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-live-gates-49",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": [
+        "gates.txt"
+      ],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates.py > gates.txt 2>&1; rc=$?; cat gates.txt; exit $rc",
+      "check": "exp=$(grep -oE 'EXPECT_RELATIVE_DATE=.*' gates.txt | cut -d= -f2); line=$(grep -E '^GATE=anchor-exact' gates.txt); echo \"$line\" | grep -q 'first=08/07/2026 11:15 am' && echo \"$line\" | grep -q 'exact=True' || { echo 'FAIL: anchor_exact on an exact match:'; echo \"$line\"; exit 1; }; grep GATE=anchor-exact gates.txt; exit 1; }; grep -E '^GATE=anchor-offgrid' gates.txt | grep -q 'exact=False' || { echo 'FAIL: off-grid anchor wrongly reported exact:'; grep GATE=anchor-offgrid gates.txt; exit 1; }; grep -E '^GATE=specificity' gates.txt | grep -q 'first=08/27/2026' || { echo 'FAIL: specificity'; grep GATE=specificity gates.txt; exit 1; }; grep -E '^GATE=ordinal' gates.txt | grep -q 'first=08/27/2026' || { echo 'FAIL: ordinal'; grep GATE=ordinal gates.txt; exit 1; }; grep -E '^GATE=anaphora' gates.txt | grep -q 'first=08/17/2026' || { echo 'FAIL: anaphora'; grep GATE=anaphora gates.txt; exit 1; }; grep -E '^GATE=away-override' gates.txt | grep -q \"first=$exp\" || { echo 'FAIL: away-override'; grep GATE=away-override gates.txt; exit 1; }; grep -E '^GATE=week-of-reg' gates.txt | grep -q 'first=08/17/2026' || { echo 'FAIL: week-of'; grep GATE=week-of-reg gates.txt; exit 1; }; grep -E '^GATE=relative-reg' gates.txt | grep -q \"first=$exp\" || { echo 'FAIL: relative'; grep GATE=relative-reg gates.txt; exit 1; }; grep -E '^GATE=latest-reg' gates.txt | grep -qE 'first=[0-9/]+ 0[45]:[0-9]{2} pm' || { echo 'FAIL: latest'; grep GATE=latest-reg gates.txt; exit 1; }; grep -E '^GATE=default-window' gates.txt | grep -qE 'first=[0-9/]+ 0[3-5]:[0-9]{2} pm' || { echo 'FAIL: default window'; grep GATE=default-window gates.txt; exit 1; }; grep -E '^GATE=oob-3am' gates.txt | grep -q 'oob=True' || { echo 'FAIL: out-of-hours'; grep GATE=oob-3am gates.txt; exit 1; }; echo 'PASS: all eleven lane-49 live gates green'",
+      "verified": "Eleven live gates on production: anchor_exact fires only on a true exact match, and every date-resolution, ordering, default-window and out-of-hours behavior built today is unregressed."
+    }
+  ]
+}

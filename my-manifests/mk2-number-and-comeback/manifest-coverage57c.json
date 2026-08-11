@@ -1,0 +1,19 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workCoverage57c",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-coverage-receipt-57",
+      "engine": "local-shell",
+      "timeout_s": 900,
+      "task_type": "research",
+      "verified": "The coverage sweep against the deployed lane-57 gateway shows the five gated fix-families resolving live (week-after-next, following-week anaphors, month-part windows, day-part idioms, verbatim windows) with controls intact; spelled clock idioms recorded as a documented open item.",
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_datetime_coverage.py > coverage.txt 2>&1; rc=$?; cat coverage.txt; exit $rc",
+      "check": "grep -qE 'DT_DONE total=51 http_ok=51' coverage.txt || { echo 'FAIL: sweep incomplete or HTTP errors'; tail -4 coverage.txt; exit 1; }; bad=''; for c in week-after-next following-week same-day-next-week end-of-month beginning-next-month mid-month; do grep -E \"^DT=$c \" coverage.txt | grep -q 'unres=True' && bad=\"$bad $c\"; done; [ -z \"$bad\" ] || { echo \"FAIL: still unresolved:$bad\"; exit 1; }; grep -E '^DT=after-lunch ' coverage.txt | grep -qE 'first=[0-9/]+ 0?[1-5]:[0-9]{2} pm' || { echo 'FAIL: after-lunch not windowed:'; grep DT=after-lunch coverage.txt; exit 1; }; grep -E '^DT=after-work ' coverage.txt | grep -qE 'first=[0-9/]+ 0?[4-5]:[0-9]{2} pm' || { echo 'FAIL: after-work not windowed:'; grep DT=after-work coverage.txt; exit 1; }; b24=$(grep -E '^DT=between-2-and-4 ' coverage.txt); echo \"$b24\" | grep -qE 'first=[0-9/]+ 0?[23]:[0-9]{2} pm|n=0 ' || { echo \"FAIL: between-2-and-4 neither windowed nor honest-empty: $b24\"; exit 1; }; grep -E '^DT=before-noon ' coverage.txt | grep -qE 'n=[1-9] |n=1[0-1] ' && grep -E '^DT=before-noon ' coverage.txt | grep -qE 'first=[0-9/]+ [0-9:]+ am' || { echo 'FAIL: before-noon'; grep DT=before-noon coverage.txt; exit 1; }; grep -E '^DT=bare-weekday ' coverage.txt | grep -qE 'first=[0-9/]+ [0-9:]+ am' || { echo 'FAIL: regression - bare weekday broke'; exit 1; }; grep -E '^DT=(half-past-four|quarter-to-five) ' coverage.txt | grep -q 'first=' && echo 'NOTE: spelled clock idioms (F6) recorded - known open item, not gated'; echo 'PASS: lane-57 coverage receipt green - resolvers + windows live, controls intact, F6 documented'",
+      "expect_files": [
+        "coverage.txt"
+      ]
+    }
+  ]
+}

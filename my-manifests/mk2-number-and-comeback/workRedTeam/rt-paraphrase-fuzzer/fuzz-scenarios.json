@@ -1,0 +1,933 @@
+[
+ {
+  "name": "weekend-ish-whenever",
+  "turns": [
+   "hi",
+   "weekend-ish, whenever u got room"
+  ],
+  "expect": {
+   "kind": "honest_miss",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "Slang combines a broad weekend with earliest-available intent."
+ },
+ {
+  "name": "end-next-month",
+  "turns": [
+   "hi",
+   "shoot for the tail end of next month pls"
+  ],
+  "expect": {
+   "kind": "clarify_or_offer",
+   "must_not_contain": [
+    "booked"
+   ],
+   "must_contain": []
+  },
+  "stress": "Idiomatic relative month boundary without a numeric date."
+ },
+ {
+  "name": "day-after-tomorrow-late-morning",
+  "turns": [
+   "hi",
+   "day after tomorrow, late morning-ish"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "confirmed"
+   ]
+  },
+  "stress": "Relative day plus fuzzy day-part in one fragment."
+ },
+ {
+  "name": "week-from-friday",
+  "turns": [
+   "hi",
+   "a week from friday would be solid"
+  ],
+  "expect": {
+   "kind": "offer"
+  },
+  "stress": "Nested relative weekday must not collapse to the nearest Friday."
+ },
+ {
+  "name": "fortnight-from-now",
+  "turns": [
+   "hi",
+   "not this wk, fortnight from now"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_contain": []
+  },
+  "stress": "Negated near week plus British-style two-week offset."
+ },
+ {
+  "name": "back-in-eleven-days",
+  "turns": [
+   "hi",
+   "headed out tonight, back in 11 days so after that"
+  ],
+  "expect": {
+   "kind": "clarify_or_offer",
+   "must_contain": [],
+   "must_not_contain": []
+  },
+  "stress": "Unavailable departure date must not outrank return availability."
+ },
+ {
+  "name": "after-one-unsuffixed",
+  "turns": [
+   "hi",
+   "anything after 1 works"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "1:00 am"
+   ]
+  },
+  "stress": "Meridiem-less lower bound should use scheduling context, not overnight."
+ },
+ {
+  "name": "around-five-unsuffixed",
+  "turns": [
+   "hi",
+   "could do around 5 maybe"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "Meridiem ambiguity plus hedging must route as a clock anchor."
+ },
+ {
+  "name": "at-seven-unsuffixed",
+  "turns": [
+   "hi",
+   "at 7 if that's a thing"
+  ],
+  "expect": {
+   "kind": "honest_miss",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "Ambiguous seven should fail honestly if outside office availability."
+ },
+ {
+  "name": "numeric-nine-thirty",
+  "turns": [
+   "hi",
+   "930 on a weekday"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_contain": [],
+   "must_not_contain": []
+  },
+  "stress": "Bare three-digit clock plus broad weekday context."
+ },
+ {
+  "name": "numeric-eleven-space-fifteen",
+  "turns": [
+   "hi",
+   "11 15 next fri works"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked"
+   ],
+   "must_contain": []
+  },
+  "stress": "Space-separated numeric time must normalize without becoming a date."
+ },
+ {
+  "name": "numeric-four-fortyfive",
+  "turns": [
+   "hi",
+   "fri late, like 445"
+  ],
+  "expect": {},
+  "stress": "Three-digit late-day anchor embedded in a fragment."
+ },
+ {
+  "name": "near-tenish",
+  "turns": [
+   "hi",
+   "something close to ten-ish on monday"
+  ],
+  "expect": {
+   "kind": "honest_miss",
+   "must_contain": []
+  },
+  "stress": "Colloquial proximity suffix around a clock target."
+ },
+ {
+  "name": "quarter-past-three",
+  "turns": [
+   "hi",
+   "quarter past 3 next wed if possible"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_contain": []
+  },
+  "stress": "Spelled clock arithmetic with omitted meridiem."
+ },
+ {
+  "name": "first-thing-not-first-choice",
+  "turns": [
+   "hi",
+   "first thing you can squeeze me in"
+  ],
+  "expect": {
+   "kind": "offer"
+  },
+  "stress": "Earliest-time idiom must not be mistaken for selecting option one."
+ },
+ {
+  "name": "soonest-after-lunch",
+  "turns": [
+   "hi",
+   "soonest thing after lunch, any day"
+  ],
+  "expect": {
+   "kind": "offer"
+  },
+  "stress": "Earliest availability is constrained by an implied afternoon bound."
+ },
+ {
+  "name": "latest-sometime-next-week",
+  "turns": [
+   "hi",
+   "next week is fine but gimme the very end-of-day one"
+  ],
+  "expect": {
+   "kind": "offer"
+  },
+  "stress": "Latest intent on a new week should use the generic latest search."
+ },
+ {
+  "name": "closing-time-friday",
+  "turns": [
+   "hi",
+   "friday, whatever slot is closest to closing"
+  ],
+  "expect": {
+   "kind": "offer"
+  },
+  "stress": "Indirect last-appointment wording with an explicit new day."
+ },
+ {
+  "name": "offered-day-after-one",
+  "turns": [
+   "hi",
+   "the monday after next",
+   "those dates fine, just after 1 though"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked"
+   ]
+  },
+  "stress": "Day-less time refinement should stay pinned to the offered date."
+ },
+ {
+  "name": "offered-day-around-five",
+  "turns": [
+   "hi",
+   "two weeks from today",
+   "same day, anything around 5"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked"
+   ],
+   "must_contain": []
+  },
+  "stress": "Named-time refinement must anchor to the established offered date."
+ },
+ {
+  "name": "offered-day-earliest",
+  "turns": [
+   "hi",
+   "the 27th",
+   "on that date what's first thing available"
+  ],
+  "expect": {
+   "kind": "offer"
+  },
+  "stress": "Anaphoric earliest-time request must not re-resolve the date."
+ },
+ {
+  "name": "offered-day-latest-slang",
+  "turns": [
+   "hi",
+   "next thurs",
+   "same date, what's the absolute latest yall have"
+  ],
+  "expect": {
+   "kind": "offer"
+  },
+  "stress": "Offered-date latest route with slang and emphatic modifier."
+ },
+ {
+  "name": "offered-day-last-appt",
+  "turns": [
+   "hi",
+   "day after tomorrow",
+   "keep that day but last appt pls"
+  ],
+  "expect": {
+   "kind": "offer"
+  },
+  "stress": "Telegraphic last-appointment refinement must retain the offered day."
+ },
+ {
+  "name": "choose-earlier-words",
+  "turns": [
+   "hi",
+   "a week from monday",
+   "I'll take whichever one comes earlier"
+  ],
+  "expect": {
+   "kind": "confirm_gate",
+   "must_contain": [
+    "confirm"
+   ],
+   "must_not_contain": [
+    "booked"
+   ]
+  },
+  "stress": "First-choice selection is expressed relationally without digits."
+ },
+ {
+  "name": "choose-top-option",
+  "turns": [
+   "hi",
+   "next wednesday afternoon",
+   "the top option works for me"
+  ],
+  "expect": {
+   "kind": "confirm_gate",
+   "must_contain": [
+    "confirm"
+   ],
+   "must_not_contain": [
+    "booked"
+   ]
+  },
+  "stress": "Visual-list language selects the first opening."
+ },
+ {
+  "name": "choose-later-words",
+  "turns": [
+   "hi",
+   "next tuesday",
+   "I'll go with the later of those two"
+  ],
+  "expect": {
+   "kind": "confirm_gate",
+   "must_contain": [
+    "confirm"
+   ],
+   "must_not_contain": [
+    "booked"
+   ]
+  },
+  "stress": "Second-choice selection is expressed relationally without a numeral."
+ },
+ {
+  "name": "choose-bottom-one",
+  "turns": [
+   "hi",
+   "friday week",
+   "bottom one is better"
+  ],
+  "expect": {
+   "kind": "confirm_gate",
+   "must_contain": [
+    "confirm"
+   ],
+   "must_not_contain": [
+    "booked"
+   ]
+  },
+  "stress": "Layout language selects the second opening."
+ },
+ {
+  "name": "named-offered-clock-colon",
+  "turns": [
+   "hi",
+   "next monday",
+   "10:45 works for me"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_contain": [],
+   "must_not_contain": [
+    "booked"
+   ]
+  },
+  "stress": "Agreement-phrased exact clock should bypass another two-slot offer when it matches."
+ },
+ {
+  "name": "named-offered-clock-runon",
+  "turns": [
+   "hi",
+   "next thursday",
+   "1045worksletsdoit"
+  ],
+  "expect": {},
+  "stress": "Run-on bare clock selection tests token-boundary robustness."
+ },
+ {
+  "name": "named-offered-clock-spaced",
+  "turns": [
+   "hi",
+   "week from friday",
+   "11 15 is my pick"
+  ],
+  "expect": {
+   "kind": "confirm_gate",
+   "must_contain": [
+    "confirm"
+   ],
+   "must_not_contain": [
+    "booked"
+   ]
+  },
+  "stress": "Space-separated named clock selection must preserve the established date."
+ },
+ {
+  "name": "mixed-earlier-but-wednesday",
+  "turns": [
+   "hi",
+   "next monday",
+   "earlier one's good but actually got anything wed?"
+  ],
+  "expect": {
+   "kind": "clarify",
+   "must_contain": [],
+   "must_not_contain": []
+  },
+  "stress": "Mixed intent selects option one while requesting a different weekday."
+ },
+ {
+  "name": "mixed-later-plus-after-four",
+  "turns": [
+   "hi",
+   "day after tomorrow",
+   "later one, unless u have after 4 instead"
+  ],
+  "expect": {
+   "kind": "clarify",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ]
+  },
+  "stress": "Mixed intent combines option two with a conflicting time refinement."
+ },
+ {
+  "name": "mixed-clock-or-next-week",
+  "turns": [
+   "hi",
+   "this friday",
+   "1045 is fine or maybe next week would be easier"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_contain": [],
+   "must_not_contain": []
+  },
+  "stress": "Exact clock acceptance competes with a new relative week."
+ },
+ {
+  "name": "mixed-take-it-search-late",
+  "turns": [
+   "hi",
+   "monday",
+   "take the first one, unless there's a later appt that day"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_contain": [],
+   "must_not_contain": []
+  },
+  "stress": "Selection and offered-date latest search appear in one sentence."
+ },
+ {
+  "name": "mixed-bottom-but-not-date",
+  "turns": [
+   "hi",
+   "the 20th",
+   "bottom one works but not on the 20th, the 27th"
+  ],
+  "expect": {
+   "kind": "clarify_or_offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "Selection is immediately negated by a replacement date."
+ },
+ {
+  "name": "mixed-sure-but-around-three",
+  "turns": [
+   "hi",
+   "next tues",
+   "that first slot's okay, though closer to 3 would be better"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "Soft acceptance plus clock-anchor request should trigger one clarification."
+ },
+ {
+  "name": "correction-no-week-after",
+  "turns": [
+   "hi",
+   "next friday",
+   "no wait, friday the week after that"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "Correction prefix plus anaphoric week offset replaces the offer date."
+ },
+ {
+  "name": "correction-meant-twentyseventh",
+  "turns": [
+   "hi",
+   "the twentieth",
+   "actually meant the twenty-seventh, my bad"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_contain": []
+  },
+  "stress": "Spelled ordinal correction must replace rather than refine the stale date."
+ },
+ {
+  "name": "correction-not-this-monday",
+  "turns": [
+   "hi",
+   "monday",
+   "not this coming monday, the following one"
+  ],
+  "expect": {
+   "kind": "offer"
+  },
+  "stress": "Negation distinguishes two adjacent relative Mondays."
+ },
+ {
+  "name": "correction-date-time-runon",
+  "turns": [
+   "hi",
+   "next thursday",
+   "scratch that fridayafter2"
+  ],
+  "expect": {},
+  "stress": "Run-on correction changes both weekday and time bound."
+ },
+ {
+  "name": "same-week-anaphora-tuesday",
+  "turns": [
+   "hi",
+   "thursday two weeks out",
+   "could we do tuesday of that same week"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_contain": []
+  },
+  "stress": "Week-relative anaphora must retain the established future week."
+ },
+ {
+  "name": "monday-in-that-week-colloquial",
+  "turns": [
+   "hi",
+   "the 28th",
+   "how's the monday in that week looking"
+  ],
+  "expect": {
+   "kind": "offer"
+  },
+  "stress": "Colloquial anaphora points to a weekday inside the offered week."
+ },
+ {
+  "name": "decline-both-new-time",
+  "turns": [
+   "hi",
+   "next friday",
+   "neither, anything closer to noon?"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "Rejects both choices while supplying a usable replacement anchor."
+ },
+ {
+  "name": "decline-both-no-preference",
+  "turns": [
+   "hi",
+   "day after tomorrow",
+   "nah neither of those"
+  ],
+  "expect": {
+   "kind": "clarify",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ]
+  },
+  "stress": "Both choices are declined without a usable replacement preference."
+ },
+ {
+  "name": "decline-current-offer-soft",
+  "turns": [
+   "hi",
+   "next monday",
+   "can't make either, what else is there"
+  ],
+  "expect": {
+   "kind": "honest_miss",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "Soft decline asks for other times on the established date."
+ },
+ {
+  "name": "decline-scheduling-now",
+  "turns": [
+   "hi",
+   "not looking to schedule after all, appreciate it"
+  ],
+  "expect": {
+   "kind": "end_stop",
+   "must_not_contain": [
+    "reply 1",
+    "reply 2"
+   ]
+  },
+  "stress": "Polite withdrawal should terminate scheduling without opt-out semantics."
+ },
+ {
+  "name": "decline-scheduling-cant-commit",
+  "turns": [
+   "hi",
+   "I can't commit to an appointment rn, leave it"
+  ],
+  "expect": {
+   "kind": "end_stop",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ]
+  },
+  "stress": "Colloquial refusal should not be mistaken for asking for availability."
+ },
+ {
+  "name": "optout-lose-my-number",
+  "turns": [
+   "hi",
+   "lose my number and quit messaging me"
+  ],
+  "expect": {
+   "kind": "end_stop"
+  },
+  "stress": "Hostile opt-out without canonical STOP wording."
+ },
+ {
+  "name": "optout-no-more-pings",
+  "turns": [
+   "hi",
+   "no more pings from this number thx"
+  ],
+  "expect": {
+   "kind": "end_stop"
+  },
+  "stress": "Informal channel-specific opt-out language."
+ },
+ {
+  "name": "human-call-me-instead",
+  "turns": [
+   "hi",
+   "can a real person call me instead of doing this by text"
+  ],
+  "expect": {
+   "kind": "office_referral",
+   "must_contain": [
+    "office"
+   ]
+  },
+  "stress": "Requests human contact without saying representative or agent."
+ },
+ {
+  "name": "human-front-desk",
+  "turns": [
+   "hi",
+   "lemme talk to the front desk pls"
+  ],
+  "expect": {
+   "kind": "office_referral",
+   "must_contain": []
+  },
+  "stress": "Role synonym should route to office support."
+ },
+ {
+  "name": "ambiguous-that-weekend",
+  "turns": [
+   "hi",
+   "that weekend would be better"
+  ],
+  "expect": {
+   "kind": "clarify",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ]
+  },
+  "stress": "Unbound anaphora provides no resolvable calendar anchor."
+ },
+ {
+  "name": "ambiguous-eleven",
+  "turns": [
+   "hi",
+   "11 works"
+  ],
+  "expect": {
+   "kind": "clarify",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ]
+  },
+  "stress": "Bare number may be a date, hour, or choice and should not be acted on."
+ },
+ {
+  "name": "ambiguous-next-one",
+  "turns": [
+   "hi",
+   "the next one after that"
+  ],
+  "expect": {
+   "kind": "clarify",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ]
+  },
+  "stress": "Unbound comparative reference lacks an offered slot or date."
+ },
+ {
+  "name": "conflicting-weekday-date",
+  "turns": [
+   "hi",
+   "monday the 27th"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ]
+  },
+  "stress": "Potential weekday/date disagreement must be resolved before search."
+ },
+ {
+  "name": "conflicting-correction-still-conflicts",
+  "turns": [
+   "hi",
+   "tuesday the 27th",
+   "sorry I mean monday the 27th"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "A correction that remains internally inconsistent should get one re-ask."
+ },
+ {
+  "name": "clarify-then-usable-relative",
+  "turns": [
+   "hi",
+   "that day I mentioned",
+   "ok, a week from this friday"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked"
+   ]
+  },
+  "stress": "After an unusable reference, a concrete relative date must resume search."
+ },
+ {
+  "name": "clarify-then-usable-month-end",
+  "turns": [
+   "hi",
+   "sometime around then",
+   "last business day next month"
+  ],
+  "expect": {
+   "kind": "clarify_or_offer",
+   "must_contain": [],
+   "must_not_contain": []
+  },
+  "stress": "Clarification recovery uses a relative business-calendar phrase."
+ },
+ {
+  "name": "gate-mismatch-date",
+  "turns": [
+   "hi",
+   "next thursday",
+   "earlier one please",
+   "hold up, I said friday not thursday"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ]
+  },
+  "stress": "A date mismatch at confirmation must fail closed into fresh search."
+ },
+ {
+  "name": "gate-mismatch-clock",
+  "turns": [
+   "hi",
+   "next tuesday",
+   "later one please",
+   "wait I meant 2:30 not that time"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "A named-time mismatch at the gate must not book the selected stale slot."
+ },
+ {
+  "name": "out-of-hours-midnight",
+  "turns": [
+   "hi",
+   "next monday at midnight works best"
+  ],
+  "expect": {
+   "kind": "clarify_or_offer",
+   "must_contain": [],
+   "must_not_contain": []
+  },
+  "stress": "Explicit overnight time must not be normalized to noon or fabricated."
+ },
+ {
+  "name": "out-of-hours-seven-evening",
+  "turns": [
+   "hi",
+   "friday around 7 in the evening"
+  ],
+  "expect": {
+   "kind": "honest_miss",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "Explicit evening anchor tests honest out-of-hours handling."
+ },
+ {
+  "name": "decline-single-anchor-offer",
+  "turns": [
+   "hi",
+   "next wed around 3",
+   "nope, that closest one won't work"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ],
+   "must_contain": []
+  },
+  "stress": "Declines the dedicated one-opening anchor offer without asking for alternatives."
+ },
+ {
+  "name": "single-offer-new-preference",
+  "turns": [
+   "hi",
+   "next wed around 3",
+   "can't do that; friday after lunch instead"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ]
+  },
+  "stress": "Single-offer rejection includes a replacement day and day-part."
+ },
+ {
+  "name": "single-offer-latest-switch",
+  "turns": [
+   "hi",
+   "monday close to 2",
+   "actually just show me the latest that day"
+  ],
+  "expect": {
+   "kind": "offer",
+   "must_not_contain": [
+    "booked",
+    "confirmed"
+   ]
+  },
+  "stress": "Dedicated named-time offer switches to latest intent on the same day."
+ }
+]

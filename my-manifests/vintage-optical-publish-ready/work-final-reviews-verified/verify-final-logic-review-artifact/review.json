@@ -1,0 +1,19 @@
+{
+  "verdict": "PASS",
+  "readiness": "READY_FOR_PROJECT_ROOM_REVIEW",
+  "external_use_authorized": false,
+  "project_room_status": "inventory_review_required",
+  "fatal_issues": [],
+  "material_issues": [],
+  "minor_issues": [],
+  "checks": {
+    "plain_language_explanations": "PASS",
+    "logic_reconciled": "PASS",
+    "unknowns_neutral": "PASS",
+    "no_overclaim": "PASS",
+    "score_direction": "PASS",
+    "limitations_visible": "PASS",
+    "owner_actionability": "PASS",
+    "source_dictionary_complete": "PASS"
+  }
+}

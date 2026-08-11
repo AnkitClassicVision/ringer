@@ -1,0 +1,5 @@
+STEP1_SLOT=08/06/2026 10:45 am doctor=None end=08/06/2026 11:00 am
+STEP2_BOOK_STATUS=200 BODY={"action": "book", "http_status": 200, "new_appt_id": "4388259080", "proposed": {"appointment_type_lc_id": "674597395", "appt_date": "08/06/2026", "doctor_id": "3796833018", "end_time": "11:00", "patient_id": "4376662466", "section_id": "appt_3796833018_711", "start_time": "10:45", "store_id": "711"}, "response_bytes": 479, "success": true}
+STEP3_APPT_COUNT=2 APPTS=[('4388257831', '2026-08-06T10:30:00Z'), ('4388259080', '2026-08-06T10:45:00Z')]
+STEP4_CLEANUP_COUNT=0
+DIAG_DONE

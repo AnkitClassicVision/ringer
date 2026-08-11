@@ -1,0 +1,184 @@
+--- v96:n_search
++++ v101:n_goal_search
+@@ -1,179 +1,4 @@
+ {
+-  "data": {
+-    "active": false,
+-    "body": "{\"store\":\"{{store}}\",\"from\":\"{{preference_from}}\",\"to\":\"{{preference_to}}\",\"after\":\"{{time_after}}\",\"before\":\"none\",\"time_pref\":\"none\",\"slot_minutes\":\"15\",\"callID\":\"{{callID}}\",\"user_text\":\"{{lastUserMessage}}\",\"user_verbatim\":\"{{user_verbatim}}\"}",
+-    "headers": {
+-      "Authorization": "[REDACTED:len=29,sha8=9322934a]",
+-      "Content-Type": "application/json"
+-    },
+-    "method": "POST",
+-    "modelOptions": {
+-      "retryAttempts": 1,
+-      "skipUserResponse": true
+-    },
+-    "name": "Search by preference (silent)",
+-    "responseData": [
+-      {
+-        "data": "$.ok",
+-        "name": "ok"
+-      },
+-      {
+-        "data": "$.result.count",
+-        "name": "slot_count"
+-      },
+-      {
+-        "data": "$.result.slots[0].start",
+-        "name": "slot_1_start"
+-      },
+-      {
+-        "data": "$.result.slots[0].end",
+-        "name": "slot_1_end"
+-      },
+-      {
+-        "data": "$.result.slots[0].doctor_id",
+-        "name": "slot_1_doctor"
+-      },
+-      {
+-        "data": "$.result.slots[0].day_name",
+-        "name": "slot_1_day_name"
+-      },
+-      {
+-        "data": "$.result.slots[1].start",
+-        "name": "slot_2_start"
+-      },
+-      {
+-        "data": "$.result.slots[1].end",
+-        "name": "slot_2_end"
+-      },
+-      {
+-        "data": "$.result.slots[1].doctor_id",
+-        "name": "slot_2_doctor"
+-      },
+-      {
+-        "data": "$.result.slots[1].day_name",
+-        "name": "slot_2_day_name"
+-      },
+-      {
+-        "data": "$.result.time_pref_relaxed",
+-        "name": "time_pref_relaxed"
+-      },
+-      {
+-        "data": "$.result.date_conflict[3]",
+-        "name": "conflict_option_1"
+-      },
+-      {
+-        "data": "$.result.date_conflict[4]",
+-        "name": "conflict_option_2"
+-      },
+-      {
+-        "data": "$.result.date_conflict[0]",
+-        "name": "date_conflict_detected"
+-      },
+-      {
+-        "data": "$.result.date_conflict[1]",
+-        "name": "conflict_date_1_resolved"
+-      },
+-      {
+-        "data": "$.result.date_conflict[2]",
+-        "name": "conflict_date_2_resolved"
+-      }
+-    ],
+-    "responsePathways": [
+-      [
+-        "preference_from",
+-        "==",
+-        "unclear",
+-        {
+-          "id": "n_clarify",
+-          "name": "Could not read the week they meant"
+-        }
+-      ],
+-      [
+-        "ok",
+-        "!=",
+-        "true",
+-        {
+-          "id": "n_miss_unread",
+-          "name": "Search rejected or unavailable"
+-        }
+-      ],
+-      [
+-        "day_part",
+-        "==",
+-        "outside",
+-        {
+-          "id": "n_miss_time",
+-          "name": "Requested clock time is outside clinic hours"
+-        }
+-      ],
+-      [
+-        "date_conflict_detected",
+-        "==",
+-        "conflict",
+-        {
+-          "id": "n_date_conflict",
+-          "name": "Two dates disagree"
+-        }
+-      ],
+-      [
+-        "slot_count",
+-        "==",
+-        "0",
+-        {
+-          "id": "n_miss_empty",
+-          "name": "Window checked and empty"
+-        }
+-      ],
+-      [
+-        "day_part",
+-        "==",
+-        "late",
+-        {
+-          "id": "n_page_3",
+-          "name": "Asked for late in the day"
+-        }
+-      ],
+-      [
+-        "day_part",
+-        "==",
+-        "afternoon",
+-        {
+-          "id": "n_page_2",
+-          "name": "Asked for the afternoon"
+-        }
+-      ],
+-      [
+-        "slot_count",
+-        "==",
+-        "1",
+-        {
+-          "id": "n_offer",
+-          "name": "One opening found"
+-        }
+-      ],
+-      [
+-        "slot_count",
+-        ">=",
+-        "2",
+-        {
+-          "id": "n_offer",
+-          "name": "Two or more found"
+-        }
+-      ]
+-    ],
+-    "text": "",
+-    "url": "https://mott-booking-gw.mail.mybcat.com/availability"
+-  },
+-  "height": 115,
+-  "id": "n_search",
+-  "position": {
+-    "x": 2895,
+-    "y": 487.5
+-  },
+-  "sourcePosition": "bottom",
+-  "targetPosition": "top",
+-  "type": "Webhook",
+-  "width": 320,
+-  "x": 2895,
+-  "y": 487.5
++  "id": "n_goal_search",
++  "name": "Goal extracted"
+ }

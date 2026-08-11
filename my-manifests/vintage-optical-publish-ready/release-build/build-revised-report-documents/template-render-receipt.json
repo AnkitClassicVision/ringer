@@ -1,0 +1,16 @@
+{
+  "rendered_at_utc": "2026-07-30T16:47:14.027828+00:00",
+  "network_used": false,
+  "source": {
+    "file": "template-framed-onepager.html",
+    "sha256": "d4bb364978fa6d468ae8eb6aa9989adad4fca69260fbcbb5d43d4918dbfa492c"
+  },
+  "pdf": {
+    "file": "template-framed-onepager.pdf",
+    "pages": 1,
+    "page_size": "612 x 792 pts (letter)",
+    "sha256": "ecd9f8c1725b1fafc203cc9c334bdb0102a1cc9775256f060d568048e39856a3"
+  },
+  "page_images": 1,
+  "status": "PASS"
+}

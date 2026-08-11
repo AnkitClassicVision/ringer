@@ -1,0 +1,56 @@
+{
+  "data": {
+    "assistant_responses": [
+      "I can't modify your appointment time. If you'd like to check availability for 10:40, please call the office at (212) 219-2219."
+    ],
+    "chat_history": [
+      {
+        "content": "hi",
+        "role": "user"
+      },
+      {
+        "content": "Hi Rachel! I'm just calling to confirm that your appointment is all set. How can I help you today?",
+        "role": "assistant"
+      },
+      {
+        "content": "How about Friday at 1020",
+        "role": "user"
+      },
+      {
+        "content": "I'm not able to make any changes to your appointment from here. If you'd like to reschedule for Friday at 10:20, please give the office a call at (212) 219-2219 and they can help you with that.",
+        "role": "assistant"
+      },
+      {
+        "content": "What about 1040?",
+        "role": "user"
+      },
+      {
+        "content": "I can't modify your appointment time. If you'd like to check availability for 10:40, please call the office at (212) 219-2219.",
+        "role": "assistant"
+      }
+    ],
+    "chat_id": "1f9aaac0-066b-4854-9e3c-6888ece8a8a3",
+    "completed": false,
+    "current_node_id": "n_post_booking",
+    "current_node_name": "Booked - support",
+    "pathway_id": "94abad8b-fbe2-4e67-9c64-d9b586dd2653",
+    "pathway_version": 124,
+    "use_candidate_model": false,
+    "variables": {
+      "BlandStatusCode": 200,
+      "appt_count": 1,
+      "callID": "1f9aaac0-066b-4854-9e3c-6888ece8a8a3",
+      "campaign": "harness",
+      "channel": "voice",
+      "count": 1,
+      "exam_type_id": "***7395",
+      "ok": true,
+      "patient_first": "RACHEL",
+      "patient_id": "***2466",
+      "recall_cell": "***2428",
+      "recall_patient_id": "***2466",
+      "store": "711"
+    }
+  },
+  "errors": null
+}

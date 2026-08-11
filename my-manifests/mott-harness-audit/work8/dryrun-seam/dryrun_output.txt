@@ -1,0 +1,29 @@
+
+aws: [ERROR]: Could not connect to the endpoint URL: "https://secretsmanager.us-east-1.amazonaws.com/"
+Traceback (most recent call last):
+  File "/mnt/d_drive/repos/finances/scripts/secret_exec.py", line 102, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/mnt/d_drive/repos/finances/scripts/secret_exec.py", line 80, in main
+    secret_value = _load_secret(secret_id, field)
+  File "/mnt/d_drive/repos/finances/scripts/secret_exec.py", line 18, in _load_secret
+    raw = subprocess.check_output(
+          ~~~~~~~~~~~~~~~~~~~~~~~^
+        [
+        ^
+    ...<10 lines>...
+        text=True,
+        ^^^^^^^^^^
+    ).strip()
+    ^
+  File "/usr/lib64/python3.14/subprocess.py", line 473, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               **kwargs).stdout
+               ^^^^^^^^^
+  File "/usr/lib64/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['aws', 'secretsmanager', 'get-secret-value', '--secret-id', 'conductor/agents/bland-mott/api-key', '--query', 'SecretString', '--output', 'text']' returned non-zero exit status 255.
+ERROR refused: gateway authorization is unavailable
+external_actions_taken=0

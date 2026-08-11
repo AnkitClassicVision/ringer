@@ -1,0 +1,224 @@
+{
+  "review_type": "technical",
+  "verdict": "PASS",
+  "reviewed_at_utc": "2026-07-30T14:55:04Z",
+  "external_actions_taken": "none",
+  "blocking_findings": [],
+  "nonblocking_observations": [
+    "The internal-only explainer contains package-relative audit references required by the approved report contract. They are not absolute filesystem paths and do not authorize external delivery.",
+    "The 25-page explainer preserves full score, source, receipt, and limitation lineage. Visual QA found the compact tables legible at normal PDF zoom."
+  ],
+  "reviewed_artifact_hashes": {
+    "onepager_pdf": "0ad82c2597c2594131bf9650bd3d45c718db6a8a2000256b2bbb9504f64ce349",
+    "number_explainer_pdf": "4c544174cc06b7c5075cfce1865f6ab25cff24b6e385ec0e5ca9f7a9b8f58b2e",
+    "scores_json": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c"
+  },
+  "highest_truthful_state": "RENDERED_QA_PASSED_HUMAN_PROJECT_ROOM_REQUIRED",
+  "external_delivery_authorized": false,
+  "onepager_pages": 1,
+  "explainer_pages": 25,
+  "internal_path_leak_count": 0,
+  "stale_route_value_count": 0,
+  "client_visible_raw_receipt_path_count": 0,
+  "receipt_integrity": "PASS",
+  "visual_qa": "PASS",
+  "required_files_verified": [
+    "onepager.html",
+    "onepager.pdf",
+    "number-explainer.md",
+    "number-explainer.html",
+    "number-explainer.pdf",
+    "scores.json",
+    "sources.json",
+    "source_inventory.json",
+    "missing_evidence.json",
+    "receipt_manifest.json",
+    "number_inventory.json",
+    "runlog.md",
+    "render_receipt.json",
+    "visual-qa.json"
+  ],
+  "required_file_hashes": {
+    "onepager.html": "e5649f3ea910fa97af760dcd03848fc5503f7fa68874426cac67c46e8570c7a4",
+    "onepager.pdf": "0ad82c2597c2594131bf9650bd3d45c718db6a8a2000256b2bbb9504f64ce349",
+    "number-explainer.md": "7b514851cb1ccfb7661d11f9693605ef405267a96ed2b0b87be8176229628d40",
+    "number-explainer.html": "84bd9cb4fdb9adb9dba60842af20eae50098d44017a50f7557cc23a3344277a9",
+    "number-explainer.pdf": "4c544174cc06b7c5075cfce1865f6ab25cff24b6e385ec0e5ca9f7a9b8f58b2e",
+    "scores.json": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c",
+    "sources.json": "c54beaa3f81ad905bc70bb34d82baefaf3a43d63dbf58d519f912165190d9135",
+    "source_inventory.json": "fed269940d49701e374ab8782d784b1ce0046f7097c34b99ef62cc238b01fd18",
+    "missing_evidence.json": "0334e77fba1059c73c39ac1320c05d2e9172ecf581a444dcf938c561854acb1d",
+    "receipt_manifest.json": "743c347135b58960c4454d7b6ef1a474ca0d740a5af03cd06b2b1cdbce5d398b",
+    "number_inventory.json": "394c86456429863da760c490f54a8f6dc02477e95ee954ee822176b038147cf3",
+    "runlog.md": "d060bff1e65278ef9b238cf063621f302d02d696e159d29a452434aa6f9c7861",
+    "render_receipt.json": "3bb536440caa1be196b4cdc0d5040af23e23583428cc4234b5ff31af35b63f10",
+    "visual-qa.json": "737ace5c2738f1e2a3be5edc2fc43f661b9f260b83a6fd52131497bf4fd24a11"
+  },
+  "required_file_timestamps_utc": {
+    "onepager.html": "2026-07-30T14:46:07.440619Z",
+    "onepager.pdf": "2026-07-30T14:48:25.103388Z",
+    "number-explainer.md": "2026-07-30T14:02:30.600742Z",
+    "number-explainer.html": "2026-07-30T14:02:30.602042Z",
+    "number-explainer.pdf": "2026-07-30T14:48:25.641395Z",
+    "scores.json": "2026-07-30T13:55:37.490638Z",
+    "sources.json": "2026-07-30T13:55:37.491263Z",
+    "source_inventory.json": "2026-07-30T13:55:37.491573Z",
+    "missing_evidence.json": "2026-07-30T13:55:37.491796Z",
+    "receipt_manifest.json": "2026-07-30T13:55:37.489961Z",
+    "number_inventory.json": "2026-07-30T14:48:24.181376Z",
+    "runlog.md": "2026-07-30T14:50:29.916046Z",
+    "render_receipt.json": "2026-07-30T14:48:30.332886Z",
+    "visual-qa.json": "2026-07-30T14:49:59.988795Z"
+  },
+  "required_file_sizes_bytes": {
+    "onepager.html": 25330,
+    "onepager.pdf": 155931,
+    "number-explainer.md": 76080,
+    "number-explainer.html": 94462,
+    "number-explainer.pdf": 662414,
+    "scores.json": 45317,
+    "sources.json": 18353,
+    "source_inventory.json": 31279,
+    "missing_evidence.json": 4946,
+    "receipt_manifest.json": 35991,
+    "number_inventory.json": 2648181,
+    "runlog.md": 4526,
+    "render_receipt.json": 499,
+    "visual-qa.json": 2728
+  },
+  "review_input_hashes": {
+    "external_render_receipt": "3bb536440caa1be196b4cdc0d5040af23e23583428cc4234b5ff31af35b63f10",
+    "visual_qa_markdown": "72e92a1408b32e3057a7de2c7f9ae6efab2b77049bc510fb0ba6d1a13946a933",
+    "build_validator": "b9f47ff965c23ae6747469c01f5042c6d122906770e0f28174dc90a542715d7e",
+    "render_validator": "16bbc5670a0d87dd0841394259e837b29866eca0ab1bf25f5578bc76a6c12186",
+    "approved_report_contract": "0023999f4370e0c2484dd245b84db779e61796636bfb28149f389cc9bb803960"
+  },
+  "validator_checks": {
+    "build_validator": {
+      "status": "PASS",
+      "exit_code": 0
+    },
+    "render_validator": {
+      "status": "PASS",
+      "exit_code": 0,
+      "external_receipt_used": "final matching render receipt"
+    }
+  },
+  "package_read_check": {
+    "status": "PASS",
+    "regular_file_count": 90,
+    "total_bytes_read": 309748199,
+    "symlink_count": 0,
+    "json_files_parsed": 30,
+    "json_parse_error_count": 0,
+    "inventory_sha256": "f53fae384b232d9d73551bf2e2bd51499546625d2eb0e55110ac9991f67d77c5",
+    "inventory_digest_basis": "Sorted package-relative filename and file SHA-256 pairs."
+  },
+  "approved_contract_check": {
+    "status": "PASS",
+    "packaged_copy_matches_approved_contract_byte_for_byte": true,
+    "approved_status": "APPROVED_FOR_INTERNAL_REBUILD_ONLY",
+    "external_delivery_authorized": false
+  },
+  "receipt_checks": {
+    "status": "PASS",
+    "manifest_rows_declared": 50,
+    "manifest_rows_verified": 50,
+    "unique_files_declared": 33,
+    "unique_files_verified": 33,
+    "safe_package_relative_paths": 50,
+    "unsafe_path_count": 0,
+    "missing_path_count": 0,
+    "sha256_matches": 50,
+    "sha256_mismatch_count": 0,
+    "filename_hash_prefix_matches": 50,
+    "packaged_and_external_render_receipts_byte_identical": true,
+    "render_receipt_sha256": "3bb536440caa1be196b4cdc0d5040af23e23583428cc4234b5ff31af35b63f10",
+    "rendered_at_utc": "2026-07-30T14:48:30.331731Z",
+    "network_used": false,
+    "external_actions_taken": "none"
+  },
+  "pdf_checks": {
+    "onepager": {
+      "status": "PASS",
+      "pages": 1,
+      "page_size_points": [
+        612,
+        792
+      ],
+      "pdf_newer_than_html": true,
+      "freshness_delta_seconds": 137.662769,
+      "text_pages_extracted": 1,
+      "minimum_nonspace_characters_on_any_page": 3226,
+      "blank_or_near_blank_page_count": 0,
+      "stored_text_extract_matches_fresh_default_extraction": true
+    },
+    "number_explainer": {
+      "status": "PASS",
+      "pages": 25,
+      "page_size_points": [
+        612,
+        792
+      ],
+      "pdf_newer_than_html": true,
+      "freshness_delta_seconds": 2755.039353,
+      "text_pages_extracted": 25,
+      "minimum_nonspace_characters_on_any_page": 676,
+      "maximum_nonspace_characters_on_any_page": 4345,
+      "blank_or_near_blank_page_count": 0,
+      "stored_text_extract_matches_fresh_default_extraction": true
+    }
+  },
+  "page_image_checks": {
+    "status": "PASS",
+    "onepager": {
+      "expected": 1,
+      "found": 1,
+      "dimensions_pixels": [
+        1275,
+        1650
+      ],
+      "minimum_size_bytes": 330239
+    },
+    "number_explainer": {
+      "expected": 25,
+      "found": 25,
+      "filenames_sequential": true,
+      "dimensions_pixels": [
+        1275,
+        1650
+      ],
+      "minimum_size_bytes": 100279
+    },
+    "minimum_grayscale_standard_deviation": 30.522,
+    "minimum_ink_fraction_below_245": 0.08689,
+    "blank_or_near_blank_image_count": 0
+  },
+  "client_visible_boundary_checks": {
+    "status": "PASS",
+    "artifacts_checked": [
+      "onepager.html",
+      "onepager.pdf",
+      "number-explainer.md",
+      "number-explainer.html",
+      "number-explainer.pdf"
+    ],
+    "absolute_internal_path_leak_count": 0,
+    "stale_route_value_count": 0,
+    "client_visible_raw_receipt_path_count": 0,
+    "internal_only_package_relative_audit_references_present": true,
+    "internal_only_audit_reference_manifest_rows": 50
+  },
+  "visual_qa_checks": {
+    "status": "PASS",
+    "receipt_verdict": "PASS",
+    "pages_expected": 26,
+    "pages_inspected": 26,
+    "receipt_hashes_match_reviewed_pdfs": true,
+    "inspection_completed_after_final_render": true,
+    "independent_page_image_review": "PASS",
+    "blocking_findings": []
+  },
+  "external_boundary": "The reviewed package is internal-only. External delivery, upload, publishing, outreach, CRM write, or any other external action is not authorized.",
+  "remaining_human_gate": "Human Project Room review and approval of the exact reviewed package is required before any external use or delivery."
+}

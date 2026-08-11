@@ -1,0 +1,57 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workV93final",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "re-adjudicate",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["verdict.txt"],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_graph.py --base /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v86.json --draft /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workV93/build-v93/pathway-v93-draft.json --v88-ref /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v90.json --classification /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workK/build-v92/v91-classification.json > verdict.txt 2>&1; rc=$?; tail -5 verdict.txt; exit $rc",
+      "check": "grep -q 'PASS' verdict.txt || { echo 'FAIL: validator still red:'; grep -E '^\\s*- \\[' verdict.txt | head -6; exit 1; }; echo \"PASS: $(tail -1 verdict.txt)\"",
+      "verified": "The round-1 D6 draft (already minted as Bland v94) fully green under the amended validator including the new [35] convergence and [36] n_search-pin assertions, with the untouched v91 classification."
+    },
+    {
+      "key": "flake-clock-time",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["probe.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > probe.txt 2>&1\nimport importlib.util, sys\nsys.path.insert(0, \"/home/ankit114/repos/mott-v21-snap/harness\")\nimport pathway_harness as H\nspec = importlib.util.spec_from_file_location(\"v62_scenarios\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workB3/v62r2-lane/scenarios.py\")\nmod = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(mod)\nsc = next(s for s in mod.SCENARIOS if s[\"name\"] == \"clock time with no day at all\")\nprint(\"scenario:\", sc[\"name\"], \"turns:\", sc[\"turns\"])\noutcomes = []\nfor i in range(3):\n    ok, failures, said = H.run_scenario(94, sc)\n    outcomes.append(ok)\n    print(\"ITER=%d ok=%s\" % (i + 1, ok))\n    for f in failures:\n        print(\"   -> %s\" % f)\nif all(outcomes):\n    print(\"VERDICT: PASS-ALL - the regression failure was nondeterministic extraction, not a v93 defect\")\nelif not any(outcomes):\n    print(\"VERDICT: DETERMINISTIC-FAIL - v94 mint reliably breaks this scenario\")\nelse:\n    print(\"VERDICT: FLAKY - mixed %s\" % outcomes)\nPY\nrc=$?; tail -4 probe.txt; exit $rc",
+      "check": "n=$(grep -cE '^ITER=[0-9] ok=' probe.txt); [ \"$n\" -eq 3 ] || { echo \"FAIL: expected 3 iterations, got $n\"; tail -4 probe.txt; exit 1; }; grep -qE '^VERDICT: (PASS-ALL|DETERMINISTIC-FAIL|FLAKY)' probe.txt || { echo 'FAIL: no verdict'; exit 1; }; echo \"PASS: $(grep -m1 '^VERDICT:' probe.txt)\"",
+      "verified": "The 'clock time with no day at all' scenario executed three times against the v94 mint, classifying the tomorrow-vs-monday regression as deterministic defect or extraction nondeterminism."
+    },
+    {
+      "key": "s1-attrib",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, re, subprocess, sys, time\nfrom datetime import datetime, timedelta, timezone\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nstart = datetime.now(timezone.utc)\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"How about next Friday the 17th\", \"Friday the 14th\"]}, f)\nrc = subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", \"94\", \"script.json\", \"s1-attrib\"])\ntime.sleep(3)\nend = datetime.now(timezone.utc) + timedelta(seconds=5)\nout = subprocess.run([\"aws\", \"logs\", \"filter-log-events\", \"--log-group-name\", \"/ecs/mott-booking-gateway\", \"--start-time\", str(int(start.timestamp() * 1000)), \"--end-time\", str(int(end.timestamp() * 1000)), \"--filter-pattern\", \"?raw_fetch ?raw_resolve ?date_source ?raw_refetch\", \"--query\", \"events[].message\", \"--output\", \"json\"], capture_output=True, text=True, timeout=120)\nevents = json.loads(out.stdout or \"[]\") if out.returncode == 0 else []\nprint(\"GWLOG_LINES=%d\" % len(events))\nmask = lambda s: re.sub(r\"\\d{5,}\", lambda m: \"***\" + m.group(0)[-4:], str(s))\nfor e in events:\n    print(\"GW\", mask(str(e).strip()[:220]))\nprint(\"TIMER_RC=%d\" % rc)\nprint(\"ATTRIB_DONE\")\nPY\nrc=$?; grep -E '^TURN=|^RESULT|^GW |GWLOG|TIMER_RC' measure.txt | tail -18; exit $rc",
+      "check": "grep -q 'ATTRIB_DONE' measure.txt || { echo 'FAIL: attribution run did not finish:'; tail -5 measure.txt; exit 1; }; t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -ge 3 ] || { echo \"FAIL: only $t turns ran\"; exit 1; }; last=$(grep -E '^TURN=3' measure.txt); if echo \"$last\" | grep -q '08/14/2026' && ! echo \"$last\" | grep -q 'NODE=n_date_conflict'; then echo \"PASS-CONVERGED: $last\" | head -c 250; else g=$(grep -cE '^GW ' measure.txt); [ \"$g\" -ge 1 ] || { echo 'FAIL: loop persists AND no gateway lines captured for attribution'; exit 1; }; echo \"PASS-ATTRIBUTED: loop persists, $g gateway lines on record for attribution - $last\" | head -c 300; fi",
+      "verified": "The convergence replay against v94 with its own gateway-log window captured in the same task: either it converges to the 08/14 offer, or the loop's gateway-side mechanism is finally on the record turn-by-turn."
+    },
+    {
+      "key": "s2-reconfirm",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"How about next Friday the 17th\", \"hmm whatever you think\", \"just pick something\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", \"94\", \"script.json\", \"s2-reconfirm\"]))\nPY\nrc=$?; tail -4 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 4 ] || { echo \"FAIL: expected 4 TURN lines, got $t\"; tail -4 measure.txt; exit 1; }; last=$(grep -E '^TURN=4' measure.txt); echo \"$last\" | grep -qE 'NODE=(n_date_conflict|n_date_conflict_retry)' && { echo \"FAIL: fail-stay returned: $last\"; exit 1; }; echo \"$last\" | grep -qE '[0-9]{2}/[0-9]{2}/[0-9]{4}' || { echo \"FAIL: no dated offer: $last\"; exit 1; }; echo \"PASS: $(grep -m1 '^RESULT' measure.txt)\"",
+      "verified": "Fail-open reconfirmed on v94: clarify ignored twice, one retry, then a dated offer - no fail-stay."
+    },
+    {
+      "key": "regression-94",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 2400,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/phase_run.py 94 phase1 > transcript.txt 2>&1; rc=$?; tail -5 transcript.txt; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_phase_transcript.py --file transcript.txt --phase phase1 --total 33",
+      "verified": "The full 33-scenario suite against the v94 mint with the amended validator's blessing - the pre-flip regression gate."
+    }
+  ]
+}

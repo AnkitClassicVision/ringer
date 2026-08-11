@@ -1,0 +1,22 @@
+{
+  "source_id": "S14",
+  "claim": "Census QuickFacts supports Morton village city context, including the report's explicitly vintaged 2024 population estimate and the displayed 2020-2024 age shares, income, density, and commute facts.",
+  "value": {
+    "report_value_population_estimate_2024": 17557,
+    "current_live_population_estimate_2025": 17565,
+    "under_18_percent_2020_2024": 25.9,
+    "age_65_plus_percent_2020_2024": 23.1,
+    "median_household_income_2020_2024_usd": 94402,
+    "population_density_2020_per_square_mile": 1336.4,
+    "mean_commute_minutes_2020_2024": 16.6
+  },
+  "source_url": "https://www.census.gov/quickfacts/fact/table/mortonvillageillinois/PST045224",
+  "retrieval": {
+    "date": "2026-07-29",
+    "method": "Direct public web fetch of Census QuickFacts plus a search of the indexed official Census QuickFacts V2024 result for the retained historical estimate.",
+    "live_access": "successful_with_vintage_change"
+  },
+  "result": "The live QuickFacts page now defaults to the newer July 1, 2025 estimate of 17,565. It still confirms 25.9% under 18, 23.1% age 65+, $94,402 median household income, 1,336.4 people per square mile, and a 16.6-minute commute. An indexed official Census QuickFacts V2024 result confirms 17,557 for July 1, 2024. The report labels that number as a 2024 city estimate, so the vintage difference does not contradict the report.",
+  "limitations": "The live endpoint is mutable and no frozen Census payload is stored in the packet. The 2024 estimate is historical rather than the current default. All values are city-boundary context, not drive-time catchment measurements.",
+  "status": "PASS_WITH_LIMITATION"
+}

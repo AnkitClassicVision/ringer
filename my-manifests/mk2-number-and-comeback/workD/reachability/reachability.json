@@ -1,0 +1,111 @@
+{
+  "start_node": "n_identity",
+  "edges_only_unreachable_from_start": [
+    "n_office",
+    "n_faq",
+    "e_office",
+    "n_suppress_stop",
+    "e_stop",
+    "n_suppress_not_me",
+    "e_not_me",
+    "e_existing"
+  ],
+  "zero_inbound_edge_end_nodes": [
+    "e_existing"
+  ],
+  "edges_only_no_path_to_end": [],
+  "global_nodes": [
+    {
+      "id": "n_negotiate",
+      "effect_on_reachability": "Bland may enter this negotiation node from anywhere before booking confirmation, although it is already reachable from the start through ordinary edges."
+    },
+    {
+      "id": "n_office",
+      "effect_on_reachability": "Its global label supplies a real entry into an edges-only-unreachable office-handoff branch, making n_office and its descendant e_office reachable in practice."
+    },
+    {
+      "id": "n_faq",
+      "effect_on_reachability": "Its global label supplies a real entry into an edges-only-unreachable FAQ branch; its ordinary outgoing edges can then reach n_office and e_office."
+    },
+    {
+      "id": "e_declined",
+      "effect_on_reachability": "Bland may terminate directly at this End Call node when the patient declines, although the node is also reachable from the start through ordinary edges."
+    },
+    {
+      "id": "n_suppress_stop",
+      "effect_on_reachability": "Its global STOP intent makes this edges-only-unreachable webhook a practical entry point, and its outgoing routes make e_stop reachable after the suppression attempt."
+    },
+    {
+      "id": "n_suppress_not_me",
+      "effect_on_reachability": "Its global wrong-person intent makes this edges-only-unreachable webhook a practical entry point, and its outgoing routes make e_not_me reachable afterward."
+    },
+    {
+      "id": "e_existing",
+      "effect_on_reachability": "This zero-inbound End Call node remains practically reachable because Bland can jump directly to it when the global existing-appointment label matches."
+    }
+  ],
+  "effectively_unreachable": [],
+  "condition_order_review": [
+    {
+      "node": "n_identity",
+      "verdict": "no_shadowing",
+      "reason": "The three missing-input guards are independent, the nonnegative count cases are disjoint, and a failed response leaves count unset so the final ok guard can still match."
+    },
+    {
+      "node": "n_appt_check",
+      "verdict": "no_shadowing",
+      "reason": "The appointment-count branches divide zero from one-or-more; on a failed or missing response the count is unset, leaving the final ok failure condition available."
+    },
+    {
+      "node": "n_search",
+      "verdict": "no_shadowing",
+      "reason": "Some preference, health, day-part, and count predicates can overlap, but the files do not establish that any later predicate necessarily implies an earlier one for every matching response."
+    },
+    {
+      "node": "n_page_2",
+      "verdict": "no_shadowing",
+      "reason": "The health failure check comes first, and the remaining empty versus nonempty slot-start comparisons are mutually exclusive and collectively cover the mapped value."
+    },
+    {
+      "node": "n_page_3",
+      "verdict": "no_shadowing",
+      "reason": "The health failure check comes first, and the remaining empty versus nonempty slot-start comparisons are mutually exclusive and collectively cover the mapped value."
+    },
+    {
+      "node": "n_page_near",
+      "verdict": "no_shadowing",
+      "reason": "The health failure check comes first, and the remaining empty versus nonempty slot-start comparisons are mutually exclusive and collectively cover the mapped value."
+    },
+    {
+      "node": "n_verify_1",
+      "verdict": "shadowed",
+      "reason": "The final slot_conflict == empty route is shadowed: failure is caught by ok != true, while a successful catalog response supplies boolean true or false, each caught earlier."
+    },
+    {
+      "node": "n_book_1",
+      "verdict": "no_shadowing",
+      "reason": "The specific slot_conflict error is handled first, reported success is handled second, and the final complement remains reachable for every other non-success or missing-success result."
+    },
+    {
+      "node": "n_verify_2",
+      "verdict": "shadowed",
+      "reason": "The final slot_conflict == empty route is shadowed: failure is caught by ok != true, while a successful catalog response supplies boolean true or false, each caught earlier."
+    },
+    {
+      "node": "n_book_2",
+      "verdict": "no_shadowing",
+      "reason": "The specific slot_conflict error is handled first, reported success is handled second, and the final complement remains reachable for every other non-success or missing-success result."
+    },
+    {
+      "node": "n_suppress_stop",
+      "verdict": "no_shadowing",
+      "reason": "The equality and inequality tests are complements, so the later failure branch is not consumed by the earlier success branch; both deliberately target the same End node."
+    },
+    {
+      "node": "n_suppress_not_me",
+      "verdict": "no_shadowing",
+      "reason": "The equality and inequality tests are complements, so the later failure branch is not consumed by the earlier success branch; both deliberately target the same End node."
+    }
+  ],
+  "never_match_conditions": []
+}

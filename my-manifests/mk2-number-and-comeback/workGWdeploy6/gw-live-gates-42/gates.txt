@@ -1,0 +1,4 @@
+GATE=partial-day-3pm STATUS=200 first=08/04/2026 03:30 pm count=8 oob=False err=
+GATE=oob-3am STATUS=200 first=08/06/2026 10:30 am count=24 oob=False err=
+GATE=default-window STATUS=200 first=08/04/2026 03:30 pm count=96 oob=False err=
+GATE=latest-reg STATUS=200 first=08/06/2026 04:45 pm count=24 oob=None err=

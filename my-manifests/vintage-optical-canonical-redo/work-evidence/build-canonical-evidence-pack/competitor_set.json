@@ -1,0 +1,141 @@
+{
+  "schema_version": "stage1-competitor-set-v1",
+  "report_visibility": "internal_only_unroomed_draft",
+  "project_room_status": "EMPTY",
+  "subject": {
+    "name": "Vintage Optical",
+    "address": "605 S Main St, Morton, IL 61550",
+    "website": "https://www.vintageopt.com/",
+    "lat": 40.6048878,
+    "lon": -89.4669666,
+    "source_ids": ["S01", "S02", "N00"]
+  },
+  "market_type": "exurban",
+  "market_type_confidence": "medium",
+  "primary_catchment_minutes": 20,
+  "extended_catchment_minutes": 30,
+  "geography_note": "Morton is classified as exurban under the repository types because it is a lower-density, car-oriented small community with a 16.6-minute mean commute and relevant regional peers beyond 20 minutes. Census reports 1,336.4 people per square mile in 2020. The repository assigns exurban markets a 20-minute primary and 30-minute extended window. Tri-County at 20.94 minutes and Vision Care Center at 22.41 minutes fall in the extended context. This classification is directional because no catchment density surface or trip-tolerance study was completed.",
+  "route_provider": "Nominatim/OpenStreetMap geocoding plus OSRM public point-to-point routing",
+  "route_collected_at": "2026-07-30T01:35:21.143554+00:00",
+  "route_method": "Exact subject-origin to selected destination coordinate. Stored OSRM duration and route distance are used without converting older straight-line distances.",
+  "route_limitations": [
+    "Routes are practice-origin point-to-point observations, not polygon isochrones or population-weighted patient choice.",
+    "OSRM public routes do not model live traffic or time-of-day variation.",
+    "Nominatim entity matches require review against official addresses.",
+    "The Walmart destination is the matched Supercenter entity, not a separately matched Vision Center entity.",
+    "Illinois Eye Center Washington had no Nominatim match and therefore no OSRM duration."
+  ],
+  "tiers": {
+    "tier_1_direct_peers": [
+      {
+        "name": "Focus On Eyes",
+        "category": "independent_optometry",
+        "address": "829 W Jackson Plaza, Morton, IL 61550",
+        "match_basis": "Exact official website entity and Morton address, high service overlap, and a successful subject-origin OSRM route.",
+        "website_url": "https://visionsource-focusoneyes.com/",
+        "public_evidence": "Official peer site verifies the Morton entity, examinations, disease care, lenses, frames, contacts, posted hours, and appointment request. OSRM verifies the stored 4.07-minute point-to-point route.",
+        "model": "Independent community optometry with examinations, disease care, lenses, frames, and contacts.",
+        "service_overlap": "High routine, family, disease-care, contact-lens, and optical overlap.",
+        "route_relevance": "4.07-minute routed Morton peer inside the 20-minute primary catchment.",
+        "travel_time_minutes": 4.07,
+        "route_miles": 1.56,
+        "confidence": "high",
+        "source_ids": ["S07", "R01"]
+      },
+      {
+        "name": "Tri-County Eye Center Washington",
+        "category": "regional_eye_care_group",
+        "address": "100 Hillcrest Drive, Washington, IL 61571",
+        "match_basis": "Exact official website entity and Washington address, broad routine and specialty overlap, and a successful subject-origin OSRM route within the 30-minute extended context.",
+        "website_url": "https://www.tricountyeyecenter.com/",
+        "public_evidence": "Official peer site verifies examinations, disease treatment, dry-eye clinic, contact lenses, macular-health, emergency-care, and eyewear services. OSRM verifies the stored 20.94-minute point-to-point route.",
+        "model": "Regional eye-care practice with examinations, disease treatment, contact lenses, optical, emergency care, dry eye, and macular-health services.",
+        "service_overlap": "High routine, medical, dry-eye, contact-lens, and optical overlap.",
+        "route_relevance": "20.94-minute routed Washington peer, just outside the 20-minute primary window and inside the 30-minute exurban extended context.",
+        "travel_time_minutes": 20.94,
+        "route_miles": 10.85,
+        "confidence": "high",
+        "source_ids": ["S08", "R03"]
+      },
+      {
+        "name": "Vision Care Center Washington",
+        "category": "regional_optometry_specialty_peer",
+        "address": "1009 N Cummings Lane, Washington, IL 61571",
+        "match_basis": "Official peer and service pages establish the Washington entity and direct dry-eye and myopia overlap; a successful subject-origin OSRM route places it within the 30-minute extended context.",
+        "website_url": "https://vcc2020.com/",
+        "public_evidence": "Official peer pages verify dry-eye diagnostics and therapies plus myopia-control options including atropine, multifocal contacts and glasses, and Ortho-K. OSRM verifies the stored 22.41-minute point-to-point route.",
+        "model": "Regional optometry group with routine eye care and publicly detailed specialty services.",
+        "service_overlap": "High dry-eye and myopia overlap, with additional routine and specialty eye-care overlap.",
+        "route_relevance": "22.41-minute routed Washington peer inside the 30-minute exurban extended context.",
+        "travel_time_minutes": 22.41,
+        "route_miles": 16.33,
+        "confidence": "high",
+        "source_ids": ["S09", "S10", "R04"]
+      }
+    ],
+    "tier_2_substitutes": [
+      {
+        "name": "Walmart Vision Center Morton",
+        "category": "retail_optical_with_eye_care_context_unverified",
+        "address": "155 E Courtland St, Morton, IL 61550",
+        "match_basis": "Required named Morton substitute with a blocked official page and a Nominatim-matched Walmart Supercenter route receipt. Entity and service matching remain limited.",
+        "website_url": "https://www.walmart.com/store/5157-morton-il/vision-center",
+        "public_evidence": "The official Walmart Vision Center page fetch was blocked. The only usable location evidence is the Nominatim-matched Walmart Supercenter entity and its stored 5.71-minute OSRM route, which supports location context only.",
+        "model": "Named retail optical and eye-care substitute. Current first-party service details were not fetched because the official page was blocked.",
+        "service_overlap": "Potential routine exam, eyewear, and contact-lens substitution remains inferred, not verified in this pack.",
+        "route_relevance": "5.71-minute route to the Nominatim-matched Walmart Supercenter store entity inside the 20-minute primary catchment. The route is location context only.",
+        "travel_time_minutes": 5.71,
+        "route_miles": 2.35,
+        "confidence": "low",
+        "source_ids": ["S13", "R02"]
+      },
+      {
+        "name": "Bard Optical East Peoria",
+        "category": "retail_optical_with_eye_care",
+        "address": "412 Riverside Drive, East Peoria, IL 61611",
+        "match_basis": "Exact official location page entity and address, routine eye-care and optical substitution, and a successful subject-origin OSRM route.",
+        "website_url": "https://www.bardoptical.com/eye-doctor-peoria-east/",
+        "public_evidence": "Official location page verifies the East Peoria entity, eye-care and optical model, appointment request, and public access information. OSRM verifies the stored 14.00-minute point-to-point route.",
+        "model": "Regional retail optical location with public eye-care access and an appointment request.",
+        "service_overlap": "Routine eye care, contacts, disease-management context, pediatric care, and optical substitution.",
+        "route_relevance": "14.00-minute routed East Peoria substitute inside the 20-minute primary catchment.",
+        "travel_time_minutes": 14.0,
+        "route_miles": 9.25,
+        "confidence": "high",
+        "source_ids": ["S11", "R05"]
+      },
+      {
+        "name": "Illinois Eye Center Washington",
+        "category": "ophthalmology_optometry_medical_surgical",
+        "address": "93 Eastgate Drive, Washington, IL 61571",
+        "match_basis": "Exact current official location page and address with routine, medical, surgical, contact-lens, and optical overlap. Route relevance is unmeasured because the supplied geocode attempt failed.",
+        "website_url": "https://www.illinoiseyecenter.com/location/washington/",
+        "public_evidence": "Official location page verifies the current Washington entity and service breadth. The supplied Nominatim request returned no match, so no OSRM route evidence exists.",
+        "model": "Multi-specialty eye-care group with routine, medical, surgical, contact-lens, and optical services.",
+        "service_overlap": "Partial routine, medical, contact-lens, and optical substitution, plus referral and co-management relevance. It is not a like-for-like independent optometry peer.",
+        "route_relevance": "Official Washington entity is current, but route relevance is unmeasured because Nominatim returned no match and OSRM did not run.",
+        "travel_time_minutes": null,
+        "route_miles": null,
+        "confidence": "medium",
+        "source_ids": ["S12", "R06"]
+      }
+    ]
+  },
+  "review_comparison": {
+    "subject_rating_sample": 4.9,
+    "subject_rating_sample_date": "2026-07-29",
+    "subject_book_online_action": true,
+    "review_count": null,
+    "review_recency": null,
+    "owner_response_comparison": null,
+    "peer_normalization": null,
+    "status": "UNKNOWN beyond the limited subject sample",
+    "source_ids": ["S16"]
+  },
+  "set_completeness": {
+    "complete_market_office_census": false,
+    "complete_provider_join": false,
+    "deduplicated_supply_count": false,
+    "use": "Named, evidence-linked peer set only. It must not be interpreted as complete supply."
+  }
+}

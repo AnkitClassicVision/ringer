@@ -1,0 +1,5 @@
+ ! OPEN item OPEN-1: listed separately; pre-approved item warns but does not automatically fail
+ ! OPEN item OPEN-2: listed separately; pre-approved item warns but does not automatically fail
+ - [4] node n_search: immutable v86 node differs (including layout fields)
+FAIL: 1 assertion failure(s)
+EXIT=1

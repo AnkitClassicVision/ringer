@@ -1,0 +1,149 @@
+[
+  {
+    "patient_text": "can I come in on july 28th?",
+    "expected_pref_from": "july 28",
+    "expected_resolved_date": "07/28/2026",
+    "category": "month+day with ordinal",
+    "risk_level": "low"
+  },
+  {
+    "patient_text": "july 31st please",
+    "expected_pref_from": "july 31",
+    "expected_resolved_date": "07/31/2026",
+    "category": "month+day with ordinal",
+    "risk_level": "low"
+  },
+  {
+    "patient_text": "how about august 3rd",
+    "expected_pref_from": "august 3",
+    "expected_resolved_date": "08/03/2026",
+    "category": "month+day with ordinal",
+    "risk_level": "low"
+  },
+  {
+    "patient_text": "july 28 works for me",
+    "expected_pref_from": "july 28",
+    "expected_resolved_date": "07/28/2026",
+    "category": "month+day clean",
+    "risk_level": "low"
+  },
+  {
+    "patient_text": "august 1 would be great",
+    "expected_pref_from": "august 1",
+    "expected_resolved_date": "08/01/2026",
+    "category": "month+day clean",
+    "risk_level": "low"
+  },
+  {
+    "patient_text": "can you do tomorrow?",
+    "expected_pref_from": "tomorrow",
+    "expected_resolved_date": "07/28/2026",
+    "category": "relative day",
+    "risk_level": "low"
+  },
+  {
+    "patient_text": "today if you have anything",
+    "expected_pref_from": "monday",
+    "expected_resolved_date": "07/27/2026",
+    "category": "relative day",
+    "risk_level": "medium"
+  },
+  {
+    "patient_text": "day after tomorrow maybe",
+    "expected_pref_from": "day after tomorrow",
+    "expected_resolved_date": "07/29/2026",
+    "category": "relative day",
+    "risk_level": "medium"
+  },
+  {
+    "patient_text": "how about tuesday",
+    "expected_pref_from": "tuesday",
+    "expected_resolved_date": "07/28/2026",
+    "category": "bare weekday",
+    "risk_level": "low"
+  },
+  {
+    "patient_text": "friday would be good",
+    "expected_pref_from": "friday",
+    "expected_resolved_date": "07/31/2026",
+    "category": "bare weekday",
+    "risk_level": "low"
+  },
+  {
+    "patient_text": "tuesday next week",
+    "expected_pref_from": "tuesday next week",
+    "expected_resolved_date": "08/04/2026",
+    "category": "weekday + qualifier",
+    "risk_level": "medium"
+  },
+  {
+    "patient_text": "how about this thursday",
+    "expected_pref_from": "thursday",
+    "expected_resolved_date": "07/30/2026",
+    "category": "weekday + qualifier",
+    "risk_level": "medium"
+  },
+  {
+    "patient_text": "next monday works",
+    "expected_pref_from": "next monday",
+    "expected_resolved_date": "08/03/2026",
+    "category": "weekday + qualifier",
+    "risk_level": "high"
+  },
+  {
+    "patient_text": "Tomorrow july 28th",
+    "expected_pref_from": "july 28",
+    "expected_resolved_date": "07/28/2026",
+    "category": "Kenneth exact",
+    "risk_level": "high"
+  },
+  {
+    "patient_text": "Tuesday July 28",
+    "expected_pref_from": "july 28",
+    "expected_resolved_date": "07/28/2026",
+    "category": "compound redundant",
+    "risk_level": "high"
+  },
+  {
+    "patient_text": "thursday july 28th",
+    "expected_pref_from": "july 28",
+    "expected_resolved_date": "07/28/2026",
+    "category": "compound CONFLICTING",
+    "risk_level": "high"
+  },
+  {
+    "patient_text": "anytime next week is fine",
+    "expected_pref_from": "next week",
+    "expected_resolved_date": "08/03/2026",
+    "category": "vague week",
+    "risk_level": "high"
+  },
+  {
+    "patient_text": "later this week if possible",
+    "expected_pref_from": "friday",
+    "expected_resolved_date": "07/31/2026",
+    "category": "vague this-week",
+    "risk_level": "high"
+  },
+  {
+    "patient_text": "tues nxt wk",
+    "expected_pref_from": "tuesday next week",
+    "expected_resolved_date": "08/04/2026",
+    "category": "texting shorthand",
+    "risk_level": "high"
+  },
+  {
+    "patient_text": "any openings on the 28th?",
+    "expected_pref_from": "monday",
+    "expected_resolved_date": "07/28/2026",
+    "category": "bare day number",
+    "risk_level": "high"
+  },
+  {
+    "patient_text": "I'm free wed or thurs",
+    "expected_pref_from": "wednesday",
+    "expected_resolved_date": "07/29/2026",
+    "category": "multi-day choice",
+    "risk_level": "high"
+  }
+]

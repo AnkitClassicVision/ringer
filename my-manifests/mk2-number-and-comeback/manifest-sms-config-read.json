@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD6",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "sms-config-read",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 300,
+      "expect_files": ["sms-config.txt"],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > sms-config.txt 2>&1\nimport json, os, re, urllib.request, urllib.error\nraw = os.environ['BLAND_API_KEY'].strip()\nif raw.startswith('{'):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in ('api_key','key','value') if p.get(k)), raw)\n    except Exception:\n        pass\nNUM = '+15095611012'\nfor path in (f'/v1/inbound/{NUM}', f'/v1/sms/number/{NUM}', '/v1/sms/numbers', f'/v1/sms/config?phone_number={NUM}', '/v1/sms/conversations?limit=1'):\n    req = urllib.request.Request('https://api.bland.ai' + path, headers={'Authorization': raw, 'User-Agent': 'mybcat-sms-config-probe'})\n    try:\n        with urllib.request.urlopen(req, timeout=60) as r:\n            body = r.read().decode()[:1200]\n            status = r.status\n    except urllib.error.HTTPError as e:\n        status, body = e.code, e.read().decode(errors='replace')[:300]\n    except Exception as e:\n        status, body = 0, f'{type(e).__name__}: {e}'\n    body = re.sub(r'\\d{7,}', lambda m: '***' + m.group(0)[-4:], ' '.join(str(body).split()))\n    print(f'ENDPOINT={path} STATUS={status} BODY={body}')\nPY\nrc=$?; cat sms-config.txt; exit $rc",
+      "check": "grep -q 'STATUS=200' sms-config.txt || { echo 'FAIL: no endpoint answered 200:'; cat sms-config.txt; exit 1; }; echo 'PASS: config read recorded'; grep -oE 'ENDPOINT=[^ ]+ STATUS=[0-9]+' sms-config.txt",
+      "verified": "The live SMS/inbound configuration of the 509 agent line is on record (read-only), answering what time_out and restart_after_end_call are actually set to versus platform defaults."
+    }
+  ]
+}

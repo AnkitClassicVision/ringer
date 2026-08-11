@@ -1,0 +1,13 @@
+{
+  "data": {
+    "chat_id": "a***9854-f4b5-4100-a557-cb19848e35c1",
+    "message": "Chat instance created successfully",
+    "variables": {
+      "campaign": "harness",
+      "recall_cell": "***2428",
+      "recall_patient_id": "***2466",
+      "store": "711"
+    }
+  },
+  "errors": null
+}

@@ -1,0 +1,38 @@
+ - [2] nodes: new ids expected ['e_book_unknown', 'e_booked_recovered', 'e_defer', 'n_appt_check', 'n_reconcile_1', 'n_reconcile_2'], got []
+ - [4] node n_clarify: immutable v86 node differs (including layout fields)
+ - [4] node n_gate_1: immutable v86 node differs (including layout fields)
+ - [4] node n_gate_2: immutable v86 node differs (including layout fields)
+ - [4] node n_miss_empty: immutable v86 node differs (including layout fields)
+ - [4] node n_miss_thin: immutable v86 node differs (including layout fields)
+ - [4] node n_miss_time: immutable v86 node differs (including layout fields)
+ - [4] node n_miss_unbookable: immutable v86 node differs (including layout fields)
+ - [4] node n_miss_unread: immutable v86 node differs (including layout fields)
+ - [4] node n_negotiate: immutable v86 node differs (including layout fields)
+ - [4] node n_offer: immutable v86 node differs (including layout fields)
+ - [4] node n_offer_2: immutable v86 node differs (including layout fields)
+ - [4] node n_offer_near: immutable v86 node differs (including layout fields)
+ - [4] node n_recheck: immutable v86 node differs (including layout fields)
+ - [4] node n_which_intent: immutable v86 node differs (including layout fields)
+ - [29] node n_ask data.prompt: exact five-paragraph greeting block from v90 is missing
+ - [30] node n_ask data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_empty data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_unread data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_thin data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_unbookable data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_clarify data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_time data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer_2 data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer_3 data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer_near data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_which_intent data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_gate_1 data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_gate_2 data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_negotiate data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_recheck data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_confirm data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_help data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_office data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_faq data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [34] classification coverage: missing 211 v86-v90 field differences; first entries [('__top__', 'version_number'), ('e_book_unknown', 'position'), ('e_book_unknown', 'x'), ('e_book_unknown', 'y'), ('e_booked', 'position'), ('e_booked', 'x'), ('e_booked', 'y'), ('e_booked_recovered', 'position')]
+FAIL: 37 assertion failure(s)

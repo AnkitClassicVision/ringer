@@ -1,0 +1,3 @@
+CONVERSE us.anthropic.claude-haiku-4-5-20251001-v1:0 -> ERROR AccessDeniedException: An error occurred (AccessDeniedException) when calling the Converse operation: User: arn:aws:sts::533267039664:assumed-role/AWSReservedSSO_connect_full_2d6eff6dd64a98d6/ankit_mybcat is not authorized to perform: bedrock:InvokeModel on resource: arn:a
+CONVERSE us.anthropic.claude-sonnet-5 -> ERROR AccessDeniedException: An error occurred (AccessDeniedException) when calling the Converse operation: User: arn:aws:sts::533267039664:assumed-role/AWSReservedSSO_connect_full_2d6eff6dd64a98d6/ankit_mybcat is not authorized to perform: bedrock:InvokeModel on resource: arn:a
+PROBE_DONE

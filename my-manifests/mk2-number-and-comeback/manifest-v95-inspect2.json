@@ -1,0 +1,20 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workV95T8",
+  "max_parallel": 2,
+  "tasks": [
+    {
+      "key": "v95-inspect",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": [
+        "inspect.txt",
+        "pathway-v95.json"
+      ],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > inspect.txt 2>&1\nimport json, os, urllib.request\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    p = json.loads(raw); raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\nPID = \"94abad8b-fbe2-4e67-9c64-d9b586dd2653\"\n\ndef get(path):\n    req = urllib.request.Request(\"https://api.bland.ai\" + path, headers={\"Authorization\": raw, \"User-Agent\": \"mybcat-cli\"})\n    with urllib.request.urlopen(req, timeout=90) as r:\n        return json.loads(r.read().decode())\n\nversions = get(\"/v1/pathway/%s/versions\" % PID)\nrows = versions if isinstance(versions, list) else (versions.get(\"data\") or [])\nfor v in rows:\n    if isinstance(v, dict) and str(v.get(\"version_number\", v.get(\"version\"))) in (\"93\", \"94\", \"95\"):\n        print(\"VERSION %s name=%r created=%s\" % (v.get(\"version_number\", v.get(\"version\")), str(v.get(\"name\", \"\"))[:60], v.get(\"created_at\", \"?\")))\ng = None\nfor path in (\"/v1/pathway/%s/version/95\" % PID, \"/v1/pathway/%s/versions/95\" % PID):\n    try:\n        g = get(path)\n        break\n    except Exception as e:\n        print(\"fetch %s -> %s\" % (path.rsplit('/',2)[-2:], type(e).__name__))\nassert g, \"could not fetch v95 graph\"\ndata = g.get(\"data\", g) or {}\nnodes = data.get(\"nodes\") or []\nedges = data.get(\"edges\") or []\nopen(\"pathway-v95.json\", \"w\").write(json.dumps(data))\nprint(\"V95_NODES=%d V95_EDGES=%d\" % (len(nodes), len(edges)))\nids = sorted(str(n.get(\"id\")) for n in nodes if isinstance(n, dict))\nv94 = json.load(open(\"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workV93/build-v93/pathway-v93-draft.json\"))\nids94 = sorted(str(n.get(\"id\")) for n in v94[\"nodes\"])\nonly95 = [i for i in ids if i not in ids94]\nonly94 = [i for i in ids94 if i not in ids]\nprint(\"NODES_ONLY_IN_95=%s\" % (only95[:15] or \"none\"))\nprint(\"NODES_MISSING_VS_94=%s\" % (only94[:15] or \"none\"))\nhas_retry = \"n_date_conflict_retry\" in ids\nprint(\"HAS_RETRY_NODE=%s\" % has_retry)\nex = [str(n.get(\"id\")) for n in nodes if isinstance(n, dict) and \"extractVars\" in (n.get(\"data\") or {})]\nprint(\"EXTRACT_NODES=%d %s\" % (len(ex), sorted(ex)[:12]))\nbody = json.dumps(data)\nprint(\"FILLER_ONE_MOMENT=%d\" % body.count(\"One moment while I check the schedule for you\"))\nprint(\"FILLER_LET_ME_CHECK=%d\" % body.count(\"Let me check that for you\"))\nprint(\"INSPECT_DONE\")\nPY\nrc=$?; cat inspect.txt; exit $rc",
+      "check": "grep -q 'INSPECT_DONE' inspect.txt || { echo 'FAIL: inspection did not finish:'; tail -5 inspect.txt; exit 1; }; grep -qE 'V95_NODES=[0-9]+' inspect.txt || { echo 'FAIL: no node count'; exit 1; }; echo 'PASS: v95 facts on record:'; grep -E 'VERSION 95|V95_NODES|HAS_RETRY|NODES_ONLY|NODES_MISSING|FILLER' inspect.txt",
+      "verified": "The v95 now serving the live 509 line characterized read-only: provenance metadata, node/edge counts, structural diff vs the validated v94, retry-node presence, extraction-config count, and filler counts."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+=== ANKIT RETEST THREAD 54de4c ===
+DETAIL HTTP 200 node=n_confirm_1 version=123 active=True
+MESSAGES: 11
+  [2026-08-06T13:18:45] AGENT (delivered): Hi ANKIT, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.
+
+Many vision insurance benefits renew yearly, so don't let your benefits go unused!
+
+When would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.
+
+如需中文服务，请直接用中文回复。
+  [2026-08-06T13:23:16] USER (None): 你好，我想约个检查，但我不确定具体时间。请问你们下周一般什么时候有空？
+  [2026-08-06T13:23:25] AGENT (delivered): 我这里有 Monday 08/10/2026 11:15 am 或 Monday 08/10/2026 11:45 am（地点：MK2 Optical）。回复1或2选择，或告诉我其他日期或时间。
+  [2026-08-06T13:27:38] USER (None): 周一上午我不太方便，怕时间赶不上。请问周一下午有位置吗？或者下周后半周（比如周三或周四）有什么可选的时间？
+  [2026-08-06T13:27:48] AGENT (delivered): 我这里有 Wednesday 08/12/2026 10:45 am 或 Wednesday 08/12/2026 11:00 am（地点：MK2 Optical）。回复1或2选择，或告诉我其他日期或时间。
+  [2026-08-06T13:28:44] USER (None): 周三上午我刚好有会议，不太方便。请问你们周三下午或者周四下午有没有更晚一点的时间？比如大概两三点左右？
+  [2026-08-06T13:28:55] AGENT (delivered): 我这里有 Wednesday 08/12/2026 02:00 pm 或 Wednesday 08/12/2026 02:15 pm（地点：MK2 Optical）。回复1或2选择，或告诉我其他日期或时间。
+  [2026-08-06T13:38:26] USER (None): 我选择 1（Wednesday 08/12/2026 02:00 pm），谢谢！
+  [2026-08-06T13:38:29] AGENT (delivered): 确认一下，您的眼科检查时间为 Wednesday 08/12/2026 02:00 pm（地点：MK2 Optical）。回复 YES 确认预约，或回复 NO 查看其他时间。
+  [2026-08-06T13:39:03] USER (None): Yes
+  [2026-08-06T13:39:13] AGENT (delivered): 您的眼科检查已预约在 Wednesday 08/12/2026 02:00 pm（地点：MK2 Optical）。您都安排好了。如有其他问题，请致电 MK2 Optical，电话：(212) 219-2219
+VARS: {"appt_count": 0, "store": "711", "today": "Thu, Aug 6, 2026", "timezone": "America/Los_Angeles"}
+THREAD_DONE
+=== ANKIT APPTS (patient 4362694474 store 711) ===
+HTTP 200
+ok: True count: 1
+{'id': None, 'start': '2026-08-12T14:00:00Z', 'store': None, 'status': 'created', 'type': None}
+APPTS_DONE

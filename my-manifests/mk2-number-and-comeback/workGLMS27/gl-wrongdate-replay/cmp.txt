@@ -1,0 +1,7 @@
+TURN=1 node=n_goal_ask spoken=[] slots=[] said="Hi RACHEL, this is MK2 Optical.\n\nWe noticed that it's been awhile since your last visit wi"
+TURN=2 node=n_goal_response spoken=['08/26/2026'] slots=['08/26/2026'] said='I have Wednesday 08/26/2026 10:30 am or Wednesday 08/26/2026 10:45 am at MK2 Optical. Repl'
+TURN=3 node=n_goal_response spoken=['08/26/2026'] slots=['08/26/2026'] said="I'm sorry, I don't have availability for Thursday. The openings I found are on Wednesday 0"
+TURN=4 node=n_goal_response spoken=['08/13/2026'] slots=['08/13/2026'] said='I have Thursday 08/13/2026 10:30 am or Thursday 08/13/2026 10:45 am at MK2 Optical. Reply '
+TURN=5 node=n_goal_response spoken=['08/13/2026'] slots=['08/13/2026'] said='I have Thursday 08/13/2026 05:15 pm or Thursday 08/13/2026 05:00 pm at MK2 Optical. Reply '
+TURN=6 node=n_gate_1 spoken=['08/13/2026'] slots=['08/13/2026'] said='To confirm, your eye exam would be Thursday 08/13/2026 04:30 pm at MK2 Optical. Reply YES '
+PASS: every spoken date is backed by a live slot variable

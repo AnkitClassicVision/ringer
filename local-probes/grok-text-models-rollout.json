@@ -1,0 +1,62 @@
+{
+  "run_name": "grok-models-rollout",
+  "workdir": "/tmp/ringer-grok-models-rollout-corrected",
+  "max_parallel": 3,
+  "tasks": [
+    {
+      "key": "grok-4-20-non-reasoning",
+      "engine": "xai",
+      "model": "xai/grok-4.20-0309-non-reasoning",
+      "task_type": "probe",
+      "spec": "You are a bounded Ringer model probe worker. Work only in the current task directory. Create exactly one file named lane_probe.py. It must be valid Python and print exactly GROK_TEXT_LANE_OK when executed. Do not inspect credentials or environment variables. Do not read or modify any other files. Do not make external calls. Do not commit. Create no extra files. After writing the file, stop.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np = Path('lane_probe.py')\nif not p.is_file():\n    print('FAIL: lane_probe.py was not created')\n    sys.exit(1)\nproc = subprocess.run([sys.executable, str(p)], text=True, capture_output=True, timeout=10)\nif proc.returncode != 0:\n    print(f'FAIL: lane_probe.py exited {proc.returncode}')\n    print(proc.stdout)\n    print(proc.stderr)\n    sys.exit(1)\nif proc.stdout.strip() != 'GROK_TEXT_LANE_OK':\n    print(f'FAIL: expected GROK_TEXT_LANE_OK, got {proc.stdout.strip()!r}')\n    sys.exit(1)\nextra = sorted(str(x) for x in Path('.').iterdir() if x.name not in {'lane_probe.py', 'worker.log'})\nif extra:\n    print('FAIL: unexpected files:', extra)\n    sys.exit(1)\nprint('PASS: model wrote one executable Python artifact with exact output')\nPY",
+      "expect_files": ["lane_probe.py"],
+      "timeout_s": 300,
+      "verified": "executing the model-created artifact proves this xAI model can perform a bounded checked file-writing task through Ringer"
+    },
+    {
+      "key": "grok-4-20-reasoning",
+      "engine": "xai",
+      "model": "xai/grok-4.20-0309-reasoning",
+      "task_type": "probe",
+      "spec": "You are a bounded Ringer model probe worker. Work only in the current task directory. Create exactly one file named lane_probe.py. It must be valid Python and print exactly GROK_TEXT_LANE_OK when executed. Do not inspect credentials or environment variables. Do not read or modify any other files. Do not make external calls. Do not commit. Create no extra files. After writing the file, stop.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np = Path('lane_probe.py')\nif not p.is_file():\n    print('FAIL: lane_probe.py was not created')\n    sys.exit(1)\nproc = subprocess.run([sys.executable, str(p)], text=True, capture_output=True, timeout=10)\nif proc.returncode != 0:\n    print(f'FAIL: lane_probe.py exited {proc.returncode}')\n    print(proc.stdout)\n    print(proc.stderr)\n    sys.exit(1)\nif proc.stdout.strip() != 'GROK_TEXT_LANE_OK':\n    print(f'FAIL: expected GROK_TEXT_LANE_OK, got {proc.stdout.strip()!r}')\n    sys.exit(1)\nextra = sorted(str(x) for x in Path('.').iterdir() if x.name not in {'lane_probe.py', 'worker.log'})\nif extra:\n    print('FAIL: unexpected files:', extra)\n    sys.exit(1)\nprint('PASS: model wrote one executable Python artifact with exact output')\nPY",
+      "expect_files": ["lane_probe.py"],
+      "timeout_s": 300,
+      "verified": "executing the model-created artifact proves this xAI model can perform a bounded checked file-writing task through Ringer"
+    },
+    {
+      "key": "grok-4-3",
+      "engine": "xai",
+      "model": "xai/grok-4.3",
+      "task_type": "probe",
+      "spec": "You are a bounded Ringer model probe worker. Work only in the current task directory. Create exactly one file named lane_probe.py. It must be valid Python and print exactly GROK_TEXT_LANE_OK when executed. Do not inspect credentials or environment variables. Do not read or modify any other files. Do not make external calls. Do not commit. Create no extra files. After writing the file, stop.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np = Path('lane_probe.py')\nif not p.is_file():\n    print('FAIL: lane_probe.py was not created')\n    sys.exit(1)\nproc = subprocess.run([sys.executable, str(p)], text=True, capture_output=True, timeout=10)\nif proc.returncode != 0:\n    print(f'FAIL: lane_probe.py exited {proc.returncode}')\n    print(proc.stdout)\n    print(proc.stderr)\n    sys.exit(1)\nif proc.stdout.strip() != 'GROK_TEXT_LANE_OK':\n    print(f'FAIL: expected GROK_TEXT_LANE_OK, got {proc.stdout.strip()!r}')\n    sys.exit(1)\nextra = sorted(str(x) for x in Path('.').iterdir() if x.name not in {'lane_probe.py', 'worker.log'})\nif extra:\n    print('FAIL: unexpected files:', extra)\n    sys.exit(1)\nprint('PASS: model wrote one executable Python artifact with exact output')\nPY",
+      "expect_files": ["lane_probe.py"],
+      "timeout_s": 300,
+      "verified": "executing the model-created artifact proves this xAI model can perform a bounded checked file-writing task through Ringer"
+    },
+    {
+      "key": "grok-4-5",
+      "engine": "xai",
+      "model": "xai/grok-4.5",
+      "task_type": "probe",
+      "spec": "You are a bounded Ringer model probe worker. Work only in the current task directory. Create exactly one file named lane_probe.py. It must be valid Python and print exactly GROK_TEXT_LANE_OK when executed. Do not inspect credentials or environment variables. Do not read or modify any other files. Do not make external calls. Do not commit. Create no extra files. After writing the file, stop.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np = Path('lane_probe.py')\nif not p.is_file():\n    print('FAIL: lane_probe.py was not created')\n    sys.exit(1)\nproc = subprocess.run([sys.executable, str(p)], text=True, capture_output=True, timeout=10)\nif proc.returncode != 0:\n    print(f'FAIL: lane_probe.py exited {proc.returncode}')\n    print(proc.stdout)\n    print(proc.stderr)\n    sys.exit(1)\nif proc.stdout.strip() != 'GROK_TEXT_LANE_OK':\n    print(f'FAIL: expected GROK_TEXT_LANE_OK, got {proc.stdout.strip()!r}')\n    sys.exit(1)\nextra = sorted(str(x) for x in Path('.').iterdir() if x.name not in {'lane_probe.py', 'worker.log'})\nif extra:\n    print('FAIL: unexpected files:', extra)\n    sys.exit(1)\nprint('PASS: model wrote one executable Python artifact with exact output')\nPY",
+      "expect_files": ["lane_probe.py"],
+      "timeout_s": 300,
+      "verified": "executing the model-created artifact proves this xAI model can perform a bounded checked file-writing task through Ringer"
+    },
+    {
+      "key": "grok-build-0-1",
+      "engine": "xai",
+      "model": "xai/grok-build-0.1",
+      "task_type": "probe",
+      "spec": "You are a bounded Ringer model probe worker. Work only in the current task directory. Create exactly one file named lane_probe.py. It must be valid Python and print exactly GROK_TEXT_LANE_OK when executed. Do not inspect credentials or environment variables. Do not read or modify any other files. Do not make external calls. Do not commit. Create no extra files. After writing the file, stop.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np = Path('lane_probe.py')\nif not p.is_file():\n    print('FAIL: lane_probe.py was not created')\n    sys.exit(1)\nproc = subprocess.run([sys.executable, str(p)], text=True, capture_output=True, timeout=10)\nif proc.returncode != 0:\n    print(f'FAIL: lane_probe.py exited {proc.returncode}')\n    print(proc.stdout)\n    print(proc.stderr)\n    sys.exit(1)\nif proc.stdout.strip() != 'GROK_TEXT_LANE_OK':\n    print(f'FAIL: expected GROK_TEXT_LANE_OK, got {proc.stdout.strip()!r}')\n    sys.exit(1)\nextra = sorted(str(x) for x in Path('.').iterdir() if x.name not in {'lane_probe.py', 'worker.log'})\nif extra:\n    print('FAIL: unexpected files:', extra)\n    sys.exit(1)\nprint('PASS: model wrote one executable Python artifact with exact output')\nPY",
+      "expect_files": ["lane_probe.py"],
+      "timeout_s": 300,
+      "verified": "executing the model-created artifact proves this xAI model can perform a bounded checked file-writing task through Ringer"
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+--- /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWfix2/gw-prod-extract2/bland_gateway_prod.py	2026-08-03 19:53:05.074391919 -0400
++++ bland_gateway_fixed.py	2026-08-03 19:57:58.931946131 -0400
+@@ -713,6 +713,9 @@
+     if match:
+         weekday_text = match.group(1) or match.group(2)
+         return emit(calendar_weekday(_WEEKDAYS[weekday_text], 1))
++    match = re.fullmatch(rf"(?:the )?following ({weekday_pattern})", t)
++    if match:
++        return emit(calendar_weekday(_WEEKDAYS[match.group(1)], 1))
+ 
+     weekday_text = re.sub(r"^(this|next|on|coming)\s+", "", t)
+     if weekday_text in _WEEKDAYS:
+@@ -913,17 +916,24 @@
+     normalized = " ".join(
+         _fuzzy_calendar_token(token) for token in normalized.split()
+     )
++    weekday_pattern = "|".join(sorted(_WEEKDAYS, key=len, reverse=True))
++    correction_following = re.match(
++        rf"^no[,!. ]+(?P<phrase>(?:the )?following (?:{weekday_pattern}))\b",
++        normalized,
++        re.IGNORECASE,
++    )
+     # A leading "No" answering OUR last offer is a discourse marker, not a
+     # negation of the days the patient goes on to name ("No I need something
+     # friday"). Strip it only when the next word shows a fresh request; "no
+     # friday works" keeps its negation.
+-    normalized = re.sub(
+-        r"^(?:no|nope|nah)[,.!]*\s+(?=(?:i|we|im|id|lets|let|can|could|what|"
+-        r"how|do|does|is|are|need|want|please|prefer|the|that|this|actually|"
+-        r"maybe)\b)",
+-        "",
+-        normalized,
+-    )
++    if not correction_following:
++        normalized = re.sub(
++            r"^(?:no|nope|nah)[,.!]*\s+(?=(?:i|we|im|id|lets|let|can|could|what|"
++            r"how|do|does|is|are|need|want|please|prefer|the|that|this|actually|"
++            r"maybe)\b)",
++            "",
++            normalized,
++        )
+     if not normalized:
+         return None
+ 
+@@ -986,9 +996,11 @@
+                 offset += 1
+                 continue
+ 
+-            def killed(start):
++            def killed(start, correction_phrase=False):
+                 if clause_killed:
+                     return True
++                if correction_phrase:
++                    return False
+                 # Scope a negator to the last 8 tokens before the date,
+                 # across transparent segments. Wider scopes kill days the
+                 # patient then requests (live miss 2026-07-29); correction
+@@ -1006,6 +1018,24 @@
+             date_seen = False
+ 
+             occupied = []
++            following = re.compile(
++                rf"\b(?:the )?following (?:{weekday_pattern})\b"
++            )
++            for match in following.finditer(segment):
++                result = resolve_relative_date(match.group(0))
++                is_correction = bool(
++                    correction_following
++                    and match.group(0) == correction_following.group("phrase")
++                )
++                if result:
++                    date_seen = True
++                if result and not killed(match.start(), is_correction):
++                    candidates.append(("window", clause_index, segment_index,
++                                       offset + match.start(), order, result,
++                                       match.group(0)))
++                    order += 1
++                occupied.append(match.span())
++
+             for match in explicit.finditer(segment):
+                 day = int(match.group(2))
+                 suffix = match.group(3)

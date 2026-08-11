@@ -1,0 +1,116 @@
+{
+  "facts": {
+    "number_carrier_nodes": [
+      "n_confirm",
+      "n_office",
+      "n_faq",
+      "e_safe_identity",
+      "e_safe_failure",
+      "e_booking_failed",
+      "e_defer",
+      "e_office",
+      "e_declined",
+      "e_stop",
+      "e_not_me",
+      "e_existing"
+    ],
+    "nodes_containing_855": [],
+    "close_carrier_nodes": [
+      "n_confirm"
+    ],
+    "n_confirm_adjacency": [
+      "e_booked",
+      "e_defer"
+    ],
+    "e_defer": {
+      "exists": true,
+      "node_type": "End Call",
+      "outgoing_edge_count": 0,
+      "text_matches_defer_verbatim": true
+    },
+    "analysis_options_value": null
+  },
+  "gates": [
+    {
+      "gate": "G1",
+      "verdict": "PASS",
+      "evidence": "The required scan finds zero nodes containing `855`. It finds `(212) 219-2219` in exactly n_confirm, n_office, n_faq, e_safe_identity, e_safe_failure, e_booking_failed, e_office, e_declined, e_stop, e_not_me, e_existing, plus the newly required e_defer: the eleven named carriers plus e_defer and no others."
+    },
+    {
+      "gate": "G2",
+      "verdict": "PASS",
+      "evidence": "The verbatim CLOSE string occurs in the scanned fields of n_confirm only. n_confirm.prompt says the English confirmation `must end exactly with` that line; no other node contains it, and e_booked.text remains `Thank you. We look forward to seeing you.`"
+    },
+    {
+      "gate": "G3",
+      "verdict": "PASS",
+      "evidence": "Node e_defer exists with type `End Call`, outcome `deferred_after_booking`, and exact text `For that you'll have to contact the MK2 Optical office at (212) 219-2219`. The edges array contains zero edges whose source is e_defer."
+    },
+    {
+      "gate": "G4",
+      "verdict": "PASS",
+      "evidence": "The sorted adjacency of n_confirm is exactly {e_booked, e_defer}: `confirmation delivered` and `72-hour silence after booking` target e_booked, while `change requested after confirmation` and `anything else requested after booking` target e_defer. Both targets are End Call nodes with no outgoing edges, so no path continues to search, verify, book, offer, n_office, or n_faq."
+    },
+    {
+      "gate": "G5",
+      "verdict": "PASS",
+      "evidence": "Revision-aware reading used: design item 6 explicitly says `booked_already` is retired and superseded by n_appt_check, so the older literal Gate-additions wording is stale. n_identity routes `count == 1` to n_appt_check. In n_appt_check.responsePathways, `appt_count >= 1` to e_defer is first, before `appt_count == 0` and `ok != true` routes to n_ask. Under a strictly literal, unrevised reading, G5 would FAIL because n_identity has no booked_already route."
+    },
+    {
+      "gate": "G6",
+      "verdict": "PASS",
+      "evidence": "Both global labels carry the required exclusion. n_office.globalLabel ends `This does not apply once a booking is confirmed.` and n_faq.globalLabel contains the same exact sentence. Both nodes are marked isGlobal true."
+    }
+  ],
+  "design_items": [
+    {
+      "item": 1,
+      "verdict": "PASS",
+      "evidence": "The scan finds `(212) 219-2219` in all eleven specified carriers: n_confirm, n_office, n_faq, e_safe_identity, e_safe_failure, e_booking_failed, e_office, e_declined, e_stop, e_not_me, and e_existing. No scanned node contains `855`. The separate byte-identical-to-an-earlier-version clause cannot be independently compared without that earlier graph, but the v62 graph requirements visible in this export are satisfied."
+    },
+    {
+      "item": 2,
+      "verdict": "PASS",
+      "evidence": "n_confirm.prompt contains the exact CLOSE and instructs that the confirmation name the booked time, use one SMS bubble, end exactly with the mandated tail, and avoid earlier duplicate `all set` wording. The CLOSE appears nowhere else. e_booked.text is exactly `Thank you. We look forward to seeing you.` and contains no booking claim."
+    },
+    {
+      "item": 3,
+      "verdict": "FAIL",
+      "evidence": "The e_defer node itself conforms: it is an End Call with exact DEFER text, outcome `deferred_after_booking`, and no outgoing edges. However, the top-level pathway field is literally `analysis_options: null`, so the specification's claim that `deferred_after_booking` was added to analysis_options is false in version 87."
+    },
+    {
+      "item": 4,
+      "verdict": "PASS",
+      "evidence": "n_confirm has the required `change requested after confirmation` edge to e_defer and the added `anything else requested after booking` edge to e_defer. Its only other targets are e_booked. Thus adjacency(n_confirm) is exactly {e_booked, e_defer}, structurally preventing re-entry into booking."
+    },
+    {
+      "item": 5,
+      "verdict": "PASS",
+      "evidence": "n_office.globalLabel and n_faq.globalLabel each state `This does not apply once a booking is confirmed.` e_existing.globalLabel is tightened to `The patient has an appointment made outside this conversation they want to cancel or move.`, matching the specified post-booking scope separation."
+    },
+    {
+      "item": 6,
+      "verdict": "NOT_VERIFIABLE",
+      "evidence": "The JSON-visible graph conforms to the revised design: n_identity `count == 1` targets n_appt_check; n_appt_check POSTs /appt-list with patient_id and store, maps ok from $.ok and appt_count from $.result.count, and orders `appt_count >= 1` to e_defer first, then `appt_count == 0` and `ok != true` to n_ask. No scanned node field or webhook response mapping contains `booked_already` or `upcoming_appointment`. The same item also requires send-queue exclusion and live probe P4 behavior; neither can be established from pathway-v87.json alone, so the whole numbered item is not fully verifiable."
+    },
+    {
+      "item": 7,
+      "verdict": "PASS",
+      "evidence": "n_confirm.prompt contains the Chinese CLOSE `您都安排好了。如有其他问题，请致电 MK2 Optical，电话：(212) 219-2219`, preserving the all-arranged meaning, office brand in Latin script, and ASCII digits without using 预约成功. e_defer.text is English-only, consistent with the documented single-language End Call limitation; proposed report-only Chinese DEFER copy is not a graph requirement."
+    }
+  ],
+  "extra_findings": [
+    {
+      "severity": "critical",
+      "finding": "The incident's unknown-outcome defect remains in both write branches. n_book_1 and n_book_2 map book_success from $.success and route every `book_success != true` result to e_booking_failed, whose text says `I couldn't confirm that booking.` There is no branch that distinguishes an UNKNOWN write outcome such as HTTP 502 gateway_unreachable or HTTP 423 write_unverified, and no read-after-write verification branch. This is outside SPEC-v62's G1-G6 and design items 1-7, but it directly explains the reported false-failure message after a committed write."
+    },
+    {
+      "severity": "high",
+      "finding": "n_book_1 and n_book_2 explicitly set modelOptions.retryAttempts to 0, which avoids an unsafe automatic repeat of the non-idempotent /sign write. The graph still conflates determinate and indeterminate non-success responses at e_booking_failed."
+    },
+    {
+      "severity": "spec-contradiction",
+      "finding": "G5 says an n_identity `booked_already` route must be present, but revised design item 6 explicitly retires `booked_already` and replaces it with n_appt_check. This review treats the later explicit revision as controlling; a strictly literal G5-only verifier would report FAIL."
+    }
+  ]
+}

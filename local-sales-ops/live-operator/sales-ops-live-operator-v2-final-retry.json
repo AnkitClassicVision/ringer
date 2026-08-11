@@ -1,0 +1,45 @@
+{
+  "run_name": "sales-ops-live-operator-v2-final-retry",
+  "workdir": "/tmp/sales-ops-live-operator-v2-final-retry",
+  "max_parallel": 2,
+  "tasks": [
+    {
+      "key": "copy-qa-worker",
+      "task_type": "test-hardening",
+      "spec": "Build copy QA as part of the full operator. Work only in this task directory. Create copy_qa.py, copy_qa_cases.json, and copy_qa_report.json. Reject fake familiarity, unsupported claims, banned phrases, em dash, too much length, missing specific ask, and wrong voice. Pass a short grounded Ankit-voice draft. Include fixture cases for pass and reject. No sends. No writes. Use no em dash.",
+      "check": "test -s copy_qa.py || { echo 'WHY: copy QA missing'; exit 1; }; test -s copy_qa_cases.json || { echo 'WHY: copy QA cases missing'; exit 1; }; test -s copy_qa_report.json || { echo 'WHY: copy QA report missing'; exit 1; }; grep -qi 'unsupported' copy_qa.py || { echo 'WHY: copy QA missing unsupported claim check'; exit 1; }; grep -Eqi 'specific_ask|specific ask' copy_qa.py || { echo 'WHY: copy QA missing specific ask'; exit 1; }; grep -qi 'banned' copy_qa.py || { echo 'WHY: copy QA missing banned phrase check'; exit 1; }",
+      "expect_files": [
+        "copy_qa.py",
+        "copy_qa_cases.json",
+        "copy_qa_report.json"
+      ],
+      "timeout_s": 600,
+      "verified": "copy QA rejects bad drafts and passes grounded short drafts",
+      "engine": "claude",
+      "model": "sonnet",
+      "engine_args": [
+        "--effort",
+        "medium"
+      ]
+    },
+    {
+      "key": "live-boundary-and-approval-worker",
+      "task_type": "probe",
+      "spec": "Build live boundary v2 as part of the full operator. Work only in this task directory. Create live_boundary_v2.py, approval_file.schema.json, and boundary_probe.json. Boundary must block by default unless all are true: exact env flag RINGER_SALES_OPS_ALLOW_LIVE_SEND enabled, approval file names run_id, candidate_id, sender, channel, cap, approver, row approval_state approved_to_send, all QA pass, email channel only, daily cap available, business day ok, kill switch absent, idempotency key unused, and HubSpot logging preflight configured. This task probes block mode only. No sends. No writes. Use no em dash.",
+      "check": "test -s live_boundary_v2.py || { echo 'WHY: live boundary missing'; exit 1; }; test -s approval_file.schema.json || { echo 'WHY: approval schema missing'; exit 1; }; test -s boundary_probe.json || { echo 'WHY: boundary probe missing'; exit 1; }; grep -q 'RINGER_SALES_OPS_ALLOW_LIVE_SEND' live_boundary_v2.py || { echo 'WHY: boundary missing env flag'; exit 1; }; grep -qi 'idempotency' live_boundary_v2.py || { echo 'WHY: boundary missing idempotency'; exit 1; }; grep -qi 'kill' live_boundary_v2.py || { echo 'WHY: boundary missing kill switch'; exit 1; }; grep -qi 'block' boundary_probe.json || { echo 'WHY: boundary probe did not block'; exit 1; }",
+      "expect_files": [
+        "live_boundary_v2.py",
+        "approval_file.schema.json",
+        "boundary_probe.json"
+      ],
+      "timeout_s": 600,
+      "verified": "live boundary blocks without explicit approval, env flag, passing QA, cap, idempotency, and logging preflight",
+      "engine": "claude",
+      "model": "sonnet",
+      "engine_args": [
+        "--effort",
+        "medium"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+Traceback (most recent call last):
+  File "/usr/lib64/python3.14/urllib/request.py", line 1321, in do_open
+    h.request(req.get_method(), req.selector, req.data, headers,
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+              encode_chunked=req.has_header('Transfer-encoding'))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/http/client.py", line 1367, in request
+    self._send_request(method, url, body, headers, encode_chunked)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/http/client.py", line 1413, in _send_request
+    self.endheaders(body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/http/client.py", line 1362, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/http/client.py", line 1122, in _send_output
+    self.send(msg)
+    ~~~~~~~~~^^^^^
+  File "/usr/lib64/python3.14/http/client.py", line 1066, in send
+    self.connect()
+    ~~~~~~~~~~~~^^
+  File "/usr/lib64/python3.14/http/client.py", line 1508, in connect
+    self.sock = self._context.wrap_socket(self.sock,
+                ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+                                          server_hostname=server_hostname)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/ssl.py", line 455, in wrap_socket
+    return self.sslsocket_class._create(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sock=sock,
+        ^^^^^^^^^^
+    ...<5 lines>...
+        session=session
+        ^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/usr/lib64/python3.14/ssl.py", line 1076, in _create
+    self.do_handshake()
+    ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib64/python3.14/ssl.py", line 1372, in do_handshake
+    self._sslobj.do_handshake()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~^^
+TimeoutError: _ssl.c:1064: The handshake operation timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_datetime_coverage.py", line 128, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_datetime_coverage.py", line 116, in main
+    status, r = post(frm, pref, after, verbatim, ctx)
+                ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_datetime_coverage.py", line 107, in post
+    with urllib.request.urlopen(req, timeout=60) as resp:
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/urllib/request.py", line 487, in open
+    response = self._open(req, data)
+  File "/usr/lib64/python3.14/urllib/request.py", line 504, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+                              '_open', req)
+  File "/usr/lib64/python3.14/urllib/request.py", line 464, in _call_chain
+    result = func(*args)
+  File "/usr/lib64/python3.14/urllib/request.py", line 1369, in https_open
+    return self.do_open(http.client.HTTPSConnection, req,
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        context=self._context)
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib64/python3.14/urllib/request.py", line 1324, in do_open
+    raise URLError(err)
+urllib.error.URLError: <urlopen error _ssl.c:1064: The handshake operation timed out>
+DT=slash-date cat=absolute first=08/27/2026 10:30 am n=25 unres=None oob=None closed=False err=
+DT=month-name cat=absolute first=08/27/2026 10:30 am n=25 unres=None oob=None closed=False err=
+DT=ordinal-th cat=absolute first=08/27/2026 10:30 am n=25 unres=None oob=None closed=False err=
+DT=spelled-ordinal cat=absolute first=08/27/2026 10:30 am n=25 unres=None oob=None closed=False err=
+DT=ordinal-dropped-ex cat=absolute first=08/27/2026 10:30 am n=25 unres=None oob=None closed=False err=
+DT=bare-weekday cat=weekday first=08/07/2026 11:00 am n=11 unres=None oob=None closed=False err=
+DT=this-weekday cat=weekday first=08/07/2026 11:00 am n=11 unres=None oob=None closed=False err=
+DT=next-weekday cat=weekday first=08/07/2026 11:00 am n=11 unres=None oob=None closed=False err=
+DT=abbrev-weekday cat=weekday first=08/07/2026 11:00 am n=11 unres=None oob=None closed=False err=
+DT=tomorrow cat=relative first=08/06/2026 10:30 am n=24 unres=None oob=None closed=False err=
+DT=day-after-tomorrow cat=relative first=08/07/2026 11:00 am n=11 unres=None oob=None closed=False err=

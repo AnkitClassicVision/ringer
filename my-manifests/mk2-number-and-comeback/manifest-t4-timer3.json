@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "t4-timer3-fixer",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1200,
+      "expect_files": ["turn_timer3.py"],
+      "spec": "You are a fix worker. OFFLINE: no network, no git, no MCP, no skills; write only in your working directory.\n\nRUNTIME FAILURE EVIDENCE: /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4timer/t4-timer2-builder/turn_timer2.py (read it) failed its first live run with: chat create failed: HTTP 400 {\"errors\":[{\"error\":\"CREATE_PATHWAY_CHAT_BAD_REQUEST\",\"message\":\"pathway_version must be a number\"}]} - it passes sys.argv pathway_version into the create body as a STRING.\n\nWRITE ./turn_timer3.py: a full copy of turn_timer2.py with these changes only: (1) validate pathway_version argv is a positive integer during argument parsing (usage error exit if not) and send it as a JSON number in the create body; (2) expose a pure function build_create_body(pathway_version, request_data, use_candidate) that returns the exact dict POSTed to /v1/pathway/chat/create, and use it in main - so the body is testable offline. Preserve everything else: validation order (args -> script load -> booking refusal exit 2 -> env), CANDIDATE flag via env USE_CANDIDATE, subject request_data from HARNESS_* env, CREATE_KEYS echo, TURN=/RESULT machine lines, masking, timeouts.\n\nVERIFY before finishing: PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile turn_timer3.py; no-args exits nonzero with usage; python3 turn_timer3.py abc script.json x exits nonzero complaining about the version; a 'yes'-turn script still exits 2; and python3 -c \"import sys; sys.path.insert(0,'.'); import turn_timer3 as t; b=t.build_create_body(92, {'store':'711'}, True); assert isinstance(b['pathway_version'], int) and b.get('use_candidate_model') is True; print('body OK')\" prints body OK. Final message <=10 lines.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile turn_timer3.py || exit 1; if python3 turn_timer3.py >/dev/null 2>&1; then echo 'CHECK FAILED: no-args must exit nonzero'; exit 1; fi; printf '{\"turns\":[\"hi\",\"yes\"]}' > refuse_test.json; python3 turn_timer3.py 92 refuse_test.json probe >/dev/null 2>&1; rc=$?; [ \"$rc\" -eq 2 ] || { echo \"CHECK FAILED: booking refusal must exit 2, got $rc\"; exit 1; }; PYTHONDONTWRITEBYTECODE=1 python3 -c \"import sys; sys.path.insert(0,'.'); import turn_timer3 as t; b=t.build_create_body(92, {'store':'711'}, False); assert isinstance(b['pathway_version'], int), 'pathway_version not an int'; assert 'use_candidate_model' not in b or b['use_candidate_model'] is False, 'candidate flag wrong when off'; b2=t.build_create_body(92, {'store':'711'}, True); assert b2.get('use_candidate_model') is True, 'candidate flag missing when on'; print('create body int-typed; candidate flag correct')\" || { echo 'CHECK FAILED: build_create_body contract broken'; exit 1; }; echo 'PASS: version int-typed in executed body; guards hold'",
+      "verified": "The timing driver's chat-create body now carries pathway_version as a JSON number, proven by executing the body constructor - the exact 400 from the live run cannot recur."
+    }
+  ]
+}

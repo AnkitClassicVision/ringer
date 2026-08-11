@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-onepager",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/work-readme-close",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "close-readme-status",
+      "engine": "local-shell",
+      "task_type": "docs",
+      "timeout_s": 120,
+      "expect_files": ["README.md"],
+      "spec": "set -euo pipefail; DEST=/mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/checks/finalize_readme.py --readme \"$DEST/README.md\"; cp \"$DEST/README.md\" ./README.md",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport sys\np=Path('/mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29/README.md')\nt=p.read_text()\nneed=['Generated and technically validated','onepager.pdf','Client Opportunity: 66','Final fresh-context review: READY','human delivery gate remains pending','No external delivery occurred']\nmiss=[x for x in need if x not in t]\nif miss:\n print('WHY: README missing '+', '.join(miss)); sys.exit(1)\nif 'Not generated yet' in t:\n print('WHY: README still says the one-pager is not generated'); sys.exit(1)\nprint('PASS: README reflects final local one-pager state')\nPY\ncmp README.md /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29/README.md && echo 'PASS: Ringer artifact matches canonical README'",
+      "verified": "the report-folder README now points to the generated one-page artifact, records its score/QA state, and keeps the human delivery gate pending"
+    }
+  ]
+}

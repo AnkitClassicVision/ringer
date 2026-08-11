@@ -1,0 +1,27 @@
+{
+  "run_name": "ringer-model-routing-attribution-fix",
+  "workdir": "/tmp/ringer-model-routing-attribution-fix",
+  "repo": "/home/ankit114/repos/ringer",
+  "worktrees": true,
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "model-attribution-and-candidate-normalization",
+      "engine": "codex",
+      "engine_args": [
+        "-m",
+        "gpt-5.6-sol",
+        "-c",
+        "model_reasoning_effort=high"
+      ],
+      "task_type": "code-fix",
+      "spec": "You are the implementation worker for a tightly scoped Ringer routing fix. Your current directory is an isolated git worktree of the Ringer repository. Edit files here directly. Do not commit, push, deploy, touch user configuration, mutate ~/.ringer, or access credentials. You own only ringer.py, registry/model-identity.toml, tests/test_model_field.py, tests/test_model_log.py, tests/test_catalog.py, and tests/test_model_db.py. Goal 1: make Ringer attribute the effective Codex model accurately when a task pins it through engine_args. Add a single reusable resolver used by run state and eval logging. Precedence must be explicit task.model first, then the last recognized model selector in engine_args for engines without a model placeholder, then engine.model_default, then empty/unpinned. Recognize at least '-m VALUE', '--model VALUE', '--model=VALUE', and the Codex config form '-c model=VALUE'. Record a model_source field in the local eval row and notes so task-model, engine-args, engine-default, and unpinned are distinguishable. Preserve retry behavior: the same effective model is used and logged on retry. For engines whose template already contains the model placeholder, reject model selectors in engine_args so a later CLI flag cannot silently override the manifest model. Goal 2: normalize OpenRouter route identifiers when models --explore compares tested models with catalog candidates. A tested value like 'openrouter/cohere/north-mini-code:free' must exclude catalog id 'cohere/north-mini-code:free' from untested candidates, without changing the model slug printed or sent to a worker. Goal 3: change the Codex identity registry default from the static GPT-5.5 assumption to an honest 'codex-cli-default' identity displayed as 'Codex CLI default (unpinned)'; retain the explicit gpt-5.5 identity entry for actually pinned gpt-5.5 rows. Do not rewrite historical runs.jsonl. Add focused regression tests proving precedence, all selector forms, model_source logging, retry-stable attribution, duplicate selector rejection for model-placeholder engines, normalized tested-candidate exclusion, and registry behavior. Keep the change minimal and backward compatible. The check will run all focused suites, reject out-of-scope files, and export the staged patch outside the disposable worktree.",
+      "check": "/usr/bin/python3 /home/ankit114/repos/ringer/my-manifests/model-routing-attribution-fix/checks/check_model_routing_fix.py --patch /tmp/ringer-model-routing-attribution-fix.patch",
+      "expect_files": [
+        "/tmp/ringer-model-routing-attribution-fix.patch"
+      ],
+      "timeout_s": 1200,
+      "verified": "Focused suites prove exact Codex model attribution, explicit model-source telemetry, duplicate selector rejection, OpenRouter route normalization, and honest unpinned Codex identity; the checked patch contains only owned files"
+    }
+  ]
+}

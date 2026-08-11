@@ -1,0 +1,33 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS8b",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-smoke-frozen-ask",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": [
+        "measure.txt",
+        "script.json"
+      ],
+      "spec": "V=104; echo \"SMOKING_VERSION=$V\"; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_V=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"thursday please\", \"What's the last time of the day I can come in?\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_V\"], \"script.json\", \"gl8-frozen-ask\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 turns, got $t\"; tail -5 measure.txt; exit 1; }; grep -E '^TURN=' measure.txt | grep -qiE 'one moment|let me check|checking availab|please hold' && { echo 'FAIL: promise copy spoken'; exit 1; }; grep -E '^TURN=' measure.txt | grep -q '{{' && { echo 'FAIL: unrendered template in patient copy'; grep -E '^TURN=' measure.txt | grep '{{'; exit 1; }; last=$(grep -E '^TURN=3' measure.txt); echo \"$last\" | grep -qE '0[45]:[0-9]{2} pm|03:[3-5][0-9] pm' || { echo \"FAIL: turn-3 does not offer late-day times (expect ~3:30pm-5:15pm range): $last\"; exit 1; }; echo \"PASS: true-latest answered - $last\" | head -c 320",
+      "verified": "The frozen ask on the round-8 candidate: an immediate answer offering genuinely late-day slots, zero promise copy, zero unrendered templates - the complete T7 ruling working end to end on a live data layer."
+    },
+    {
+      "key": "gl-smoke-keep-date",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": [
+        "measure.txt",
+        "script.json"
+      ],
+      "spec": "V=104; echo \"SMOKING_VERSION=$V\"; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_V=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"Tuesday the 18th\", \"What's the latest time I can come in?\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_V\"], \"script.json\", \"gl8-keep-date\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 turns, got $t\"; tail -5 measure.txt; exit 1; }; last=$(grep -E '^TURN=3' measure.txt); echo \"$last\" | grep -q '08/18/2026' || { echo \"FAIL: established date 08/18 lost on day-less latest ask: $last\"; exit 1; }; echo \"$last\" | grep -qE '0[45]:[0-9]{2} pm' || { echo \"FAIL: not late-day times: $last\"; exit 1; }; echo \"$last\" | grep -q '{{' && { echo \"FAIL: unrendered template: $last\"; exit 1; }; echo \"PASS: date kept with true-latest - $last\" | head -c 300",
+      "verified": "Ankit's live D2 replay: with 08/18 established, a day-less latest ask stays on 08/18 and answers with true late-day slots - the offered-date pin working."
+    }
+  ]
+}

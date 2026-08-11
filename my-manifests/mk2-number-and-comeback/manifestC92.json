@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workC92",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "regression-v92-phase1",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 2400,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/phase_run.py 92 phase1 > transcript.txt 2>&1; rc=$?; tail -5 transcript.txt; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_phase_transcript.py --file transcript.txt --phase phase1 --total 33",
+      "verified": "Live chat-harness run of the 33 non-booking scenarios against Bland pathway version 92 (the version currently live on 509): transcript shows RESULT phase1 with zero failures and exactly 33 scenarios."
+    }
+  ]
+}

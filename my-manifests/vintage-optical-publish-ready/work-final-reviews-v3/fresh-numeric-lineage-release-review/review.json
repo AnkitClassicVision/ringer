@@ -1,0 +1,17 @@
+{
+  "verdict": "PASS",
+  "readiness": "READY_FOR_PROJECT_ROOM_REVIEW",
+  "external_use_authorized": false,
+  "project_room_status": "inventory_review_required",
+  "fatal_issues": [],
+  "material_issues": [],
+  "minor_issues": [],
+  "checks": {
+    "all_visible_numbers_accounted": true,
+    "scores_recomputed": true,
+    "source_registry_resolves": true,
+    "refresh_values_current": true,
+    "cross_document_values_match": true,
+    "fix_card_math_safe": true
+  }
+}

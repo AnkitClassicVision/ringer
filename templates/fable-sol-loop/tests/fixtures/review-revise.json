@@ -1,0 +1,16 @@
+{
+  "verdict": "REVISE",
+  "findings": [
+    {
+      "id": "F-1",
+      "severity": "MAJOR",
+      "evidence": {
+        "source": "status.json",
+        "detail": "The staged status records a material mismatch with the mapped output contract."
+      },
+      "required_change": "Restore the declared output content and rerun the locked verification.",
+      "owner": "sol"
+    }
+  ],
+  "holds_resolved": []
+}

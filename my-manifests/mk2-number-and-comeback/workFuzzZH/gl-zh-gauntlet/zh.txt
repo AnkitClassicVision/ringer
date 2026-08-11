@@ -1,0 +1,7 @@
+RESULT name=zh-thursday-morning status=PASS said='我这里有 Thursday 08/06/2026 10:30 am 或 Thursday 08/06/2026 10:45 am（地点：MK2 Optical）。回复1或2选择，或'
+RESULT name=zh-afternoon-refine status=PASS said='我这里有 Thursday 08/06/2026 12:30 pm 或 Thursday 08/06/2026 12:45 pm（地点：MK2 Optical）。回复1或2选择，或'
+RESULT name=zh-later-refine status=FAIL problems=missing required text 'pm' said='我这里有 Thursday 08/06/2026 10:45 am 或 Thursday 08/06/2026 11:00 am（地点：MK2 Optical）。回复1或2选择，或告诉我其他日期或时间。'
+RESULT name=zh-weekend-closed status=PASS said='我们办公室那天不休息，周末不开放。请问您工作日哪天方便？'
+RESULT name=zh-codeswitch-refine status=FAIL problems=missing required text 'pm' said='我这里有 Thursday 08/06/2026 10:30 am 或 Thursday 08/06/2026 10:45 am（地点：MK2 Optical）。回复1或2选择，或告诉我其他日期或时间。'
+RESULT name=zh-named-time status=PASS said='我这里有 Thursday 08/06/2026 03:00 pm 或 Thursday 08/06/2026 03:15 pm（地点：MK2 Optical）。回复1或2选择，或'
+SUMMARY passed=4 failed=2 total=6

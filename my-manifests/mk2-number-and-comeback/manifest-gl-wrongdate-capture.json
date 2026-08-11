@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD22c",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "capture-v111-wrongdate",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["capture.log", "turn6.json", "turns.json"],
+      "spec": "python3 -c \"import json;json.dump(['hi','cant this week how about in 3 weeks','How late can I come in that Thursday','No Thursday the 27','How late can I come?','Ok I will take 430'],open('turns.json','w'))\" && CAPTURE_TURNS=\"$(cat turns.json)\" HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py 111 . > capture.log 2>&1; rc=$?; tail -8 capture.log; exit $rc",
+      "check": "grep -q 'CAPTURE_COMPLETE version=111' capture.log || { echo 'FAIL: capture incomplete'; tail -6 capture.log; exit 1; }; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_spoken_vs_slots.py .",
+      "verified": "Ankit's wrong-date sequence replayed on v111 with per-turn envelopes; every spoken date is compared against the slot variables held at that same turn, so a node speaking one date while holding another fails loudly."
+    }
+  ]
+}

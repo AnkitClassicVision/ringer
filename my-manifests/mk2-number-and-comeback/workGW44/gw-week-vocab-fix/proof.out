@@ -1,0 +1,5 @@
+CASE=monday-next-week DATE=2026-08-10
+CASE=monday-week-of DATE=2026-08-17
+CASE=monday-week-of-18th DATE=2026-08-17
+CASE=friday-this-week DATE=2026-08-07
+CASE=regression-2weeks DATE=2026-08-18

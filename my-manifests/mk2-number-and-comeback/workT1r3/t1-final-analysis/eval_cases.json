@@ -1,0 +1,14 @@
+[
+  {"phrase":"No the following Thursday","context":"correction-after-offer","prior_offer":"08/06/2026","now":"2026-08-03","expected":"08/13/2026"},
+  {"phrase":"the following Thursday","context":"plain","prior_offer":null,"now":"2026-08-03","expected":"08/13/2026"},
+  {"phrase":"following Thursday","context":"plain","prior_offer":null,"now":"2026-08-03","expected":"08/13/2026"},
+  {"phrase":"the following Monday","context":"plain","prior_offer":null,"now":"2026-08-05","expected":"08/10/2026"},
+  {"phrase":"following Tuesday","context":"plain","prior_offer":null,"now":"2026-08-05","expected":"08/11/2026"},
+  {"phrase":"the following Friday","context":"plain","prior_offer":null,"now":"2026-08-03","expected":"08/14/2026"},
+  {"phrase":"following Wednesday","context":"plain","prior_offer":null,"now":"2026-08-07","expected":"08/12/2026"},
+  {"phrase":"No, the following Monday","context":"correction-after-offer","prior_offer":"08/03/2026","now":"2026-08-01","expected":"08/10/2026"},
+  {"phrase":"No the following Tuesday","context":"correction-after-offer","prior_offer":"08/04/2026","now":"2026-08-02","expected":"08/11/2026"},
+  {"phrase":"No, following Friday","context":"correction-after-offer","prior_offer":"08/07/2026","now":"2026-08-04","expected":"08/14/2026"},
+  {"phrase":"the following Sunday","context":"plain","prior_offer":null,"now":"2026-08-03","expected":"08/16/2026"},
+  {"phrase":"following Saturday","context":"plain","prior_offer":null,"now":"2026-08-09","expected":"08/15/2026"}
+]

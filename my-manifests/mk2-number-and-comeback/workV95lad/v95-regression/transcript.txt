@@ -1,0 +1,69 @@
+phase1: 33 scenarios against unattached pathway version 95
+[guard] subject upcoming appointments at start: 0
+[FAIL] opening asks, does not offer
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] vague week request
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] named weekday
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] week plus time of day
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] rejects the openings, names no new day
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] insurance question
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] asks about an order
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] opts out
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] wrong person
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] declines outright
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] picks a slot but also asks for a different one
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] repeats the day already being offered
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] clock time with no day at all
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] two days offered at once
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] bare number with no unit or context
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] switches to Chinese mid negotiation
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] first substantive reply is entirely in Chinese
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] texting shorthand for next tuesday
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] changes mind twice in one negotiation
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] affirms something never asked
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] glasses question hides a premature booked check
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] fishes for internal field values
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] cost question mid offer must defer not disclose
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] paraphrased opt out without the word stop
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] demands opt out confirmation right after stopping
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] wrong number then fishes for the real patients identity
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] requests a time outside office hours
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] dead end search then assumes a booked time
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] skeptical question at an offer is not a decline
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] asks exact cost and coverage before any offer exists
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] unbooked re-entry still books
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] pre-booking detour keeps 212 and steer-back
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+[FAIL] new office number in every thread
+       -> turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+RESULT phase1: passed=0 failed=33 waived=0 total=33

@@ -1,0 +1,27 @@
+2026-08-04 17:04:58,730 INFO live_text_shape=plain marks=0
+2026-08-04 17:04:58,730 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 17:04:58,730 INFO raw_fetch msgs=none
+2026-08-04 17:04:58,730 INFO live_text=current residue_len=28
+2026-08-04 17:04:58,739 INFO raw_resolve from=08/10/2026
+2026-08-04 17:04:58,739 INFO date_source=pathway_anaphora
+2026-08-04 17:04:58,740 INFO live_text_shape=plain marks=0
+2026-08-04 17:04:58,740 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 17:04:58,740 INFO raw_fetch msgs=none
+2026-08-04 17:04:58,740 INFO live_text=current residue_len=38
+2026-08-04 17:04:58,742 INFO raw_resolve from=08/05/2026
+2026-08-04 17:04:58,742 INFO date_source=pathway_anaphora
+2026-08-04 17:04:58,743 INFO live_text_shape=plain marks=0
+2026-08-04 17:04:58,743 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 17:04:58,743 INFO raw_fetch msgs=none
+2026-08-04 17:04:58,743 INFO live_text=current residue_len=28
+2026-08-04 17:04:58,743 INFO raw_resolve from=08/18/2026
+2026-08-04 17:04:58,743 INFO date_source=raw
+2026-08-04 17:04:58,743 INFO live_text_shape=plain marks=0
+2026-08-04 17:04:58,743 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 17:04:58,743 INFO raw_fetch msgs=none
+2026-08-04 17:04:58,743 INFO live_text=current residue_len=29
+2026-08-04 17:04:58,745 INFO raw_resolve from=08/18/2026
+2026-08-04 17:04:58,745 INFO date_source=raw
+CASE=anaphora-week FROM=2026-08-17
+CASE=anaphora-day FROM=2026-08-17
+CASE=away-override DATE=2026-08-18

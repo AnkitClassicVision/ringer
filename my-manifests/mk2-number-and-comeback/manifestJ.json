@@ -1,0 +1,57 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workJ",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "harness-driver",
+      "engine": "codex",
+      "task_type": "code-feature",
+      "timeout_s": 1800,
+      "expect_files": ["v91_harness.py"],
+      "spec": "You are a build worker writing a live-test driver script. OFFLINE while building: no network calls during this task, no git, no MCP, no skills; write only in your working directory. The script you write will be EXECUTED LATER by separate runner tasks with credentials in env.\n\nREFERENCE (read for proven mechanics, then adapt): /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/failure_mode_run.py — reuse its pathway_harness import pattern (sys.path insert of /home/ankit114/repos/mott-v21-snap/harness, H.post chat mechanics with pathway_id/pathway_version/request_data, per-turn POST /v1/pathway/chat/{id}), its gateway helpers (gw_call/gw_count/gw_cleanup/gw_direct_book via GW_TOKEN env, base https://mott-booking-gw.mail.mybcat.com), its masking, and its evidence-line style.\n\nTASK: write ./v91_harness.py with usage `v91_harness.py <pathway_version> gate_booked|gate_clean|incident|happy`. Env: BLAND_API_KEY, GW_TOKEN, HARNESS_PATIENT_ID, HARNESS_PATIENT_CELL, HARNESS_STORE. All modes ABORT unless GW_COUNT_BEFORE is as required. All modes print machine lines the external check greps; print each EXACTLY as specified:\n\nMODE gate_booked: require count 0; book the first-available real slot directly via /sign (print `SEED_OK appt_id=...` masked to last4); open a fresh chat on <version>, send only 'hi'; print TURN/SAID lines, `END_NODE=<id>`; then cancel everything and print `CLEANUP_FINAL_COUNT=<n>`; PASS iff END_NODE == e_defer. Print `VERDICT: PASS mode=gate_booked` or `VERDICT: FAIL <reasons>` and exit accordingly.\n\nMODE gate_clean: require count 0 (print `GW_COUNT_BEFORE=0`); fresh chat, send 'hi'; print `END_NODE=<id>` and `APPT_COUNT_VAR=<variables.appt_count>`; PASS iff END_NODE == n_ask and appt_count == 0.\n\nMODE incident: require count 0; fresh chat; turns: 'hi', then 'Friday afternoon', capture the offer message and parse ALL times in it (regex MM/DD/YYYY hh:mm am/pm), print `OFFER_FIRST=<joined times>`; then send 'Any later time?', capture the reply, parse times, print `OFFER_LATER=<joined times>`. Then compute and print three booleans: `LATER_STRICTLY_GREATER=<True|False>` (every OFFER_LATER time strictly later in the day than the max OFFER_FIRST time, same date), `OFFERS_IN_INVENTORY=<True|False>` (query the gateway /availability directly with {store, from:'friday', to:'friday', after:'none', before:'none', time_pref:'none', slot_minutes:'15'} and verify every offered time string from BOTH offers appears among the returned slots' start values), `NEVER_DENIED=<True|False>` (True iff no agent message matched /latest the office has|nothing later|different day\\?/i while the reply contained no times). PASS iff all three True and both offers non-empty. The conversation is left unbooked: send no '1'/'yes'. If the later reply contains a question about a different day instead of times, that is FAIL with the reply quoted.\n\nMODE happy: require count 0; turns 'hi', 'the first available time works', '1', 'yes'; print END_NODE, GW_COUNT_AFTER, cleanup cancel all, CLEANUP_FINAL_COUNT; PASS iff END_NODE == e_booked and GW_COUNT_AFTER == 1 and CLEANUP_FINAL_COUNT == 0. (Note: on v91 the confirm-then-close flow ends at e_booked after the close; allow up to 2 extra turns of 'thank you' if END_NODE is not terminal after 'yes', printing each.)\n\nGeneral: mask digit runs 5+ except last 4 in SAID lines; timeout each HTTP call at 180s; on any turn HTTP failure print the failure and exit 1; never retry a /sign book.\n\nVERIFY before finishing: PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile v91_harness.py passes, and running `python3 v91_harness.py` with no args exits nonzero printing usage. Final message <=15 lines.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile v91_harness.py && if python3 v91_harness.py >/dev/null 2>&1; then echo 'CHECK FAILED: no-args run must exit nonzero'; exit 1; else echo 'driver compiles; usage guard works'; fi",
+      "verified": "A four-mode live harness driver reusing the proven chat and gateway mechanics, with the exact machine-line contract the mode checks grep, compiled and usage-guarded."
+    },
+    {
+      "key": "hz-gate-clean",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workJ/harness-driver/v91_harness.py 91 gate_clean > transcript.txt 2>&1; rc=$?; tail -3 transcript.txt; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_harness.py --file transcript.txt --mode gate_clean",
+      "verified": "On unattached v91, a clean subject saying hi reaches n_ask with appt_count 0 - the booking flow opens normally."
+    },
+    {
+      "key": "hz-gate-booked",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workJ/harness-driver/v91_harness.py 91 gate_booked > transcript.txt 2>&1; rc=$?; tail -3 transcript.txt; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_harness.py --file transcript.txt --mode gate_booked",
+      "verified": "On unattached v91, a subject WITH an appointment saying hi defers immediately with the DEFER line and is never offered booking - Opus's sharpest-risk measurement, booked side. Seed appointment cancelled afterward."
+    },
+    {
+      "key": "hz-incident",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workJ/harness-driver/v91_harness.py 91 incident > transcript.txt 2>&1; rc=$?; tail -6 transcript.txt; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_harness.py --file transcript.txt --mode incident",
+      "verified": "The exact incident replay on v91: 'Friday afternoon' then 'Any later time?' yields offers strictly later than the first offer, every offered time verified as a member of the gateway's real inventory, and no denial of existing availability."
+    },
+    {
+      "key": "hz-happy",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workJ/harness-driver/v91_harness.py 91 happy > transcript.txt 2>&1; rc=$?; tail -4 transcript.txt; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_harness.py --file transcript.txt --mode happy",
+      "verified": "A full live booking on v91 lands at e_booked with the mandated close, one committed appointment verified at the source, then cancelled clean - the booking path survives the rebase."
+    }
+  ]
+}

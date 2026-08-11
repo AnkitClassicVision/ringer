@@ -1,0 +1,47 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "capture-v96",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["capture.log", "graph.json", "create.json", "turn1.json", "turn2.json"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py 96 . > capture.log 2>&1; rc=$?; tail -5 capture.log; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_capture.py . 96 --reference",
+      "verified": "The working baseline exists on disk: full raw redacted chat envelopes and the stored v96 graph, with turn 2 proving a live data layer (concrete 2026 date, no unrendered templates)."
+    },
+    {
+      "key": "capture-v101",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["capture.log", "graph.json", "create.json", "turn1.json", "turn2.json"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py 101 . > capture.log 2>&1; rc=$?; tail -5 capture.log; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_capture.py . 101",
+      "verified": "The failing mint's envelopes are captured completely (no behavior judgment): full raw redacted chat responses and the stored v101 graph for the same two turns."
+    },
+    {
+      "key": "node-diff",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 300,
+      "expect_files": ["NODE-DIFF.txt", "ENVELOPE-DIFF.txt", "diff.log"],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/node_diff.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/capture-v96/graph.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/capture-v101/graph.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/capture-v96/turn2.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/capture-v101/turn2.json . > diff.log 2>&1; rc=$?; tail -3 diff.log; exit $rc",
+      "check": "grep -q DIFF_COMPLETE diff.log || { echo 'FAIL: diff did not complete'; tail -5 diff.log; exit 1; }; test -s NODE-DIFF.txt || { echo 'FAIL: NODE-DIFF.txt empty'; exit 1; }; grep -q 'v96:n_search' NODE-DIFF.txt || { echo 'FAIL: NODE-DIFF missing v96 label'; exit 1; }; grep -q '===== v96' ENVELOPE-DIFF.txt || { echo 'FAIL: ENVELOPE-DIFF missing v96 section'; exit 1; }; grep -q '===== v101' ENVELOPE-DIFF.txt || { echo 'FAIL: ENVELOPE-DIFF missing v101 section'; exit 1; }; echo 'PASS: deterministic diffs on disk'",
+      "verified": "The stored search nodes (v96 n_search vs v101 n_goal_search) and both turn-2 envelope structures are diffed deterministically, as Bland serves them - not as the local draft imagines them."
+    },
+    {
+      "key": "platform-diagnosis",
+      "engine": "codex",
+      "task_type": "research",
+      "timeout_s": 1800,
+      "expect_files": ["DIAGNOSIS.md"],
+      "spec": "ROLE: read-only platform diagnostician for the Mott scheduling pathway on Bland.ai. CONTEXT: Production pathway version 96 answers scheduling asks with real slot data. A rebuilt 'goal-loop' pathway minted as version 101 returns unrendered template text (literally '{{slot_1_day_name}} {{slot_1_start}}') and hallucinated dates on the same asks. Working hypothesis from round-5 smoke: the derived search webhook node n_goal_search does not execute or populate variables at runtime in chat mode, even though its config was derived from v96's working n_search node. Your job is to find the platform-level difference that explains the dead data layer, from captured evidence only. HARD RULES: You are read-only outside your current working directory; never modify, create, or delete any file outside CWD. No git commands, no network calls, no MCP or Apps, do not load skills. Do not attempt any fix. Every decisive claim must be backed by spans quoted VERBATIM from the input files. INPUTS (read all; absolute paths): (1) /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/capture-v96/ - graph.json is the stored v96 graph exactly as Bland serves it; create.json, turn1.json, turn2.json are FULL raw chat envelopes for the script [hi, thursday please]; capture.log is the driver log. Redacted values look like [REDACTED:len=..,sha8=..] - present-vs-absent-vs-different is still meaningful. (2) /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/capture-v101/ - the same five files for the failing mint v101. (3) /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/node-diff/NODE-DIFF.txt - unified diff of stored v96 n_search vs stored v101 n_goal_search. (4) /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/node-diff/ENVELOPE-DIFF.txt - key-structure walk of both turn-2 envelopes. (5) /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLDER/gl-derive-from-working/DERIVATION.md - how the loop graph was derived from production. (6) /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD3/gl-respond-wiring-fix/pathway-goalloop-draft.json - the local draft that minted as v101. (7) /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS5/gl-smoke-frozen-ask/measure.txt, .../gl-smoke-never-terminate/measure.txt, .../gl-smoke-converge/measure.txt - the round-5 failures being explained. ANALYSIS PRIORITIES - confirm or eliminate each suspect with quoted evidence: (a) fields Bland stores on working n_search that the derivation dropped or altered on n_goal_search: request url, method, body, headers/auth presence, variable-extraction config, response schema/mapping, timeout, retry/response options; (b) responsePathways or edge wiring differences that determine whether the webhook actually fires en route to the respond node; (c) chat-mode routing requirements visible in the envelopes: current_node_id progression per turn, which nodes executed, whether variables populate for v96 but not v101; (d) anything present in the v96 envelopes (variables, webhook traces, errors, extra keys) that is missing in v101's. DELIVERABLE: write DIAGNOSIS.md in your current working directory with exactly these sections: '# Root Cause' - the single most probable platform-level cause stated plainly, followed by a line starting 'CONVENTION: ' naming the violated Bland runtime convention in one sentence; '# Evidence' - each claim backed by backtick-quoted spans copied verbatim from the input files, naming the source file per span; '# Eliminated' - suspects ruled out plus the quoted evidence that rules them out; '# Proposed Assertion' - assertion #6 for check_goalloop_graph.py: the exact property of the draft graph the validator must assert so this failure class is caught offline before minting (describe the property precisely; no code required); '# Fix Plan' - the smallest change to derive_goalloop.py or the draft that restores a live data layer, written as instructions for a separate fix worker; do NOT apply it yourself. If the evidence cannot single out one root cause, say so explicitly under Root Cause and name the ONE additional measurement that would settle it.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_platform_diagnosis.py DIAGNOSIS.md /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/capture-v96 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/capture-v101 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/node-diff",
+      "verified": "A diagnosis whose decisive evidence is proven verbatim against the captured envelopes and stored-graph diffs (the check greps every quoted span against the corpus), with the violated convention named, a validator assertion proposed, and a fix plan staged for a separate worker."
+    }
+  ]
+}

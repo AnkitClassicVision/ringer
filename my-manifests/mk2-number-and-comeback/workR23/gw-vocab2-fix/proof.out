@@ -1,0 +1,8 @@
+CASE=around-five ANCHOR=17:00
+CASE=at-seven ANCHOR=19:00
+CASE=nine-thirty-bare ANCHOR=09:30
+CASE=midnight OOB=true
+CASE=fortnight DATE=2026-08-19
+CASE=eleven-days DATE=2026-08-16
+CASE=week-after-that FROM=2026-08-24
+CASE=end-next-month WINDOW=true

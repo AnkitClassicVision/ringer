@@ -1,0 +1,12 @@
+{
+  "integrated_at": "2026-07-30T04:23:38.368824+00:00",
+  "backup": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/backups/pre-polished-explainer-20260730T042257Z",
+  "report": "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30",
+  "onepager_pages": 1,
+  "explainer_pages": 12,
+  "onepager_sha256": "0ce6b8fe3b1ea3f9f8654b6590bc969b28ac3e51bbcf04d6b8db9c9891b2f42a",
+  "explainer_sha256": "250dfbeb6233b847c24ac1f2af31881c2066af30e8cada2dd539211f289ba50c",
+  "status": "PASS",
+  "project_room": "inventory_review_required",
+  "external_actions": "none"
+}

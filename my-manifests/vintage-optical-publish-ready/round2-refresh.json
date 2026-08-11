@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-publish-ready",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-refresh",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "freeze-current-public-number-receipts",
+      "engine": "local-shell",
+      "task_type": "research",
+      "timeout_s": 180,
+      "expect_files": ["receipt_summary.json", "source_receipts/quickfacts-current.csv", "source_receipts/acs-2024-illinois-places.json", "source_receipts/osrm-r01-current.json"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/collect_refresh_receipts.py",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_refresh_receipts.py --dir .",
+      "verified": "frozen official public receipts confirm the current QuickFacts values, exact Morton ACS row, and a live OSRM route response, with explicit comparisons against the report's displayed values"
+    }
+  ]
+}

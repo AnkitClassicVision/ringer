@@ -1,0 +1,8 @@
+scenario: texting shorthand for next tuesday turns: ['hi', 'tues nxt wk']
+ITER=1 ok=False
+   -> preference_to was 'friday next week', expected 'tuesday next week'
+ITER=2 ok=False
+   -> preference_to was 'friday next week', expected 'tuesday next week'
+ITER=3 ok=False
+   -> preference_to was 'friday next week', expected 'tuesday next week'
+VERDICT: DETERMINISTIC-FAIL - v92 reliably mis-extracts this scenario

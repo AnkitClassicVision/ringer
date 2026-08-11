@@ -1,0 +1,40 @@
+{
+  "schema_version": "1",
+  "operations": {
+    "insurance.get": {
+      "effect": "read",
+      "release_state": "test_only",
+      "allowed_principals": ["bland-read"],
+      "reason_codes": ["coverage-question"],
+      "default_projection": "summary",
+      "cli_adapter": ["insurance", "get"],
+      "request_schema": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "format": "numeric",
+            "max_length": 20,
+            "flag": "--patient"
+          }
+        },
+        "required": ["patient_id"]
+      },
+      "response_schema": {
+        "list_key": "insurance"
+      },
+      "projections": {
+        "summary": {
+          "fields": ["insurance", "carrier", "status", "plan_name"],
+          "sensitive_withheld": ["member_id", "subscriber_id", "policy_number", "group_number"]
+        }
+      },
+      "limits": {
+        "max_rows": 10,
+        "rate_per_minute": 30,
+        "timeout_seconds": 30,
+        "max_response_bytes": 65536
+      }
+    }
+  }
+}

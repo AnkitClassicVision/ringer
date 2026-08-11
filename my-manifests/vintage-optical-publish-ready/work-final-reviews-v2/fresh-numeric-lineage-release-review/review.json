@@ -1,0 +1,27 @@
+{
+  "verdict": "FAIL",
+  "readiness": "NOT_READY_FOR_PROJECT_ROOM_REVIEW",
+  "external_use_authorized": false,
+  "project_room_status": "inventory_review_required",
+  "fatal_issues": [],
+  "material_issues": [],
+  "minor_issues": [
+    {
+      "id": "MINOR-001",
+      "location": "data/competitor_set.json",
+      "issue": "The final competitor data still records project_room_status as EMPTY.",
+      "evidence": "The Project Room JSON, scores.json project_room.status, scores.json data_quality.project_room_status, the one-page report, and the explainer all record inventory_review_required. The runlog also says both Project Room status fields were corrected.",
+      "impact": "The stale value does not change a score and is more restrictive than the current state, but it contradicts the final packet lineage and prevents a no-issues release verdict.",
+      "required_fix": "Change data/competitor_set.json project_room_status to inventory_review_required, then rerun the final packet review."
+    }
+  ],
+  "checks": {
+    "all_visible_numbers_accounted": true,
+    "scores_recomputed": true,
+    "source_registry_resolves": true,
+    "refresh_values_current": true,
+    "cross_document_values_match": true,
+    "fix_card_math_safe": true,
+    "packet_status_consistent": false
+  }
+}

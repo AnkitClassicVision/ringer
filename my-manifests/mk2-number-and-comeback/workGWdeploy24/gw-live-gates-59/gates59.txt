@@ -1,0 +1,3 @@
+GATE59=garbled-zh-daypart STATUS=200 first=08/06/2026 12:30 pm count=18 err=
+GATE59=verbatim-wins STATUS=200 first=08/06/2026 04:00 pm count=6 err=
+GATE59=clean-path-control STATUS=200 first=08/06/2026 10:30 am count=6 err=

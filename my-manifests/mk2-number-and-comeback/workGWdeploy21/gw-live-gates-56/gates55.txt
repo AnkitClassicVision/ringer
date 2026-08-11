@@ -1,0 +1,3 @@
+GATE55=ordinal-dropped STATUS=200 first=08/13/2026 10:30 am count=25 err=
+GATE55=that-weekday STATUS=200 first=08/06/2026 10:30 am count=24 err=
+GATE55=bare-weekday-control STATUS=200 first=08/06/2026 10:30 am count=24 err=

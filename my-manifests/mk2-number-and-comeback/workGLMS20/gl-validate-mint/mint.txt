@@ -1,0 +1,15 @@
+PASS: 467 assertions
+local graph /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD27/gl-round20-fix/pathway-goalloop-draft.json: 42 nodes, 122 edges
+provider currently has 115 versions, latest = 115
+
+WRITE: creating one new unattached version
+created version 116
+
+READBACK
+  matches local exactly: 42 nodes, 122 edges, routing and extraction identical
+
+ATTACHMENT
+  numbers pointing at version 116: none, unattached as intended
+
+external_actions_taken=1 (one version create)
+VERSION=116

@@ -1,0 +1,1599 @@
+{
+  "canonical_office_count": null,
+  "materialized_record_count": 39,
+  "office_candidate_count": 24,
+  "office_candidates": [
+    {
+      "batch_id": "VO-04a8eacc79154ed0",
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "city": "MORTON",
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optical_goods",
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "829 w jackson st",
+      "normalized_city": "morton",
+      "normalized_state": "il",
+      "normalized_zip": "61550",
+      "original_address": "829 W JACKSON ST",
+      "original_address_variants": [
+        "829 W JACKSON ST"
+      ],
+      "provider_public_ids": [
+        "1364a8a3bcd6064d7ff7580340b87c5c93a67d8ac0eb5fec92263eef9301745c",
+        "d9f8699e41b162d1d38e7694976a3346c4cd0fca4cad6c53e41488c968bb7de2"
+      ],
+      "state": "IL",
+      "zip": "61550"
+    },
+    {
+      "batch_id": "VO-0664ecb12223d94d",
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "city": "PEKIN",
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "durable_medical_equipment",
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "3287 ct st",
+      "normalized_city": "pekin",
+      "normalized_state": "il",
+      "normalized_zip": "61554",
+      "original_address": "3287 COURT ST",
+      "original_address_variants": [
+        "3287 COURT ST"
+      ],
+      "provider_public_ids": [
+        "03a71f3ff73a5c36c5d71c07b1597c101740d0d834bc7e3d1ab5258adaf1132b",
+        "7df0a1d449c130c03ee35b1308b1ccad7d7b26085306520a6945bcebad144c42",
+        "811a75e18e1e337258cf2f774b9057f8ed6a125261670b20828725b115a5f73d"
+      ],
+      "state": "IL",
+      "zip": "61554"
+    },
+    {
+      "batch_id": "VO-1fdc0d9b6fa66d54",
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "city": "SKOKIE",
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "2650 ridge ave",
+      "normalized_city": "skokie",
+      "normalized_state": "il",
+      "normalized_zip": "60077",
+      "original_address": "2650 RIDGE AVE.",
+      "original_address_variants": [
+        "2650 RIDGE AVE."
+      ],
+      "provider_public_ids": [
+        "61bfd24c5446a8c763f9e5414c87d4b1902073b4602c2429fc25863123713c30"
+      ],
+      "state": "IL",
+      "zip": "60077"
+    },
+    {
+      "batch_id": "VO-2a9028f0cfd51aae",
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "city": "PEORIA",
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "6800 n knoxville ave",
+      "normalized_city": "peoria",
+      "normalized_state": "il",
+      "normalized_zip": "61614",
+      "original_address": "6800 N KNOXVILLE AVE",
+      "original_address_variants": [
+        "6800 N KNOXVILLE AVE"
+      ],
+      "provider_public_ids": [
+        "d551c81a95e47802f4ce63c6e5e13b63a73d80fbe15b853d18769a8afae18e16"
+      ],
+      "state": "IL",
+      "zip": "61614"
+    },
+    {
+      "batch_id": "VO-2bb876a25071bef4",
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "city": "WASHINGTON",
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "93 eastgate dr",
+      "normalized_city": "washington",
+      "normalized_state": "il",
+      "normalized_zip": "61571",
+      "original_address": "93 EASTGATE DR",
+      "original_address_variants": [
+        "93 EASTGATE DR"
+      ],
+      "provider_public_ids": [
+        "af29fdfc11e8df875e439d61d038f653763580caae0726dde0b6c2f47499c4e1",
+        "bb713e197fd0a7ac928e1d5477f277ce56ce30bd31c1fa81e99afc3d6fcf4273"
+      ],
+      "state": "IL",
+      "zip": "61571"
+    },
+    {
+      "batch_id": "VO-2ebfdf1ae7643a2e",
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "city": "PEORIA",
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "ophthalmology",
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "8921 n wood sage rd",
+      "normalized_city": "peoria",
+      "normalized_state": "il",
+      "normalized_zip": "61615",
+      "original_address": "8921 N WOOD SAGE RD",
+      "original_address_variants": [
+        "8921 N WOOD SAGE RD"
+      ],
+      "provider_public_ids": [
+        "0174740fcbcd6f9a128f33a51dd740084f4b4a96e79a55839854539763160bbd",
+        "204bc628b1ea752dc4b31f7cc5346bcbfcdbc16d7dd39c415f57e0fa83168c9a"
+      ],
+      "state": "IL",
+      "zip": "61615"
+    },
+    {
+      "batch_id": "VO-332356e82ee38e84",
+      "candidate_classification": "organization_provider_registry_location_candidate",
+      "city": "EAST PEORIA",
+      "enumeration_types": [
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "401 river rd",
+      "normalized_city": "east peoria",
+      "normalized_state": "il",
+      "normalized_zip": "61611",
+      "original_address": "401 RIVER RD",
+      "original_address_variants": [
+        "401 RIVER RD"
+      ],
+      "provider_public_ids": [
+        "4d9041d7af5adb821b39be7db4eb0cd97b8df0d4ada41e38bbcad92aba931745"
+      ],
+      "state": "IL",
+      "zip": "61611"
+    },
+    {
+      "batch_id": "VO-3c4f5c9f59bfc188",
+      "candidate_classification": "organization_provider_registry_location_candidate",
+      "city": "MORTON",
+      "enumeration_types": [
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "605 s main st",
+      "normalized_city": "morton",
+      "normalized_state": "il",
+      "normalized_zip": "61550",
+      "original_address": "605 S MAIN ST",
+      "original_address_variants": [
+        "605 S MAIN ST"
+      ],
+      "provider_public_ids": [
+        "3bc2f45bf80ce673c45b5d4c4181e46cc599293444ff90b252a6d27dd2f20d2b"
+      ],
+      "state": "IL",
+      "zip": "61550"
+    },
+    {
+      "batch_id": "VO-449ba7a75c5641a2",
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "city": "WASHINGTON",
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "8 cherry tree ctr",
+      "normalized_city": "washington",
+      "normalized_state": "il",
+      "normalized_zip": "61571",
+      "original_address": "8 CHERRY TREE CENTER",
+      "original_address_variants": [
+        "8 CHERRY TREE CENTER"
+      ],
+      "provider_public_ids": [
+        "6dec304337178460d6032d33823f27a80f642cc01b00f276bdc66e80a877a852"
+      ],
+      "state": "IL",
+      "zip": "61571"
+    },
+    {
+      "batch_id": "VO-605f3b4bd4e778ef",
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "city": "PEORIA",
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "4727 n sheridan rd",
+      "normalized_city": "peoria",
+      "normalized_state": "il",
+      "normalized_zip": "61614",
+      "original_address": "4727 N SHERIDAN RD",
+      "original_address_variants": [
+        "4727 N SHERIDAN RD"
+      ],
+      "provider_public_ids": [
+        "e778bc602645fced7a542d919d29738097539e654bbe6f81333bcb4383f35ae5"
+      ],
+      "state": "IL",
+      "zip": "61614"
+    },
+    {
+      "batch_id": "VO-62bdb46919a41bce",
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "city": "PEKIN",
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "ophthalmology",
+        "optical_goods",
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "725 s 14th st",
+      "normalized_city": "pekin",
+      "normalized_state": "il",
+      "normalized_zip": "61554",
+      "original_address": "725 S 14TH ST",
+      "original_address_variants": [
+        "725 S 14TH ST"
+      ],
+      "provider_public_ids": [
+        "060b1631159996d8d67a7166420d54cddcc52f83c5e2b92c225910986ea3d7de",
+        "25ca14db12b801383fc327d7e63726ad6986f815872083e6f6cd2df8846125df",
+        "d4573f291f9e7e5c9413a383e53969c30568699e20c72d106e1bfaf3854d23a8",
+        "e486f6c55e42a37a087f92fc50d058c920bfd7ff6bd9e4e979e28bfca598fae2",
+        "f19ba681ee14757cc853758349019f7e10db1f49388b407b7548f452b197ff33"
+      ],
+      "state": "IL",
+      "zip": "61554"
+    },
+    {
+      "batch_id": "VO-6e0eb045beac6510",
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "city": "PEKIN",
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "3320 veterans dr",
+      "normalized_city": "pekin",
+      "normalized_state": "il",
+      "normalized_zip": "61554",
+      "original_address": "3320 VETERANS DR",
+      "original_address_variants": [
+        "3320 VETERANS DR"
+      ],
+      "provider_public_ids": [
+        "07af89aaf5f867a49bc0e2cedb26f03022bf3e1462cc85d547e31afb6b6a8b33",
+        "f0bdadfc0ddde905ed892fdfad2ceca97ab1d497846333d0aba319b3ff723abc"
+      ],
+      "state": "IL",
+      "zip": "61554"
+    },
+    {
+      "batch_id": "VO-876c77b70cd2b760",
+      "candidate_classification": "organization_provider_registry_location_candidate",
+      "city": "WASHINGTON",
+      "enumeration_types": [
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "durable_medical_equipment",
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "8 cherry tree shopping ctr",
+      "normalized_city": "washington",
+      "normalized_state": "il",
+      "normalized_zip": "61571",
+      "original_address": "8 CHERRY TREE SHOPPING CTR",
+      "original_address_variants": [
+        "8 CHERRY TREE SHOPPING CTR"
+      ],
+      "provider_public_ids": [
+        "bc306705da4ed4ec056a57b9931ccf8107adc728fec3ffc072700e90519ea6ba"
+      ],
+      "state": "IL",
+      "zip": "61571"
+    },
+    {
+      "batch_id": "VO-8772bf50f87de0a2",
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "city": "EAST PEORIA",
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "301 w washington | 20 20 eyecare solutions inc",
+      "normalized_city": "east peoria",
+      "normalized_state": "il",
+      "normalized_zip": "61611",
+      "original_address": "301 W WASHINGTON, 20/20 EYECARE SOLUTIONS, INC.",
+      "original_address_variants": [
+        "301 W WASHINGTON, 20/20 EYECARE SOLUTIONS, INC."
+      ],
+      "provider_public_ids": [
+        "042930e62eb35ea9bcd5457b2782eb3dec7bbe68cb800b39790ff0d8b41772a9"
+      ],
+      "state": "IL",
+      "zip": "61611"
+    },
+    {
+      "batch_id": "VO-a0e1bbc847e8735f",
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "city": "EAST PEORIA",
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "durable_medical_equipment",
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "412 riverside dr",
+      "normalized_city": "east peoria",
+      "normalized_state": "il",
+      "normalized_zip": "61611",
+      "original_address": "412 RIVERSIDE DR",
+      "original_address_variants": [
+        "412 RIVERSIDE DR"
+      ],
+      "provider_public_ids": [
+        "50edfdafe424bf40e30d6c901afb121c9d9da10da651908a8d5c5cf653e5ea95",
+        "c118b2ebdf04c715bb37726e935da469a019bce3fac0a2ba2a8c4f7b529890af"
+      ],
+      "state": "IL",
+      "zip": "61611"
+    },
+    {
+      "batch_id": "VO-b496827d89be0a37",
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "city": "WASHINGTON",
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "1009 n cummings ln",
+      "normalized_city": "washington",
+      "normalized_state": "il",
+      "normalized_zip": "61571",
+      "original_address": "1009 N CUMMINGS LN",
+      "original_address_variants": [
+        "1009 N CUMMINGS LN"
+      ],
+      "provider_public_ids": [
+        "d01709e06ad03d0c97e1c66b03693e54d1c1f75e0701d835c750b165ebd17f03",
+        "d2a99f9ac17d7111e51c22bf0e5fea56fd5db6538887f5e4981b39d7c31336dc"
+      ],
+      "state": "IL",
+      "zip": "61571"
+    },
+    {
+      "batch_id": "VO-b71a82c99cfe1f6a",
+      "candidate_classification": "organization_provider_registry_location_candidate",
+      "city": "EAST PEORIA",
+      "enumeration_types": [
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "111 w washington st | ste 410",
+      "normalized_city": "east peoria",
+      "normalized_state": "il",
+      "normalized_zip": "61611",
+      "original_address": "111 W WASHINGTON ST, SUITE 410",
+      "original_address_variants": [
+        "111 W WASHINGTON ST, SUITE 410"
+      ],
+      "provider_public_ids": [
+        "2afe422164006265fc6074666df9126b16f820f74b377515559dd45ed9692d01"
+      ],
+      "state": "IL",
+      "zip": "61611"
+    },
+    {
+      "batch_id": "VO-baf5b45383e71013",
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "city": "WASHINGTON",
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "100 hillcrest dr ste b",
+      "normalized_city": "washington",
+      "normalized_state": "il",
+      "normalized_zip": "61571",
+      "original_address": "100 HILLCREST DR STE B",
+      "original_address_variants": [
+        "100 HILLCREST DR STE B"
+      ],
+      "provider_public_ids": [
+        "18caa8052e1139a3b7ccb6f1f3cc2491e301806cd2b3d513b10b7e4167d7869c"
+      ],
+      "state": "IL",
+      "zip": "61571"
+    },
+    {
+      "batch_id": "VO-c4321b180047c8f8",
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "city": "PEKIN",
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "ophthalmology"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "101 n pkwy dr",
+      "normalized_city": "pekin",
+      "normalized_state": "il",
+      "normalized_zip": "61554",
+      "original_address": "101 N PARKWAY DR",
+      "original_address_variants": [
+        "101 N PARKWAY DR"
+      ],
+      "provider_public_ids": [
+        "b44c93134a7bd74953cff0880f624d6d61e4154020f3802324e4d957c72efa2f",
+        "d34614f7827e63dcd3ab4b504dd2a09d6b7aed718e168702d654c1eae1316efc"
+      ],
+      "state": "IL",
+      "zip": "61554"
+    },
+    {
+      "batch_id": "VO-e0e55998f0343717",
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "city": "MORTON",
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "155 e courtland st",
+      "normalized_city": "morton",
+      "normalized_state": "il",
+      "normalized_zip": "61550",
+      "original_address": "155 E COURTLAND ST",
+      "original_address_variants": [
+        "155 E COURTLAND ST"
+      ],
+      "provider_public_ids": [
+        "87d73a96781602cb66e3c0b854b8ce6744d3411c797e4debfd19f37c881e1abf"
+      ],
+      "state": "IL",
+      "zip": "61550"
+    },
+    {
+      "batch_id": "VO-e54d74b5478aa8a5",
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "city": "SPRINGFIELD",
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "1201 s dirksen pkwy",
+      "normalized_city": "springfield",
+      "normalized_state": "il",
+      "normalized_zip": "62703",
+      "original_address": "1201 S DIRKSEN PKWY",
+      "original_address_variants": [
+        "1201 S DIRKSEN PKWY"
+      ],
+      "provider_public_ids": [
+        "3b20e8f6c386802435deebea9e29c727ae08fc5bb4401ae10addb137caaba087"
+      ],
+      "state": "IL",
+      "zip": "62703"
+    },
+    {
+      "batch_id": "VO-ee7e0924cf17ea62",
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "city": "PEKIN",
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "2611 broadway st",
+      "normalized_city": "pekin",
+      "normalized_state": "il",
+      "normalized_zip": "61554",
+      "original_address": "2611 BROADWAY ST",
+      "original_address_variants": [
+        "2611 BROADWAY ST"
+      ],
+      "provider_public_ids": [
+        "24f01c42f490c9ee8a1c336fe7acaba44734fadb7e7e7db47853a93c5b571f02",
+        "32fd8de8efccce1fa5f6d1f6b6b7f0b844e09b5ea4f8423d548c2d7cfec861b3"
+      ],
+      "state": "IL",
+      "zip": "61554"
+    },
+    {
+      "batch_id": "VO-f98fd44b1ff3cca8",
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "city": "MORTON",
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "417 w jefferson st",
+      "normalized_city": "morton",
+      "normalized_state": "il",
+      "normalized_zip": "61550",
+      "original_address": "417 W JEFFERSON ST",
+      "original_address_variants": [
+        "417 W JEFFERSON ST"
+      ],
+      "provider_public_ids": [
+        "1ba574d2bfa9efd4a0e90a2da1b7f240b18bdbc8b4c2c09872b46423ac482650",
+        "371969f903f86d07aa9ce94f881f9d7091ebe091b5acdb6b983dbfd91c941c43"
+      ],
+      "state": "IL",
+      "zip": "61550"
+    },
+    {
+      "batch_id": "VO-fb07ec23570e5873",
+      "candidate_classification": "organization_provider_registry_location_candidate",
+      "city": "WASHINGTON",
+      "enumeration_types": [
+        "NPI-2"
+      ],
+      "geocode_status": "pending_census_batch",
+      "limitation": "Exact registry practice-location grouping only. This candidate is not proof of an active office, capacity, or distinct operating entity.",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "normalized_address": "100 hillcrest dr",
+      "normalized_city": "washington",
+      "normalized_state": "il",
+      "normalized_zip": "61571",
+      "original_address": "100 HILLCREST DR",
+      "original_address_variants": [
+        "100 HILLCREST DR"
+      ],
+      "provider_public_ids": [
+        "05ea82252901c8a58e64a197e65a329ea696086cf82d80fc20a818920119dcf5"
+      ],
+      "state": "IL",
+      "zip": "61571"
+    }
+  ],
+  "packet_date": "2026-07-30",
+  "provider_public_id_definition": {
+    "algorithm": "sha256",
+    "field_delimiter": "|",
+    "fields_in_order": [
+      "enumeration_type",
+      "provider_or_org_name",
+      "practice_address_1",
+      "practice_address_2",
+      "practice_city",
+      "practice_state",
+      "practice_postal_prefix",
+      "taxonomy_query"
+    ],
+    "normalization": "NFKC, trim, case-fold, punctuation-to-space, whitespace collapse; practice address lines also standardize the declared conservative street and secondary-designator tokens",
+    "purpose": "public_row_stability_key_not_restricted_identifier_hash"
+  },
+  "provider_records": [
+    {
+      "active_status": "A",
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "8921 N WOOD SAGE RD",
+        "address_line_2": null,
+        "city": "PEORIA",
+        "postal_prefix": "61615",
+        "state": "IL"
+      },
+      "provider_or_org_name": "EMIL ABRAHAM GEORGE OD",
+      "provider_public_id": "0174740fcbcd6f9a128f33a51dd740084f4b4a96e79a55839854539763160bbd",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "3287 COURT ST",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "TIMOTHY DANE SHELLEY O.D.",
+      "provider_public_id": "03a71f3ff73a5c36c5d71c07b1597c101740d0d834bc7e3d1ab5258adaf1132b",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "301 W WASHINGTON",
+        "address_line_2": "20/20 EYECARE SOLUTIONS, INC.",
+        "city": "EAST PEORIA",
+        "postal_prefix": "61611",
+        "state": "IL"
+      },
+      "provider_or_org_name": "KAREN LYNNE CRAMER OD",
+      "provider_public_id": "042930e62eb35ea9bcd5457b2782eb3dec7bbe68cb800b39790ff0d8b41772a9",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Washington",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "100 HILLCREST DR",
+        "address_line_2": null,
+        "city": "WASHINGTON",
+        "postal_prefix": "61571",
+        "state": "IL"
+      },
+      "provider_or_org_name": "TRI-COUNTY EYE CENTER",
+      "provider_public_id": "05ea82252901c8a58e64a197e65a329ea696086cf82d80fc20a818920119dcf5",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "725 S 14TH ST",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "BOND EYE ASSOCIATES, SC",
+      "provider_public_id": "060b1631159996d8d67a7166420d54cddcc52f83c5e2b92c225910986ea3d7de",
+      "public_taxonomy_descriptions": [
+        "Ophthalmology",
+        "Optometrist",
+        "Technician/Technologist, Optician"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "ophthalmology",
+        "optical_goods",
+        "optometry"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "3320 VETERANS DR",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "JAWAD HAIDER O.D.",
+      "provider_public_id": "07af89aaf5f867a49bc0e2cedb26f03022bf3e1462cc85d547e31afb6b6a8b33",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Morton",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "829 W JACKSON ST",
+        "address_line_2": null,
+        "city": "MORTON",
+        "postal_prefix": "61550",
+        "state": "IL"
+      },
+      "provider_or_org_name": "SUE A FEATHER O.D.",
+      "provider_public_id": "1364a8a3bcd6064d7ff7580340b87c5c93a67d8ac0eb5fec92263eef9301745c",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "100 HILLCREST DR STE B",
+        "address_line_2": null,
+        "city": "WASHINGTON",
+        "postal_prefix": "61571",
+        "state": "IL"
+      },
+      "provider_or_org_name": "TODD E FUNK O.D., F.A.A.O.",
+      "provider_public_id": "18caa8052e1139a3b7ccb6f1f3cc2491e301806cd2b3d513b10b7e4167d7869c",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Morton",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "417 W JEFFERSON ST",
+        "address_line_2": null,
+        "city": "MORTON",
+        "postal_prefix": "61550",
+        "state": "IL"
+      },
+      "provider_or_org_name": "PAUL O VELTING O.D.",
+      "provider_public_id": "1ba574d2bfa9efd4a0e90a2da1b7f240b18bdbc8b4c2c09872b46423ac482650",
+      "public_taxonomy_descriptions": [
+        "Optometrist, Corneal and Contact Management"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "8921 N WOOD SAGE RD",
+        "address_line_2": null,
+        "city": "PEORIA",
+        "postal_prefix": "61615",
+        "state": "IL"
+      },
+      "provider_or_org_name": "STEPHEN J EYLER MD",
+      "provider_public_id": "204bc628b1ea752dc4b31f7cc5346bcbfcdbc16d7dd39c415f57e0fa83168c9a",
+      "public_taxonomy_descriptions": [
+        "Ophthalmology"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "ophthalmology"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "2611 BROADWAY ST",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "BRENDON J JOHNSON O.D.",
+      "provider_public_id": "24f01c42f490c9ee8a1c336fe7acaba44734fadb7e7e7db47853a93c5b571f02",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "725 S 14TH ST",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "IVETTA S DACCACHE O.D.",
+      "provider_public_id": "25ca14db12b801383fc327d7e63726ad6986f815872083e6f6cd2df8846125df",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "111 W WASHINGTON ST",
+        "address_line_2": "SUITE 410",
+        "city": "EAST PEORIA",
+        "postal_prefix": "61611",
+        "state": "IL"
+      },
+      "provider_or_org_name": "TAZEWELL COUNTY RESOURCE CENTERS INC",
+      "provider_public_id": "2afe422164006265fc6074666df9126b16f820f74b377515559dd45ed9692d01",
+      "public_taxonomy_descriptions": [
+        "Optometrist, Low Vision Rehabilitation"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "2611 BROADWAY ST",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "BRENDON J JOHNSON, OD, PC",
+      "provider_public_id": "32fd8de8efccce1fa5f6d1f6b6b7f0b844e09b5ea4f8423d548c2d7cfec861b3",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Morton",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "417 W JEFFERSON ST",
+        "address_line_2": null,
+        "city": "MORTON",
+        "postal_prefix": "61550",
+        "state": "IL"
+      },
+      "provider_or_org_name": "BRIAN C SOMMER O.D.",
+      "provider_public_id": "371969f903f86d07aa9ce94f881f9d7091ebe091b5acdb6b983dbfd91c941c43",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "1201 S DIRKSEN PKWY",
+        "address_line_2": null,
+        "city": "SPRINGFIELD",
+        "postal_prefix": "62703",
+        "state": "IL"
+      },
+      "provider_or_org_name": "ROMAN V. KLODNYCKY O.D.",
+      "provider_public_id": "3b20e8f6c386802435deebea9e29c727ae08fc5bb4401ae10addb137caaba087",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Morton",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "605 S MAIN ST",
+        "address_line_2": null,
+        "city": "MORTON",
+        "postal_prefix": "61550",
+        "state": "IL"
+      },
+      "provider_or_org_name": "VINTAGE OPTICAL BRIAN C SOMMER OD LTD",
+      "provider_public_id": "3bc2f45bf80ce673c45b5d4c4181e46cc599293444ff90b252a6d27dd2f20d2b",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "401 RIVER RD",
+        "address_line_2": null,
+        "city": "EAST PEORIA",
+        "postal_prefix": "61611",
+        "state": "IL"
+      },
+      "provider_or_org_name": "MARK E BREWER O D P C",
+      "provider_public_id": "4d9041d7af5adb821b39be7db4eb0cd97b8df0d4ada41e38bbcad92aba931745",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "412 RIVERSIDE DR",
+        "address_line_2": null,
+        "city": "EAST PEORIA",
+        "postal_prefix": "61611",
+        "state": "IL"
+      },
+      "provider_or_org_name": "J A K ENTERPRISES INC",
+      "provider_public_id": "50edfdafe424bf40e30d6c901afb121c9d9da10da651908a8d5c5cf653e5ea95",
+      "public_taxonomy_descriptions": [
+        "Durable Medical Equipment & Medical Supplies",
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "durable_medical_equipment",
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "2650 RIDGE AVE.",
+        "address_line_2": null,
+        "city": "SKOKIE",
+        "postal_prefix": "60077",
+        "state": "IL"
+      },
+      "provider_or_org_name": "KATHERINE KWAN O.D.",
+      "provider_public_id": "61bfd24c5446a8c763f9e5414c87d4b1902073b4602c2429fc25863123713c30",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "8 CHERRY TREE CENTER",
+        "address_line_2": null,
+        "city": "WASHINGTON",
+        "postal_prefix": "61571",
+        "state": "IL"
+      },
+      "provider_or_org_name": "MARK D HAHN O.D.",
+      "provider_public_id": "6dec304337178460d6032d33823f27a80f642cc01b00f276bdc66e80a877a852",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "3287 COURT ST",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "SHWETA R HARVI OD",
+      "provider_public_id": "7df0a1d449c130c03ee35b1308b1ccad7d7b26085306520a6945bcebad144c42",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "3287 COURT ST",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "J A K ENTERPRISES INC",
+      "provider_public_id": "811a75e18e1e337258cf2f774b9057f8ed6a125261670b20828725b115a5f73d",
+      "public_taxonomy_descriptions": [
+        "Durable Medical Equipment & Medical Supplies",
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "durable_medical_equipment",
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Morton",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "155 E COURTLAND ST",
+        "address_line_2": null,
+        "city": "MORTON",
+        "postal_prefix": "61550",
+        "state": "IL"
+      },
+      "provider_or_org_name": "ROBERT MATHEW BECKER od",
+      "provider_public_id": "87d73a96781602cb66e3c0b854b8ce6744d3411c797e4debfd19f37c881e1abf",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "93 EASTGATE DR",
+        "address_line_2": null,
+        "city": "WASHINGTON",
+        "postal_prefix": "61571",
+        "state": "IL"
+      },
+      "provider_or_org_name": "J. ALLEN POTTER O.D.",
+      "provider_public_id": "af29fdfc11e8df875e439d61d038f653763580caae0726dde0b6c2f47499c4e1",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "101 N PARKWAY DR",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "JAMES WILLIAM FARRELL M.D.",
+      "provider_public_id": "b44c93134a7bd74953cff0880f624d6d61e4154020f3802324e4d957c72efa2f",
+      "public_taxonomy_descriptions": [
+        "Ophthalmology"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "ophthalmology"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Washington",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "93 EASTGATE DR",
+        "address_line_2": null,
+        "city": "WASHINGTON",
+        "postal_prefix": "61571",
+        "state": "IL"
+      },
+      "provider_or_org_name": "EYECARE FOCUS PC",
+      "provider_public_id": "bb713e197fd0a7ac928e1d5477f277ce56ce30bd31c1fa81e99afc3d6fcf4273",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Washington",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "8 CHERRY TREE SHOPPING CTR",
+        "address_line_2": null,
+        "city": "WASHINGTON",
+        "postal_prefix": "61571",
+        "state": "IL"
+      },
+      "provider_or_org_name": "J A K ENTERPRISES INC",
+      "provider_public_id": "bc306705da4ed4ec056a57b9931ccf8107adc728fec3ffc072700e90519ea6ba",
+      "public_taxonomy_descriptions": [
+        "Durable Medical Equipment & Medical Supplies",
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "durable_medical_equipment",
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "412 RIVERSIDE DR",
+        "address_line_2": null,
+        "city": "EAST PEORIA",
+        "postal_prefix": "61611",
+        "state": "IL"
+      },
+      "provider_or_org_name": "BEN RASAMIMARI OD",
+      "provider_public_id": "c118b2ebdf04c715bb37726e935da469a019bce3fac0a2ba2a8c4f7b529890af",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "1009 N CUMMINGS LN",
+        "address_line_2": null,
+        "city": "WASHINGTON",
+        "postal_prefix": "61571",
+        "state": "IL"
+      },
+      "provider_or_org_name": "JENNIFER M WILSON OD",
+      "provider_public_id": "d01709e06ad03d0c97e1c66b03693e54d1c1f75e0701d835c750b165ebd17f03",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Washington",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "1009 N CUMMINGS LN",
+        "address_line_2": null,
+        "city": "WASHINGTON",
+        "postal_prefix": "61571",
+        "state": "IL"
+      },
+      "provider_or_org_name": "TINA R THOMAS OD LTD",
+      "provider_public_id": "d2a99f9ac17d7111e51c22bf0e5fea56fd5db6538887f5e4981b39d7c31336dc",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "101 N PARKWAY DR",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "MIDWEST EYE CARE P.C.",
+      "provider_public_id": "d34614f7827e63dcd3ab4b504dd2a09d6b7aed718e168702d654c1eae1316efc",
+      "public_taxonomy_descriptions": [
+        "Ophthalmology"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "ophthalmology"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "725 S 14TH ST",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "WILLIAM IRVING BOND M.D.",
+      "provider_public_id": "d4573f291f9e7e5c9413a383e53969c30568699e20c72d106e1bfaf3854d23a8",
+      "public_taxonomy_descriptions": [
+        "Ophthalmology"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "ophthalmology"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "6800 N KNOXVILLE AVE",
+        "address_line_2": null,
+        "city": "PEORIA",
+        "postal_prefix": "61614",
+        "state": "IL"
+      },
+      "provider_or_org_name": "NICOLE TONY HANNA OD",
+      "provider_public_id": "d551c81a95e47802f4ce63c6e5e13b63a73d80fbe15b853d18769a8afae18e16",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Morton",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "829 W JACKSON ST",
+        "address_line_2": null,
+        "city": "MORTON",
+        "postal_prefix": "61550",
+        "state": "IL"
+      },
+      "provider_or_org_name": "FOCUS ON EYES, P.C.",
+      "provider_public_id": "d9f8699e41b162d1d38e7694976a3346c4cd0fca4cad6c53e41488c968bb7de2",
+      "public_taxonomy_descriptions": [
+        "Eyewear Supplier (Equipment, not the service)",
+        "Optometrist",
+        "Optometrist, Corneal and Contact Management",
+        "Optometrist, Low Vision Rehabilitation",
+        "Optometrist, Occupational Vision",
+        "Optometrist, Pediatrics",
+        "Optometrist, Sports Vision",
+        "Optometrist, Vision Therapy"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optical_goods",
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "725 S 14TH ST",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "ROGER TODD ADLER MD",
+      "provider_public_id": "e486f6c55e42a37a087f92fc50d058c920bfd7ff6bd9e4e979e28bfca598fae2",
+      "public_taxonomy_descriptions": [
+        "Ophthalmology"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "ophthalmology"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "practice_location": {
+        "address_line_1": "4727 N SHERIDAN RD",
+        "address_line_2": null,
+        "city": "PEORIA",
+        "postal_prefix": "61614",
+        "state": "IL"
+      },
+      "provider_or_org_name": "ANDREW JOSEPH MILDER O.D.",
+      "provider_public_id": "e778bc602645fced7a542d919d29738097539e654bbe6f81333bcb4383f35ae5",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "3320 VETERANS DR",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "JAWAD HAIDER OD LTD",
+      "provider_public_id": "f0bdadfc0ddde905ed892fdfad2ceca97ab1d497846333d0aba319b3ff723abc",
+      "public_taxonomy_descriptions": [
+        "Optometrist"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "active_status": "A",
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "practice_location": {
+        "address_line_1": "725 S 14TH ST",
+        "address_line_2": null,
+        "city": "PEKIN",
+        "postal_prefix": "61554",
+        "state": "IL"
+      },
+      "provider_or_org_name": "BOND EYE ASSOCIATES, SC",
+      "provider_public_id": "f19ba681ee14757cc853758349019f7e10db1f49388b407b7548f452b197ff33",
+      "public_taxonomy_descriptions": [
+        "Ophthalmology",
+        "Optometrist",
+        "Technician/Technologist, Optician"
+      ],
+      "record_type": "nppes_provider_candidate",
+      "taxonomy_families": [
+        "ophthalmology",
+        "optical_goods",
+        "optometry"
+      ],
+      "taxonomy_query": "Optometrist"
+    }
+  ],
+  "source_gap_register": [
+    {
+      "city_query": "Pekin",
+      "deficit": 1,
+      "materialized_record_count": 10,
+      "query_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Pekin&state=IL&taxonomy_description=Optometrist&limit=200",
+      "reported_result_count": 11,
+      "status": "unresolved_source_mismatch",
+      "taxonomy_query": "Optometrist"
+    }
+  ],
+  "source_reported_result_count_total": 40,
+  "status": "candidate_census_geocoding_pending",
+  "supply_limitation": "Provider registry rows and exact address groups are candidates only. Geocoding and entity resolution remain pending, so no canonical office count or active-office claim is made."
+}

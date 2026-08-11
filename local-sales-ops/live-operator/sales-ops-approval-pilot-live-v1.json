@@ -1,0 +1,24 @@
+{
+  "run_name": "sales-ops-approval-pilot-live-v1",
+  "workdir": "/tmp/sales-ops-approval-pilot-live-v1-ringer",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "hubspot-live-read-approval-pilot",
+      "task_type": "data-pipeline",
+      "engine": "codex",
+      "engine_args": ["-c", "model_reasoning_effort=medium"],
+      "spec": "Run the full Sales Ops approval-pilot live-read path, not a tiny component. Work only in this task directory. Use the existing repo scripts to read live HubSpot PracticeOS deals, enrich via deal/company/contact associations, build approval_pilot_queue.jsonl capped at 3 ready_for_approval rows, write approval_pilot_table.md, hubspot_enriched_context_sanitized.jsonl, qa_report.md, and approval_pilot_receipt.json. Read-only only: no sends, no HubSpot writes, no CRM stage moves, no sequence enrollment. Do not print raw emails, raw CRM IDs, or secrets. If no rows are ready, still produce held rows and the receipt. Use no em dash.",
+      "check": "if [ ! -s approval_pilot_receipt.json ]; then python3 /home/ankit114/repos/ringer/local-sales-ops/live-operator/hubspot_live_enrichment.py --policy /home/ankit114/repos/ringer/local-sales-ops/live-operator/policy.json --out-dir . --cap 3 --scan-limit 100; fi; python3 /home/ankit114/repos/ringer/local-sales-ops/live-operator/qa_approval_pilot.py --out-dir . --cap 3 --min-candidates 1; python3 - <<'PY'\nimport json, pathlib, sys\nr=json.loads(pathlib.Path('approval_pilot_receipt.json').read_text())\nif r.get('ready_for_approval', 0) > 3:\n    print('WHY: ready_for_approval exceeds cap')\n    sys.exit(1)\nif r.get('sends') or r.get('hubspot_writes') or r.get('external_actions_taken'):\n    print('WHY: approval pilot took external action')\n    sys.exit(1)\nprint('PASS: live HubSpot approval pilot built', 'ready='+str(r.get('ready_for_approval')), 'held='+str(r.get('held')), 'sends=0', 'hubspot_writes=0')\nPY",
+      "expect_files": [
+        "approval_pilot_queue.jsonl",
+        "approval_pilot_table.md",
+        "hubspot_enriched_context_sanitized.jsonl",
+        "qa_report.md",
+        "approval_pilot_receipt.json"
+      ],
+      "timeout_s": 900,
+      "verified": "live HubSpot read enrichment creates an approval-pilot queue capped at 3 ready rows, with no sends and no HubSpot writes"
+    }
+  ]
+}

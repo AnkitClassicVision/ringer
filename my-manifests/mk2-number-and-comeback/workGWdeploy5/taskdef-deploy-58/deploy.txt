@@ -1,0 +1,4 @@
+NEW_REVISION=58
+STABLE taskdef=mott-booking-gateway:58 running=1 desired=1
+ROLLBACK_CMD=aws ecs update-service --cluster stack2 --service mott-booking-gateway --task-definition mott-booking-gateway:57
+DEPLOY_DONE

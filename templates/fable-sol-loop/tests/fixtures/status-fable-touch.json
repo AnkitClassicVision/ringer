@@ -1,0 +1,26 @@
+{
+  "status": "READY",
+  "build_units": [
+    {
+      "id": "U1-output",
+      "state": "COMPLETE",
+      "verification_command": "python3 -c \"from pathlib import Path; assert Path('owned/output.txt').read_text(encoding='utf-8') == 'ready'\"",
+      "verification_result": {
+        "passed": true,
+        "exit_code": 0,
+        "summary": "The locked verification passed against the owned output."
+      }
+    }
+  ],
+  "deviations": [],
+  "holds": [],
+  "probes": [],
+  "diff_summary": {
+    "paths_touched": [
+      "docs/product-contract.md"
+    ],
+    "files_changed": 1,
+    "insertions": 2,
+    "deletions": 1
+  }
+}

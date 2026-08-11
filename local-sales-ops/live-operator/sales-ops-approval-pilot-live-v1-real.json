@@ -1,0 +1,23 @@
+{
+  "run_name": "sales-ops-approval-pilot-live-v1-real",
+  "workdir": "/tmp/sales-ops-approval-pilot-live-v1-ringer-real",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "hubspot-live-read-approval-pilot",
+      "task_type": "data-pipeline",
+      "engine": "local-shell",
+      "spec": "python3 /home/ankit114/repos/ringer/local-sales-ops/live-operator/hubspot_live_enrichment.py --policy /home/ankit114/repos/ringer/local-sales-ops/live-operator/policy.json --out-dir . --cap 3 --scan-limit 100",
+      "check": "python3 /home/ankit114/repos/ringer/local-sales-ops/live-operator/qa_approval_pilot.py --out-dir . --cap 3 --min-candidates 1; python3 - <<'PY'\nimport json, pathlib, sys\nr=json.loads(pathlib.Path('approval_pilot_receipt.json').read_text())\nif r.get('ready_for_approval', 0) > 3:\n    print('WHY: ready_for_approval exceeds cap')\n    sys.exit(1)\nif r.get('sends') or r.get('hubspot_writes') or r.get('external_actions_taken'):\n    print('WHY: approval pilot took external action')\n    sys.exit(1)\nif r.get('deals_read', 0) < 1 or r.get('candidates', 0) < 1:\n    print('WHY: live HubSpot read did not produce real candidates')\n    sys.exit(1)\nprint('PASS: live HubSpot approval pilot built', 'deals_read='+str(r.get('deals_read')), 'candidates='+str(r.get('candidates')), 'ready='+str(r.get('ready_for_approval')), 'held='+str(r.get('held')), 'sends=0', 'hubspot_writes=0')\nPY",
+      "expect_files": [
+        "approval_pilot_queue.jsonl",
+        "approval_pilot_table.md",
+        "hubspot_enriched_context_sanitized.jsonl",
+        "qa_report.md",
+        "approval_pilot_receipt.json"
+      ],
+      "timeout_s": 900,
+      "verified": "live HubSpot read enrichment creates an approval-pilot queue capped at 3 ready rows, with no sends and no HubSpot writes"
+    }
+  ]
+}

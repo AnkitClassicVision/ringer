@@ -1,0 +1,73 @@
+{
+  "data": {
+    "assistant_responses": [
+      "I have Thursday 08/06/2026 01:00 pm or Thursday 08/06/2026 01:15 pm at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time."
+    ],
+    "chat_history": [
+      {
+        "content": "hi",
+        "role": "user"
+      },
+      {
+        "content": "Hi RACHEL, this is MK2 Optical.\n\nWe noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.\n\nMany vision insurance benefits renew yearly, so don't let your benefits go unused!\n\nWhen would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.\n\n\u5982\u9700\u4e2d\u6587\u670d\u52a1\uff0c\u8bf7\u76f4\u63a5\u7528\u4e2d\u6587\u56de\u590d\u3002",
+        "role": "assistant"
+      },
+      {
+        "content": "Can I come in tomorrow",
+        "role": "user"
+      },
+      {
+        "content": "I have Thursday 08/06/2026 10:30 am or Thursday 08/06/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.",
+        "role": "assistant"
+      },
+      {
+        "content": "How about after 1",
+        "role": "user"
+      },
+      {
+        "content": "I have Thursday 08/06/2026 01:00 pm or Thursday 08/06/2026 01:15 pm at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.",
+        "role": "assistant"
+      }
+    ],
+    "chat_id": "596f7a11-01c4-4785-b261-c0cca***9827",
+    "completed": false,
+    "current_node_id": "n_goal_response",
+    "current_node_name": "Goal response and offer",
+    "pathway_id": "94abad8b-fbe2-4e67-9c64-d9b586dd2653",
+    "pathway_version": 119,
+    "use_candidate_model": false,
+    "variables": {
+      "BlandStatusCode": 200,
+      "appt_count": 0,
+      "callID": "596f7a11-01c4-4785-b261-c0cca***9827",
+      "campaign": "harness",
+      "channel": "voice",
+      "count": 1,
+      "day_part": "afternoon",
+      "exam_type_id": "***7395",
+      "goal_anchor": null,
+      "ok": true,
+      "out_of_hours": false,
+      "patient_first": "RACHEL",
+      "patient_id": "***2466",
+      "preference_from": "tomorrow",
+      "preference_to": "tomorrow",
+      "recall_cell": "***2428",
+      "recall_patient_id": "***2466",
+      "slot_1_day_name": "Thursday",
+      "slot_1_doctor": "***3018",
+      "slot_1_end": "08/06/2026 01:15 pm",
+      "slot_1_start": "08/06/2026 01:00 pm",
+      "slot_2_day_name": "Thursday",
+      "slot_2_doctor": "***3018",
+      "slot_2_end": "08/06/2026 01:30 pm",
+      "slot_2_start": "08/06/2026 01:15 pm",
+      "slot_count": 14,
+      "store": "711",
+      "time_after": "01:00 PM",
+      "time_pref_relaxed": "",
+      "user_verbatim": "How about after 1"
+    }
+  },
+  "errors": null
+}

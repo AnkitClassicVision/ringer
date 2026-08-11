@@ -1,0 +1,6 @@
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN=1 WALL_MS=6002 N_MSGS=0 NODE=n_appt_check SAID=
+TURN=2 WALL_MS=2520 N_MSGS=1 NODE=n_goal_response SAID=I have Thursday 10:00 AM or Thursday 2:00 PM at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+TURN=3 WALL_MS=6181 N_MSGS=2 NODE=n_goal_response SAID=The latest appointment available is 2:00 PM. | Let me look for later times for you.
+RESULT label=gl-frozen-ask turns=3 total_wall_ms=14703 filler_hits=0 candidate=0

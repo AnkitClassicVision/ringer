@@ -1,0 +1,40 @@
+{
+  "data": {
+    "assistant_responses": [
+      "Hi RACHEL, this is MK2 Optical.\n\nWe noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.\n\nMany vision insurance benefits renew yearly, so don't let your benefits go unused!\n\nWhen would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.\n\n\u5982\u9700\u4e2d\u6587\u670d\u52a1\uff0c\u8bf7\u76f4\u63a5\u7528\u4e2d\u6587\u56de\u590d\u3002"
+    ],
+    "chat_history": [
+      {
+        "content": "hi",
+        "role": "user"
+      },
+      {
+        "content": "Hi RACHEL, this is MK2 Optical.\n\nWe noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.\n\nMany vision insurance benefits renew yearly, so don't let your benefits go unused!\n\nWhen would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.\n\n\u5982\u9700\u4e2d\u6587\u670d\u52a1\uff0c\u8bf7\u76f4\u63a5\u7528\u4e2d\u6587\u56de\u590d\u3002",
+        "role": "assistant"
+      }
+    ],
+    "chat_id": "84ae0c5d-a9d8-4e5a-a8db-e8160c808652",
+    "completed": false,
+    "current_node_id": "n_goal_ask",
+    "current_node_name": "Goal ask and search miss",
+    "pathway_id": "94abad8b-fbe2-4e67-9c64-d9b586dd2653",
+    "pathway_version": 120,
+    "use_candidate_model": false,
+    "variables": {
+      "BlandStatusCode": 200,
+      "appt_count": 0,
+      "callID": "84ae0c5d-a9d8-4e5a-a8db-e8160c808652",
+      "campaign": "harness",
+      "channel": "voice",
+      "count": 1,
+      "exam_type_id": "***7395",
+      "ok": true,
+      "patient_first": "RACHEL",
+      "patient_id": "***2466",
+      "recall_cell": "***2428",
+      "recall_patient_id": "***2466",
+      "store": "711"
+    }
+  },
+  "errors": null
+}

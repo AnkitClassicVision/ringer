@@ -1,0 +1,9 @@
+TURN=1 OK=true SAID=Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your 
+TURN=2 OK=true SAID=I have Thursday 08/06/2026 10:30 am or Thursday 08/06/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me
+TURN=3 OK=true SAID=To confirm, your eye exam would be Thursday 08/06/2026 10:30 am at MK2 Optical. Reply YES to book it, or NO to look at o
+TURN=4 OK=true SAID=Your eye exam is booked for Thursday 08/06/2026 10:30 am at MK2 Optical. You're all set. If you have further questions, 
+TURN=5 OK=true SAID=Your appointment is set. If you need to change or reschedule, please call the office at (212) 219-2219.
+TURN=6 OK=true SAID=Yes, I'm here! Your appointment is set for Thursday 08/06/2026 10:30 am. If you need to make any changes, please call th
+PROBE_RESULT booked_then_alive=true cleanup_count=0

@@ -1,0 +1,17 @@
+{
+  "run_name": "mott-throttle-verify",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mott-throttle-verify/work",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "throttle-verdict",
+      "engine": "codex",
+      "task_type": "research",
+      "timeout_s": 1200,
+      "expect_files": ["report.md"],
+      "verified": "The report commits to one verdict, uses the measured v56=v62 latency parity to rule out the pathway/prompt, distinguishes the transient queued-no-error state from the 21610 opt-out block, and cites the delivery evidence.",
+      "check": "python3 /mnt/d_drive/repos/mott/gw-temporal-check/check_throttle.py --report report.md",
+      "spec": "You are independently confirming or refuting one diagnosis from staged evidence only. BOUNDARY: read only inside your task directory; ./source/EVIDENCE.md is your evidence; no web, no API. You own exactly one output file: ./report.md.\n\nTHE CLAIM. An SMS booking pathway (version 62) felt slow to the owner during testing. The claim to test: the slowness is ENTIRELY transient carrier/provider throttling of one heavily-texted number, now cleared, and NOT a pathway, prompt, gateway, or bot defect.\n\nBE SKEPTICAL. Do not rubber-stamp. Consider alternative causes: the pathway itself being slow, the doubled extraction prompt (28,700 vs 15,600 chars) adding latency, the gateway availability call, or a genuine delivery failure. For each, say whether the evidence supports or rules it out.\n\nKEY EVIDENCE to weigh: measured per-turn latency was ~1.5s on BOTH v56 and v62 via the chat endpoint (no SMS), so the near-doubled prompt added no measurable latency and the pathway is not slow. The slow messages showed status 'queued' with no error and later delivered; a carrier opt-out block instead shows 'failed' + error_code 21610 (seen twice, from a deliberate STOP test). Of 15 conversations to the number today, 9 delivered, 2 failed (both the intentional 21610 STOP test), 0 stuck.\n\nOUTPUT CONTRACT for ./report.md. Start with '# Throttle Verdict'. State the verdict on its own line as exactly one of: 'VERDICT: THROTTLING-ONLY', 'VERDICT: OTHER-CAUSE', or 'VERDICT: INSUFFICIENT'. Then '## Summary' (max 3 bullets), '## Alternatives Ruled Out' addressing pathway/prompt (use the 1.5s latency parity and the 28,700-char figure), gateway, and hard delivery failure, '## Throttle vs Opt-Out' distinguishing the queued-no-error transient state from the 21610 block, '## What Would Change This', '## Assumptions'. Cite the 1.5s parity, the 21610 code, the queued state, the 28,700 char figure, and the delivered count. Under 700 words."
+    }
+  ]
+}

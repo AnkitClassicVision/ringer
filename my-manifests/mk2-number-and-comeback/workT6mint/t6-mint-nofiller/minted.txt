@@ -1,0 +1,14 @@
+local graph /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT6mint/t6-strip-builder/v92_nofiller.json: 48 nodes, 125 edges
+provider currently has 92 versions, latest = 92
+
+WRITE: creating one new unattached version
+created version 93
+
+READBACK
+  matches local exactly: 48 nodes, 125 edges, routing and extraction identical
+
+ATTACHMENT
+  numbers pointing at version 93: none, unattached as intended
+
+external_actions_taken=1 (one version create)
+VERSION=93

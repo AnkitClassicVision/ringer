@@ -1,0 +1,37 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT5r4",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "bedrock-admin-probe",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 300,
+      "expect_files": ["bedrock.txt"],
+      "spec": "python3 -u - <<'PY' > bedrock.txt 2>&1\nimport boto3\nrt = boto3.client(\"bedrock-runtime\", region_name=\"us-east-1\")\nfor mid in (\"us.anthropic.claude-haiku-4-5-20251001-v1:0\", \"us.anthropic.claude-sonnet-5\"):\n    try:\n        r = rt.converse(modelId=mid, messages=[{\"role\": \"user\", \"content\": [{\"text\": \"Reply with the single word: ok\"}]}], inferenceConfig={\"maxTokens\": 10})\n        txt = r[\"output\"][\"message\"][\"content\"][0][\"text\"].strip()[:40]\n    except Exception as e:\n        print(\"CONVERSE %s -> ERROR %s: %s\" % (mid, type(e).__name__, str(e)[:250]))\n    else:\n        print(\"CONVERSE %s -> OK %r\" % (mid, txt))\nprint(\"PROBE_DONE\")\nPY\nrc=$?; cat bedrock.txt; exit $rc",
+      "check": "grep -q 'PROBE_DONE' bedrock.txt || { echo 'FAIL: probe did not finish'; exit 1; }; grep -qE '^CONVERSE us.anthropic.claude-haiku.* -> OK' bedrock.txt || { echo 'FAIL: admin profile cannot invoke Haiku on Bedrock:'; grep CONVERSE bedrock.txt; exit 1; }; echo 'PASS: admin profile invokes Bedrock:'; grep '^CONVERSE' bedrock.txt",
+      "verified": "The admin AWS profile proven able to invoke Bedrock converse on Haiku (and Sonnet-5 attempted, result on record) before any eval spend."
+    },
+    {
+      "key": "t5-eval-haiku3",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["haiku.txt"],
+      "spec": "MODE=both ECP_LLM_INTENT=authoritative ECP_LLM_MODEL_ID=us.anthropic.claude-haiku-4-5-20251001-v1:0 PYTHONDONTWRITEBYTECODE=1 python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT5/t5-eval-builder/eval_ext.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT1r3/t1-final-analysis/eval_cases.json > haiku.txt 2>&1; rc=$?; grep '^TOTAL' haiku.txt; exit $rc",
+      "check": "c=$(grep -cE '^CASE=' haiku.txt); [ \"$c\" -ge 20 ] || { echo \"FAIL: only $c CASE lines\"; tail -6 haiku.txt; exit 1; }; grep -qE '^TOTAL mode=raw' haiku.txt || { echo 'FAIL: no raw TOTAL'; exit 1; }; grep -qE '^TOTAL mode=llm model=us.anthropic.claude-haiku' haiku.txt || { echo 'FAIL: no Haiku llm TOTAL'; exit 1; }; m=$(grep -oE '^TOTAL mode=llm.*median_lat_ms=[0-9]+' haiku.txt | grep -oE '[0-9]+$'); [ -n \"$m\" ] && [ \"$m\" -ge 300 ] || { echo \"FAIL: llm median latency ${m}ms too fast to be real Bedrock calls\"; grep -m3 'mode=llm' haiku.txt; exit 1; }; echo \"PASS: $(grep '^TOTAL' haiku.txt | tr '\\n' ' ')\"",
+      "verified": "The 12-case corpus scored through Haiku 4.5 with real Bedrock calls (latency-floor proven) plus the raw-path baseline, per-case correctness and latency on record."
+    },
+    {
+      "key": "t5-eval-sonnet3",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["sonnet.txt"],
+      "spec": "MODE=llm ECP_LLM_INTENT=authoritative MODEL_CANDIDATES=us.anthropic.claude-sonnet-5,us.anthropic.claude-sonnet-4-6,us.anthropic.claude-sonnet-4-5-20250929-v1:0 PYTHONDONTWRITEBYTECODE=1 python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT5/t5-eval-builder/eval_ext.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT1r3/t1-final-analysis/eval_cases.json > sonnet.txt 2>&1; rc=$?; grep -E '^MODEL_USED|^MODEL_PROBE|^TOTAL' sonnet.txt; exit $rc",
+      "check": "grep -qE '^MODEL_USED=us.anthropic.claude-sonnet' sonnet.txt || { echo 'FAIL: no Sonnet-class model responded:'; head -6 sonnet.txt; exit 1; }; c=$(grep -cE '^CASE=.*mode=llm' sonnet.txt); [ \"$c\" -ge 10 ] || { echo \"FAIL: only $c llm CASE lines\"; tail -6 sonnet.txt; exit 1; }; m=$(grep -oE '^TOTAL mode=llm.*median_lat_ms=[0-9]+' sonnet.txt | grep -oE '[0-9]+$'); [ -n \"$m\" ] && [ \"$m\" -ge 300 ] || { echo \"FAIL: llm median latency ${m}ms too fast to be real\"; grep -m3 'mode=llm' sonnet.txt; exit 1; }; echo \"PASS: $(grep -m1 '^MODEL_USED' sonnet.txt); $(grep -m1 '^TOTAL' sonnet.txt)\"",
+      "verified": "The same corpus scored through a Sonnet-class picker with real Bedrock calls, exact model id printed, completing the raw vs Haiku vs Sonnet comparison."
+    }
+  ]
+}

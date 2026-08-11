@@ -1,0 +1,443 @@
+{
+  "packet_date": "2026-07-30",
+  "status": "corrected_direct_origin_and_named_peer_route_reconciled",
+  "origin": {
+    "name": "Vintage Optical",
+    "address": "605 S Main St, Morton, IL 61550",
+    "latitude": 40.6049094,
+    "longitude": -89.467024,
+    "endpoint_basis": "direct_google_listing_pin",
+    "source_id": "GOOGLE_MAPS_SAMPLE_20260730"
+  },
+  "candidate_table_method": {
+    "source_id": "OSRM_TABLE_20260730",
+    "profile": "driving",
+    "origin_basis": "direct_google_listing_pin",
+    "destination_basis": "census_address_geocoder_candidate_points",
+    "traffic_basis": "no_live_traffic",
+    "evidence_limitation": "Routes describe address-geocoder location candidates. They are not a canonical office census or patient-origin choice evidence."
+  },
+  "candidate_table_routes": [
+    {
+      "batch_id": "VO-04a8eacc79154ed0",
+      "input_address": "829 W JACKSON ST, MORTON, IL, 61550",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.618477755603,
+        "longitude": -89.469452078133,
+        "match_type": "Exact",
+        "matched_address": "829 W JACKSON ST, MORTON, IL, 61550"
+      },
+      "duration_seconds": 203.5,
+      "duration_minutes": 3.39,
+      "distance_meters": 2413.3,
+      "distance_miles": 1.5,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "superseded_for_focus_named_peer_comparison"
+    },
+    {
+      "batch_id": "VO-0664ecb12223d94d",
+      "input_address": "3287 COURT ST, PEKIN, IL, 61554",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.54673311119,
+        "longitude": -89.603970003133,
+        "match_type": "Exact",
+        "matched_address": "3287 COURT ST, PEKIN, IL, 61554"
+      },
+      "duration_seconds": 1079.1,
+      "duration_minutes": 17.98,
+      "distance_meters": 20119.4,
+      "distance_miles": 12.5,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-2a9028f0cfd51aae",
+      "input_address": "6800 N KNOXVILLE AVE, PEORIA, IL, 61614",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.770032638222,
+        "longitude": -89.60227079541,
+        "match_type": "Exact",
+        "matched_address": "6800 N KNOXVILLE AVE, PEORIA, IL, 61614"
+      },
+      "duration_seconds": 1379.6,
+      "duration_minutes": 22.99,
+      "distance_meters": 24212.4,
+      "distance_miles": 15.04,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-2bb876a25071bef4",
+      "input_address": "93 EASTGATE DR, WASHINGTON, IL, 61571",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.716312330511,
+        "longitude": -89.506382689529,
+        "match_type": "Exact",
+        "matched_address": "93 EASTGATE DR, WASHINGTON, IL, 61571"
+      },
+      "duration_seconds": 1084.6,
+      "duration_minutes": 18.08,
+      "distance_meters": 20689.1,
+      "distance_miles": 12.86,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-2ebfdf1ae7643a2e",
+      "input_address": "8921 N WOOD SAGE RD, PEORIA, IL, 61615",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.79576274215,
+        "longitude": -89.668617582701,
+        "match_type": "Non_Exact",
+        "matched_address": "8921 WOOD SAGE RD, PEORIA, IL, 61615"
+      },
+      "duration_seconds": 1756.7,
+      "duration_minutes": 29.28,
+      "distance_meters": 31084.2,
+      "distance_miles": 19.31,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-332356e82ee38e84",
+      "input_address": "401 RIVER RD, EAST PEORIA, IL, 61611",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.682510474091,
+        "longitude": -89.586291009883,
+        "match_type": "Exact",
+        "matched_address": "401 RIVER RD, EAST PEORIA, IL, 61611"
+      },
+      "duration_seconds": 854.3,
+      "duration_minutes": 14.24,
+      "distance_meters": 14905.3,
+      "distance_miles": 9.26,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-3c4f5c9f59bfc188",
+      "input_address": "605 S MAIN ST, MORTON, IL, 61550",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.60447486451,
+        "longitude": -89.466600801652,
+        "match_type": "Exact",
+        "matched_address": "605 S MAIN ST, MORTON, IL, 61550"
+      },
+      "duration_seconds": 17.2,
+      "duration_minutes": 0.29,
+      "distance_meters": 65.6,
+      "distance_miles": 0.04,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-449ba7a75c5641a2",
+      "input_address": "8 CHERRY TREE CENTER, WASHINGTON, IL, 61571",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.706044153812,
+        "longitude": -89.445722803876,
+        "match_type": "Non_Exact",
+        "matched_address": "8 CHERRY TREE SHOPPING CENTER, WASHINGTON, IL, 61571"
+      },
+      "duration_seconds": 1303.1,
+      "duration_minutes": 21.72,
+      "distance_meters": 15694.1,
+      "distance_miles": 9.75,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-605f3b4bd4e778ef",
+      "input_address": "4727 N SHERIDAN RD, PEORIA, IL, 61614",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.744448846161,
+        "longitude": -89.603081805522,
+        "match_type": "Exact",
+        "matched_address": "4727 N SHERIDAN RD, PEORIA, IL, 61614"
+      },
+      "duration_seconds": 1214.9,
+      "duration_minutes": 20.25,
+      "distance_meters": 21903.5,
+      "distance_miles": 13.61,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-62bdb46919a41bce",
+      "input_address": "725 S 14TH ST, PEKIN, IL, 61554",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.561550947645,
+        "longitude": -89.631418275212,
+        "match_type": "Exact",
+        "matched_address": "725 S 14TH ST, PEKIN, IL, 61554"
+      },
+      "duration_seconds": 1205.5,
+      "duration_minutes": 20.09,
+      "distance_meters": 17904.4,
+      "distance_miles": 11.13,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-876c77b70cd2b760",
+      "input_address": "8 CHERRY TREE SHOPPING CTR, WASHINGTON, IL, 61571",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.706044153812,
+        "longitude": -89.445722803876,
+        "match_type": "Exact",
+        "matched_address": "8 CHERRY TREE SHOPPING CENTER, WASHINGTON, IL, 61571"
+      },
+      "duration_seconds": 1303.1,
+      "duration_minutes": 21.72,
+      "distance_meters": 15694.1,
+      "distance_miles": 9.75,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-a0e1bbc847e8735f",
+      "input_address": "412 RIVERSIDE DR, EAST PEORIA, IL, 61611",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.682164141521,
+        "longitude": -89.585827378909,
+        "match_type": "Exact",
+        "matched_address": "412 RIVERSIDE DR, EAST PEORIA, IL, 61611"
+      },
+      "duration_seconds": 838.9,
+      "duration_minutes": 13.98,
+      "distance_meters": 14876.8,
+      "distance_miles": 9.24,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-b496827d89be0a37",
+      "input_address": "1009 N CUMMINGS LN, WASHINGTON, IL, 61571",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.714554500141,
+        "longitude": -89.44558914993,
+        "match_type": "Exact",
+        "matched_address": "1009 N CUMMINGS LN, WASHINGTON, IL, 61571"
+      },
+      "duration_seconds": 1343.9,
+      "duration_minutes": 22.4,
+      "distance_meters": 26273.9,
+      "distance_miles": 16.33,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-b71a82c99cfe1f6a",
+      "input_address": "111 W WASHINGTON ST, SUITE 410, EAST PEORIA, IL, 61611",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.666411924471,
+        "longitude": -89.580305249514,
+        "match_type": "Exact",
+        "matched_address": "111 W WASHINGTON ST, EAST PEORIA, IL, 61611"
+      },
+      "duration_seconds": 710.0,
+      "duration_minutes": 11.83,
+      "distance_meters": 12868.2,
+      "distance_miles": 8.0,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-baf5b45383e71013",
+      "input_address": "100 HILLCREST DR STE B, WASHINGTON, IL, 61571",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.704146005233,
+        "longitude": -89.432588430081,
+        "match_type": "Non_Exact",
+        "matched_address": "100 HILLCREST DR, WASHINGTON, IL, 61571"
+      },
+      "duration_seconds": 1255.3,
+      "duration_minutes": 20.92,
+      "distance_meters": 17447.9,
+      "distance_miles": 10.84,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-c4321b180047c8f8",
+      "input_address": "101 N PARKWAY DR, PEKIN, IL, 61554",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.567874134398,
+        "longitude": -89.618140254783,
+        "match_type": "Exact",
+        "matched_address": "101 N PARKWAY DR, PEKIN, IL, 61554"
+      },
+      "duration_seconds": 1078.0,
+      "duration_minutes": 17.97,
+      "distance_meters": 16061.4,
+      "distance_miles": 9.98,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-e0e55998f0343717",
+      "input_address": "155 E COURTLAND ST, MORTON, IL, 61550",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.628495488901,
+        "longitude": -89.460882368211,
+        "match_type": "Non_Exact",
+        "matched_address": "155 COURTLAND ST, MORTON, IL, 61550"
+      },
+      "duration_seconds": 354.1,
+      "duration_minutes": 5.9,
+      "distance_meters": 3768.6,
+      "distance_miles": 2.34,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-e54d74b5478aa8a5",
+      "input_address": "1201 S DIRKSEN PKWY, SPRINGFIELD, IL, 62703",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 39.789209406776,
+        "longitude": -89.605972246191,
+        "match_type": "Exact",
+        "matched_address": "1201 S DIRKSEN PKWY, SPRINGFIELD, IL, 62703"
+      },
+      "duration_seconds": 4142.1,
+      "duration_minutes": 69.04,
+      "distance_meters": 99396.6,
+      "distance_miles": 61.76,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-ee7e0924cf17ea62",
+      "input_address": "2611 BROADWAY ST, PEKIN, IL, 61554",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.56798835614,
+        "longitude": -89.582204988641,
+        "match_type": "Exact",
+        "matched_address": "2611 BROADWAY ST, PEKIN, IL, 61554"
+      },
+      "duration_seconds": 877.0,
+      "duration_minutes": 14.62,
+      "distance_meters": 13018.5,
+      "distance_miles": 8.09,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-f98fd44b1ff3cca8",
+      "input_address": "417 W JEFFERSON ST, MORTON, IL, 61550",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.613347408958,
+        "longitude": -89.465650124039,
+        "match_type": "Exact",
+        "matched_address": "417 W JEFFERSON ST, MORTON, IL, 61550"
+      },
+      "duration_seconds": 151.6,
+      "duration_minutes": 2.53,
+      "distance_meters": 1278.4,
+      "distance_miles": 0.79,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    },
+    {
+      "batch_id": "VO-fb07ec23570e5873",
+      "input_address": "100 HILLCREST DR, WASHINGTON, IL, 61571",
+      "destination_basis": "census_address_geocoder_candidate_point",
+      "destination": {
+        "latitude": 40.704146005233,
+        "longitude": -89.432588430081,
+        "match_type": "Exact",
+        "matched_address": "100 HILLCREST DR, WASHINGTON, IL, 61571"
+      },
+      "duration_seconds": 1255.3,
+      "duration_minutes": 20.92,
+      "distance_meters": 17447.9,
+      "distance_miles": 10.84,
+      "traffic_basis": "no_live_traffic",
+      "evidence_status": "address_geocoder_candidate_route_not_patient_origin_choice_evidence",
+      "named_peer_precedence": "not_applicable"
+    }
+  ],
+  "named_peer_routes": {
+    "focus_on_eyes": {
+      "name": "Focus On Eyes, P.C. Member Of Vision Source",
+      "origin": {
+        "name": "Vintage Optical",
+        "latitude": 40.6049094,
+        "longitude": -89.467024,
+        "source_id": "GOOGLE_MAPS_SAMPLE_20260730"
+      },
+      "destination": {
+        "name": "Focus On Eyes, P.C. Member Of Vision Source",
+        "address": "829 W Jackson St, Morton, IL 61550",
+        "latitude": 40.6196994,
+        "longitude": -89.4680886,
+        "source_id": "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+      },
+      "endpoint_basis": "direct_google_listing_pins",
+      "route_source_id": "OSRM_FOCUS_GOOGLE_PINS_20260730",
+      "duration_seconds": 233.4,
+      "duration_minutes": 3.89,
+      "distance_meters": 2466.8,
+      "distance_miles": 1.53,
+      "traffic_basis": "no_live_traffic",
+      "precedence": "named direct-listing-pin route supersedes the Census-interpolated candidate route for Focus On Eyes",
+      "catchment_context": "nearby direct peer within the corrected 20-minute window",
+      "interpretation": "The endpoint lineage changed. The competitive direction did not change materially."
+    }
+  },
+  "superseded_claims": [
+    {
+      "prior_display": "4.07 routed minutes",
+      "status": "superseded",
+      "reason": "The prior origin and destination lineage was not the current pair of direct Google listing pins.",
+      "replacement_display": "3.89 routed minutes",
+      "material_direction_change": false,
+      "retained_context": "Focus remains a nearby direct peer within the 20-minute window."
+    }
+  ],
+  "limitations": [
+    "OSRM modeled driving routes have no live traffic.",
+    "Routes do not measure patient origins, patient choice, capacity, or draw.",
+    "Candidate routes do not convert registry locations into canonical offices."
+  ]
+}

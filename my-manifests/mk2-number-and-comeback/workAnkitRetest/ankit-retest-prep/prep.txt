@@ -1,0 +1,10 @@
+=== LINE BINDING ===
+BOUND_VERSION=123 pathway=94abad8b-fbe2-4e67-9c64-d9b586dd2653 label=Emerald Eye Care | Clarkston
+=== ANKIT CONV CLEANUP ===
+ANKIT_CONVS_BEFORE=0
+ANKIT_CONVS_AFTER=0
+CLEANUP_DONE
+=== ANKIT APPTS (patient 4362694474 store 711) ===
+HTTP 200
+ok: True count: 0
+APPTS_DONE

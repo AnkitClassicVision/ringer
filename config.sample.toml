@@ -35,9 +35,9 @@ jsonl_path = "~/.ringer/runs.jsonl"
 # env_file = "~/.supabase.env"
 
 [engines.codex]
-# Public default resolves this with shutil.which("codex"). Set an absolute path
-# here only for machine-specific installs.
-bin = "codex"
+# Point this at the checkout's OAuth wrapper. It strips API-key/base-URL routes,
+# requires `codex login status` to report ChatGPT, and forces user-config isolation.
+bin = "/absolute/path/to/ringer/engines/codex-oauth.sh"
 
 # Placeholders:
 # - {taskdir}: task working directory
@@ -49,6 +49,7 @@ bin = "codex"
 args_template = [
   "exec",
   "--skip-git-repo-check",
+  "--ignore-user-config",
   "{access_args}",
   "{engine_args}",
   "-C",
@@ -77,6 +78,7 @@ token_regex = "tokens\\s+used\\s*:?\\s*([0-9][0-9,]*)"
 # [engines.grok]
 # bin = "grok"
 # model_default = "grok-composer-2.5-fast"
+# auth_routing_trusted = true  # explicit custom-harness capability; protected families still blocked
 # args_template = [
 #   "--cwd",
 #   "{taskdir}",
@@ -107,39 +109,60 @@ token_regex = "tokens\\s+used\\s*:?\\s*([0-9][0-9,]*)"
 # sandbox_args = []
 # full_access_args = []
 
-# OpenCode + OpenRouter — the universal model harness. One engine block runs
-# ANY OpenRouter-served model: the {model} placeholder is filled per task from
-# the manifest's "model" field, falling back to model_default below. Example
-# default: GLM-5.2 (z-ai/glm-5.2, roughly $0.74/M input, $2.33/M output as of
-# 2026-07) — the cheap-intelligence lane.
-# OpenCode has no OS sandbox, so `bin` points at engines/opencode-sandboxed.sh
-# (macOS Seatbelt: network + reads open, writes confined to the task dir, a
-# per-run scratch dir, and OpenCode's state/config dirs). Auth: put your
-# OpenRouter key where your OpenCode version expects it — commonly
-# ~/.local/share/opencode/auth.json ({"openrouter": {"type": "api", "key": "..."}});
-# confirm the path with your installed CLI.
-# Per-task engine_args can set reasoning effort ("--variant", "low|high|max").
-# Uncomment and set an absolute path for `bin` to enable.
-# [engines.opencode]
-# bin = "/absolute/path/to/ringer/engines/opencode-sandboxed.sh"
-# model_default = "openrouter/z-ai/glm-5.2"
-# args_template = [
-#   "{taskdir}",
-#   "{access_args}",
-#   "run",
-#   "-m",
-#   "{model}",
-#   "--dangerously-skip-permissions",
-#   "--format",
-#   "json",
-#   "{engine_args}",
-#   "--dir",
-#   "{taskdir}",
-#   "{spec}",
-# ]
-# sandbox_args = []
-# full_access_args = ["--no-sandbox"]
-# token_regex = '"tokens":\{"total":([0-9]+)'
+[engines.gemini]
+bin = "/absolute/path/to/ringer/engines/gemini-oauth.sh"
+model_default = "gemini-2.5-pro"
+args_template = ["{taskdir}", "{model}", "{spec}"]
+sandbox_args = []
+full_access_args = []
+token_regex = ""
+
+# Claude Code OAuth lane. The wrapper verifies claude.ai first-party auth,
+# scrubs API routes, and forces safe mode with no user/project/local settings.
+[engines.claude]
+bin = "/absolute/path/to/ringer/engines/claude-oauth.sh"
+model_default = "sonnet"
+args_template = ["-p", "--model", "{model}", "--permission-mode", "acceptEdits", "--output-format", "text", "--no-session-persistence", "{engine_args}", "{spec}"]
+sandbox_args = []
+full_access_args = []
+token_regex = ""
+
+# Universal OpenRouter text lane. API use is explicit: a manifest must select
+# this engine and an exact lowercase openrouter/<publisher>/<model> selector.
+# Examples: openrouter/x-ai/grok-4.5, openrouter/z-ai/glm-5.2,
+# openrouter/moonshotai/kimi-k3.
+# Linux only: the wrapper requires bubblewrap and fails closed if it cannot
+# confine Pi. It mounts a strictly resolved minimal Node runtime, not /usr;
+# /usr/local and /usr/src remain absent. It mounts only the task directory at
+# /workspace, rejects canonical overlap with agent/package sources, injects the
+# literal credential only through a clean child environment, omits /proc, and
+# mounts a read-only /agent containing only the exact cached model.
+[engines.pi-openrouter]
+bin = "/absolute/path/to/ringer/engines/pi-openrouter-ringer.sh"
+model_default = "openrouter/z-ai/glm-5.2"
+args_template = ["{taskdir}", "{model}", "{spec}"]
+sandbox_args = []
+full_access_args = []
+token_regex = "tokens used: ([0-9]+)"
+
+# ByteDance Seedance through OpenRouter's first-class Video API. This is a
+# media-generation engine, not an OpenCode text-model alias. Set bin to this
+# clone's executable adapter path. Auth is resolved by the adapter.
+[engines.seedance]
+bin = "/absolute/path/to/ringer/engines/openrouter-video.py"
+model_default = "bytedance/seedance-2.0"
+auth_routing_trusted = true
+args_template = [
+  "--taskdir",
+  "{taskdir}",
+  "--model",
+  "{model}",
+  "--prompt",
+  "{spec}",
+  "{engine_args}",
+]
+sandbox_args = []
+full_access_args = []
 
 [artifact]
 # Zero-LLM, self-contained HTML artifacts rendered directly from state — no model calls, no

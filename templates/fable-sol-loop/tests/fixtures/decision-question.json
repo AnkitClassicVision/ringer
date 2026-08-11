@@ -1,0 +1,62 @@
+{
+  "intent": "Produce a verified repository change while preserving Fable decision rights and routing founder judgment explicitly.",
+  "architecture": {
+    "components": [
+      "A single owned output artifact",
+      "A round-boundary founder question"
+    ],
+    "boundaries": [
+      "Sol may change only declared repo-relative paths",
+      "Hermes transports the question outside the headless worker"
+    ]
+  },
+  "owned_paths": [
+    "owned"
+  ],
+  "fable_owned_surfaces": [],
+  "unknowns": [
+    {
+      "id": "U-TASTE",
+      "description": "Choose the founder-preferred visible label for the final artifact.",
+      "route": "founder_taste_strategy_courage_relationship_risk_appetite"
+    }
+  ],
+  "implementation_contract": {
+    "build_units": [
+      {
+        "id": "U1-output",
+        "owned_paths": [
+          "owned/output.txt"
+        ],
+        "done_criteria": "The owned output contains exactly the expected ready marker.",
+        "verification_command": "python3 -c \"from pathlib import Path; assert Path('owned/output.txt').read_text(encoding='utf-8') == 'ready'\""
+      }
+    ]
+  },
+  "forbidden_actions": [
+    "Do not commit or push repository changes.",
+    "Do not deploy or modify production.",
+    "Do not perform external sends or writes.",
+    "Do not access secrets or credentials.",
+    "Do not use any provider fallback when OAuth is unavailable.",
+    "Do not let Sol accept its own work."
+  ],
+  "question": {
+    "question": "Which visible label should the final artifact use?",
+    "why_now": "The label is founder taste and changes the user-visible contract.",
+    "consequence_if_wrong": "Choosing without founder context could create avoidable rework and intent drift.",
+    "options_with_default": [
+      {
+        "option": "Ready",
+        "tradeoff": "Plain and unambiguous, but less distinctive.",
+        "default": true
+      },
+      {
+        "option": "Prepared",
+        "tradeoff": "More distinctive, but may be less immediately clear.",
+        "default": false
+      }
+    ],
+    "answer_deadline_effect": "Without an answer the mapping round remains stopped before implementation."
+  }
+}

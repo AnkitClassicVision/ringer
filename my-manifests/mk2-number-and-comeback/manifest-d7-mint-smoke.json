@@ -1,0 +1,37 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workD7MS",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "guarded-mint-d7",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["mint.txt"],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workV95T8/t8-guard-builder/validate_and_mint.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workEve/pathway-d7-builder/pathway-v94-1-draft.json > mint.txt 2>&1; rc=$?; tail -8 mint.txt; exit $rc",
+      "check": "grep -qE 'GUARD_RESULT=MINTED version=[0-9]+' mint.txt || { echo 'FAIL: guard did not mint (validation red or guard error):'; grep -E 'REFUSED|- \\[' mint.txt | head -6; exit 1; }; grep -q 'REFUSED' mint.txt && { echo 'FAIL: refusal recorded'; exit 1; }; echo \"PASS: T8 guard first real outing - $(grep -m1 'GUARD_RESULT=' mint.txt)\"",
+      "verified": "The D7 candidate minted UNATTACHED through the T8 validate-then-mint guard's first production use: canonical validation green as a precondition, version number on the record, live line untouched."
+    },
+    {
+      "key": "smoke-frozen-ask",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "V=$(grep -oE 'GUARD_RESULT=MINTED version=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workD7MS/guarded-mint-d7/mint.txt | grep -oE '[0-9]+$'); [ -n \"$V\" ] || { echo 'no minted version'; exit 1; }; echo \"SMOKING_VERSION=$V\"; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_V=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"thursday please\", \"What's the last time of the day I can come in?\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_V\"], \"script.json\", \"frozen-ask\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 turns, got $t\"; tail -5 measure.txt; exit 1; }; grep -iE '^TURN=' measure.txt | grep -qiE 'one moment while i check|let me check that for you' && { echo 'FAIL: filler still spoken'; exit 1; }; last=$(grep -E '^TURN=3' measure.txt); said=$(echo \"$last\" | grep -oE 'SAID=.*'); [ -n \"$said\" ] && ! echo \"$said\" | grep -qE 'SAID=\\s*$' || { echo \"FAIL: empty turn-3 reply (ghost): $last\"; exit 1; }; echo \"$last\" | grep -qE '[0-9]{2}/[0-9]{2}/[0-9]{4}|call our office' || { echo \"FAIL: turn-3 neither offers a dated slot nor refers honestly: $last\"; exit 1; }; echo \"PASS-PART1: no filler, no ghost, productive reply - $last\" | head -c 320",
+      "verified": "The exact question that froze Ankit's phone, replayed against the guarded D7 mint: zero filler, zero ghosting, and a productive reply (dated slots via the late route on the current gateway, or the honest referral) - the stall class dead; true-latest wording upgrades when lane-38 deploys."
+    },
+    {
+      "key": "smoke-convergence-intact",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "V=$(grep -oE 'GUARD_RESULT=MINTED version=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workD7MS/guarded-mint-d7/mint.txt | grep -oE '[0-9]+$'); [ -n \"$V\" ] || { echo 'no minted version'; exit 1; }; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_V=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"How about next Friday the 17th\", \"Friday the 14th\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_V\"], \"script.json\", \"converge-check\"]))\nPY\nrc=$?; tail -4 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 turns, got $t\"; tail -4 measure.txt; exit 1; }; last=$(grep -E '^TURN=3' measure.txt); echo \"$last\" | grep -qE 'NODE=(n_date_conflict|n_date_conflict_retry)' && { echo \"FAIL: convergence regressed: $last\"; exit 1; }; echo \"$last\" | grep -q '08/14/2026' || { echo \"FAIL: no 08/14 offer: $last\"; exit 1; }; grep -qiE 'one moment|let me check that' measure.txt && { echo 'FAIL: filler resurfaced'; exit 1; }; echo \"PASS: convergence intact on D7 - $last\" | head -c 300",
+      "verified": "The proven conflict-convergence sequence re-run on the D7 candidate: one clarify, answer consumed, 08/14 offered, zero filler - D7 did not regress D6."
+    }
+  ]
+}

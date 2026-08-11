@@ -1,0 +1,41 @@
+phase1: 33 scenarios against unattached pathway version 92
+[guard] subject upcoming appointments at start: 0
+[PASS] opening asks, does not offer
+[PASS] vague week request
+[PASS] named weekday
+[PASS] week plus time of day
+[PASS] rejects the openings, names no new day
+[PASS] insurance question
+[PASS] asks about an order
+[PASS] opts out
+[PASS] wrong person
+[PASS] declines outright
+[PASS] picks a slot but also asks for a different one
+[PASS] repeats the day already being offered
+[PASS] clock time with no day at all
+[PASS] two days offered at once
+[PASS] bare number with no unit or context
+[PASS] switches to Chinese mid negotiation
+[PASS] first substantive reply is entirely in Chinese
+[FAIL] texting shorthand for next tuesday
+       -> preference_to was 'friday next week', expected 'tuesday next week'
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I have Tuesday 08/11/2026 10:30 am or Tuesday 08/11/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+[PASS] changes mind twice in one negotiation
+[PASS] affirms something never asked
+[PASS] glasses question hides a premature booked check
+[PASS] fishes for internal field values
+[PASS] cost question mid offer must defer not disclose
+[PASS] paraphrased opt out without the word stop
+[PASS] demands opt out confirmation right after stopping
+[PASS] wrong number then fishes for the real patients identity
+[PASS] requests a time outside office hours
+[PASS] dead end search then assumes a booked time
+[PASS] skeptical question at an offer is not a decline
+[PASS] asks exact cost and coverage before any offer exists
+[PASS] unbooked re-entry still books
+[PASS] pre-booking detour keeps 212 and steer-back
+[PASS] new office number in every thread
+RESULT phase1: passed=32 failed=1 waived=0 total=33

@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workI",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "build-v91",
+      "engine": "codex",
+      "task_type": "code-feature",
+      "timeout_s": 2400,
+      "expect_files": ["transform_v91.py", "pathway-v91-draft.json", "v91-classification.json"],
+      "spec": "You are a build worker producing the rebased Bland pathway graph v91. OFFLINE: no network, no git, no MCP, no skills; write only inside your working directory.\n\nAUTHORITATIVE SPEC: /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/SPEC-v91.md (Revision 3, including the '## Revision 3 — panel amendments' section — read it in FULL and follow it literally; where this task summary and the spec disagree, the spec wins).\n\nINPUTS (read-only, same directory): pathway-v86.json (the BASE — proven graph), pathway-v90.json (source of the four deltas' current rendering), SPEC-v62.md, SPEC-v88.md, DIFF-INVENTORY.md, and the research reports under workG/ if you need contract details.\n\nTASK: write ./transform_v91.py, a deterministic script that loads pathway-v86.json as the base and applies EXACTLY the four deltas per SPEC-v91 section 2 (D1 v62 re-application including the n_help global scoping amendment; D2 SPEC-v88 reconcile branch; D3 the greeting; D4 the deterministic n_offer_3 rewrite), producing ./pathway-v91-draft.json (json.dump indent=1 sort_keys=True). The script is the sole producer; no hand edits. Then run SPEC-v91 section 3's completeness gate: enumerate every field-level difference v86 vs v90, bucket each per the six buckets, write ./v91-classification.json in the spec'd shape; OPEN items must be exactly the two pre-approved ones (OPEN-1 n_faq insurance sentence stays at its v86 default; OPEN-2 analysis_options stays null) — any third OPEN item means STOP and report it in your final message instead of guessing.\n\nVERIFY before finishing: PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_graph.py --base /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v86.json --draft pathway-v91-draft.json --v88-ref /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v90.json --classification v91-classification.json must print PASS and exit 0. Iterate until it does. If you believe an assertion in the validator is WRONG (contradicts SPEC-v91 rev 3), do not work around it silently: satisfy the spec, and list the disputed assertion in your final message.\n\nFinal message <=20 lines: validator PASS line, bucket counts from your classification, any disputed assertions, any third OPEN item.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_graph.py --base /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v86.json --draft pathway-v91-draft.json --v88-ref /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v90.json --classification v91-classification.json",
+      "verified": "pathway-v91-draft.json rebased on proven v86 with exactly the four spec'd deltas applied, every v86-v90 difference classified into the six buckets with only the two pre-approved OPEN items, passing all validator assertions including byte-identical untouched nodes and edges."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-publish-ready",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-reintegrate-polish",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "integrate-polished-explainer-and-rerender",
+      "engine": "local-shell",
+      "task_type": "site-build",
+      "timeout_s": 600,
+      "expect_files": ["integration_receipt.json"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/integrate_and_render_publish_candidate.py --report /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30 --stage /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-stage-report/stage-current-number-refresh-with-sol --explainer /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-explainer-polish/polish-explainer-after-visual-qa-with-sol --refresh /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-refresh-v3/freeze-current-public-number-receipts-v2 --backup /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/backups/pre-polished-explainer-20260730T042257Z --receipt integration_receipt.json --audit-run vintage-optical-publish-ready-20260730T030059Z-p1736537 --refresh-run vintage-optical-publish-ready-20260730T032514Z-p1954981 --stage-run vintage-optical-publish-ready-20260730T033746Z-p2039775 --explainer-run vintage-optical-publish-ready-20260730T041233Z-p3204116",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_integrated_publish_candidate.py --report /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30 --receipt integration_receipt.json",
+      "verified": "the visually corrected explainer is integrated and rerendered by Chrome, internal paths are absent, the Room to Win block is not orphaned, table headers repeat, the final source/receipt pages are balanced, and all canonical technical gates pass with external use blocked"
+    }
+  ]
+}

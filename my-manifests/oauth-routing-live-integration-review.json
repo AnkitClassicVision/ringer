@@ -1,0 +1,17 @@
+{
+  "run_name": "oauth-routing-live-integration-review",
+  "workdir": "/home/ankit114/.ringer/work/oauth-routing-live-integration-review",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "fresh-review",
+      "engine": "codex",
+      "engine_args": ["-c", "model_reasoning_effort=high"],
+      "spec": "Fresh-context report-only review. Do not modify /home/ankit114/repos/ringer or any configuration file. Review only the OAuth-first integration in /home/ankit114/repos/ringer: EngineConfig.auth_routing_trusted; built_in_codex_engine; load_engines; restricted_model_family; validate_auth_first_model_route; validate_manifest_engines; engines/claude-oauth.sh; engines/codex-oauth.sh; engines/opencode-auth-policy.sh; README auth-first section; config.sample.toml; tests/test_oauth_routing_local.py; and /home/ankit114/.config/ringer/config.toml. Do not open credential stores or print values from any auth/config secret. Read the approved plan at /home/ankit114/.worktrees/ringer-oauth-routing/docs/plans/2026-07-12-oauth-first-model-routing.md and the latest PASS review at /home/ankit114/.ringer/work/ringer-oauth-first-routing-review/fresh-oauth-routing-review/review.md. Acceptance: Anthropic/Haiku/Sonnet/Opus/Fable route only through Claude first-party OAuth; OpenAI/GPT/o-series/Codex only through Codex ChatGPT OAuth; GLM only through exact zai-coding-plan/glm-* and pinned official endpoint; custom model lanes require explicit capability and cannot take manifest route overrides; unrelated lanes stay functional; no secret values appear. You may run read-only targeted tests and dry-runs. Full-suite known unrelated exception: test_design_reference needs an absent external /private/tmp design fixture. Write only ./review.md in this task directory, beginning exactly VERDICT: PASS or VERDICT: FAIL, then Findings, Evidence, and Remaining risks. PASS only if no material finding remains.",
+      "check": "test -f review.md && grep -q '^VERDICT: PASS$' review.md",
+      "expect_files": ["review.md"],
+      "timeout_s": 900,
+      "verified": "A fresh OAuth-routed Codex reviewer found no material defect in the live integration."
+    }
+  ]
+}

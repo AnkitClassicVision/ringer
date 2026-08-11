@@ -1,0 +1,48 @@
+{
+  "data": {
+    "assistant_responses": [
+      "I have Thursday 10/24/2024 2:00 PM or Thursday 10/24/2024 4:00 PM at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time."
+    ],
+    "chat_history": [
+      {
+        "content": "hi",
+        "role": "user"
+      },
+      {
+        "content": "Hi RACHEL, this is MK2 Optical.\n\nWe noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.\n\nMany vision insurance benefits renew yearly, so don't let your benefits go unused!\n\nWhen would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.\n\n\u5982\u9700\u4e2d\u6587\u670d\u52a1\uff0c\u8bf7\u76f4\u63a5\u7528\u4e2d\u6587\u56de\u590d\u3002",
+        "role": "assistant"
+      },
+      {
+        "content": "thursday please",
+        "role": "user"
+      },
+      {
+        "content": "I have Thursday 10/24/2024 2:00 PM or Thursday 10/24/2024 4:00 PM at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.",
+        "role": "assistant"
+      }
+    ],
+    "chat_id": "04b4bb46-5fba-4895-9358-a6eb***0047",
+    "completed": false,
+    "current_node_id": "n_goal_response",
+    "current_node_name": "Goal response and offer",
+    "pathway_id": "94abad8b-fbe2-4e67-9c64-d9b586dd2653",
+    "pathway_version": 101,
+    "use_candidate_model": false,
+    "variables": {
+      "BlandStatusCode": 200,
+      "appt_count": 0,
+      "callID": "04b4bb46-5fba-4895-9358-a6eb***0047",
+      "campaign": "harness",
+      "channel": "voice",
+      "count": 1,
+      "exam_type_id": "***7395",
+      "ok": true,
+      "patient_first": "RACHEL",
+      "patient_id": "***2466",
+      "recall_cell": "***2428",
+      "recall_patient_id": "***2466",
+      "store": "711"
+    }
+  },
+  "errors": null
+}

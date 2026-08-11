@@ -1,0 +1,82 @@
+LINES=225 (window 00:40Z..02:10Z)
+GW 2026-08-04 02:01:02,343 INFO raw_fetch msgs=2
+GW 2026-08-04 02:01:02,344 INFO raw_resolve from=08/04/2026
+GW 2026-08-04 02:01:02,344 INFO date_source=raw
+GW 2026-08-04 02:01:07,891 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:01:08,122 INFO raw_fetch msgs=4
+GW 2026-08-04 02:01:09,062 INFO raw_resolve from=None
+GW 2026-08-04 02:01:09,062 INFO date_source=fallback
+GW 2026-08-04 02:02:14,091 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:02:14,357 INFO raw_fetch msgs=2
+GW 2026-08-04 02:02:14,358 INFO raw_resolve from=08/04/2026
+GW 2026-08-04 02:02:14,358 INFO date_source=raw
+GW 2026-08-04 02:02:29,306 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:02:29,570 INFO raw_fetch msgs=2
+GW 2026-08-04 02:02:29,571 INFO raw_resolve from=08/04/2026
+GW 2026-08-04 02:02:29,571 INFO date_source=raw
+GW 2026-08-04 02:02:44,215 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:02:44,454 INFO raw_fetch msgs=2
+GW 2026-08-04 02:02:45,299 INFO raw_resolve from=None
+GW 2026-08-04 02:02:45,299 INFO date_source=fallback
+GW 2026-08-04 02:02:47,594 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:02:47,810 INFO raw_fetch msgs=2
+GW 2026-08-04 02:02:48,612 INFO raw_resolve from=None
+GW 2026-08-04 02:02:48,612 INFO date_source=fallback
+GW 2026-08-04 02:03:01,666 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:03:01,927 INFO raw_fetch msgs=2
+GW 2026-08-04 02:03:01,928 INFO raw_resolve from=('either', '08/10/2026', '08/05/2026', 'Monday 08/10/2026', 'Wednesday 08/05/2026')
+GW 2026-08-04 02:03:01,928 INFO date_source=either
+GW 2026-08-04 02:03:25,532 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:03:25,785 INFO raw_fetch msgs=2
+GW 2026-08-04 02:03:25,786 INFO raw_resolve from=08/04/2026
+GW 2026-08-04 02:03:25,786 INFO date_source=raw
+GW 2026-08-04 02:03:31,105 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:03:31,330 INFO raw_fetch msgs=4
+GW 2026-08-04 02:03:32,043 INFO date_source=llm
+GW 2026-08-04 02:03:32,043 INFO raw_resolve from=None
+GW 2026-08-04 02:03:32,043 INFO date_source=fallback
+GW 2026-08-04 02:03:44,954 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:03:45,197 INFO raw_fetch msgs=2
+GW 2026-08-04 02:03:45,897 INFO raw_resolve from=None
+GW 2026-08-04 02:03:45,897 INFO date_source=fallback
+GW 2026-08-04 02:03:58,685 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:03:58,903 INFO raw_fetch msgs=2
+GW 2026-08-04 02:03:58,904 INFO raw_resolve from=08/11/2026
+GW 2026-08-04 02:03:58,904 INFO date_source=raw
+GW 2026-08-04 02:04:12,173 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:04:12,432 INFO raw_fetch msgs=2
+GW 2026-08-04 02:04:12,433 INFO raw_resolve from=08/04/2026
+GW 2026-08-04 02:04:12,433 INFO date_source=raw
+GW 2026-08-04 02:04:17,319 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:04:17,545 INFO raw_fetch msgs=4
+GW 2026-08-04 02:04:17,546 INFO raw_resolve from=08/05/2026
+GW 2026-08-04 02:04:17,546 INFO date_source=raw
+GW 2026-08-04 02:04:22,865 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:04:23,143 INFO raw_fetch msgs=7
+GW 2026-08-04 02:04:23,144 INFO raw_resolve from=08/04/2026
+GW 2026-08-04 02:04:23,144 INFO date_source=raw
+GW 2026-08-04 02:05:07,847 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:05:08,120 INFO raw_fetch msgs=2
+GW 2026-08-04 02:05:08,122 INFO raw_resolve from=08/10/2026
+GW 2026-08-04 02:05:08,122 INFO date_source=raw
+GW 2026-08-04 02:05:55,860 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:05:56,107 INFO raw_fetch msgs=2
+GW 2026-08-04 02:05:56,108 INFO raw_resolve from=('conflict', '08/04/2026', '08/11/2026', 'this coming Tuesday the 4th', 'next week Tuesday the 11th')
+GW 2026-08-04 02:05:56,108 INFO date_source=conflict
+GW 2026-08-04 02:06:07,766 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:06:08,016 INFO raw_fetch msgs=2
+GW 2026-08-04 02:06:08,027 INFO raw_resolve from=('conflict', '08/04/2026', '08/11/2026', 'this coming Tuesday the 4th', 'next week Tuesday the 11th')
+GW 2026-08-04 02:06:08,027 INFO date_source=conflict
+GW 2026-08-04 02:06:20,976 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:06:21,210 INFO raw_fetch msgs=2
+GW 2026-08-04 02:06:21,211 INFO raw_resolve from=08/04/2026
+GW 2026-08-04 02:06:21,211 INFO date_source=raw
+GW 2026-08-04 02:06:26,444 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:06:26,714 INFO raw_fetch msgs=4
+GW 2026-08-04 02:06:26,716 INFO raw_resolve from=08/04/2026
+GW 2026-08-04 02:06:26,716 INFO date_source=raw
+GW 2026-08-04 02:06:50,804 INFO raw_fetch_err attempt=0 type=HTTPError code=404
+GW 2026-08-04 02:06:51,051 INFO raw_fetch msgs=2
+GW 2026-08-04 02:06:51,051 INFO raw_resolve from=08/04/2026
+GW 2026-08-04 02:06:51,051 INFO date_source=raw
+DIAG_DONE

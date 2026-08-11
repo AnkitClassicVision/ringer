@@ -1,0 +1,8 @@
+RESOLVE(friday the 14th) relative=None extract=08/14/2026
+RESOLVE(the 14th) relative=None extract=08/14/2026
+RESOLVE(august 14) relative=08/14/2026 extract=08/14/2026
+RESOLVE(friday the 14th works) relative=None extract=08/14/2026
+RESOLVE(no next friday the 14) relative=None extract=None
+RESOLVE(friday august 14) relative=None extract=08/14/2026
+RESOLVE(the 14) relative=None extract=None
+PROBE_DONE

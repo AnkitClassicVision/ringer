@@ -1,0 +1,14 @@
+local graph /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workV93/build-v93/pathway-v93-draft.json: 49 nodes, 127 edges
+provider currently has 93 versions, latest = 93
+
+WRITE: creating one new unattached version
+created version 94
+
+READBACK
+  matches local exactly: 49 nodes, 127 edges, routing and extraction identical
+
+ATTACHMENT
+  numbers pointing at version 94: none, unattached as intended
+
+external_actions_taken=1 (one version create)
+VERSION=94

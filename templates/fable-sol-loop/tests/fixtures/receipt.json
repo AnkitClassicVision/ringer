@@ -1,0 +1,29 @@
+{
+  "outcome": "DONE",
+  "findings_closed": [
+    {
+      "id": "F-1",
+      "source": "review",
+      "evidence": "The owned output was restored and the contract verification reran cleanly."
+    }
+  ],
+  "verification_reruns": [
+    {
+      "command": "python3 -c \"from pathlib import Path; assert Path('owned/output.txt').read_text(encoding='utf-8') == 'ready'\"",
+      "result": {
+        "passed": true,
+        "exit_code": 0,
+        "summary": "The closure round read the owned output and confirmed the ready marker."
+      }
+    }
+  ],
+  "review_ran": true,
+  "skip_reasons": [],
+  "open_items": [],
+  "boundary_attestation": {
+    "forbidden_actions_taken": [],
+    "external_actions_taken": [],
+    "sol_accepted_own_work": false,
+    "statement": "Sol closed only the cited Fable finding and left acceptance to the validators and reviewer."
+  }
+}

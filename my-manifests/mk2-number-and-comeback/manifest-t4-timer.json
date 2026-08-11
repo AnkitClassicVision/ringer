@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4timer",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "t4-timer2-builder",
+      "engine": "codex",
+      "task_type": "code-feature",
+      "timeout_s": 1800,
+      "expect_files": ["turn_timer2.py"],
+      "spec": "You are a build worker extending a proven timing driver. OFFLINE: no network, no git, no MCP, no skills; write only in your working directory.\n\nBASE (read and preserve its whole contract): /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT46prep/turn-timer-builder/turn_timer.py - a scripted-conversation driver for Bland pathway chat (usage <pathway_version> <script.json> <label>; validation order args -> script load -> booking-turn refusal exit 2 before any env/network -> BLAND_API_KEY; per-turn 'TURN=<i> WALL_MS=<int> N_MSGS=<n> NODE=<id> SAID=<masked>' lines; final 'RESULT label=... turns=... total_wall_ms=... filler_hits=...'; 180s timeouts; TURN_FAIL on error).\n\nWRITE ./turn_timer2.py: the same driver with THREE additions. (1) CANDIDATE FLAG: if env USE_CANDIDATE is '1', include \"use_candidate_model\": true in the POST /v1/pathway/chat/create body (documented boolean: 'Whether to use the candidate model for this pathway chat'); always print a line CANDIDATE=<0|1> before turn 1, and append ' candidate=<0|1>' to the RESULT line. (2) SUBJECT CONTEXT: build request_data from env exactly like the production harness does - {\"recall_patient_id\": env HARNESS_PATIENT_ID, \"recall_cell\": env HARNESS_PATIENT_CELL, \"store\": env HARNESS_STORE default '711', \"campaign\": \"harness\"} - so routing sees the same patient context real conversations get; if HARNESS_PATIENT_ID is missing, exit 1 saying so (after the booking-refusal check, with the other env checks). (3) CREATE ECHO: after chat create, print CREATE_KEYS=<sorted top-level keys of the create response data object> so an unexpected rejection or echo of the candidate flag is visible on the record.\n\nVERIFY before finishing: PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile turn_timer2.py passes; no-args exits nonzero with usage; a script containing a 'yes' turn still exits 2 without any env set. Final message <=15 lines.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile turn_timer2.py || exit 1; if python3 turn_timer2.py >/dev/null 2>&1; then echo 'CHECK FAILED: no-args must exit nonzero'; exit 1; fi; printf '{\"turns\":[\"hi\",\"yes\"]}' > refuse_test.json; python3 turn_timer2.py 92 refuse_test.json probe >/dev/null 2>&1; rc=$?; [ \"$rc\" -eq 2 ] || { echo \"CHECK FAILED: booking-turn refusal must exit 2 before env checks, got $rc\"; exit 1; }; grep -q 'use_candidate_model' turn_timer2.py || { echo 'CHECK FAILED: candidate flag not implemented'; exit 1; }; grep -q 'recall_patient_id' turn_timer2.py || { echo 'CHECK FAILED: subject request_data not implemented'; exit 1; }; echo 'PASS: compiles; guards hold; candidate flag and subject context present'",
+      "verified": "The timing driver now carries real patient context and the documented use_candidate_model switch, with the create response echoed - the instrument for the current-vs-candidate bakeoff."
+    }
+  ]
+}

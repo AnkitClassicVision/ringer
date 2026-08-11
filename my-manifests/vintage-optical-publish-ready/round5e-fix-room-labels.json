@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-publish-ready",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-room-label-fix",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "reconcile-final-room-labels",
+      "engine": "local-shell",
+      "task_type": "docs",
+      "timeout_s": 120,
+      "expect_files": ["fix_receipt.txt"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/fix_stale_room_labels.py --report /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30 --backup /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/backups/pre-room-label-fix; printf '%s\n' 'PASS: stale room labels reconciled' > fix_receipt.txt",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_room_label_fix.py --report /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30",
+      "verified": "all final data and historical notes distinguish the initial pre-inventory state from the current inventory_review_required state; no stale current-room or client/prospect readiness label remains"
+    }
+  ]
+}

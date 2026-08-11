@@ -1,0 +1,37 @@
+{
+  "run_name": "vintage-optical-publish-ready",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-final-reviews-verified",
+  "max_parallel": 3,
+  "tasks": [
+    {
+      "key": "verify-final-numeric-review-artifact",
+      "engine": "local-shell",
+      "task_type": "review",
+      "timeout_s": 60,
+      "expect_files": ["review.json", "review.md"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/copy_review_artifacts.py --source-dir /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-final-reviews-v3/fresh-numeric-lineage-release-review",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_final_review.py --dir . --checks all_visible_numbers_accounted,scores_recomputed,source_registry_resolves,refresh_values_current,cross_document_values_match,fix_card_math_safe",
+      "verified": "the already-complete fresh numeric review passes the corrected semantic JSON gate without model rewriting"
+    },
+    {
+      "key": "verify-final-logic-review-artifact",
+      "engine": "local-shell",
+      "task_type": "review",
+      "timeout_s": 60,
+      "expect_files": ["review.json", "review.md"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/copy_review_artifacts.py --source-dir /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-final-reviews-v3/fresh-logic-owner-read-release-review",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_final_review.py --dir . --checks plain_language_explanations,logic_reconciled,unknowns_neutral,no_overclaim,score_direction,limitations_visible,owner_actionability,source_dictionary_complete",
+      "verified": "the fresh logic and owner-read review remains issue-free under the corrected shared gate"
+    },
+    {
+      "key": "verify-final-render-review-artifact",
+      "engine": "local-shell",
+      "task_type": "review",
+      "timeout_s": 60,
+      "expect_files": ["review.json", "review.md"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/copy_review_artifacts.py --source-dir /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-final-reviews-v3/fresh-render-boundary-release-review",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_final_review.py --dir . --checks onepager_one_letter,explainer_letter_pages,links_valid,visual_qa,no_internal_paths,no_clipping,room_boundary,hashes_match,external_actions_none",
+      "verified": "the fresh render and boundary review remains issue-free under the corrected shared gate"
+    }
+  ]
+}

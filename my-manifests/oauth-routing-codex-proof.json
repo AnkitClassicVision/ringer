@@ -1,0 +1,17 @@
+{
+  "run_name": "oauth-routing-codex-proof",
+  "workdir": "/home/ankit114/.ringer/work/oauth-routing-codex-proof",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "codex-oauth",
+      "engine": "codex",
+      "engine_args": ["-c", "model_reasoning_effort=low"],
+      "spec": "Create ./proof.txt containing exactly OPENAI_OAUTH_OK followed by a newline. Do not inspect credentials, network settings, or unrelated files. Then stop.",
+      "check": "test \"$(cat proof.txt)\" = OPENAI_OAUTH_OK",
+      "expect_files": ["proof.txt"],
+      "timeout_s": 300,
+      "verified": "Codex executed through the ChatGPT OAuth wrapper and wrote the expected bounded sentinel."
+    }
+  ]
+}

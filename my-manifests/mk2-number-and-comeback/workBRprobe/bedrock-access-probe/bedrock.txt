@@ -1,0 +1,29 @@
+PROFILES_ANTHROPIC=25
+  PROFILE global.anthropic.claude-fable-5
+  PROFILE global.anthropic.claude-haiku-4-5-20251001-v1:0
+  PROFILE global.anthropic.claude-opus-4-5-20251101-v1:0
+  PROFILE global.anthropic.claude-opus-4-6-v1
+  PROFILE global.anthropic.claude-opus-4-7
+  PROFILE global.anthropic.claude-opus-4-8
+  PROFILE global.anthropic.claude-opus-5
+  PROFILE global.anthropic.claude-sonnet-4-20250514-v1:0
+  PROFILE global.anthropic.claude-sonnet-4-5-20250929-v1:0
+  PROFILE global.anthropic.claude-sonnet-4-6
+  PROFILE global.anthropic.claude-sonnet-5
+  PROFILE us.anthropic.claude-3-haiku-20240307-v1:0
+  PROFILE us.anthropic.claude-3-sonnet-20240229-v1:0
+  PROFILE us.anthropic.claude-fable-5
+  PROFILE us.anthropic.claude-haiku-4-5-20251001-v1:0
+  PROFILE us.anthropic.claude-opus-4-1-20250805-v1:0
+  PROFILE us.anthropic.claude-opus-4-5-20251101-v1:0
+  PROFILE us.anthropic.claude-opus-4-6-v1
+  PROFILE us.anthropic.claude-opus-4-7
+  PROFILE us.anthropic.claude-opus-4-8
+  PROFILE us.anthropic.claude-opus-5
+  PROFILE us.anthropic.claude-sonnet-4-20250514-v1:0
+  PROFILE us.anthropic.claude-sonnet-4-5-20250929-v1:0
+  PROFILE us.anthropic.claude-sonnet-4-6
+  PROFILE us.anthropic.claude-sonnet-5
+CONVERSE us.anthropic.claude-haiku-4-5-20251001-v1:0 -> ERROR AccessDeniedException: An error occurred (AccessDeniedException) when calling the Converse operation: User: arn:aws:iam::533267039664:user/mybcat-account-readonly is not authorized to perform: bedrock:InvokeModel on resource: arn:aws:bedrock:us-east-1:533267039664:inferenc
+CONVERSE us.anthropic.claude-sonnet-4-5-20250929-v1:0 -> ERROR AccessDeniedException: An error occurred (AccessDeniedException) when calling the Converse operation: User: arn:aws:iam::533267039664:user/mybcat-account-readonly is not authorized to perform: bedrock:InvokeModel on resource: arn:aws:bedrock:us-east-1:533267039664:inferenc
+PROBE_DONE

@@ -1,0 +1,16 @@
+BUILD_OK live_len=2211 trimmed_len=2195
+PASS: 545 assertions
+local graph draft-v124.json: 42 nodes, 122 edges
+provider currently has 123 versions, latest = 123
+
+WRITE: creating one new unattached version
+created version 124
+
+READBACK
+  matches local exactly: 42 nodes, 122 edges, routing and extraction identical
+
+ATTACHMENT
+  numbers pointing at version 124: none, unattached as intended
+
+external_actions_taken=1 (one version create)
+VERSION=124

@@ -1,0 +1,2 @@
+CASE=default-window FROM=2026-08-04 TO=2026-08-17
+CASE=oob-flag OUT_OF_HOURS=true REQUESTED=03:00 am

@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workI2",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "verify-v91",
+      "engine": "local-shell",
+      "task_type": "code-review",
+      "timeout_s": 600,
+      "expect_files": ["pathway-v91-draft.json", "v91-classification.json"],
+      "spec": "cp /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workI/build-v91/pathway-v91-draft.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workI/build-v91/v91-classification.json . && PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_graph.py --base /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v86.json --draft pathway-v91-draft.json --v88-ref /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v90.json --classification v91-classification.json",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_graph.py --base /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v86.json --draft pathway-v91-draft.json --v88-ref /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v90.json --classification v91-classification.json",
+      "verified": "The Round-2 v91 draft passes all 34 assertions of the rev-3-calibrated validator (the earlier FAIL receipt was four checker defects, each fixed and documented; the graph itself was correct). Green receipt recorded against the corrected gate."
+    }
+  ]
+}

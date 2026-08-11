@@ -1,0 +1,17 @@
+{
+  "run_name": "mott-date-architecture",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "date-design",
+      "engine": "codex",
+      "task_type": "research",
+      "timeout_s": 2100,
+      "expect_files": ["DESIGN.md"],
+      "verified": "The design commits to a specific two-layer split, explicitly forbids the model computing a weekday (the root cause), resolves the ordinal-suffix gateway rejection, and walks the Kenneth 'tomorrow july 28th' case to the correct 07/28.",
+      "check": "python3 /mnt/d_drive/repos/mott/gw-temporal-check/check_date_design.py --report DESIGN.md",
+      "spec": "You are designing the date-handling architecture for an SMS booking agent, from measured constraints. BOUNDARY: read only inside your task directory; design only, write NO code, change nothing. You own exactly one output file: ./DESIGN.md.\n\nREAD ./source/CONSTRAINTS.md COMPLETELY FIRST. It has the failure, the three hard constraints (measured), and what is wanted. ./source/bland_gateway.py contains the gateway resolver resolve_relative_date (read its accepted grammar). ./source/build_v62.py contains the current model extraction guidance for preference_from / preference_to / day_part.\n\nTHE PROBLEM. A real patient said 'Tomorrow july 28th' and the small extraction model wrote 'thursday' (wrong: 07/28 is a Tuesday), so the gateway searched 07/30. The model cannot be trusted to compute a weekday. But (1) Bland exposes NO raw-message variable, so something must pass through a model-extracted variable, and (2) the gateway resolver rejects raw/compound/ordinal phrasing (409 on 'tomorrow july 28th', 'july 28th', '28th') and only accepts clean single phrases. Design the split so real patient phrasing reliably resolves to the correct date.\n\nDELIVER a design, not code. Decide and specify:\n1. MODEL LAYER: the minimal, safe extraction rule that CANNOT invent a weekday. What exactly does the model put in preference_from / preference_to for: an explicit month+day ('july 28th'), a relative word ('tomorrow', 'next week'), a bare weekday the patient actually said ('tuesday'), and a compound ('tomorrow july 28th')? The rule must forbid deriving a weekday from a date or from 'tomorrow'. Prefer copying the patient's explicit token verbatim.\n2. GATEWAY LAYER: what resolve_relative_date must additionally accept so the model can pass patient-literal tokens through -- at minimum strip ordinal suffixes so 'july 28th' and '28th' resolve, and say how. Do NOT undo the deployed Monday-anchored week fix.\n3. CONFLICT RULE: when the patient gives two date cues (relative + explicit) that AGREE (tomorrow + july 28th on a Monday), and when they DISAGREE, which wins and why.\n4. KENNETH WALKTHROUGH: trace 'Tomorrow july 28th' through your design end to end and show it lands on 07/28.\n5. MIGRATION: order the changes (gateway first or model first) so the system is never left worse; note that gateway and model deploy independently.\n\nOUTPUT CONTRACT for ./DESIGN.md. Start with '# Date Handling Architecture'. Include '## Summary' (max 3 bullets), '## Model Layer', '## Gateway Layer', '## Conflict Rule', '## Kenneth Walkthrough', '## Migration', '## What This Still Cannot Do'. Cite real function names and variables. Under 1100 words."
+    }
+  ]
+}

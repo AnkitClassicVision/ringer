@@ -1,0 +1,5 @@
+CASE=away-sentence DATE=2026-08-18
+CASE=until-18th DATE=2026-08-18
+CASE=gone-10-days DATE=2026-08-14
+CASE=plain-today DATE=2026-08-04
+CASE=thursday DATE=2026-08-06

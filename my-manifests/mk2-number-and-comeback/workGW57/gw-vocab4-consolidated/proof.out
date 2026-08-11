@@ -1,0 +1,31 @@
+2026-08-05 15:47:35,315 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,320 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,320 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,320 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,321 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,321 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,322 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,323 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,323 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,323 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,324 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,324 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,324 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,325 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,325 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 15:47:35,325 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+CASE=week-after-next FROM=2026-08-17
+CASE=following-week FROM=2026-08-31 (context=08/26/2026 10:30 am)
+CASE=same-day-next-week FROM=2026-09-02 (context=08/26/2026 10:30 am)
+CASE=end-of-month FROM=2026-08-25
+CASE=beginning-next-month FROM=2026-09-01
+CASE=after-lunch AFTER=13:00
+CASE=lunchtime WINDOW=11:00-14:00
+CASE=after-work AFTER=16:00
+CASE=first-thing BEFORE=12:00
+CASE=between-2-and-4 AFTER=14:00 BEFORE=16:00
+CASE=no-earlier-than-3 AFTER=15:00
+CASE=before-noon BEFORE=12:00
+CASE=half-past-four ANCHOR=16:30
+CASE=quarter-to-five ANCHOR=16:45
+CASE=explicit-kept AFTER=15:00 (verbatim='between 2 and 4', after='03:00 pm' - extraction wins, no override)

@@ -1,0 +1,52 @@
+DT=slash-date cat=absolute first=08/27/2026 10:30 am n=25 unres=None oob=None closed=False err=
+DT=month-name cat=absolute first=08/27/2026 10:30 am n=25 unres=None oob=None closed=False err=
+DT=ordinal-th cat=absolute first=08/27/2026 10:30 am n=25 unres=None oob=None closed=False err=
+DT=spelled-ordinal cat=absolute first=08/27/2026 10:30 am n=25 unres=None oob=None closed=False err=
+DT=ordinal-dropped-ex cat=absolute first=08/27/2026 10:30 am n=25 unres=None oob=None closed=False err=
+DT=bare-weekday cat=weekday first=08/07/2026 11:00 am n=7 unres=None oob=None closed=False err=
+DT=this-weekday cat=weekday first=08/07/2026 11:00 am n=7 unres=None oob=None closed=False err=
+DT=next-weekday cat=weekday first=08/07/2026 11:00 am n=7 unres=None oob=None closed=False err=
+DT=abbrev-weekday cat=weekday first=08/07/2026 11:00 am n=7 unres=None oob=None closed=False err=
+DT=tomorrow cat=relative first=08/06/2026 10:30 am n=24 unres=None oob=None closed=False err=
+DT=day-after-tomorrow cat=relative first=08/07/2026 11:00 am n=7 unres=None oob=None closed=False err=
+DT=in-3-days cat=relative first= n=0 unres=None oob=None closed=True err=
+DT=in-2-weeks cat=relative first=08/19/2026 10:30 am n=28 unres=None oob=None closed=False err=
+DT=next-week cat=relative first=08/10/2026 11:15 am n=23 unres=None oob=None closed=False err=
+DT=week-after-next cat=relative first=08/17/2026 01:00 pm n=128 unres=None oob=None closed=False err=
+DT=fortnight-bare cat=relative first=08/19/2026 10:30 am n=28 unres=None oob=None closed=False err=
+DT=in-a-month cat=relative first= n=0 unres=None oob=None closed=True err=
+DT=end-of-month cat=relative first=08/25/2026 10:30 am n=133 unres=None oob=None closed=False err=
+DT=beginning-next-month cat=relative first=09/01/2026 10:30 am n=135 unres=None oob=None closed=False err=
+DT=mid-month cat=relative first=09/10/2026 10:30 am n=190 unres=None oob=None closed=False err=
+DT=after-holiday cat=relative first=08/05/2026 11:00 am n=225 unres=True oob=None closed=False err=
+DT=that-week cat=anaphora first=08/24/2026 11:00 am n=26 unres=None oob=None closed=False err=
+DT=that-weekday cat=anaphora first=08/27/2026 10:30 am n=25 unres=None oob=None closed=False err=
+DT=following-week cat=anaphora first=08/31/2026 11:00 am n=135 unres=None oob=None closed=False err=
+DT=same-day-next-week cat=anaphora first=09/02/2026 10:30 am n=28 unres=None oob=None closed=False err=
+DT=clock-pm cat=clock first=08/07/2026 01:45 pm n=7 unres=None oob=None closed=False err=
+DT=clock-colon cat=clock first=08/07/2026 01:45 pm n=7 unres=None oob=None closed=False err=
+DT=bare-digits-1115 cat=clock first=08/07/2026 11:15 am n=7 unres=None oob=None closed=False err=
+DT=bare-hour-3 cat=clock first=08/07/2026 01:45 pm n=7 unres=None oob=None closed=False err=
+DT=invented-am cat=clock first=08/07/2026 01:45 pm n=7 unres=None oob=None closed=False err=
+DT=military-1500 cat=clock first=08/07/2026 01:45 pm n=7 unres=None oob=False closed=False err=
+DT=noon cat=clock first=08/07/2026 11:45 am n=7 unres=None oob=None closed=False err=
+DT=spelled-three cat=clock first=08/07/2026 01:45 pm n=7 unres=None oob=None closed=False err=
+DT=half-past-four cat=clock first=08/07/2026 11:00 am n=7 unres=None oob=None closed=False err=
+DT=quarter-to-five cat=clock first=08/07/2026 11:00 am n=7 unres=None oob=None closed=False err=
+DT=afternoon-dropped cat=daypart first=08/07/2026 12:15 pm n=3 unres=None oob=None closed=False err=
+DT=morning cat=daypart first=08/07/2026 11:00 am n=4 unres=None oob=None closed=False err=
+DT=evening cat=daypart first=08/06/2026 04:00 pm n=6 unres=None oob=None closed=False err=
+DT=tonight cat=daypart first=08/05/2026 04:00 pm n=6 unres=None oob=None closed=False err=
+DT=after-lunch cat=daypart first=08/07/2026 01:30 pm n=2 unres=None oob=None closed=False err=
+DT=first-thing cat=daypart first=08/07/2026 11:00 am n=4 unres=None oob=None closed=False err=
+DT=after-work cat=daypart first= n=0 unres=None oob=None closed=False err=
+DT=lunchtime cat=daypart first=08/07/2026 11:00 am n=7 unres=None oob=None closed=False err=
+DT=after-3 cat=window first= n=0 unres=None oob=False closed=False err=
+DT=before-noon cat=window first=08/07/2026 11:00 am n=4 unres=None oob=None closed=False err=
+DT=between-2-and-4 cat=window first= n=0 unres=None oob=None closed=False err=
+DT=no-earlier-than-3 cat=window first= n=0 unres=None oob=None closed=False err=
+DT=earliest cat=edge first=08/07/2026 11:00 am n=7 unres=None oob=None closed=False err=
+DT=latest cat=edge first=08/07/2026 01:45 pm n=7 unres=None oob=None closed=False err=
+DT=not-friday cat=negation first=08/05/2026 11:00 am n=225 unres=True oob=None closed=False err=
+DT=anything-but-monday cat=negation first=08/05/2026 11:00 am n=225 unres=True oob=None closed=False err=
+DT_DONE total=51 http_ok=51

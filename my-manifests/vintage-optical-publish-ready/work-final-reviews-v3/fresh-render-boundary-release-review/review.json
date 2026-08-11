@@ -1,0 +1,100 @@
+{
+  "verdict": "PASS",
+  "readiness": "READY_FOR_PROJECT_ROOM_REVIEW",
+  "external_use_authorized": false,
+  "project_room_status": "inventory_review_required",
+  "fatal_issues": [],
+  "material_issues": [],
+  "minor_issues": [],
+  "checks": {
+    "onepager_one_letter": "PASS",
+    "explainer_letter_pages": "PASS",
+    "links_valid": "PASS",
+    "visual_qa": "PASS",
+    "no_internal_paths": "PASS",
+    "no_clipping": "PASS",
+    "room_boundary": "PASS",
+    "hashes_match": "PASS",
+    "external_actions_none": "PASS"
+  },
+  "evidence": {
+    "onepager_pdf": {
+      "pages": 1,
+      "page_size_points": [
+        612.0,
+        792.0
+      ],
+      "text_spans": 185,
+      "out_of_bounds_text_spans": 0,
+      "html_anchor_count": 81,
+      "pdf_uri_annotation_count": 81,
+      "unique_html_uris": 22,
+      "unique_pdf_uris": 22,
+      "missing_or_extra_link_occurrences": 0
+    },
+    "explainer_pdf": {
+      "pages": 11,
+      "all_pages_letter_612x792": true,
+      "text_spans": 1468,
+      "out_of_bounds_text_spans": 0,
+      "empty_pages": 0,
+      "extracted_characters_by_page": [
+        541,
+        3628,
+        4052,
+        4119,
+        3445,
+        3259,
+        3698,
+        3277,
+        3848,
+        4099,
+        3421
+      ],
+      "html_anchor_count": 206,
+      "pdf_uri_annotation_count": 206,
+      "unique_html_uris": 25,
+      "unique_pdf_uris": 25,
+      "missing_or_extra_link_occurrences": 0,
+      "room_to_win_section_page": 4,
+      "semantic_tables": 13,
+      "semantic_tables_with_thead": 13,
+      "final_page_extracted_characters": 3421,
+      "final_page_extracted_words": 491
+    },
+    "receipts": {
+      "package_relative_paths_checked": 5,
+      "package_relative_paths_resolved": 5,
+      "visible_absolute_home_or_mnt_paths_in_explainer": 0
+    },
+    "visuals": {
+      "onepager_pdf_pages_matching_shipped_page_images_exactly": 1,
+      "onepager_pdf_pages_expected": 1,
+      "explainer_pdf_pages_matching_shipped_page_images_exactly": 11,
+      "explainer_pdf_pages_expected": 11,
+      "maximum_page_image_mean_absolute_error": 0.0,
+      "contact_sheet_size_pixels": [
+        1080,
+        4200
+      ],
+      "contact_sheet_reconstruction_difference_bbox": null,
+      "contact_sheet_mean_absolute_error": 0.0,
+      "recorded_visual_qa": "PASS"
+    },
+    "hashes": {
+      "onepager_pdf_sha256": "b6e18c05cf73987772436ba80c4a9eeb0a3643058f3ddf8b20d41ad6ec789b05",
+      "explainer_pdf_sha256": "30bdb7f0aa6196f1081fe5e1b47f89a865c69b97fdb56114151070f98cbe431e",
+      "runlog_pdf_hash_occurrences": 6,
+      "runlog_hashes_match_current_pdfs": true
+    },
+    "boundary": {
+      "room_status": "inventory_review_required",
+      "room_last_reviewed_at": null,
+      "room_stale_reasons": [],
+      "room_sources": 4,
+      "room_sources_pending_human_review": 4,
+      "external_actions": "none",
+      "external_use_authorized": false
+    }
+  }
+}

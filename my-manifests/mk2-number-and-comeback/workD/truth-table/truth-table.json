@@ -1,0 +1,121 @@
+{
+  "nodes": {
+    "n_book_1": {
+      "response_pathways": [
+        {"variable": "book_error", "operator": "==", "value": "slot_conflict", "destination": "n_recheck"},
+        {"variable": "book_success", "operator": "==", "value": "true", "destination": "n_confirm"},
+        {"variable": "book_success", "operator": "!=", "value": "true", "destination": "e_booking_failed"}
+      ],
+      "edges": [
+        {"target": "n_recheck", "label": "book_error == slot_conflict"},
+        {"target": "n_confirm", "label": "book_success == true"},
+        {"target": "e_booking_failed", "label": "book_success != true"}
+      ]
+    },
+    "n_book_2": {
+      "response_pathways": [
+        {"variable": "book_error", "operator": "==", "value": "slot_conflict", "destination": "n_recheck"},
+        {"variable": "book_success", "operator": "==", "value": "true", "destination": "n_confirm"},
+        {"variable": "book_success", "operator": "!=", "value": "true", "destination": "e_booking_failed"}
+      ],
+      "edges": [
+        {"target": "n_recheck", "label": "book_error == slot_conflict"},
+        {"target": "n_confirm", "label": "book_success == true"},
+        {"target": "e_booking_failed", "label": "book_success != true"}
+      ]
+    },
+    "n_verify_1": {
+      "response_pathways": [
+        {"variable": "ok", "operator": "!=", "value": "true", "destination": "e_safe_failure"},
+        {"variable": "slot_conflict", "operator": "==", "value": "true", "destination": "n_miss_unbookable"},
+        {"variable": "conflict_reason", "operator": "!=", "value": "", "destination": "n_miss_unbookable"},
+        {"variable": "slot_conflict", "operator": "==", "value": "false", "destination": "n_book_1"},
+        {"variable": "slot_conflict", "operator": "==", "value": "", "destination": "n_book_1"}
+      ],
+      "edges": [
+        {"target": "e_safe_failure", "label": "ok != true"},
+        {"target": "n_miss_unbookable", "label": "slot_conflict == true"},
+        {"target": "n_miss_unbookable", "label": "conflict_reason != "},
+        {"target": "n_book_1", "label": "slot_conflict == false"},
+        {"target": "n_book_1", "label": "slot_conflict == "}
+      ]
+    },
+    "n_verify_2": {
+      "response_pathways": [
+        {"variable": "ok", "operator": "!=", "value": "true", "destination": "e_safe_failure"},
+        {"variable": "slot_conflict", "operator": "==", "value": "true", "destination": "n_miss_unbookable"},
+        {"variable": "conflict_reason", "operator": "!=", "value": "", "destination": "n_miss_unbookable"},
+        {"variable": "slot_conflict", "operator": "==", "value": "false", "destination": "n_book_2"},
+        {"variable": "slot_conflict", "operator": "==", "value": "", "destination": "n_book_2"}
+      ],
+      "edges": [
+        {"target": "e_safe_failure", "label": "ok != true"},
+        {"target": "n_miss_unbookable", "label": "slot_conflict == true"},
+        {"target": "n_miss_unbookable", "label": "conflict_reason != "},
+        {"target": "n_book_2", "label": "slot_conflict == false"},
+        {"target": "n_book_2", "label": "slot_conflict == "}
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "scenario_id": "success_true",
+      "response_class": "HTTP 200 with success true and a new appointment ID",
+      "variables_after_extraction": {"book_success": "true", "book_http_status": "ABSENT", "book_error": "ABSENT", "new_appt_id": "PRESENT", "error_status": "ABSENT"},
+      "destination": "n_confirm",
+      "destination_reasoning": "Fact from both booking nodes: the first slot-conflict condition cannot match because book_error is absent, while the second ordered condition book_success == true matches the extracted string and routes to n_confirm."
+    },
+    {
+      "scenario_id": "success_false_no_error_code",
+      "response_class": "Response with success false and no recognized error code",
+      "variables_after_extraction": {"book_success": "false", "book_http_status": "ABSENT", "book_error": "ABSENT", "new_appt_id": "ABSENT", "error_status": "ABSENT"},
+      "destination": "e_booking_failed",
+      "destination_reasoning": "Fact from the ordered conditions: absent book_error does not equal slot_conflict, book_success false does not equal true, and book_success false does satisfy book_success != true, so the third route reaches e_booking_failed."
+    },
+    {
+      "scenario_id": "slot_conflict",
+      "response_class": "Signer response with error slot_conflict",
+      "variables_after_extraction": {"book_success": "ABSENT", "book_http_status": "ABSENT", "book_error": "slot_conflict", "new_appt_id": "ABSENT", "error_status": "ABSENT"},
+      "destination": "n_recheck",
+      "destination_reasoning": "Fact from both booking nodes: the first responsePathways entry tests book_error == slot_conflict. It matches before either book_success comparison is evaluated, so Bland routes the response to n_recheck."
+    },
+    {
+      "scenario_id": "http_502_gateway_unreachable",
+      "response_class": "HTTP 502 with gateway_unreachable and no success key",
+      "variables_after_extraction": {"book_success": "ABSENT", "book_http_status": "ABSENT", "book_error": "gateway_unreachable", "new_appt_id": "ABSENT", "error_status": "502"},
+      "destination": "e_booking_failed",
+      "destination_reasoning": "Fact: $.success is missing, so book_success has no extracted response value. The export does not reveal whether Bland internally stores that as empty or undefined. Inference grounded by the incident: Bland treated it as not equal to true, because this exact 502 ended at e_booking_failed; no condition inspects book_error gateway_unreachable, error_status, or HTTP status."
+    },
+    {
+      "scenario_id": "http_423_write_unverified",
+      "response_class": "HTTP 423 with error write_unverified",
+      "variables_after_extraction": {"book_success": "ABSENT", "book_http_status": "ABSENT", "book_error": "write_unverified", "new_appt_id": "ABSENT", "error_status": "ABSENT"},
+      "destination": "e_booking_failed",
+      "destination_reasoning": "Inference using the observed missing-success behavior: write_unverified does not match the only error-specific condition, and absent book_success is treated as not equal to true. Therefore the third ordered route reaches e_booking_failed, not e_safe_failure."
+    },
+    {
+      "scenario_id": "http_403_authorization_denied",
+      "response_class": "HTTP 403 with error authorization_denied",
+      "variables_after_extraction": {"book_success": "ABSENT", "book_http_status": "ABSENT", "book_error": "authorization_denied", "new_appt_id": "ABSENT", "error_status": "ABSENT"},
+      "destination": "e_booking_failed",
+      "destination_reasoning": "Inference using the incident-confirmed missing-success behavior: authorization_denied is not slot_conflict, explicit success cannot match, and absent book_success is treated as != true. The write node therefore reaches e_booking_failed."
+    },
+    {
+      "scenario_id": "timeout_or_empty_response",
+      "response_class": "Network timeout or empty response with no extracted variables",
+      "variables_after_extraction": {"book_success": "ABSENT", "book_http_status": "ABSENT", "book_error": "ABSENT", "new_appt_id": "ABSENT", "error_status": "ABSENT"},
+      "destination": "e_booking_failed",
+      "destination_reasoning": "Inference, not fully specified by the export: all JSONPath extractions are absent, and the incident shows that missing book_success on a failed webhook is operationally accepted by book_success != true. On that evidence the third route reaches e_booking_failed; exact empty-versus-undefined representation remains unknown."
+    }
+  ],
+  "e_safe_failure_inbound": ["n_identity", "n_verify_1", "n_verify_2"],
+  "e_safe_failure_reachable_from_booking_write": {
+    "direct_route_from_book_nodes": false,
+    "transitive_route_exists": true,
+    "explanation": "No outgoing edge from n_book_1 or n_book_2 targets e_safe_failure. Pure graph reachability is nevertheless true: a slot_conflict response routes to n_recheck, then later conversation and search paths can reach n_verify_1 or n_verify_2, whose failed conflict check can reach e_safe_failure. This does not classify the original /sign response as gateway_failed; it requires a new offer and a later verification response."
+  },
+  "verdict_502_distinguishable": {
+    "verdict": "no",
+    "explanation": "The /sign routing conditions inspect book_error only for the single literal slot_conflict and otherwise inspect only whether book_success equals true. They never test book_error == gateway_unreachable, error_status == 502, book_http_status, or the HTTP status recorded by Bland. Thus a 502 body without success is routed by the same book_success != true catch-all as success false, write_unverified, authorization_denied, and an empty response. The incident proves that this missing-success 502 actually reached e_booking_failed, so the graph cannot distinguish UNKNOWN write outcome from genuine reported failure."
+  }
+}

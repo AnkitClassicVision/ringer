@@ -1,0 +1,6 @@
+CASE=fortnight-no-article DATE=2026-08-19
+CASE=fortnight-article DATE=2026-08-19
+CASE=spelled-twentyseventh DATE=2026-08-27
+CASE=spelled-third DATE=2026-09-03
+CASE=tail-end-next-month WINDOW=true
+CASE=fortnightly-not-matched UNRESOLVED=true

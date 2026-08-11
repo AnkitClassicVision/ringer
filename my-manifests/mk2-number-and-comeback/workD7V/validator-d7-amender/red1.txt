@@ -1,0 +1,48 @@
+ ! OPEN item OPEN-1: listed separately; pre-approved item warns but does not automatically fail
+ ! OPEN item OPEN-2: listed separately; pre-approved item warns but does not automatically fail
+ - [1] nodes: expected count 50, got 49
+ - [1] edges: expected count 134, got 127
+ - [2] nodes: new ids expected ['e_book_unknown', 'e_booked_recovered', 'e_defer', 'n_appt_check', 'n_date_conflict_retry', 'n_reconcile_1', 'n_reconcile_2', 'n_search_offered_date'], got ['e_book_unknown', 'e_booked_recovered', 'e_defer', 'n_appt_check', 'n_date_conflict_retry', 'n_reconcile_1', 'n_reconcile_2']
+ - [5] edge edge-n_miss_unread-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda: must be absent
+ - [5] edge edge-n_miss_unread-e_declined-gives-up-on-booking: must be absent
+ - [5] edge edge-n_miss_unread-e_timeout-72-hour-timeout: must be absent
+ - [5] edge edge-n_offer-n_page_2-wants-later-in-the-day: expected source/target/label ('n_offer', 'n_page_3', 'wants late, latest, last appointment, or end of day on the offered date'), got ('n_offer', 'n_page_2', 'wants later in the day')
+ - [5] edge edge-n_offer-n_negotiate-wants-a-different-day-or-time: expected source/target/label ('n_offer', 'n_negotiate', 'wants a different day and does not give only a time preference'), got ('n_offer', 'n_negotiate', 'wants a different day or time')
+ - [5] edge edge-n_offer-n_search_offered_date-time-preference-only: required edge is missing
+ - [10] node n_search_offered_date data.body: invalid JSON: the JSON object must be str, bytes or bytearray, not NoneType
+ - [10] node n_search_offered_date data.body field callID: expected '{{callID}}', got None
+ - [10] node n_search_offered_date data.body field after: expected '{{time_after}}', got None
+ - [10] node n_search_offered_date data.body field user_text: expected '{{lastUserMessage}}', got None
+ - [10] node n_search_offered_date data.body field user_verbatim: expected '{{user_verbatim}}', got None
+ - [11] node n_search_offered_date data.body field time_pref: expected 'none', got None
+ - [11] node n_search_offered_date data.body field from: expected '{{slot_1_start}}', got None
+ - [11] node n_search_offered_date data.body field to: expected '{{slot_1_start}}', got None
+ - [13] node n_search_offered_date data.responseData slot_1_day_name: expected '$.result.slots[0].day_name', got None
+ - [13] node n_search_offered_date data.responseData slot_2_day_name: expected '$.result.slots[1].day_name', got None
+ - [16] node n_search_offered_date data.modelOptions.retryAttempts: expected 1, got None
+ - [30] node n_ask data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_empty data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_unread data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_thin data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_unbookable data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_clarify data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_time data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer_2 data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer_3 data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer_near data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_which_intent data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_gate_1 data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_gate_2 data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_negotiate data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_recheck data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_confirm data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_help data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_office data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_faq data.prompt: D7 canonical ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [38] graph serialization: banned string 'One moment while I check the schedule for you.' expected count 0, got 20
+ - [38] graph serialization: banned string 'Let me check that for you.' expected count 0, got 1
+ - [39] node n_miss_unread type: expected 'End Call', got 'Default'
+ - [39] node n_miss_unread data.text: expected 'I want to make sure we get you scheduled. Please call our office at (212) 219-2219 and they will find the perfect time for you.', got None
+ - [39] node n_miss_unread: expected zero outgoing edges, got ['edge-n_miss_unread-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda', 'edge-n_miss_unread-e_declined-gives-up-on-booking', 'edge-n_miss_unread-e_timeout-72-hour-timeout']
+FAIL: 45 assertion failure(s)

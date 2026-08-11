@@ -1,0 +1,21 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW49",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-anchor-exact-fix",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1800,
+      "expect_files": [
+        "fixed-bland_gateway.py",
+        "proof_exact.py",
+        "DEBUG-GW49.md"
+      ],
+      "spec": "ROLE: fix worker for the Mott booking gateway, lane 49 (anchor_exact flag). Work entirely inside your CWD; never modify anything outside it; no network, no git, no MCP/Apps/skills, no deploys. CONTEXT: the pathway needs to know, deterministically, whether an anchor search actually found the exact clock time the patient named, so it can route straight to a single booking confirmation when it did and offer the nearest alternative when it did not. Today it cannot tell, so it always inserts an extra 'reply 1 to take it' step. BASE FILE: ./deployed-bland_gateway.py is byte-equal to production image mott-lane-48 (anchor ordering already restored there). Minimal in-style diff. THE FIX: when the request's time_pref is of the form 'anchor=<clock>', add two fields to the availability result: 'anchor_exact' (boolean true only when the FIRST returned slot's clock equals the requested anchor clock exactly, after tolerant parsing of both) and 'anchor_requested' (the normalized requested clock as hh:mm am/pm). For any other time_pref, omit both fields or set anchor_exact false - never true. Do not change ordering, out_of_hours, from_unresolved, or any other behavior. TESTS (frozen-today pattern, handler-level seam): anchor 10:45 AM on a day containing 10:30/10:45/11:00 -> anchor_exact true, anchor_requested '10:45 am', first slot 10:45; anchor 10:40 AM on the same day -> anchor_exact false with the nearest slot still first; time_pref latest -> no anchor_exact true; time_pref none -> no anchor_exact true; malformed anchor -> anchor_exact false, no exception. Full suite green in ./gwtest (copy of /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW44b/gw-week-vocab-live-fix/gwtest with the fixed file installed; report the count, it should be at least 85). ./proof_exact.py: standalone offline, prints 'CASE=exact ANCHOR_EXACT=true FIRST=10:45 am', 'CASE=offgrid ANCHOR_EXACT=false', 'CASE=latest ANCHOR_EXACT=false', 'CASE=none ANCHOR_EXACT=false'. DEBUG-GW49.md: the contract, code location, test output tails, deploy separately gated.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 ./proof_exact.py > proof.out 2>&1 || { echo 'FAIL: proof crashed'; tail -5 proof.out; exit 1; }; for c in 'CASE=exact ANCHOR_EXACT=true FIRST=10:45 am' 'CASE=offgrid ANCHOR_EXACT=false' 'CASE=latest ANCHOR_EXACT=false' 'CASE=none ANCHOR_EXACT=false'; do grep -q \"$c\" proof.out || { echo \"FAIL: missing $c\"; cat proof.out; exit 1; }; done; cd gwtest && PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q > ../pytest.out 2>&1; rc=$?; cd ..; summary=$(tail -1 pytest.out); [ $rc -eq 0 ] || { echo \"FAIL: suite red: $summary\"; tail -10 pytest.out; exit 1; }; n=$(echo \"$summary\" | grep -oE '^[0-9]+'); [ \"$n\" -ge 85 ] || { echo \"FAIL: only $n tests ran\"; exit 1; }; echo \"PASS: anchor_exact contract proven - $summary\"",
+      "verified": "An anchor search now reports whether it found the patient's exact requested clock, letting the pathway route deterministically to a single confirmation or to a nearest-alternative offer, with ordering and every other gateway behavior unchanged."
+    }
+  ]
+}

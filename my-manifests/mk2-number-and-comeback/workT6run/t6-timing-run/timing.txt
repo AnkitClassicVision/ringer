@@ -1,0 +1,10 @@
+WATERFALL turn=1 gap_to_first=4.629 gap_between=NA class=single-answer
+WATERFALL turn=2 gap_to_first=3.346 gap_between=NA class=single-answer
+WATERFALL turn=3 gap_to_first=3.572 gap_between=NA class=single-answer
+WATERFALL turn=4 gap_to_first=10.499 gap_between=0.336 class=filler+answer
+WATERFALL turn=5 gap_to_first=10.667 gap_between=0.331 class=filler+answer
+WATERFALL turn=6 gap_to_first=11.849 gap_between=0.339 class=filler+answer
+TWO_MSG_TURNS=3/6
+SUMMARY median_reply_s=7.732 p95_reply_s=12.188
+UNMEASURED: gateway processing per turn - conversation ID not present in CloudWatch records
+UNMEASURED: carrier delivery to handset - not present in any record

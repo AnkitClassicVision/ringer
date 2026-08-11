@@ -1,0 +1,19 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWgates16b",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-live-gates-51",
+      "engine": "local-shell",
+      "timeout_s": 300,
+      "verified": "The live gateway passes all eleven standing gates plus the three lane-51 probes (pm meridiem anchor, midnight OOB, spelled-number relative) after the deploy.",
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates.py > gates.txt 2>&1; rc1=$?; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates51.py > gates51.txt 2>&1; rc2=$?; cat gates.txt gates51.txt; exit $((rc1 | rc2))",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_gw_gates.py gates.txt || exit 1; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_gw_gates51.py gates51.txt",
+      "expect_files": [
+        "gates.txt",
+        "gates51.txt"
+      ]
+    }
+  ]
+}

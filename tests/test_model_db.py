@@ -67,7 +67,12 @@ def write_registry(path: Path) -> None:
 [engines.codex]
 harness = "Codex CLI"
 access = "OAuth plan"
-default_model_key = "gpt-5.5"
+default_model_key = "codex-cli-default"
+
+[engines.codex.models."codex-cli-default"]
+display = "Codex CLI default (unpinned)"
+confidence = "verified"
+source = "fixture"
 
 [engines.codex.models."gpt-5.5"]
 display = "GPT-5.5"
@@ -212,7 +217,7 @@ class ModelDbTests(unittest.TestCase):
         self.assertEqual(2, self.count_attempts())
         with sqlite3.connect(self.db_path) as conn:
             self.assertEqual(1, conn.execute("SELECT COUNT(*) FROM catalog_models").fetchone()[0])
-            self.assertEqual(2, conn.execute("SELECT COUNT(*) FROM identity").fetchone()[0])
+            self.assertEqual(3, conn.execute("SELECT COUNT(*) FROM identity").fetchone()[0])
 
     def test_sync_consumes_only_new_bytes_and_rebuilds_after_truncation(self) -> None:
         write_jsonl(self.log_path, [attempt(run_id="run-1")])
@@ -424,14 +429,28 @@ class ModelDbTests(unittest.TestCase):
         registry = load_model_identity_registry(self.registry_path)
 
         codex = registry.resolve("codex", "")
+        pinned_codex = registry.resolve("codex", "gpt-5.5")
         listed = registry.resolve("opencode", "openrouter/z-ai/glm-5.2")
         unlisted = registry.resolve("opencode", "openrouter/vendor/model")
         unknown = registry.resolve("custom-engine", "custom-model")
 
-        self.assertEqual(("GPT-5.5", "Codex CLI", "OAuth plan"), (codex.model_display, codex.harness, codex.access))
+        self.assertEqual(("Codex CLI default (unpinned)", "Codex CLI", "OAuth plan"), (codex.model_display, codex.harness, codex.access))
+        self.assertEqual(("GPT-5.5", "Codex CLI", "OAuth plan"), (pinned_codex.model_display, pinned_codex.harness, pinned_codex.access))
         self.assertEqual(("GLM 5.2", "OpenCode", "OpenRouter API"), (listed.model_display, listed.harness, listed.access))
         self.assertEqual(("vendor/model", "OpenCode", "OpenRouter API"), (unlisted.model_display, unlisted.harness, unlisted.access))
         self.assertEqual(("custom-engine", "custom-engine", "unknown"), (unknown.model_display, unknown.harness, unknown.access))
+
+        for alias in (
+            "openai-api", "claude-api", "gemini-api", "grok-api", "glm-api",
+            "kimi-api", "glm-openrouter", "xai", "deepseek", "kimi", "qwen",
+            "free",
+        ):
+            with self.subTest(alias=alias):
+                active = registry.resolve(alias, "openrouter/x-ai/grok-4.5")
+                self.assertEqual(
+                    ("x-ai/grok-4.5", "Pi", "OpenRouter API"),
+                    (active.model_display, active.harness, active.access),
+                )
 
     def test_models_json_includes_identity_fields(self) -> None:
         write_jsonl(
@@ -439,6 +458,7 @@ class ModelDbTests(unittest.TestCase):
             [
                 attempt(run_id="run-1", engine="codex", model="", task_type="site-build"),
                 attempt(run_id="run-2", engine="opencode", model="openrouter/vendor/model"),
+                attempt(run_id="run-3", engine="codex", model="gpt-5.5", task_type="code-fix"),
             ],
         )
         out = io.StringIO()
@@ -448,9 +468,10 @@ class ModelDbTests(unittest.TestCase):
 
         payload = json.loads(out.getvalue())
         by_model = {row["model"]: row for row in payload}
-        self.assertEqual("GPT-5.5", by_model["codex"]["model_display"])
+        self.assertEqual("Codex CLI default (unpinned)", by_model["codex"]["model_display"])
         self.assertEqual("Codex CLI", by_model["codex"]["harness"])
         self.assertEqual("OAuth plan", by_model["codex"]["access"])
+        self.assertEqual("GPT-5.5", by_model["gpt-5.5"]["model_display"])
         self.assertEqual("vendor/model", by_model["openrouter/vendor/model"]["model_display"])
         self.assertEqual("OpenCode", by_model["openrouter/vendor/model"]["harness"])
         self.assertEqual("OpenRouter API", by_model["openrouter/vendor/model"]["access"])

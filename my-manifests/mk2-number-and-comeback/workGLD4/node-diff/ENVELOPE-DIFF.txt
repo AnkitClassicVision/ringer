@@ -1,0 +1,79 @@
+===== v96 turn2 structure =====
+data.assistant_responses = list(len=1)
+data.assistant_responses[0] = str: I have Thursday 08/06/2026 10:30 am or Thursday 08/06/2026 10:45 am at MK2 Optic
+data.chat_history = list(len=4)
+data.chat_history[0].content = <depth-limit type=str>
+data.chat_history[0].role = <depth-limit type=str>
+data.chat_history[1].content = <depth-limit type=str>
+data.chat_history[1].role = <depth-limit type=str>
+data.chat_history[2].content = <depth-limit type=str>
+data.chat_history[2].role = <depth-limit type=str>
+data.chat_id = str: c75fde9a-be39-4441-a0b1-8c9b0387b50f
+data.completed = bool: False
+data.current_node_id = str: n_offer
+data.current_node_name = str: Offered, first openings
+data.pathway_id = str: 94abad8b-fbe2-4e67-9c64-d9b586dd2653
+data.pathway_version = int: 96
+data.use_candidate_model = bool: False
+data.variables.BlandStatusCode = int: 200
+data.variables.appt_count = int: 0
+data.variables.callID = str: c75fde9a-be39-4441-a0b1-8c9b0387b50f
+data.variables.campaign = str: harness
+data.variables.channel = str: voice
+data.variables.count = int: 1
+data.variables.day_part = str: none
+data.variables.exam_type_id = str: ***7395
+data.variables.ok = bool: True
+data.variables.patient_first = str: RACHEL
+data.variables.patient_id = str: ***2466
+data.variables.preference_from = str: thursday
+data.variables.preference_to = str: thursday
+data.variables.recall_cell = str: ***2428
+data.variables.recall_patient_id = str: ***2466
+data.variables.slot_1_day_name = str: Thursday
+data.variables.slot_1_doctor = str: ***3018
+data.variables.slot_1_end = str: 08/06/2026 10:45 am
+data.variables.slot_1_start = str: 08/06/2026 10:30 am
+data.variables.slot_2_day_name = str: Thursday
+data.variables.slot_2_doctor = str: ***3018
+data.variables.slot_2_end = str: 08/06/2026 11:00 am
+data.variables.slot_2_start = str: 08/06/2026 10:45 am
+data.variables.slot_count = int: 24
+data.variables.store = str: 711
+data.variables.time_after = str: none
+data.variables.time_pref_relaxed = str: 
+data.variables.user_verbatim = str: thursday please
+errors = NoneType: None
+
+===== v101 turn2 structure =====
+data.assistant_responses = list(len=1)
+data.assistant_responses[0] = str: I have Thursday 10/24/2024 2:00 PM or Thursday 10/24/2024 4:00 PM at MK2 Optical
+data.chat_history = list(len=4)
+data.chat_history[0].content = <depth-limit type=str>
+data.chat_history[0].role = <depth-limit type=str>
+data.chat_history[1].content = <depth-limit type=str>
+data.chat_history[1].role = <depth-limit type=str>
+data.chat_history[2].content = <depth-limit type=str>
+data.chat_history[2].role = <depth-limit type=str>
+data.chat_id = str: 04b4bb46-5fba-4895-9358-a6eb***0047
+data.completed = bool: False
+data.current_node_id = str: n_goal_response
+data.current_node_name = str: Goal response and offer
+data.pathway_id = str: 94abad8b-fbe2-4e67-9c64-d9b586dd2653
+data.pathway_version = int: 101
+data.use_candidate_model = bool: False
+data.variables.BlandStatusCode = int: 200
+data.variables.appt_count = int: 0
+data.variables.callID = str: 04b4bb46-5fba-4895-9358-a6eb***0047
+data.variables.campaign = str: harness
+data.variables.channel = str: voice
+data.variables.count = int: 1
+data.variables.exam_type_id = str: ***7395
+data.variables.ok = bool: True
+data.variables.patient_first = str: RACHEL
+data.variables.patient_id = str: ***2466
+data.variables.recall_cell = str: ***2428
+data.variables.recall_patient_id = str: ***2466
+data.variables.store = str: 711
+errors = NoneType: None
+

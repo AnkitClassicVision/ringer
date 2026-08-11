@@ -1,0 +1,21 @@
+{
+  "run_name": "{{RUN_SLUG}}-fable-sol-loop",
+  "workdir": "{{ROUND1_WORKDIR}}",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "fable-map",
+      "engine": "claude-lean",
+      "model": "fable",
+      "task_type": "docs",
+      "timeout_s": 1800,
+      "full_access": false,
+      "expect_files": [
+        "decision-packet.json"
+      ],
+      "spec": "{{FABLE_MAP_PROMPT}}",
+      "check": "python3 {{KIT_DIR_SHELL}}/checks/validate_decision_packet.py decision-packet.json",
+      "verified": "The decision packet has routed unknowns, bounded ownership, substantive architecture, and executable verification for every build unit; a complete single QUESTION is also controlled output."
+    }
+  ]
+}

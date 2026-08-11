@@ -1,0 +1,2 @@
+CASE=partial-day-3pm OUT_OF_HOURS=false
+CASE=3am OUT_OF_HOURS=true

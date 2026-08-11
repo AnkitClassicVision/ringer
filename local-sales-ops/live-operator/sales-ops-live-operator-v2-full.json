@@ -1,0 +1,246 @@
+{
+  "run_name": "sales-ops-live-operator-v2-full",
+  "workdir": "/tmp/sales-ops-live-operator-v2-full",
+  "max_parallel": 4,
+  "tasks": [
+    {
+      "key": "operator-contract",
+      "task_type": "docs",
+      "spec": "You are building the full Sales Ops Live Operator, not a tiny component. Work only in this task directory. Do not send messages. Do not write HubSpot or any CRM. Create operator_contract.md and operator_policy_v2.json. The contract must name the full path: HubSpot live read enrichment, candidate ranking, send_queue v2, draft worker, context QA, copy QA, live boundary, pilot send adapter, HubSpot logger, ledger writer, daily summary, optimizer note, and e2e fixture runner. Preserve current approved lane: PracticeOS stale active deals, email only, pilot cap 3/day, no SMS, no LinkedIn, no postcards, no sequence enrollment, no stage moves, send_enabled false, hubspot_write_enabled false. Use no em dash. Use Ringer-native terms only.",
+      "check": "test -s operator_contract.md || { echo 'WHY: operator_contract.md missing'; exit 1; }; test -s operator_policy_v2.json || { echo 'WHY: operator_policy_v2.json missing'; exit 1; }; grep -qi 'HubSpot live read' operator_contract.md || { echo 'WHY: contract missing HubSpot live read'; exit 1; }; grep -qi 'pilot send adapter' operator_contract.md || { echo 'WHY: contract missing pilot send adapter'; exit 1; }; grep -qi 'hubspot_write_enabled' operator_policy_v2.json || { echo 'WHY: policy missing hubspot_write_enabled'; exit 1; }",
+      "expect_files": [
+        "operator_contract.md",
+        "operator_policy_v2.json"
+      ],
+      "timeout_s": 600,
+      "verified": "the operator contract names the whole sales-ops live path and preserves the approved-lane boundaries",
+      "engine": "claude",
+      "model": "sonnet",
+      "engine_args": [
+        "--effort",
+        "high"
+      ]
+    },
+    {
+      "key": "hubspot-live-context-reader",
+      "task_type": "data-pipeline",
+      "spec": "Build the read-only HubSpot context reader as part of the full operator. Work only in this task directory. Create hubspot_live_context_reader.py, hubspot_enriched_context.schema.json, and fixture_enriched_context.jsonl. The reader must support read-only live enrichment when credentials and flags are supplied, but default to fixture/local-snapshot mode. It must enrich deal rows with contact_id, contact_email, company_id, unsubscribe or suppression status, bounce status, last human touch, recent touch status, and context_sources. Unknown fields become hold reasons, never pass. Include CLI flags --snapshot, --out, --fixture-mode, and --limit. No sends. No HubSpot writes. Use no em dash.",
+      "check": "test -s hubspot_live_context_reader.py || { echo 'WHY: reader missing'; exit 1; }; test -s hubspot_enriched_context.schema.json || { echo 'WHY: schema missing'; exit 1; }; test -s fixture_enriched_context.jsonl || { echo 'WHY: fixture output missing'; exit 1; }; grep -q 'fixture-mode' hubspot_live_context_reader.py || { echo 'WHY: reader missing fixture-mode'; exit 1; }; grep -qi 'contact_email' hubspot_live_context_reader.py || { echo 'WHY: reader missing contact_email'; exit 1; }; grep -qi 'suppression' hubspot_live_context_reader.py || { echo 'WHY: reader missing suppression'; exit 1; }",
+      "expect_files": [
+        "hubspot_live_context_reader.py",
+        "hubspot_enriched_context.schema.json",
+        "fixture_enriched_context.jsonl"
+      ],
+      "timeout_s": 900,
+      "verified": "the reader defines the live read-only enrichment contract and safe fixture mode without writes",
+      "engine": "codex",
+      "engine_args": [
+        "-c",
+        "model_reasoning_effort=high"
+      ]
+    },
+    {
+      "key": "candidate-ranker",
+      "task_type": "data-pipeline",
+      "spec": "Build the candidate ranker as part of the full operator. Work only in this task directory. Create rank_sales_candidates.py, ranking_policy.json, and ranked_candidates.jsonl. Rank stale PracticeOS active deals by days_idle, stage urgency, contact completeness, recent-touch safety, suppression safety, and likely value. Suppressed, unqualified, closed-won, or recent-touch rows cannot become send-ready. Missing live context can rank for enrichment but must not pass for send. Include fixture mode against /tmp/ringer-sales-ops-input/live_practiceos_snapshot.json. No sends. No writes. Use no em dash.",
+      "check": "test -s rank_sales_candidates.py || { echo 'WHY: ranker missing'; exit 1; }; test -s ranking_policy.json || { echo 'WHY: ranking policy missing'; exit 1; }; test -s ranked_candidates.jsonl || { echo 'WHY: ranked candidates missing'; exit 1; }; grep -qi 'days_idle' rank_sales_candidates.py || { echo 'WHY: ranker missing days_idle'; exit 1; }; grep -qi 'suppression' rank_sales_candidates.py || { echo 'WHY: ranker missing suppression'; exit 1; }; grep -qi 'recent' rank_sales_candidates.py || { echo 'WHY: ranker missing recent touch logic'; exit 1; }",
+      "expect_files": [
+        "rank_sales_candidates.py",
+        "ranking_policy.json",
+        "ranked_candidates.jsonl"
+      ],
+      "timeout_s": 600,
+      "verified": "the ranker produces ordered candidates while preserving closed/suppressed/recent-touch safety",
+      "engine": "opencode",
+      "model": "openrouter/z-ai/glm-5.2",
+      "engine_args": [
+        "model_reasoning_effort=low"
+      ]
+    },
+    {
+      "key": "send-queue-v2-builder",
+      "task_type": "data-pipeline",
+      "spec": "Build send_queue v2 as part of the full operator. Work only in this task directory. Create build_send_queue_v2.py, send_queue.v2.schema.json, send_queue_v2.jsonl, approval_table_v2.md, and ledger_preview_v2.jsonl. Queue rows must include schema_version, run_id, candidate_id, idempotency_key, cohort, deal, contact, context, draft placeholder, QA fields, approval state, status, hold_reason, send_receipt, hubspot_receipt, and audit. Missing email, suppression, bounce, duplicate, or recent-touch context must hold. No sends. No row may be pre-approved. No send or HubSpot receipts in unapproved mode. Use no em dash.",
+      "check": "test -s build_send_queue_v2.py || { echo 'WHY: queue builder missing'; exit 1; }; test -s send_queue.v2.schema.json || { echo 'WHY: queue schema missing'; exit 1; }; test -s send_queue_v2.jsonl || { echo 'WHY: queue missing'; exit 1; }; test -s approval_table_v2.md || { echo 'WHY: approval table missing'; exit 1; }; test -s ledger_preview_v2.jsonl || { echo 'WHY: ledger preview missing'; exit 1; }; grep -qi 'idempotency_key' send_queue.v2.schema.json || { echo 'WHY: schema missing idempotency_key'; exit 1; }; grep -qi 'hubspot_receipt' send_queue.v2.schema.json || { echo 'WHY: schema missing hubspot_receipt'; exit 1; }",
+      "expect_files": [
+        "build_send_queue_v2.py",
+        "send_queue.v2.schema.json",
+        "send_queue_v2.jsonl",
+        "approval_table_v2.md",
+        "ledger_preview_v2.jsonl"
+      ],
+      "timeout_s": 900,
+      "verified": "queue v2 defines the full row contract with idempotency, approvals, receipts, and hold states",
+      "engine": "codex",
+      "engine_args": [
+        "-c",
+        "model_reasoning_effort=high"
+      ]
+    },
+    {
+      "key": "draft-worker",
+      "task_type": "copywriting",
+      "spec": "Build the draft worker as part of the full operator. Work only in this task directory. Create draft_sales_emails.py, draft_policy.json, and draft_samples.jsonl. Draft short Ankit-voice PracticeOS follow-up emails for queue rows. Each draft needs subject, body, specific ask, reason grounded in row context, and no fake familiarity. Ban generic sales phrases, unsupported claims, em dash, and long copy. Do not send. Use no em dash.",
+      "check": "test -s draft_sales_emails.py || { echo 'WHY: draft worker missing'; exit 1; }; test -s draft_policy.json || { echo 'WHY: draft policy missing'; exit 1; }; test -s draft_samples.jsonl || { echo 'WHY: draft samples missing'; exit 1; }; grep -qi 'specific' draft_sales_emails.py || { echo 'WHY: draft worker missing specific ask'; exit 1; }; grep -qi 'banned' draft_sales_emails.py || { echo 'WHY: draft worker missing banned phrase check'; exit 1; }; ! grep -qi 'just checking in' draft_samples.jsonl || { echo 'WHY: draft samples contain banned phrase just checking in'; exit 1; }; ! grep -qi 'touching base' draft_samples.jsonl || { echo 'WHY: draft samples contain banned phrase touching base'; exit 1; }; ! grep -qi 'circling back' draft_samples.jsonl || { echo 'WHY: draft samples contain banned phrase circling back'; exit 1; }; ! grep -qi 'hope you are doing well' draft_samples.jsonl || { echo 'WHY: draft samples contain banned phrase hope you are doing well'; exit 1; }",
+      "expect_files": [
+        "draft_sales_emails.py",
+        "draft_policy.json",
+        "draft_samples.jsonl"
+      ],
+      "timeout_s": 900,
+      "verified": "draft worker creates grounded short email drafts and excludes banned sales language",
+      "engine": "opencode",
+      "model": "openrouter/z-ai/glm-5.2",
+      "engine_args": [
+        "model_reasoning_effort=low"
+      ]
+    },
+    {
+      "key": "context-qa-worker",
+      "task_type": "test-hardening",
+      "spec": "Build context QA as part of the full operator. Work only in this task directory. Create context_qa.py, context_qa_cases.json, and context_qa_report.json. Enforce: deal exists, target pipeline, contact exists, email present, suppression known and clear, bounce clear, recent touch cooldown passed, duplicate ledger clear, sender health available, HubSpot logging path available. Unknown means hold, never pass. Include passing and failing fixture cases. No sends. No writes. Use no em dash.",
+      "check": "test -s context_qa.py || { echo 'WHY: context QA missing'; exit 1; }; test -s context_qa_cases.json || { echo 'WHY: context QA cases missing'; exit 1; }; test -s context_qa_report.json || { echo 'WHY: context QA report missing'; exit 1; }; grep -qi 'unknown' context_qa.py || { echo 'WHY: context QA missing unknown logic'; exit 1; }; grep -qi 'suppression' context_qa.py || { echo 'WHY: context QA missing suppression'; exit 1; }; grep -qi 'duplicate' context_qa.py || { echo 'WHY: context QA missing duplicate ledger'; exit 1; }",
+      "expect_files": [
+        "context_qa.py",
+        "context_qa_cases.json",
+        "context_qa_report.json"
+      ],
+      "timeout_s": 600,
+      "verified": "context QA proves unsafe or unknown context becomes hold rather than send-ready",
+      "engine": "codex",
+      "engine_args": [
+        "-c",
+        "model_reasoning_effort=high"
+      ]
+    },
+    {
+      "key": "copy-qa-worker",
+      "task_type": "test-hardening",
+      "spec": "Build copy QA as part of the full operator. Work only in this task directory. Create copy_qa.py, copy_qa_cases.json, and copy_qa_report.json. Reject fake familiarity, unsupported claims, banned phrases, em dash, too much length, missing specific ask, and wrong voice. Pass a short grounded Ankit-voice draft. Include fixture cases for pass and reject. No sends. No writes. Use no em dash.",
+      "check": "test -s copy_qa.py || { echo 'WHY: copy QA missing'; exit 1; }; test -s copy_qa_cases.json || { echo 'WHY: copy QA cases missing'; exit 1; }; test -s copy_qa_report.json || { echo 'WHY: copy QA report missing'; exit 1; }; grep -qi 'unsupported' copy_qa.py || { echo 'WHY: copy QA missing unsupported claim check'; exit 1; }; grep -Eqi 'specific_ask|specific ask' copy_qa.py || { echo 'WHY: copy QA missing specific ask'; exit 1; }; grep -qi 'banned' copy_qa.py || { echo 'WHY: copy QA missing banned phrase check'; exit 1; }",
+      "expect_files": [
+        "copy_qa.py",
+        "copy_qa_cases.json",
+        "copy_qa_report.json"
+      ],
+      "timeout_s": 600,
+      "verified": "copy QA rejects bad drafts and passes grounded short drafts",
+      "engine": "claude",
+      "model": "sonnet",
+      "engine_args": [
+        "--effort",
+        "high"
+      ]
+    },
+    {
+      "key": "live-boundary-and-approval-worker",
+      "task_type": "probe",
+      "spec": "Build live boundary v2 as part of the full operator. Work only in this task directory. Create live_boundary_v2.py, approval_file.schema.json, and boundary_probe.json. Boundary must block by default unless all are true: exact env flag RINGER_SALES_OPS_ALLOW_LIVE_SEND enabled, approval file names run_id, candidate_id, sender, channel, cap, approver, row approval_state approved_to_send, all QA pass, email channel only, daily cap available, business day ok, kill switch absent, idempotency key unused, and HubSpot logging preflight configured. This task probes block mode only. No sends. No writes. Use no em dash.",
+      "check": "test -s live_boundary_v2.py || { echo 'WHY: live boundary missing'; exit 1; }; test -s approval_file.schema.json || { echo 'WHY: approval schema missing'; exit 1; }; test -s boundary_probe.json || { echo 'WHY: boundary probe missing'; exit 1; }; grep -q 'RINGER_SALES_OPS_ALLOW_LIVE_SEND' live_boundary_v2.py || { echo 'WHY: boundary missing env flag'; exit 1; }; grep -qi 'idempotency' live_boundary_v2.py || { echo 'WHY: boundary missing idempotency'; exit 1; }; grep -qi 'kill' live_boundary_v2.py || { echo 'WHY: boundary missing kill switch'; exit 1; }; grep -qi 'block' boundary_probe.json || { echo 'WHY: boundary probe did not block'; exit 1; }",
+      "expect_files": [
+        "live_boundary_v2.py",
+        "approval_file.schema.json",
+        "boundary_probe.json"
+      ],
+      "timeout_s": 600,
+      "verified": "live boundary blocks without explicit approval, env flag, passing QA, cap, idempotency, and logging preflight",
+      "engine": "claude",
+      "model": "sonnet",
+      "engine_args": [
+        "--effort",
+        "high"
+      ]
+    },
+    {
+      "key": "pilot-send-adapter-worker",
+      "task_type": "code-feature",
+      "spec": "Build pilot send adapter as part of the full operator. Work only in this task directory. Create pilot_send_adapter.py, send_adapter_contract.md, and send_adapter_probe.json. Adapter must support dry-run and live modes but default to deny. Live send requires boundary allow, approved row, sender account, cap, idempotency, business-day check, and kill switch absence. It must return provider receipt only after actual live send. In this task, probe block mode only with no provider call. No sends. No writes. Use no em dash.",
+      "check": "test -s pilot_send_adapter.py || { echo 'WHY: send adapter missing'; exit 1; }; test -s send_adapter_contract.md || { echo 'WHY: send adapter contract missing'; exit 1; }; test -s send_adapter_probe.json || { echo 'WHY: send adapter probe missing'; exit 1; }; grep -qi 'boundary' pilot_send_adapter.py || { echo 'WHY: send adapter missing boundary'; exit 1; }; grep -qi 'idempotency' pilot_send_adapter.py || { echo 'WHY: send adapter missing idempotency'; exit 1; }; grep -qi 'provider' pilot_send_adapter.py || { echo 'WHY: send adapter missing provider receipt concept'; exit 1; }; grep -qi 'block' send_adapter_probe.json || { echo 'WHY: send adapter probe did not block'; exit 1; }",
+      "expect_files": [
+        "pilot_send_adapter.py",
+        "send_adapter_contract.md",
+        "send_adapter_probe.json"
+      ],
+      "timeout_s": 900,
+      "verified": "pilot send adapter is wired for the full path but blocks by default and creates no provider receipt",
+      "engine": "codex",
+      "engine_args": [
+        "-c",
+        "model_reasoning_effort=high"
+      ]
+    },
+    {
+      "key": "hubspot-logger-worker",
+      "task_type": "code-feature",
+      "spec": "Build HubSpot activity logger as part of the full operator. Work only in this task directory. Create hubspot_activity_logger.py, hubspot_logger_contract.md, and hubspot_logger_probe.json. Logger must write HubSpot activity only after provider send receipt exists and boundary permits HubSpot write. It must link activity to deal and contact, record provider receipt id, and return hubspot_receipt only after real write. In this task, probe block mode only. No sends. No HubSpot writes. Use no em dash.",
+      "check": "test -s hubspot_activity_logger.py || { echo 'WHY: HubSpot logger missing'; exit 1; }; test -s hubspot_logger_contract.md || { echo 'WHY: HubSpot logger contract missing'; exit 1; }; test -s hubspot_logger_probe.json || { echo 'WHY: HubSpot logger probe missing'; exit 1; }; grep -qi 'send_receipt' hubspot_activity_logger.py || { echo 'WHY: logger missing send_receipt'; exit 1; }; grep -qi 'hubspot_receipt' hubspot_activity_logger.py || { echo 'WHY: logger missing hubspot_receipt'; exit 1; }; grep -qi 'deal' hubspot_activity_logger.py || { echo 'WHY: logger missing deal link'; exit 1; }; grep -qi 'block' hubspot_logger_probe.json || { echo 'WHY: logger probe did not block'; exit 1; }",
+      "expect_files": [
+        "hubspot_activity_logger.py",
+        "hubspot_logger_contract.md",
+        "hubspot_logger_probe.json"
+      ],
+      "timeout_s": 900,
+      "verified": "HubSpot logger is wired for post-send activity logging but blocks without send receipt and approval",
+      "engine": "codex",
+      "engine_args": [
+        "-c",
+        "model_reasoning_effort=high"
+      ]
+    },
+    {
+      "key": "ledger-summary-worker",
+      "task_type": "data-pipeline",
+      "spec": "Build ledger and daily summary as part of the full operator. Work only in this task directory. Create ledger_writer.py, ledger.schema.json, ledger_preview.jsonl, and daily_summary.md. Ledger must record candidate, hold, approval, send, HubSpot log, error, kill-switch, and optimizer events. Daily summary counts must match ledger rows: scanned, candidates, ready, held by reason, sent, HubSpot logged, errors, replies, kill switch. No sends. No writes. Use no em dash.",
+      "check": "test -s ledger_writer.py || { echo 'WHY: ledger writer missing'; exit 1; }; test -s ledger.schema.json || { echo 'WHY: ledger schema missing'; exit 1; }; test -s ledger_preview.jsonl || { echo 'WHY: ledger preview missing'; exit 1; }; test -s daily_summary.md || { echo 'WHY: daily summary missing'; exit 1; }; grep -qi 'candidate' ledger.schema.json || { echo 'WHY: ledger schema missing candidate'; exit 1; }; grep -qi 'hubspot' ledger.schema.json || { echo 'WHY: ledger schema missing hubspot'; exit 1; }; grep -qi 'kill' ledger.schema.json || { echo 'WHY: ledger schema missing kill switch'; exit 1; }; grep -qi 'Sent' daily_summary.md || { echo 'WHY: summary missing Sent'; exit 1; }",
+      "expect_files": [
+        "ledger_writer.py",
+        "ledger.schema.json",
+        "ledger_preview.jsonl",
+        "daily_summary.md"
+      ],
+      "timeout_s": 600,
+      "verified": "ledger and daily summary count candidates, holds, sends, HubSpot logs, errors, and kill-switch state consistently",
+      "engine": "opencode",
+      "model": "openrouter/z-ai/glm-5.2",
+      "engine_args": [
+        "model_reasoning_effort=low"
+      ]
+    },
+    {
+      "key": "optimizer-worker",
+      "task_type": "docs",
+      "spec": "Build optimizer output as part of the full operator. Work only in this task directory. Create optimizer_note.md and routing_policy_update.json. Optimizer reads Ringer receipts and eval log shape and recommends model, prompt, check, retry, ranking, and cheap-lane audition changes only inside the approved lane. It must not expand cohort, channel, sender, cap, suppression policy, live activation, or CRM stage moves. No sends. No writes. Use no em dash.",
+      "check": "test -s optimizer_note.md || { echo 'WHY: optimizer note missing'; exit 1; }; test -s routing_policy_update.json || { echo 'WHY: routing policy update missing'; exit 1; }; grep -qi 'model' optimizer_note.md || { echo 'WHY: optimizer note missing model'; exit 1; }; grep -qi 'prompt' optimizer_note.md || { echo 'WHY: optimizer note missing prompt'; exit 1; }; grep -qi 'approved lane' optimizer_note.md || { echo 'WHY: optimizer note missing approved lane'; exit 1; }; grep -qi 'task_type' routing_policy_update.json || { echo 'WHY: routing update missing task_type'; exit 1; }",
+      "expect_files": [
+        "optimizer_note.md",
+        "routing_policy_update.json"
+      ],
+      "timeout_s": 600,
+      "verified": "optimizer recommendations stay inside approved boundaries and focus on model, prompt, check, retry, and routing improvements",
+      "engine": "claude",
+      "model": "sonnet",
+      "engine_args": [
+        "--effort",
+        "medium"
+      ]
+    },
+    {
+      "key": "e2e-fixture-operator-runner",
+      "task_type": "data-pipeline",
+      "spec": "Build the full dry-run e2e runner as part of the full operator. Work only in this task directory. Create run_sales_ops_operator_e2e.py, e2e_fixture_result.json, and e2e_fixture_summary.md. The runner must exercise the whole chain in fixture mode: snapshot/context, rank, queue, draft, context QA, copy QA, boundary block, send adapter block, HubSpot logger block, ledger, daily summary, optimizer note. It must prove zero sends and zero HubSpot writes in default mode while exercising the full path. No sends. No writes. Use no em dash.",
+      "check": "test -s run_sales_ops_operator_e2e.py || { echo 'WHY: e2e runner missing'; exit 1; }; test -s e2e_fixture_result.json || { echo 'WHY: e2e result missing'; exit 1; }; test -s e2e_fixture_summary.md || { echo 'WHY: e2e summary missing'; exit 1; }; grep -qi 'rank' run_sales_ops_operator_e2e.py || { echo 'WHY: e2e missing rank'; exit 1; }; grep -qi 'queue' run_sales_ops_operator_e2e.py || { echo 'WHY: e2e missing queue'; exit 1; }; grep -qi 'draft' run_sales_ops_operator_e2e.py || { echo 'WHY: e2e missing draft'; exit 1; }; grep -qi 'boundary' run_sales_ops_operator_e2e.py || { echo 'WHY: e2e missing boundary'; exit 1; }; grep -qi 'zero sends' e2e_fixture_summary.md || { echo 'WHY: e2e summary missing zero sends'; exit 1; }",
+      "expect_files": [
+        "run_sales_ops_operator_e2e.py",
+        "e2e_fixture_result.json",
+        "e2e_fixture_summary.md"
+      ],
+      "timeout_s": 1200,
+      "verified": "the e2e fixture runner exercises the whole operator chain and proves default mode performs no sends or HubSpot writes",
+      "engine": "codex",
+      "engine_args": [
+        "-c",
+        "model_reasoning_effort=high"
+      ]
+    }
+  ]
+}

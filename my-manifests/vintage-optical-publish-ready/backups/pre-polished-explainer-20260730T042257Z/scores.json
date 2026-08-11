@@ -1,0 +1,868 @@
+{
+  "schema_version": "2.0",
+  "analysis_product": "single_practice",
+  "data_mode": "public_only",
+  "scoring_method": "manual_directional_banding_public_only",
+  "report_visibility": "internal_only_unroomed_draft",
+  "project_room": {
+    "status": "inventory_review_required",
+    "preflight": "BLOCKED"
+  },
+  "use_boundary": "INTERNAL-ONLY / NOT FOR EXTERNAL USE",
+  "external_actions_taken": "none",
+  "practice": {
+    "name": "Vintage Optical",
+    "address": "605 S Main St, Morton, IL 61550",
+    "website": "https://www.vintageopt.com/",
+    "lat": 40.6048878,
+    "lng": -89.4669666,
+    "source_ids": [
+      "S01",
+      "S02",
+      "N00"
+    ]
+  },
+  "market": {
+    "market_type": "exurban",
+    "market_type_confidence": "medium",
+    "primary_catchment_minutes": 20,
+    "extended_catchment_minutes": 30,
+    "geography_note": "Exurban is a directional classification based on Morton city context and the stored point-to-point peer routes. No polygon catchment or patient-origin choice set was available.",
+    "source_ids": [
+      "S14",
+      "S15",
+      "S17",
+      "R03",
+      "R04"
+    ]
+  },
+  "scores": {
+    "market_demand_supply_score": 57,
+    "market_demand_supply_label": "mixed_market",
+    "competitive_pressure_index": 57,
+    "competitive_pressure_label": "high_pressure",
+    "room_to_win": 43,
+    "room_to_win_score": 43,
+    "room_to_win_label": "tight",
+    "practice_competitiveness_score": 58,
+    "practice_competitiveness_label": "mixed",
+    "client_opportunity_score": 54,
+    "client_opportunity_label": "at_risk",
+    "digital_presence_score": 57,
+    "digital_presence_label": "mixed",
+    "confidence_grade": "C"
+  },
+  "subscore_details": {
+    "market_demand_supply": {
+      "components": {
+        "demand_strength": 65,
+        "supply_balance": 50,
+        "payer_income_fit": 65,
+        "growth_future_demand": 50,
+        "specialty_demand_load": 65,
+        "market_data_confidence": 35
+      },
+      "basis": {
+        "demand_strength": {
+          "band_label": "directionally_supportive",
+          "rationale": "Morton city context shows both a sizable under-18 share and a sizable 65-plus share, which directionally supports recurring family and age-related eye-care demand. City values are not treated as catchment measurements.",
+          "source_ids": ["S14", "S15", "S17"],
+          "confidence": "medium",
+          "unknown_handling": "not_unknown"
+        },
+        "supply_balance": {
+          "band_label": "neutral_unknown",
+          "rationale": "No complete geocoded and deduplicated office census, provider join, weighted supply total, VDU, or VDU-per-office denominator exists for the selected catchment.",
+          "source_ids": ["R01", "R02", "R03", "R04", "R05", "R06"],
+          "confidence": "low",
+          "unknown_handling": "neutral_unknown_no_directional_claim"
+        },
+        "payer_income_fit": {
+          "band_label": "directionally_supportive_proxy_only",
+          "rationale": "Morton city median household income is a favorable public income proxy. Actual payer mix, commercial coverage, and realized collections are unknown.",
+          "source_ids": ["S14", "S15"],
+          "confidence": "medium",
+          "unknown_handling": "not_unknown"
+        },
+        "growth_future_demand": {
+          "band_label": "neutral_unknown",
+          "rationale": "The evidence pack contains no catchment growth series, building permits, residential pipeline, school growth, or mobility growth vector.",
+          "source_ids": ["S14", "S15"],
+          "confidence": "low",
+          "unknown_handling": "neutral_unknown_no_directional_claim"
+        },
+        "specialty_demand_load": {
+          "band_label": "directionally_supportive_proxy_only",
+          "rationale": "Morton city age shares directionally support pediatric, senior, and chronic eye-care need. No catchment-weighted CDC PLACES, search-demand, contact-lens, or referral-density inputs were available.",
+          "source_ids": ["S14", "S15"],
+          "confidence": "medium",
+          "unknown_handling": "not_unknown"
+        },
+        "market_data_confidence": {
+          "band_label": "limited_public_market_proof",
+          "rationale": "City context and stored point routes are reproducible, but every fixed-window demographic, VDU, office, provider, and patient-choice measure is missing.",
+          "source_ids": ["S14", "S15", "S17", "R01", "R02", "R03", "R04", "R05", "R06"],
+          "confidence": "high",
+          "unknown_handling": "not_unknown"
+        }
+      },
+      "weights": {
+        "demand_strength": 0.25,
+        "supply_balance": 0.20,
+        "payer_income_fit": 0.15,
+        "growth_future_demand": 0.15,
+        "specialty_demand_load": 0.15,
+        "market_data_confidence": 0.10
+      },
+      "calculation": "round(0.25*65 + 0.20*50 + 0.15*65 + 0.15*50 + 0.15*65 + 0.10*35) = 57"
+    },
+    "competitive_pressure": {
+      "components": {
+        "supply_saturation": 50,
+        "patient_choice_pressure": 65,
+        "competitor_strength": 65,
+        "access_differentiation_pressure": 50
+      },
+      "basis": {
+        "supply_saturation": {
+          "band_label": "neutral_unknown",
+          "rationale": "The named peer set is not a complete supply census, and no office or provider denominator exists.",
+          "source_ids": ["R01", "R02", "R03", "R04", "R05", "R06"],
+          "confidence": "low",
+          "unknown_handling": "neutral_unknown_no_directional_claim"
+        },
+        "patient_choice_pressure": {
+          "band_label": "directionally_elevated",
+          "rationale": "Stored routes place three named alternatives within 20 minutes and five within 30 minutes, including a 4.07-minute direct peer and a 14-minute retail substitute. These are subject-origin observations, not a complete or population-weighted choice set.",
+          "source_ids": ["R01", "R02", "R03", "R04", "R05"],
+          "confidence": "medium",
+          "unknown_handling": "not_unknown"
+        },
+        "competitor_strength": {
+          "band_label": "directionally_elevated",
+          "rationale": "Official peer pages show broad routine, medical, optical, dry-eye, and myopia overlap across nearby and extended-context alternatives. Public claims do not prove utilization or patient draw.",
+          "source_ids": ["S07", "S08", "S09", "S10", "S11", "S12"],
+          "confidence": "medium",
+          "unknown_handling": "not_unknown"
+        },
+        "access_differentiation_pressure": {
+          "band_label": "neutral_mixed_public_access",
+          "rationale": "Vintage publishes six-day hours, same-day emergency availability, and a booking flow, while multiple peers also publish appointment access and overlapping services. Live availability, completion, and peer-normalized access are unknown.",
+          "source_ids": ["S02", "S06", "S07", "S08", "S11"],
+          "confidence": "medium",
+          "unknown_handling": "neutral_unknown_no_directional_claim"
+        }
+      },
+      "weights": {
+        "supply_saturation": 0.40,
+        "patient_choice_pressure": 0.25,
+        "competitor_strength": 0.20,
+        "access_differentiation_pressure": 0.15
+      },
+      "calculation": "round(0.40*50 + 0.25*65 + 0.20*65 + 0.15*50) = 57",
+      "hidden_raw_pressure_metadata": {
+        "visibility": "internal_only",
+        "competitive_pressure_index": 57,
+        "room_to_win_formula": "100 - competitive_pressure_index",
+        "room_to_win_calculation": "100 - 57 = 43",
+        "warning": "The pressure index is a directional internal diagnostic. It is constrained by incomplete supply, choice, reputation, and access evidence."
+      }
+    },
+    "practice_competitiveness": {
+      "components": {
+        "visibility_vs_peers": 50,
+        "access_booking_vs_peers": 65,
+        "review_trust_vs_peers": 50,
+        "service_line_differentiation": 65,
+        "website_conversion_clarity": 65,
+        "location_convenience": 50
+      },
+      "basis": {
+        "visibility_vs_peers": {
+          "band_label": "neutral_directional_sample_only",
+          "rationale": "A dated query sample shows Vintage Optical and a Book online action, but there is no rank grid, complete result set, or peer-normalized visibility measure.",
+          "source_ids": ["S16"],
+          "confidence": "low",
+          "unknown_handling": "neutral_unknown_no_directional_claim"
+        },
+        "access_booking_vs_peers": {
+          "band_label": "directionally_supportive",
+          "rationale": "The subject publishes Monday through Saturday hours, same-day emergency appointments, a prominent appointment path, and a vendor flow reaching service and provider selection. Live slots and completion are not verified.",
+          "source_ids": ["S02", "S06", "S16"],
+          "confidence": "medium",
+          "unknown_handling": "not_unknown"
+        },
+        "review_trust_vs_peers": {
+          "band_label": "neutral_unknown",
+          "rationale": "The 4.9 sample lacks review count, recency, response behavior, and equivalent peer fields, so it cannot support peer-normalized reputation.",
+          "source_ids": ["S16"],
+          "confidence": "low",
+          "unknown_handling": "neutral_unknown_no_directional_claim"
+        },
+        "service_line_differentiation": {
+          "band_label": "directionally_supportive_but_contested",
+          "rationale": "The subject publishes broad routine, medical, dry-eye, myopia, specialty-contact, and optical services. Regional peers publish direct dry-eye and myopia overlap, so breadth supports a positive band but not lane ownership.",
+          "source_ids": ["S01", "S03", "S04", "S05", "S08", "S09", "S10"],
+          "confidence": "medium",
+          "unknown_handling": "not_unknown"
+        },
+        "website_conversion_clarity": {
+          "band_label": "directionally_supportive",
+          "rationale": "The site provides service-specific pages, named providers, location and hours, and a public appointment path. Owned conversion and mobile or speed measurements are absent.",
+          "source_ids": ["S01", "S02", "S03", "S04", "S05", "S06"],
+          "confidence": "medium",
+          "unknown_handling": "not_unknown"
+        },
+        "location_convenience": {
+          "band_label": "neutral_mixed",
+          "rationale": "The official page states parking and a current Main Street location, but a direct peer is 4.07 minutes away and patient-origin convenience is unmeasured.",
+          "source_ids": ["S02", "R01", "N00"],
+          "confidence": "medium",
+          "unknown_handling": "neutral_unknown_no_directional_claim"
+        }
+      },
+      "weights": {
+        "visibility_vs_peers": 0.20,
+        "access_booking_vs_peers": 0.20,
+        "review_trust_vs_peers": 0.20,
+        "service_line_differentiation": 0.15,
+        "website_conversion_clarity": 0.15,
+        "location_convenience": 0.10
+      },
+      "calculation": "round(0.20*50 + 0.20*65 + 0.20*50 + 0.15*65 + 0.15*65 + 0.10*50) = 58"
+    },
+    "client_opportunity": {
+      "components": {
+        "market_demand": 57,
+        "competitive_pressure_opportunity": 50,
+        "practice_differentiation_upside": 50,
+        "access_fixability": 50,
+        "digital_visibility_fixability": 65,
+        "execution_simplicity": 50
+      },
+      "basis": {
+        "market_demand": {
+          "band_label": "computed_market_input",
+          "rationale": "This required component uses the computed Market Demand-Supply Score rather than a new base band.",
+          "source_ids": ["S14", "S15", "S17", "R01", "R02", "R03", "R04", "R05", "R06"],
+          "confidence": "medium",
+          "unknown_handling": "not_unknown"
+        },
+        "competitive_pressure_opportunity": {
+          "band_label": "neutral_unproven_white_space",
+          "rationale": "Pressure is directionally present, but no competitor weakness cluster, demand leakage, or capacity-supported white space is proven.",
+          "source_ids": ["S07", "S08", "S09", "S10", "S11", "S12", "R01", "R02", "R03", "R04", "R05"],
+          "confidence": "low",
+          "unknown_handling": "neutral_unknown_no_directional_claim"
+        },
+        "practice_differentiation_upside": {
+          "band_label": "neutral_measure_before_expansion",
+          "rationale": "The public offer is already broad, while peers overlap on key specialties. The actionable opening is to establish lane-level conversion proof before adding or claiming another service.",
+          "source_ids": ["S01", "S03", "S04", "S05", "S08", "S09", "S10"],
+          "confidence": "medium",
+          "unknown_handling": "neutral_unknown_no_directional_claim"
+        },
+        "access_fixability": {
+          "band_label": "neutral_diagnostic_required",
+          "rationale": "Public access features exist, but call handling, live availability, abandonment, cancellation, and no-show evidence are missing. Fixability cannot be rewarded before the diagnostic.",
+          "source_ids": ["S02", "S06"],
+          "confidence": "low",
+          "unknown_handling": "neutral_unknown_no_directional_claim"
+        },
+        "digital_visibility_fixability": {
+          "band_label": "directionally_fixable_measurement_gap",
+          "rationale": "Public location, service, provider, and booking surfaces exist, while rank-grid, independent review, response, directory consistency, and channel baselines are absent. Establishing and reconciling those baselines is a bounded digital action.",
+          "source_ids": ["S01", "S02", "S03", "S04", "S05", "S06", "S16"],
+          "confidence": "medium",
+          "unknown_handling": "not_unknown"
+        },
+        "execution_simplicity": {
+          "band_label": "neutral_unknown_operating_capacity",
+          "rationale": "The proposed first steps are measurement-oriented and bounded, but ownership, staff capacity, and current operating cadence are not evidenced.",
+          "source_ids": ["S01", "S02", "S06"],
+          "confidence": "low",
+          "unknown_handling": "neutral_unknown_no_directional_claim"
+        }
+      },
+      "weights": {
+        "market_demand": 0.20,
+        "competitive_pressure_opportunity": 0.20,
+        "practice_differentiation_upside": 0.20,
+        "access_fixability": 0.15,
+        "digital_visibility_fixability": 0.15,
+        "execution_simplicity": 0.10
+      },
+      "calculation": "round(0.20*57 + 0.20*50 + 0.20*50 + 0.15*50 + 0.15*65 + 0.10*50) = 54, reported as 54",
+      "rounding_check": 54
+    }
+  },
+  "subscores": {
+    "market_demand_supply": {
+      "demand_strength": 65,
+      "supply_balance": 50,
+      "payer_income_fit": 65,
+      "growth_future_demand": 50,
+      "specialty_demand_load": 65,
+      "market_data_confidence": 35
+    },
+    "competitive_pressure": {
+      "supply_saturation": 50,
+      "patient_choice_pressure": 65,
+      "competitor_strength": 65,
+      "access_differentiation_pressure": 50
+    },
+    "practice_competitiveness": {
+      "visibility_vs_peers": 50,
+      "access_booking_vs_peers": 65,
+      "review_trust_vs_peers": 50,
+      "service_line_differentiation": 65,
+      "website_conversion_clarity": 65,
+      "location_convenience": 50
+    },
+    "client_opportunity": {
+      "competitive_pressure_opportunity": 50,
+      "practice_differentiation_upside": 50,
+      "access_fixability": 50,
+      "digital_visibility_fixability": 65,
+      "execution_simplicity": 50
+    },
+    "digital_presence": {
+      "findability": 50,
+      "reputation": 50,
+      "bookability": 65,
+      "site_quality": 65,
+      "content_specialty_signal": 65,
+      "social_local_proof": 50
+    }
+  },
+  "subscore_basis": {
+    "market_demand_supply": {
+      "demand_strength": {
+        "band_label": "directionally_supportive",
+        "rationale": "Morton city context shows both a sizable under-18 share and a sizable 65-plus share, which directionally supports recurring family and age-related eye-care demand. City values are not treated as catchment measurements.",
+        "source_ids": ["S14", "S15", "S17"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "supply_balance": {
+        "band_label": "neutral_unknown",
+        "rationale": "No complete geocoded and deduplicated office census, provider join, weighted supply total, VDU, or VDU-per-office denominator exists for the selected catchment.",
+        "source_ids": ["R01", "R02", "R03", "R04", "R05", "R06"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "payer_income_fit": {
+        "band_label": "directionally_supportive_proxy_only",
+        "rationale": "Morton city median household income is a favorable public income proxy. Actual payer mix, commercial coverage, and realized collections are unknown.",
+        "source_ids": ["S14", "S15"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "growth_future_demand": {
+        "band_label": "neutral_unknown",
+        "rationale": "The evidence pack contains no catchment growth series, building permits, residential pipeline, school growth, or mobility growth vector.",
+        "source_ids": ["S14", "S15"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "specialty_demand_load": {
+        "band_label": "directionally_supportive_proxy_only",
+        "rationale": "Morton city age shares directionally support pediatric, senior, and chronic eye-care need. No catchment-weighted CDC PLACES, search-demand, contact-lens, or referral-density inputs were available.",
+        "source_ids": ["S14", "S15"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "market_data_confidence": {
+        "band_label": "limited_public_market_proof",
+        "rationale": "City context and stored point routes are reproducible, but every fixed-window demographic, VDU, office, provider, and patient-choice measure is missing.",
+        "source_ids": ["S14", "S15", "S17", "R01", "R02", "R03", "R04", "R05", "R06"],
+        "confidence": "high",
+        "unknown_handling": "not_unknown"
+      }
+    },
+    "competitive_pressure": {
+      "supply_saturation": {
+        "band_label": "neutral_unknown",
+        "rationale": "The named peer set is not a complete supply census, and no office or provider denominator exists.",
+        "source_ids": ["R01", "R02", "R03", "R04", "R05", "R06"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "patient_choice_pressure": {
+        "band_label": "directionally_elevated",
+        "rationale": "Stored routes place three named alternatives within 20 minutes and five within 30 minutes, including a 4.07-minute direct peer and a 14-minute retail substitute. These are subject-origin observations, not a complete or population-weighted choice set.",
+        "source_ids": ["R01", "R02", "R03", "R04", "R05"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "competitor_strength": {
+        "band_label": "directionally_elevated",
+        "rationale": "Official peer pages show broad routine, medical, optical, dry-eye, and myopia overlap across nearby and extended-context alternatives. Public claims do not prove utilization or patient draw.",
+        "source_ids": ["S07", "S08", "S09", "S10", "S11", "S12"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "access_differentiation_pressure": {
+        "band_label": "neutral_mixed_public_access",
+        "rationale": "Vintage publishes six-day hours, same-day emergency availability, and a booking flow, while multiple peers also publish appointment access and overlapping services. Live availability, completion, and peer-normalized access are unknown.",
+        "source_ids": ["S02", "S06", "S07", "S08", "S11"],
+        "confidence": "medium",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      }
+    },
+    "practice_competitiveness": {
+      "visibility_vs_peers": {
+        "band_label": "neutral_directional_sample_only",
+        "rationale": "A dated query sample shows Vintage Optical and a Book online action, but there is no rank grid, complete result set, or peer-normalized visibility measure.",
+        "source_ids": ["S16"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "access_booking_vs_peers": {
+        "band_label": "directionally_supportive",
+        "rationale": "The subject publishes Monday through Saturday hours, same-day emergency appointments, a prominent appointment path, and a vendor flow reaching service and provider selection. Live slots and completion are not verified.",
+        "source_ids": ["S02", "S06", "S16"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "review_trust_vs_peers": {
+        "band_label": "neutral_unknown",
+        "rationale": "The 4.9 sample lacks review count, recency, response behavior, and equivalent peer fields, so it cannot support peer-normalized reputation.",
+        "source_ids": ["S16"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "service_line_differentiation": {
+        "band_label": "directionally_supportive_but_contested",
+        "rationale": "The subject publishes broad routine, medical, dry-eye, myopia, specialty-contact, and optical services. Regional peers publish direct dry-eye and myopia overlap, so breadth supports a positive band but not lane ownership.",
+        "source_ids": ["S01", "S03", "S04", "S05", "S08", "S09", "S10"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "website_conversion_clarity": {
+        "band_label": "directionally_supportive",
+        "rationale": "The site provides service-specific pages, named providers, location and hours, and a public appointment path. Owned conversion and mobile or speed measurements are absent.",
+        "source_ids": ["S01", "S02", "S03", "S04", "S05", "S06"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "location_convenience": {
+        "band_label": "neutral_mixed",
+        "rationale": "The official page states parking and a current Main Street location, but a direct peer is 4.07 minutes away and patient-origin convenience is unmeasured.",
+        "source_ids": ["S02", "R01", "N00"],
+        "confidence": "medium",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      }
+    },
+    "client_opportunity": {
+      "competitive_pressure_opportunity": {
+        "band_label": "neutral_unproven_white_space",
+        "rationale": "Pressure is directionally present, but no competitor weakness cluster, demand leakage, or capacity-supported white space is proven.",
+        "source_ids": ["S07", "S08", "S09", "S10", "S11", "S12", "R01", "R02", "R03", "R04", "R05"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "practice_differentiation_upside": {
+        "band_label": "neutral_measure_before_expansion",
+        "rationale": "The public offer is already broad, while peers overlap on key specialties. The actionable opening is to establish lane-level conversion proof before adding or claiming another service.",
+        "source_ids": ["S01", "S03", "S04", "S05", "S08", "S09", "S10"],
+        "confidence": "medium",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "access_fixability": {
+        "band_label": "neutral_diagnostic_required",
+        "rationale": "Public access features exist, but call handling, live availability, abandonment, cancellation, and no-show evidence are missing. Fixability cannot be rewarded before the diagnostic.",
+        "source_ids": ["S02", "S06"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "digital_visibility_fixability": {
+        "band_label": "directionally_fixable_measurement_gap",
+        "rationale": "Public location, service, provider, and booking surfaces exist, while rank-grid, independent review, response, directory consistency, and channel baselines are absent. Establishing and reconciling those baselines is a bounded digital action.",
+        "source_ids": ["S01", "S02", "S03", "S04", "S05", "S06", "S16"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "execution_simplicity": {
+        "band_label": "neutral_unknown_operating_capacity",
+        "rationale": "The proposed first steps are measurement-oriented and bounded, but ownership, staff capacity, and current operating cadence are not evidenced.",
+        "source_ids": ["S01", "S02", "S06"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      }
+    },
+    "digital_presence": {
+      "findability": {
+        "band_label": "neutral_sampled_visibility_only",
+        "rationale": "The dated Maps query sample shows the subject, but it is directional only and cannot serve as a rank grid or complete local-pack measurement.",
+        "source_ids": ["S16"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "reputation": {
+        "band_label": "neutral_unknown",
+        "rationale": "The 4.9 Maps sample has no review count, velocity, recency, response behavior, or peer comparison and therefore cannot support a reputation advantage.",
+        "source_ids": ["S16"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "bookability": {
+        "band_label": "directionally_supportive",
+        "rationale": "A public CTA reaches a service and provider selection flow, and the Maps sample displays Book online. No slot was selected and completion or conversion is unknown.",
+        "source_ids": ["S06", "S16"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "site_quality": {
+        "band_label": "directionally_supportive_content_structure",
+        "rationale": "The public site exposes location, hours, providers, and service-specific pages. Mobile rendering, Core Web Vitals, speed, and conversion performance were not measured.",
+        "source_ids": ["S01", "S02", "S03", "S04", "S05"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "content_specialty_signal": {
+        "band_label": "directionally_supportive_but_not_unique",
+        "rationale": "Dedicated dry-eye, myopia-management, and specialty-contact pages create clear specialty signals, but nearby or extended-context peers publish overlap.",
+        "source_ids": ["S03", "S04", "S05", "S08", "S09", "S10"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "social_local_proof": {
+        "band_label": "neutral_unknown",
+        "rationale": "No verified social activity, local link, community mention, or directory consistency comparison is included in the evidence pack.",
+        "source_ids": ["S01", "S16"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      }
+    }
+  },
+  "website_positioning": {
+    "digital_presence_score": 57,
+    "digital_presence_label": "mixed",
+    "confidence_grade": "C",
+    "confidence": "C",
+    "components": {
+      "findability": 50,
+      "reputation": 50,
+      "bookability": 65,
+      "site_quality": 65,
+      "content_specialty_signal": 65,
+      "social_local_proof": 50
+    },
+    "component_basis": {
+      "findability": {
+        "band_label": "neutral_sampled_visibility_only",
+        "rationale": "The dated Maps query sample shows the subject, but it is directional only and cannot serve as a rank grid or complete local-pack measurement.",
+        "source_ids": ["S16"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "reputation": {
+        "band_label": "neutral_unknown",
+        "rationale": "The 4.9 Maps sample has no review count, velocity, recency, response behavior, or peer comparison and therefore cannot support a reputation advantage.",
+        "source_ids": ["S16"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      },
+      "bookability": {
+        "band_label": "directionally_supportive",
+        "rationale": "A public CTA reaches a service and provider selection flow, and the Maps sample displays Book online. No slot was selected and completion or conversion is unknown.",
+        "source_ids": ["S06", "S16"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "site_quality": {
+        "band_label": "directionally_supportive_content_structure",
+        "rationale": "The public site exposes location, hours, providers, and service-specific pages. Mobile rendering, Core Web Vitals, speed, and conversion performance were not measured.",
+        "source_ids": ["S01", "S02", "S03", "S04", "S05"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "content_specialty_signal": {
+        "band_label": "directionally_supportive_but_not_unique",
+        "rationale": "Dedicated dry-eye, myopia-management, and specialty-contact pages create clear specialty signals, but nearby or extended-context peers publish overlap.",
+        "source_ids": ["S03", "S04", "S05", "S08", "S09", "S10"],
+        "confidence": "medium",
+        "unknown_handling": "not_unknown"
+      },
+      "social_local_proof": {
+        "band_label": "neutral_unknown",
+        "rationale": "No verified social activity, local link, community mention, or directory consistency comparison is included in the evidence pack.",
+        "source_ids": ["S01", "S16"],
+        "confidence": "low",
+        "unknown_handling": "neutral_unknown_no_directional_claim"
+      }
+    },
+    "weights": {
+      "findability": 0.25,
+      "reputation": 0.20,
+      "bookability": 0.20,
+      "site_quality": 0.15,
+      "content_specialty_signal": 0.10,
+      "social_local_proof": 0.10
+    },
+    "calculation": "round(0.25*50 + 0.20*50 + 0.20*65 + 0.15*65 + 0.10*65 + 0.10*50) = 57",
+    "stated_position": "A broad community optometry and optical practice offering routine, pediatric, medical, dry-eye, myopia, glaucoma, retinal, contact-lens, specialty-contact, and eyewear services with public appointment access.",
+    "market_position": "A publicly broad local practice with usable access and specialty signals, operating among a very close independent peer, a nearby retail substitute, and regional peers with overlapping medical, dry-eye, myopia, contact-lens, and optical claims. Independent demand, reputation, conversion, and capacity strength are unproven.",
+    "position_vs_white_space": "The public breadth is not itself white space because key peers claim overlapping lanes. The defensible next position is evidence-led lane ownership: prove which existing specialty converts and can be delivered before expanding or making a stronger ownership claim.",
+    "recommended_position": "The Morton practice that makes comprehensive family eye care easy to access and proves its specialty value lane by lane.",
+    "channel_gaps": [
+      {
+        "gap": "No complete local visibility baseline or rank grid",
+        "cost_to_fix_band": "low_to_medium_measurement_effort",
+        "expected_impact_band": "unknown_until_baseline",
+        "source_ids": ["S16"]
+      },
+      {
+        "gap": "No independent reputation export with count, recency, response, and peer fields",
+        "cost_to_fix_band": "low_measurement_effort",
+        "expected_impact_band": "unknown_until_baseline",
+        "source_ids": ["S16"]
+      },
+      {
+        "gap": "No owned booking, call, referral, recall, or lane-conversion baseline",
+        "cost_to_fix_band": "medium_operational_measurement_effort",
+        "expected_impact_band": "unknown_until_baseline",
+        "source_ids": ["S01", "S02", "S03", "S04", "S05", "S06"]
+      }
+    ],
+    "evidence": [
+      "Official subject pages verify broad services, providers, location, hours, and appointment access.",
+      "Official peer pages verify meaningful routine, medical, optical, dry-eye, and myopia overlap.",
+      "The Maps query is a dated partial sample and is not a rank grid or peer-normalized reputation export."
+    ],
+    "source_ids": ["S01", "S02", "S03", "S04", "S05", "S06", "S07", "S08", "S09", "S10", "S11", "S12", "S16"]
+  },
+  "specialty_options": [
+    {
+      "lane": "dry_eye_ocular_surface",
+      "specialty_opportunity_score": 52,
+      "read": "research_next",
+      "subscores": {
+        "local_demand_fit": 65,
+        "competitive_gap": 35,
+        "current_capability": 65,
+        "access_capacity_fit": 50,
+        "revenue_reimbursement_potential": 50,
+        "referral_ecosystem_fit": 50,
+        "evidence_confidence": 35
+      },
+      "subscore_basis": {
+        "local_demand_fit": {"band_label": "directionally_supportive_proxy_only", "rationale": "Morton city age context supports a directional ocular-surface demand hypothesis, but no catchment clinical-demand overlay or search-demand measure exists.", "source_ids": ["S14", "S15"], "confidence": "medium", "unknown_handling": "not_unknown"},
+        "competitive_gap": {"band_label": "contested_public_lane", "rationale": "Tri-County and Vision Care Center publish direct dry-eye offerings, so the public lane is not open by default.", "source_ids": ["S08", "S09"], "confidence": "medium", "unknown_handling": "not_unknown"},
+        "current_capability": {"band_label": "public_offer_verified_operations_unproven", "rationale": "Vintage publishes a dedicated dry-eye service and modalities, which verifies the offer but not volume, outcomes, staffing, or throughput.", "source_ids": ["S03"], "confidence": "medium", "unknown_handling": "not_unknown"},
+        "access_capacity_fit": {"band_label": "neutral_unknown", "rationale": "No specialty slot, chair-time, staffing, room, follow-up, or capacity evidence exists.", "source_ids": ["S03", "S06"], "confidence": "low", "unknown_handling": "neutral_unknown_no_directional_claim"},
+        "revenue_reimbursement_potential": {"band_label": "neutral_unknown", "rationale": "No pricing, payer, collections, margin, or contribution evidence exists.", "source_ids": ["S03"], "confidence": "low", "unknown_handling": "neutral_unknown_no_directional_claim"},
+        "referral_ecosystem_fit": {"band_label": "neutral_unknown", "rationale": "No verified referral relationships or referral-density study exists.", "source_ids": ["S03"], "confidence": "low", "unknown_handling": "neutral_unknown_no_directional_claim"},
+        "evidence_confidence": {"band_label": "limited_public_proof", "rationale": "The public offer and competitor overlap are verified, while demand, capacity, conversion, referrals, and economics remain unmeasured.", "source_ids": ["S03", "S08", "S09", "S14", "S15"], "confidence": "high", "unknown_handling": "not_unknown"}
+      },
+      "weights": {"local_demand_fit": 0.20, "competitive_gap": 0.15, "current_capability": 0.15, "access_capacity_fit": 0.15, "revenue_reimbursement_potential": 0.15, "referral_ecosystem_fit": 0.10, "evidence_confidence": 0.10},
+      "calculation": "round(0.20*65 + 0.15*35 + 0.15*65 + 0.15*50 + 0.15*50 + 0.10*50 + 0.10*35) = 52",
+      "why": "Public demand proxies and an existing offer support research, while peer overlap and missing operating proof prevent a stronger lane claim.",
+      "source_ids": ["S03", "S08", "S09", "S14", "S15"],
+      "source_strength": "limited_public_directional",
+      "confidence": "C",
+      "disconfirmers": ["Catchment demand may differ from city context.", "Measured capacity, conversion, referrals, or economics could materially change the lane score."]
+    },
+    {
+      "lane": "myopia_management",
+      "specialty_opportunity_score": 52,
+      "read": "research_next",
+      "subscores": {
+        "local_demand_fit": 65,
+        "competitive_gap": 35,
+        "current_capability": 65,
+        "access_capacity_fit": 50,
+        "revenue_reimbursement_potential": 50,
+        "referral_ecosystem_fit": 50,
+        "evidence_confidence": 35
+      },
+      "subscore_basis": {
+        "local_demand_fit": {"band_label": "directionally_supportive_proxy_only", "rationale": "Morton city under-18 share supports a directional family and pediatric demand hypothesis, but no catchment, school-density, or search-demand study exists.", "source_ids": ["S14", "S15"], "confidence": "medium", "unknown_handling": "not_unknown"},
+        "competitive_gap": {"band_label": "contested_public_lane", "rationale": "Vision Care Center publishes multiple myopia-control approaches, so the lane is not publicly uncontested.", "source_ids": ["S09", "S10"], "confidence": "medium", "unknown_handling": "not_unknown"},
+        "current_capability": {"band_label": "public_offer_verified_operations_unproven", "rationale": "Vintage publishes a dedicated myopia-management service, which verifies the offer but not starts, retention, outcomes, or delivery capacity.", "source_ids": ["S04"], "confidence": "medium", "unknown_handling": "not_unknown"},
+        "access_capacity_fit": {"band_label": "neutral_unknown", "rationale": "No follow-up capacity, chair-time, staff-skill, appointment, or protocol evidence exists.", "source_ids": ["S04", "S06"], "confidence": "low", "unknown_handling": "neutral_unknown_no_directional_claim"},
+        "revenue_reimbursement_potential": {"band_label": "neutral_unknown", "rationale": "No price, payment, retention, collections, or margin evidence exists.", "source_ids": ["S04"], "confidence": "low", "unknown_handling": "neutral_unknown_no_directional_claim"},
+        "referral_ecosystem_fit": {"band_label": "neutral_unknown", "rationale": "No verified school, pediatric, parent, or provider referral relationships are included.", "source_ids": ["S04"], "confidence": "low", "unknown_handling": "neutral_unknown_no_directional_claim"},
+        "evidence_confidence": {"band_label": "limited_public_proof", "rationale": "The public offer, child-share proxy, and competitor overlap are verified, while conversion, capacity, referrals, and economics remain unmeasured.", "source_ids": ["S04", "S09", "S10", "S14", "S15"], "confidence": "high", "unknown_handling": "not_unknown"}
+      },
+      "weights": {"local_demand_fit": 0.20, "competitive_gap": 0.15, "current_capability": 0.15, "access_capacity_fit": 0.15, "revenue_reimbursement_potential": 0.15, "referral_ecosystem_fit": 0.10, "evidence_confidence": 0.10},
+      "calculation": "round(0.20*65 + 0.15*35 + 0.15*65 + 0.15*50 + 0.15*50 + 0.10*50 + 0.10*35) = 52",
+      "why": "The city child-share proxy and existing service page support research, while published peer overlap and missing delivery proof constrain the read.",
+      "source_ids": ["S04", "S09", "S10", "S14", "S15"],
+      "source_strength": "limited_public_directional",
+      "confidence": "C",
+      "disconfirmers": ["Catchment family demand may differ from city context.", "Measured starts, retention, capacity, referrals, or economics could materially change the lane score."]
+    },
+    {
+      "lane": "specialty_contact_lenses",
+      "specialty_opportunity_score": 51,
+      "read": "research_next",
+      "subscores": {
+        "local_demand_fit": 50,
+        "competitive_gap": 50,
+        "current_capability": 65,
+        "access_capacity_fit": 50,
+        "revenue_reimbursement_potential": 50,
+        "referral_ecosystem_fit": 50,
+        "evidence_confidence": 35
+      },
+      "subscore_basis": {
+        "local_demand_fit": {"band_label": "neutral_unknown", "rationale": "No catchment contact-lens population, keratoconus burden, search demand, or referral-density evidence exists.", "source_ids": ["S05"], "confidence": "low", "unknown_handling": "neutral_unknown_no_directional_claim"},
+        "competitive_gap": {"band_label": "neutral_unknown", "rationale": "Peers publish contact-lens services, but the evidence pack does not establish equivalent specialty-contact depth or an independent local gap.", "source_ids": ["S07", "S08", "S12"], "confidence": "low", "unknown_handling": "neutral_unknown_no_directional_claim"},
+        "current_capability": {"band_label": "public_offer_verified_operations_unproven", "rationale": "Vintage publishes a specialty-contact page and lens types, which verifies the offer but not fit volume, success, chair time, or capacity.", "source_ids": ["S05"], "confidence": "medium", "unknown_handling": "not_unknown"},
+        "access_capacity_fit": {"band_label": "neutral_unknown", "rationale": "No specialty fitting availability, doctor time, staff skill, room, or follow-up evidence exists.", "source_ids": ["S05", "S06"], "confidence": "low", "unknown_handling": "neutral_unknown_no_directional_claim"},
+        "revenue_reimbursement_potential": {"band_label": "neutral_unknown", "rationale": "No pricing, payer, collections, remakes, chair-time cost, or margin evidence exists.", "source_ids": ["S05"], "confidence": "low", "unknown_handling": "neutral_unknown_no_directional_claim"},
+        "referral_ecosystem_fit": {"band_label": "neutral_unknown", "rationale": "No verified ophthalmology, optometry, or keratoconus referral relationships are included.", "source_ids": ["S05"], "confidence": "low", "unknown_handling": "neutral_unknown_no_directional_claim"},
+        "evidence_confidence": {"band_label": "limited_public_proof", "rationale": "The public offer is verified, but local demand, competitive gap, referrals, conversion, capacity, and economics remain unmeasured.", "source_ids": ["S05", "S07", "S08", "S12"], "confidence": "high", "unknown_handling": "not_unknown"}
+      },
+      "weights": {"local_demand_fit": 0.20, "competitive_gap": 0.15, "current_capability": 0.15, "access_capacity_fit": 0.15, "revenue_reimbursement_potential": 0.15, "referral_ecosystem_fit": 0.10, "evidence_confidence": 0.10},
+      "calculation": "round(0.20*50 + 0.15*50 + 0.15*65 + 0.15*50 + 0.15*50 + 0.10*50 + 0.10*35) = 51",
+      "why": "The public specialty-contact offer is verified, but local demand, competitive gap, capacity, referral flow, conversion, and economics remain unmeasured.",
+      "source_ids": ["S05", "S07", "S08", "S12"],
+      "source_strength": "limited_public_directional",
+      "confidence": "C",
+      "disconfirmers": ["A complete peer service audit could reveal a stronger or weaker competitive gap.", "Measured fitting demand, capacity, outcomes, referrals, or economics could materially change the lane score."]
+    }
+  ],
+  "fix_it_playbook": {
+    "mode": "GROW",
+    "do_now": ["F-001", "F-002", "F-003"],
+    "cards": [
+      {
+        "id": "F-001",
+        "finding": "Vintage publicly offers several specialty lanes, but lane-level inquiries, booked evaluations, starts, completions, capacity, and economics are not measured in the evidence pack.",
+        "lever": "Establish a lane-tagged specialty conversion baseline for the existing dry-eye, myopia, and specialty-contact offers before adding another service or making a stronger lane-ownership claim.",
+        "owner": "practice staff",
+        "effort": "30_days_low_to_medium_measurement_effort",
+        "impact_grow": "Measurement unlock only. No patient or revenue forecast is supportable from public evidence.",
+        "impact_math": "For each lane: inquiry_to_book_rate = lane_booked_evaluations / lane_inquiries; book_to_start_rate = lane_starts / lane_booked_evaluations; completion_rate = lane_completed_plans / lane_starts. Plug measured counts into the rates after 30 days.",
+        "time_to_value": "30_days",
+        "dependency": "none",
+        "proof": "A 30-day lane table exists for all three lanes with inquiry, booked evaluation, start, completion, available-slot, and owner fields; missing counts remain explicitly null rather than zero.",
+        "confidence": "high",
+        "source_ids": ["S03", "S04", "S05", "S06"]
+      },
+      {
+        "id": "F-002",
+        "finding": "Vintage publishes six-day hours, same-day emergency access, and online booking, but the pack has no call handling, live-slot, booking completion, cancellation, no-show, or unmet-request evidence.",
+        "lever": "Run a 30-day access diagnostic before changing hours, staffing, or scheduling templates.",
+        "owner": "practice staff",
+        "effort": "30_days_low_to_medium_measurement_effort",
+        "impact_grow": "Diagnostic only. It determines whether a fixable access gap exists without assuming leakage.",
+        "impact_math": "access_gap_count = unanswered_or_abandoned_calls + booking_attempts_without_completion + requests_without_acceptable_slot; realized_gap_rate = access_gap_count / total_access_attempts. Any later sensitivity is measured_access_gap_count * tested_recovery_rate, not a forecast.",
+        "time_to_value": "30_days",
+        "dependency": "none",
+        "proof": "A 30-day access table reports call disposition, booking attempts, completed bookings, next-available slots by visit type, cancellations, no-shows, and requests without an acceptable slot.",
+        "confidence": "high",
+        "source_ids": ["S02", "S06", "S16"]
+      },
+      {
+        "id": "F-003",
+        "finding": "The current official address and public service surfaces are verified, but directory consistency, independent review behavior, referral flow, and recall performance are not established.",
+        "lever": "Reconcile the current address across tracked public surfaces, remove or correct any stale entry found, and establish review, referral, and recall baselines before broader awareness work.",
+        "owner": "practice staff",
+        "effort": "30_days_low_measurement_and_hygiene_effort",
+        "impact_grow": "Baseline and hygiene effect only. The evidence does not support assuming a stale listing, missed referrals, recall leakage, or a patient-volume lift.",
+        "impact_math": "listing_accuracy_rate = correct_tracked_listings / tracked_listings; review_velocity = new_verified_reviews / 30_days; referral_book_rate = booked_referred_patients / referral_inquiries; recall_book_rate = booked_recall_patients / eligible_recall_contacts. Apply future tested deltas only after baseline measurement.",
+        "time_to_value": "30_days",
+        "dependency": "none",
+        "proof": "A dated audit shows the current address on each tracked surface and logs corrections only where a mismatch is observed; the same packet contains 30-day review, referral, and recall baseline counts with named owners.",
+        "confidence": "medium",
+        "source_ids": ["S01", "S02", "S16", "N00"]
+      }
+    ],
+    "staged": {
+      "90_days": [],
+      "180_days": [],
+      "365_days": []
+    }
+  },
+  "drivers": [
+    {
+      "driver": "Several routed alternatives and broad peer service overlap create directional choice pressure.",
+      "direction": "increases_pressure",
+      "score_component": "competitive_pressure.patient_choice_pressure",
+      "evidence": "Three named routed alternatives fall within 20 minutes and five within 30 minutes, but the set is incomplete.",
+      "source_type": "stored_point_to_point_routes_and_official_peer_pages",
+      "confidence": "medium",
+      "source_ids": ["S07", "S08", "S09", "S10", "S11", "R01", "R02", "R03", "R04", "R05"]
+    },
+    {
+      "driver": "The subject has a usable public booking path and broad service-page coverage.",
+      "direction": "supports_competitiveness",
+      "score_component": "practice_competitiveness.access_booking_vs_peers",
+      "evidence": "Official pages show six-day hours, same-day emergency claims, detailed services, and a booking flow reaching service and provider selection.",
+      "source_type": "official_subject_pages_and_linked_booking_vendor",
+      "confidence": "medium",
+      "source_ids": ["S01", "S02", "S03", "S04", "S05", "S06"]
+    }
+  ],
+  "data_quality": {
+    "overall_confidence": "limited_directional_public_evidence",
+    "confidence_grade": "C",
+    "project_room_status": "EMPTY",
+    "use_boundary": "INTERNAL-ONLY / NOT FOR EXTERNAL USE",
+    "external_actions_taken": "none",
+    "strong_sources": [
+      "official subject and peer pages for identity, location, hours, booking links, and stated services",
+      "Census city context",
+      "stored Nominatim and OSRM receipts for reviewed entity and route observations"
+    ],
+    "weak_or_partial_sources": [
+      "dated Google Maps query sample without review count or peer-normalized export",
+      "named peer set without complete market census",
+      "city demographic context without drive-time polygon joins"
+    ],
+    "weak_or_missing_sources": [
+      "dated Google Maps query sample without review count or peer-normalized export",
+      "named peer set without complete market census",
+      "city demographic context without drive-time polygon joins",
+      "missing owned access and conversion summaries",
+      "missing specialty capacity, referral, and economics evidence"
+    ],
+    "missing_to_upgrade": [
+      "5, 10, 15, 20, and 30-minute polygon isochrones",
+      "block-group demographic intersections for each fixed window",
+      "complete geocoded and deduplicated eye-care office census",
+      "NPPES provider join with address cleaning",
+      "catchment-weighted VDU and CDC PLACES inputs",
+      "population-weighted patient-choice distribution",
+      "independent review export with rating, count, recency, responses, and peer fields",
+      "rank-grid or equivalent owned visibility measurement",
+      "owned non-PHI booking and call conversion summaries",
+      "appointment availability, cancellation, no-show, and unmet-request summaries",
+      "lane-level specialty starts, completions, capacity, and staffing",
+      "review, referral, recall, and optical-capture baselines",
+      "payer, collections, margin, and lane economics"
+    ]
+  },
+  "disconfirmers": [
+    "A complete supply census and provider join could move competitive pressure materially up or down.",
+    "The subject already publishes broad specialty services and booking access, so a claim that it lacks a public offer or any appointment path would be wrong.",
+    "Tri-County and Vision Care Center publish overlapping specialty lanes, so subject service breadth does not prove uncontested white space.",
+    "The 4.9 Maps sample could look materially different after review count, recency, responses, and peer-normalized fields are collected.",
+    "Point-to-point subject routes may not represent patient origins, live traffic, trip tolerance, or referral-driven travel.",
+    "Strong public pages may not correspond to strong conversion, capacity, outcomes, or economics for the subject or peers.",
+    "The city income and age profile may not represent the selected 20-minute drive-time catchment."
+  ],
+  "scoring_limitations": [
+    "All base components use only 20, 35, 50, 65, or 80.",
+    "Unknown components are neutral 50 with no directional claim.",
+    "The Client Opportunity market-demand input is the computed Market Demand-Supply Score, as required by the canonical formula.",
+    "Sampled query visibility is directional only and is not a rank grid.",
+    "The 4.9 Maps sample is not used as peer-normalized reputation because review count and comparison fields are absent.",
+    "Public service claims are treated as offer and positioning evidence, not operating proof.",
+    "No prior 59, 56, 72, or 66 headline score or prior continuous component value was used."
+  ],
+  "hidden_appendices": {
+    "tier_3_reference_comps": {
+      "included": false,
+      "reason": "Hidden by default and not needed for this bounded scoring task."
+    },
+    "internal_acquisition_add_on": {
+      "included": false,
+      "reason": "This is a GROW single-practice analysis, not acquisition diligence."
+    }
+  }
+}

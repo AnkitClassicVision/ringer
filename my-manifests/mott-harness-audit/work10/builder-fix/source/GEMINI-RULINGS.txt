@@ -1,0 +1,110 @@
+# Red-Team Reviewer Report: v57 Pathway & Temporal Plan
+
+**Reviewer Posture**: Independent Red-Team Reviewer (Reviewer 2).  
+**Execution Context**: Read-only inspection of repository state at `/tmp/claude-1000/-mnt-d-drive-repos-mott/1be1395d-c2b1-4124-ab95-4ee3999427dc`. No files modified, no commands executed to alter state. Rulings are formed independently without referencing or attempting to match parallel review outputs.
+
+---
+
+## Executive Summary & Findings Matrix
+
+| Finding ID | Description | Severity | Confidence | Primary Evidence |
+| :--- | :--- | :--- | :--- | :--- |
+| **F-01** | **Internal Prompt Contradiction in `build_v57.py`**: Prompt text instructs model to keep qualifiers (line 78) but explicitly commands stripping `tues nxt wk` to `tuesday` (lines 82–84). Transcript #4 passed qualifier extraction by ignoring the v57 prompt directive. | **HIGH** | **HIGH** | [build_v57.py:78-84](file:///home/ankit114/repos/mott-v21-snap/graph/build_v57.py#L78-L84) |
+| **F-02** | **Premature Suite Assertion Relaxation**: Modifying harness assertions to accept `monday next week` before running the Monday 2026-07-27 probe risks codifying unverified gateway date resolution mechanics. | **MEDIUM** | **HIGH** | [scenarios.py:22-26](file:///home/ankit114/repos/mott-v21-snap/harness/scenarios.py#L22-L26), [pathway_harness.py:149-152](file:///home/ankit114/repos/mott-v21-snap/harness/pathway_harness.py#L149-L152) |
+| **F-03** | **Hypothesis H1 Underdetermination**: H1 (Sunday-anchored gateway week) is fit to only 3 Sunday data points. It is unverified on non-Sunday run dates and cannot be distinguished yet from relative offset calculation algorithms. | **MEDIUM** | **HIGH** | [TEMPORAL-CONTRACT.md:30-43](file:///home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md#L30-L43), [TEMPORAL-BRIEF.md:55-58](file:///home/ankit114/repos/mott-v21-snap/harness/TEMPORAL-BRIEF.md#L55-L58) |
+
+---
+
+## Detailed Rulings (R1 – R5)
+
+### R1. Plan Approval (A–E)
+
+- **VERDICT**: **REVISE / DO NOT SHIP AS-IS** (Conditional rejection of Plan A & C prior to Monday probe execution).
+- **File:Line Evidence**:
+  - [contract/TEMPORAL-CONTRACT.md:39-43](file:///home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md#L39-L43): Encodes H1 as working basis without non-Sunday empirical validation.
+  - [graph/build_v57.py:82-84](file:///home/ankit114/repos/mott-v21-snap/graph/build_v57.py#L82-L84): Contains contradictory prompt text telling the model to strip shorthand phrases to bare weekdays (`tues nxt wk` -> `tuesday`).
+  - [harness/checks/check_v57_fixes.py:83-101](file:///home/ankit114/repos/mott-v21-snap/harness/checks/check_v57_fixes.py#L83-L101): Checks regex string presence in prompts, but fails to catch internal prompt contradictions.
+- **Analysis**:
+  Plan B correctly identifies the need to remove the stripping instruction in `PREFERENCE_VARS`. However, Plan A & C prematurely declare `contract/TEMPORAL-CONTRACT.md` canonical and update test assertions before verifying gateway resolution behavior on a non-Sunday date (Monday 2026-07-27). Re-minting the candidate from `build_v57.py` must occur *after* purging the contradictory prompt text, and test assertions must only be updated after Monday probe execution confirms actual gateway date math.
+- **What Would Change Ruling**:
+  1. Complete deletion of the contradictory stripping text in `build_v57.py:82-84` and re-minting the graph.
+  2. Execution of the Monday 2026-07-27 gateway probe (Plan E1) verifying exact returned slot dates.
+  3. Clean execution of all 30 scenarios against the minted candidate.
+
+---
+
+### R2. Transcript Failure Analysis (1 through 5)
+
+- **VERDICT**: **PARTIALLY CONFIRM / PARTIALLY REFUTE**
+- **File:Line Evidence**:
+  - Failure 1 (`vague week request`): [scenarios.py:22-26](file:///home/ankit114/repos/mott-v21-snap/harness/scenarios.py#L22-L26), [pathway_harness.py:149-152](file:///home/ankit114/repos/mott-v21-snap/harness/pathway_harness.py#L149-L152)
+  - Failure 2 (`picks a slot but also asks for a different one`): [scenarios.py:85-90](file:///home/ankit114/repos/mott-v21-snap/harness/scenarios.py#L85-L90)
+  - Failure 3 (`clock time with no day at all`): [scenarios.py:98-102](file:///home/ankit114/repos/mott-v21-snap/harness/scenarios.py#L98-L102)
+  - Failure 4 (`texting shorthand for next tuesday`): [build_v57.py:82-84](file:///home/ankit114/repos/mott-v21-snap/graph/build_v57.py#L82-L84), [scenarios.py:132-136](file:///home/ankit114/repos/mott-v21-snap/harness/scenarios.py#L132-L136)
+  - Failure 5 (`requests a time outside office hours`): [scenarios.py:201-205](file:///home/ankit114/repos/mott-v21-snap/harness/scenarios.py#L201-L205)
+- **Detailed Evaluation**:
+  - **Failure #1 (`vague week request`)**: *Refuted in framing*. Extraction yielded `monday next week..friday next week`. Assertion expected `'monday'`/`'friday'`. While qualifier preservation matches owner intent, assuming this behavior is resolved until Monday probe verification is premature.
+  - **Failure #2 (`picks a slot but also asks for a different one`)**: *Confirmed*. Agent stopped at `n_which_intent` and asked: *"Did you mean the Tuesday 11:00 am opening, or should I look for a Wednesday instead?"* This is safe and intended behavior to prevent unconfirmed bookings. The scenario assertion `expect_node: n_offer` ([scenarios.py:87](file:///home/ankit114/repos/mott-v21-snap/harness/scenarios.py#L87)) was stale following the introduction of `n_which_intent`.
+  - **Failure #3 (`clock time with no day at all`)**: *Confirmed*. Agent routed to `n_offer_2` (afternoon offer node) and offered 2:30pm/2:45pm slots. The scenario assertion ([scenarios.py:100](file:///home/ankit114/repos/mott-v21-snap/harness/scenarios.py#L100)) strictly expected `n_offer`. Accepting node-family `['n_offer', 'n_offer_2']` is correct.
+  - **Failure #4 (`texting shorthand for next tuesday`)**: *Partially Refuted*. Extraction captured `tuesday next week`. However, packet Plan B claimed this was expected under v57 builder design. In reality, `build_v57.py:82-84` instructed the model: "`tues nxt wk` must become tuesday". The model extracted `tuesday next week` by *violating* the v57 prompt instruction.
+  - **Failure #5 (`requests a time outside office hours`)**: *Confirmed*. Agent stated: *"I do not have anything available at that time."* Harness regex ([scenarios.py:204](file:///home/ankit114/repos/mott-v21-snap/harness/scenarios.py#L204)) matched `/don'?t have|no openings|.../` and failed on uncontracted `"do not have"`. The test regex was defective.
+- **What Would Change Ruling**: Monday live test logs showing that extracted qualified phrases correctly resolve to target calendar dates without intermediate failure.
+
+---
+
+### R3. H1 Hypothesis Evaluation & Falsification Probe
+
+- **VERDICT**: **INSUFFICIENT** (Evidence is underdetermined; H1 is consistent with 3 Sunday data points but unverified across non-Sunday run dates).
+- **File:Line Evidence**:
+  - [contract/TEMPORAL-CONTRACT.md:30-43](file:///home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md#L30-L43)
+  - [harness/TEMPORAL-BRIEF.md:55-58](file:///home/ankit114/repos/mott-v21-snap/harness/TEMPORAL-BRIEF.md#L55-L58)
+- **Analysis**:
+  On Sunday 2026-07-26, sending `monday next week` yielded `08/03`, `wednesday next week` yielded `08/05`, and `tuesday next week` yielded `08/04`. H1 posits that the gateway anchors weeks on Sunday (making Sunday 07/26 part of week 07/26–08/01, thus "next week" is 08/02–08/08).  
+  However, an alternative hypothesis (H2) exists: the gateway evaluates `X next week` by resolving `X` to its next upcoming occurrence and adding 7 days. On Sunday 07/26, the next upcoming Tuesday is 07/28; adding 7 days yields 08/04. Both H1 and H2 predict identical outputs on Sunday.
+- **Cheapest Falsification Probe**:
+  - On Monday 2026-07-27, probe **`sunday` vs `sunday next week`**.
+  - Under H1 (Sunday-anchored calendar: Mon 07/27 is day 2 of week 07/26–08/01):
+    - `sunday` (soonest Sunday) = 08/02.
+    - `sunday next week` (Sunday of next week) = 08/09.
+  - Under H2 (add 7d to next occurrence):
+    - `sunday` (next occurrence) = 08/02.
+    - `sunday next week` (08/02 + 7d) = 08/09.
+  - To cleanly separate week-boundary logic from 7-day relative offsets on Monday 07/27: Send bare vague phrase **`next week`** to the gateway and inspect the returned range in `result.slots`. If `next week` returns `08/03–08/07`, the gateway uses Monday anchoring; if it returns `08/02–08/08` or `08/10–08/14`, Sunday anchoring or 14-day capping is active.
+- **What Would Change Ruling**: Execution of the Monday probe comparing returned slot date ranges for bare and qualified temporal phrases.
+
+---
+
+### R4. Sunday-Overshoot Residual Defect Acceptability & Interim Mitigation
+
+- **VERDICT**: **ACCEPTABLE WITH OPERATIONAL BOUNDARIES** (Acceptable for interim inbound processing only if outbound Sunday campaigns remain hard-blocked at 0 and explicit dates remain mandatory in offers/confirmations).
+- **File:Line Evidence**:
+  - [contract/TEMPORAL-CONTRACT.md:54-63](file:///home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md#L54-L63)
+  - [harness/scenarios.py:18](file:///home/ankit114/repos/mott-v21-snap/harness/scenarios.py#L18) (Offer text format: `\d{2}/\d{2}/\d{4}`)
+- **Analysis & Mitigation**:
+  The bounded-harm argument holds because:
+  1. Outbound campaigns do not execute on Sundays ([TEMPORAL-CONTRACT.md:59](file:///home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md#L59)).
+  2. Inbound Sunday queries receiving an offer get explicit calendar dates (e.g., `"08/04/2026 10:30 am"`), preventing patients from silently booking an unexpected date.
+  3. Patient confirmation requires explicit affirmation of the dated slot.
+- **Interim Mitigation (No Model Math & No Platform Variables Required)**:
+  - Enforce explicit date formatting in offer prompts: Require offer nodes to state both day-of-week and full calendar date (e.g., *"Tuesday, August 4th (08/04/2026)"*). This eliminates date ambiguity for inbound Sunday replies without requiring model-side date math.
+- **What Would Change Ruling**: Evidence showing any conversational pathway where an appointment can be booked without explicit date presentation to the patient.
+
+---
+
+### R5. Explicit Framing & Transcript Interpretation Contestations
+
+- **VERDICT**: **REJECT PACKET FRAMING IN FOUR SPECIFIC AREAS**
+- **File:Line Evidence & Contested Framing Points**:
+  1. **Omission of Prompt Builder Defect in `build_v57.py`**:
+     - *Packet Claim*: Plan B frames transcript #4 (`tues nxt wk`) as proof that v57 extraction logic performed correctly under owner rules.
+     - *Contestation*: [build_v57.py:82-84](file:///home/ankit114/repos/mott-v21-snap/graph/build_v57.py#L82-L84) explicitly instructed the model: "`tues nxt wk` must become tuesday, never pass the shorthand through verbatim." Transcript #4 succeeded because the model *failed to follow* v57's bad prompt instruction. The packet misframed a prompt error as a validation success.
+  2. **Premature Adoption of H1 as Fact**:
+     - *Packet Claim*: Packet treats H1 ("Sunday-anchored gateway") as an established premise justifying immediate changes to test assertions.
+     - *Contestation*: H1 is a hypothesis based on 3 data points collected on a single day ([TEMPORAL-CONTRACT.md:30-43](file:///home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md#L30-L43)). Treating H1 as proven before running Monday probes violates test methodology.
+  3. **Conflating Assertion Changes with Behavior Verification**:
+     - *Packet Claim*: Plan C proposes updating scenario assertions to match current extracted strings (`monday next week`).
+     - *Contestation*: [pathway_harness.py:149-152](file:///home/ankit114/repos/mott-v21-snap/harness/pathway_harness.py#L149-L152) performs exact string equality on `expect_vars`. Updating assertions to match model output before confirming gateway date resolution risks masking underlying resolution errors.
+  4. **Over-reliance on `check_v57_fixes.py` as a Safety Gate**:
+     - *Packet Claim*: Plan D frames rebuilding `check_v57_fixes.py` as a structural gate.
+     - *Contestation*: [check_v57_fixes.py:83-101](file:///home/ankit114/repos/mott-v21-snap/harness/checks/check_v57_fixes.py#L83-L101) relies solely on string regex pattern checks over graph JSON. It cannot verify semantic consistency, internal prompt contradictions, or live gateway execution.
+- **What Would Change Ruling**: Updating packet documentation to accurately report prompt contradictions in `build_v57.py` and conditioning test assertion updates on executed Monday probe data.

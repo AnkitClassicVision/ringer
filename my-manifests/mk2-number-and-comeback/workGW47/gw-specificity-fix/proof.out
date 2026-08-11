@@ -1,0 +1,34 @@
+2026-08-04 19:43:44,955 INFO live_text_shape=plain marks=0
+2026-08-04 19:43:44,955 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 19:43:44,955 INFO raw_fetch msgs=none
+2026-08-04 19:43:44,955 INFO live_text=current residue_len=18
+2026-08-04 19:43:44,964 INFO raw_resolve from=08/27/2026
+2026-08-04 19:43:44,964 INFO date_source=pathway_specificity sentence=2 explicit=3
+2026-08-04 19:43:44,965 INFO live_text_shape=plain marks=0
+2026-08-04 19:43:44,965 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 19:43:44,965 INFO raw_fetch msgs=none
+2026-08-04 19:43:44,965 INFO live_text=current residue_len=18
+2026-08-04 19:43:44,965 INFO raw_resolve from=08/27/2026
+2026-08-04 19:43:44,965 INFO date_source=pathway_specificity sentence=2 explicit=2
+2026-08-04 19:43:44,966 INFO live_text_shape=plain marks=0
+2026-08-04 19:43:44,966 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 19:43:44,966 INFO raw_fetch msgs=none
+2026-08-04 19:43:44,966 INFO live_text=current residue_len=35
+2026-08-04 19:43:44,966 INFO raw_resolve from=08/18/2026
+2026-08-04 19:43:44,966 INFO date_source=raw
+2026-08-04 19:43:44,966 INFO live_text_shape=plain marks=0
+2026-08-04 19:43:44,966 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 19:43:44,966 INFO raw_fetch msgs=none
+2026-08-04 19:43:44,966 INFO live_text=current residue_len=28
+2026-08-04 19:43:44,968 INFO raw_resolve from=08/10/2026
+2026-08-04 19:43:44,968 INFO date_source=pathway_anaphora
+2026-08-04 19:43:44,969 INFO live_text_shape=plain marks=0
+2026-08-04 19:43:44,969 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 19:43:44,969 INFO raw_fetch msgs=none
+2026-08-04 19:43:44,969 INFO live_text=current residue_len=15
+2026-08-04 19:43:44,969 INFO raw_resolve from=08/06/2026
+2026-08-04 19:43:44,969 INFO date_source=pathway_specificity sentence=1 explicit=1
+CASE=explicit-beats-weekday FROM=2026-08-27
+CASE=ordinal FROM=2026-08-27
+CASE=away-exception DATE=2026-08-18
+CASE=anaphora FROM=2026-08-17

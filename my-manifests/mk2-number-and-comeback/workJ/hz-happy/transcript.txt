@@ -1,0 +1,25 @@
+GW_COUNT_BEFORE=0
+TURN 'hi' -> node=n_ask
+  SAID Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.
+
+Many vision insurance benefits renew yearly, so don't let your benefits go unused!
+
+When would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.
+
+如需中文服务，请直接用中文回复。
+TURN 'the first available time works' -> node=n_ask
+  SAID One moment while I check the schedule for you.
+TURN '1' -> node=n_ask
+  SAID One moment while I check the schedule for you.
+TURN 'yes' -> node=n_ask
+  SAID One moment while I check the schedule for you.
+TURN 'thank you' -> node=n_ask
+  SAID One moment while I check the schedule for you.
+TURN 'thank you' -> node=n_ask
+  SAID One moment while I check the schedule for you.
+END_NODE=n_ask
+GW_COUNT_AFTER=0
+CLEANUP_FINAL_COUNT=0
+VERDICT: FAIL ended on 'n_ask', expected 'e_booked' | GW count after was 0, expected 1

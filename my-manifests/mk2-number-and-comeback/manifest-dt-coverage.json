@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workDTCoverage",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-datetime-coverage",
+      "engine": "local-shell",
+      "timeout_s": 900,
+      "task_type": "research",
+      "verified": "A 51-case date/time verbiage matrix measured against the live gateway - every natural phrasing class a patient uses (absolute, weekday, relative, anaphora, clock, day-part, window, edge, negation) answered HTTP 200 with its resolution recorded, so remaining interpretation gaps are enumerated from evidence instead of discovered by patients.",
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_datetime_coverage.py > coverage.txt 2>&1; rc=$?; cat coverage.txt; exit $rc",
+      "check": "grep -qE 'DT_DONE total=[0-9]+ http_ok=[0-9]+' coverage.txt || { echo 'FAIL: sweep did not complete'; tail -4 coverage.txt; exit 1; }; t=$(grep -oE 'DT_DONE total=[0-9]+' coverage.txt | grep -oE '[0-9]+'); ok=$(grep -oE 'http_ok=[0-9]+' coverage.txt | grep -oE '[0-9]+'); [ \"$t\" = \"$ok\" ] || { echo \"FAIL: $((t-ok)) cases errored\"; grep 'err=[^ ]' coverage.txt | head -5; exit 1; }; n=$(grep -cE '^DT=' coverage.txt); [ \"$n\" -ge 50 ] || { echo \"FAIL: only $n case lines\"; exit 1; }; echo \"PASS: $n-case coverage matrix captured, all HTTP 200\"",
+      "expect_files": ["coverage.txt"]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN=1 WALL_MS=6592 N_MSGS=1 NODE=n_goal_update SAID=Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.
+
+Many vision insurance be
+TURN=2 WALL_MS=2157 N_MSGS=1 NODE=n_goal_update SAID=What time works best for you on Friday the 17th?
+TURN=3 WALL_MS=1893 N_MSGS=1 NODE=n_goal_update SAID=What time works best for you on Friday the 14th?
+RESULT label=gl-converge turns=3 total_wall_ms=10642 filler_hits=0 candidate=0

@@ -1,0 +1,8 @@
+CHAT_CREATED=fb6ee0a3
+SENT='hi' node=n_ask
+SENT='thursday please' node=n_offer
+SENT='No the following Thursday' node=n_offer
+WAIT=4s for Bland to commit the last message
+RACE_RESULT count=26 dates=08/06/2026
+INTERPRET: 08/06 dates -> deployed extract drops the negation (code drift in extract_date_from_text); 08/13 dates -> deployed resolves the correction correctly; friday dates (sentinel) -> deployed extract honored the negation and returned nothing, so the incident 08/06 came from the fetch race (correction not yet committed when the webhook fired)
+PROBE_DONE

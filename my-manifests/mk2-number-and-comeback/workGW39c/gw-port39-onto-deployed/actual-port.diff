@@ -1,0 +1,61 @@
+--- deployed-lane-38-bland_gateway.py	2026-08-04 12:33:37.475676596 -0400
++++ ported-bland_gateway.py	2026-08-04 12:34:08.851101501 -0400
+@@ -622,6 +622,9 @@
+     today = _eastern_today().date()
+     t = re.sub(r"[.,!?]", "", str(raw or "").strip().lower())
+     t = re.sub(r"\s+", " ", t)
++    # Pathway slot variables can pin from/to to an offered datetime. Keep the
++    # existing date parser authoritative by removing only its trailing clock.
++    t = re.sub(r"\s+(?:0?[1-9]|1[0-2]):[0-5]\d\s*(?:am|pm)$", "", t)
+     if not t:
+         return None
+ 
+@@ -636,6 +639,36 @@
+         monday = today - timedelta(days=today.weekday())
+         return monday + timedelta(weeks=weeks_ahead, days=weekday)
+ 
++    number_words = {
++        "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
++        "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
++        "couple": 2,
++    }
++
++    # Resolve the offset before considering anchor words such as "today".
++    # This also accepts the bare forms used by availability extraction.
++    match = re.fullmatch(
++        r"(?:in )?(a|a couple|\d+|one|two|three|four|five|six|seven|eight|nine|ten|couple) "
++        r"(days?|weeks?|months?)(?: (?:from (?:today|now)|out))?",
++        t,
++    )
++    if match:
++        count_text, unit = match.groups()
++        count = 1 if count_text == "a" else number_words.get(
++            count_text.replace("a ", ""), int(count_text) if count_text.isdigit() else None
++        )
++        if unit.startswith("day"):
++            return emit(today + timedelta(days=count))
++        if unit.startswith("week"):
++            return emit(today + timedelta(days=7 * count))
++        month = today.month - 1 + count
++        year, month = today.year + month // 12, month % 12 + 1
++        for day in range(today.day, 0, -1):
++            try:
++                return emit(today.replace(year=year, month=month, day=day))
++            except ValueError:
++                continue
++
+     simple_days = {
+         "today": 0, "tomorrow": 1, "tmrw": 1, "tmr": 1,
+         "day after tomorrow": 2,
+@@ -662,11 +695,6 @@
+     if match:
+         return emit(today + timedelta(days=int(match.group(1))))
+ 
+-    number_words = {
+-        "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+-        "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+-        "couple": 2,
+-    }
+     match = re.fullmatch(r"in (?:a|a (couple)|(\d+|one|two|three|four|five|six|seven|eight|nine|ten|couple)) weeks?", t)
+     if match:
+         count_text = match.group(1) or match.group(2)

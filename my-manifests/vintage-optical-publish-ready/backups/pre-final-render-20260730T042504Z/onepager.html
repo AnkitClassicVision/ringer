@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MyBCAT | Vintage Optical Competitive Growth Analysis</title>
+<style>
+  @page { size: Letter; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #1A242C;
+    --ink-2: #27343C;
+    --muted: #53636D;
+    --teal: #006064;
+    --teal-2: #007681;
+    --aqua: #00ACC1;
+    --aqua-soft: #DFF5F7;
+    --surface: #F4F6F8;
+    --line: #D7E0E5;
+    --track: #E3E9EC;
+    --gold: #C69A3E;
+    --warn: #8B3E20;
+    --warn-soft: #F8E8DF;
+    --white: #FFFFFF;
+  }
+  html, body {
+    width: 8.5in;
+    height: 11in;
+  }
+  body {
+    display: grid;
+    grid-template-rows: .25in 1.20in .78in 1.20in 1.50in 1.90in 2.54in .62in 1.01in;
+    overflow: hidden;
+    color: var(--ink-2);
+    background: var(--white);
+    font-family: "IBM Plex Sans", "Arial", sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  a { color: inherit; }
+  h1, h2, h3, .cond, .score-number, .section-number {
+    font-family: "IBM Plex Sans Condensed", "Arial Narrow", "Arial", sans-serif;
+  }
+  h1, h2, h3 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+
+  .boundary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 .48in;
+    background: #6D2F1C;
+    color: var(--white);
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .12em;
+  }
+  .boundary-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 18px;
+    padding: 2px 8px;
+    border: 1px solid rgba(255,255,255,.62);
+    border-radius: 999px;
+  }
+  .boundary-note {
+    font-weight: 600;
+    letter-spacing: .04em;
+    opacity: .92;
+  }
+
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: .30in;
+    padding: .17in .48in .16in;
+    overflow: hidden;
+    color: #EAF0F3;
+    background: var(--ink);
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    right: -.75in;
+    top: -1.35in;
+    width: 3.2in;
+    height: 3.2in;
+    border: 1px solid rgba(0,172,193,.25);
+    border-radius: 50%;
+  }
+  .hero-main { min-width: 0; flex: 1; position: relative; z-index: 1; }
+  .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 6px;
+  }
+  .brand-row img { width: 25px; height: 25px; object-fit: contain; }
+  .brand-name { color: var(--white); font-size: 13px; font-weight: 700; letter-spacing: .04em; }
+  .brand-tag {
+    margin-left: 2px;
+    padding-left: 8px;
+    border-left: 1px solid #46555E;
+    color: #A8BBC4;
+    font-size: 7.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    max-width: 5.5in;
+    color: var(--white);
+    font-size: 25px;
+    font-weight: 650;
+    letter-spacing: -.015em;
+    line-height: 1.06;
+  }
+  .hero h1 span { color: #7FD8E4; }
+  .subject {
+    margin-top: 6px;
+    color: #B9C7CE;
+    font-size: 8.1px;
+    line-height: 1.35;
+  }
+  .hero-score {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: .12in;
+    width: 2.20in;
+    flex: 0 0 2.20in;
+  }
+  .ring {
+    position: relative;
+    width: .92in;
+    height: .92in;
+    flex: 0 0 .92in;
+  }
+  .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring-center {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .ring-num { color: var(--white); font-size: 29px; font-weight: 750; line-height: .9; }
+  .ring-den { margin-top: 3px; color: #A8BBC4; font-size: 6.5px; letter-spacing: .1em; }
+  .score-label { color: #F0C86D; font-size: 12px; font-weight: 750; line-height: 1.05; }
+  .score-direction { margin-top: 3px; color: #D6E1E6; font-size: 7px; font-weight: 700; letter-spacing: .08em; }
+  .score-context { margin-top: 4px; color: #A8BBC4; font-size: 7px; line-height: 1.3; }
+
+  .read {
+    display: flex;
+    gap: .15in;
+    align-items: center;
+    padding: .08in .48in;
+    border-bottom: 2px solid var(--ink);
+    background: var(--white);
+  }
+  .read-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: .42in;
+    height: .42in;
+    flex: 0 0 .42in;
+    border: 1px solid var(--teal);
+    border-radius: 50%;
+    color: var(--teal);
+    font-size: 16px;
+  }
+  .read h2 {
+    color: var(--teal);
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+  }
+  .read p {
+    margin-top: 3px;
+    max-width: 7.15in;
+    font-size: 8.55px;
+    line-height: 1.38;
+  }
+  .read strong { color: var(--ink); }
+
+  .zone {
+    display: flex;
+    min-height: 0;
+    padding: .10in .48in;
+    border-bottom: 1px solid var(--line);
+  }
+  .zone.tint { background: var(--surface); }
+  .section-spine { width: .55in; flex: 0 0 .55in; padding-top: 1px; }
+  .section-number {
+    color: var(--teal);
+    font-size: 27px;
+    font-weight: 250;
+    line-height: 1;
+    opacity: .58;
+  }
+  .zone-body { min-width: 0; flex: 1; }
+  .section-label {
+    color: var(--teal);
+    font-size: 8.5px;
+    font-weight: 750;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+  }
+  .zone h2 {
+    margin-top: 2px;
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 650;
+    line-height: 1.05;
+  }
+  .zone-intro {
+    margin-top: 3px;
+    max-width: 7in;
+    color: var(--muted);
+    font-size: 7.6px;
+    line-height: 1.35;
+  }
+
+  .market-grid {
+    display: grid;
+    grid-template-columns: 1.1fr repeat(3, .9fr);
+    gap: 0;
+    margin-top: 7px;
+    border-top: 1px solid var(--line);
+  }
+  .market-cell { min-width: 0; padding: 6px 10px 0 0; }
+  .market-cell + .market-cell { padding-left: 10px; border-left: 1px solid var(--line); }
+  .metric-main { color: var(--ink); font-size: 17px; font-weight: 750; line-height: 1; }
+  .metric-main.score { color: var(--teal); }
+  .metric-label { margin-top: 3px; color: var(--ink-2); font-size: 7.1px; font-weight: 750; letter-spacing: .06em; text-transform: uppercase; }
+  .metric-note { margin-top: 2px; color: var(--muted); font-size: 6.9px; line-height: 1.28; }
+
+  .competition-grid {
+    display: grid;
+    grid-template-columns: 2.65in 1fr;
+    gap: .27in;
+    margin-top: 7px;
+  }
+  .score-row { margin-bottom: 7px; }
+  .score-row:last-child { margin-bottom: 0; }
+  .score-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .score-name { color: var(--ink); font-size: 8.4px; font-weight: 700; }
+  .score-value { color: var(--teal); font-size: 12px; font-weight: 750; }
+  .score-value.warn { color: var(--warn); }
+  .score-cue { color: var(--muted); font-size: 6.4px; font-weight: 700; letter-spacing: .04em; }
+  .meter { height: 6px; margin-top: 3px; overflow: hidden; border-radius: 4px; background: var(--track); }
+  .meter > span { display: block; height: 100%; border-radius: 4px; background: var(--teal); }
+  .meter > span.warn { background: var(--warn); }
+  .peer-list { border-top: 1px solid var(--line); }
+  .peer-row {
+    display: grid;
+    grid-template-columns: .56in 1.25in 1fr;
+    gap: 7px;
+    align-items: baseline;
+    padding: 3px 0;
+    border-bottom: 1px dotted #C6D0D6;
+  }
+  .tier {
+    width: max-content;
+    padding: 1px 4px;
+    border: 1px solid var(--teal);
+    border-radius: 3px;
+    color: var(--teal);
+    font-size: 6px;
+    font-weight: 750;
+    letter-spacing: .05em;
+  }
+  .tier.t2 { border-color: #7C8A93; color: #667680; }
+  .peer-name { color: var(--ink); font-size: 7.4px; font-weight: 700; }
+  .peer-note { color: var(--muted); font-size: 6.7px; line-height: 1.2; }
+  .limit-note {
+    margin-top: 5px;
+    padding: 4px 6px;
+    border: 1px solid #E5C9B8;
+    border-radius: 4px;
+    background: var(--warn-soft);
+    color: #69361F;
+    font-size: 6.8px;
+    line-height: 1.3;
+  }
+
+  .opportunity-grid {
+    display: grid;
+    grid-template-columns: 1.42in 1fr;
+    gap: .20in;
+    margin-top: 7px;
+  }
+  .digital-score {
+    padding: 7px 9px;
+    border: 1px solid var(--teal);
+    border-radius: 6px;
+  }
+  .digital-score .metric-main { color: var(--teal); font-size: 22px; }
+  .digital-score p { margin-top: 5px; color: var(--muted); font-size: 6.8px; line-height: 1.32; }
+  .lane { display: grid; grid-template-columns: 1fr .86in 1.06in; gap: 8px; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--line); }
+  .lane:first-child { padding-top: 0; }
+  .lane:last-child { border-bottom: 0; }
+  .lane-name { color: var(--ink); font-size: 8.2px; font-weight: 750; }
+  .lane-why { margin-top: 1px; color: var(--muted); font-size: 6.7px; line-height: 1.25; }
+  .lane-score { color: var(--teal); font-size: 13px; font-weight: 750; text-align: right; }
+  .lane-score small { display: block; color: var(--muted); font-size: 5.9px; font-weight: 700; letter-spacing: .03em; }
+  .lane-read { color: var(--ink-2); font-size: 6.8px; font-weight: 700; text-align: right; text-transform: uppercase; }
+  .unknown-strip {
+    margin-top: 6px;
+    padding: 4px 7px;
+    border: 1px solid #E3C98F;
+    border-radius: 4px;
+    background: #FBF5E8;
+    color: #624A17;
+    font-size: 6.8px;
+    line-height: 1.3;
+  }
+
+  .plan {
+    min-height: 0;
+    padding: .10in .48in .09in;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .plan-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .plan h2 { flex: 0 0 1.25in; color: var(--ink); font-size: 15px; font-weight: 650; white-space: nowrap; }
+  .plan-note { color: var(--muted); font-size: 6.8px; }
+  .fix-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: .12in;
+    height: 2.04in;
+    margin-top: 7px;
+  }
+  .fix-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    padding: 7px 8px 6px;
+    border: 1px solid #C9D4DA;
+    border-radius: 6px;
+    background: var(--white);
+  }
+  .fix-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .fix-id { color: var(--teal); font-size: 7px; font-weight: 750; letter-spacing: .08em; }
+  .confidence {
+    padding: 1px 5px;
+    border-radius: 999px;
+    background: var(--aqua-soft);
+    color: #00565A;
+    font-size: 6px;
+    font-weight: 750;
+  }
+  .fix-card h3 { margin-top: 5px; color: var(--ink); font-size: 10px; font-weight: 700; line-height: 1.08; }
+  .action { margin-top: 4px; color: var(--ink-2); font-size: 6.9px; line-height: 1.3; }
+  .owner-line { margin-top: 4px; color: var(--muted); font-size: 6.4px; line-height: 1.2; }
+  .card-label { color: var(--teal); font-weight: 750; letter-spacing: .03em; text-transform: uppercase; }
+  .math-box {
+    margin-top: 5px;
+    padding: 4px 5px;
+    border-radius: 4px;
+    background: var(--surface);
+    color: #33434C;
+    font-size: 6.2px;
+    line-height: 1.28;
+  }
+  .proof { margin-top: 5px; color: var(--muted); font-size: 6.3px; line-height: 1.28; }
+  .fix-links { margin-top: auto; padding-top: 4px; border-top: 1px solid var(--line); font-size: 6px; }
+
+  .cta {
+    display: flex;
+    align-items: center;
+    gap: .25in;
+    padding: .08in .48in;
+    color: #EAF0F3;
+    background: var(--ink);
+  }
+  .cta-copy { min-width: 0; flex: 1; }
+  .cta h2 { color: var(--white); font-size: 13px; font-weight: 650; }
+  .cta p { margin-top: 2px; color: #B7C6CD; font-size: 7.3px; line-height: 1.28; }
+  .cta-button {
+    display: block;
+    flex: 0 0 auto;
+    padding: 7px 13px;
+    border-radius: 5px;
+    color: #052E31;
+    background: var(--aqua);
+    font-size: 8.5px;
+    font-weight: 750;
+    text-decoration: none;
+  }
+
+  .fineprint {
+    padding: .08in .48in .07in;
+    background: var(--white);
+    color: #61717A;
+    font-size: 6.5px;
+    line-height: 1.35;
+  }
+  .fineprint p + p { margin-top: 4px; }
+  .fineprint strong { color: var(--ink-2); }
+  .source-key { color: #40525C; }
+  .cite {
+    display: inline-block;
+    margin-left: 2px;
+    color: var(--teal-2);
+    font-size: .88em;
+    font-weight: 750;
+    line-height: 1;
+    text-decoration: underline;
+    text-decoration-thickness: .6px;
+    text-underline-offset: 1px;
+    white-space: nowrap;
+  }
+  .hero .cite, .cta .cite { color: #7FD8E4; }
+  .warn-cite { color: var(--warn); }
+</style>
+</head>
+<body>
+  <div class="boundary" aria-label="Use boundary">
+    <span class="boundary-badge">INTERNAL-ONLY</span>
+    <span class="boundary-note">Public-data working draft</span>
+    <span class="boundary-badge">UNROOMED / NOT FOR EXTERNAL USE</span>
+  </div>
+
+  <header class="hero">
+    <div class="hero-main">
+      <div class="brand-row">
+        <img src="assets/mybcat-logo.png" alt="MyBCAT logo">
+        <span class="brand-name">MyBCAT</span>
+        <span class="brand-tag">Practice Growth Intelligence</span>
+      </div>
+      <h1>Vintage Optical: <span>measure the lanes before scaling them.</span></h1>
+      <p class="subject">Competitive Growth Analysis for Vintage Optical, 605 S Main St, Morton, Illinois. <a class="cite" href="https://www.vintageopt.com/">S01</a><a class="cite" href="https://www.vintageopt.com/hours-location/">S02</a><a class="cite" href="https://nominatim.openstreetmap.org/search?q=605+South+Main+Street%2C+Morton%2C+Illinois+61550&amp;format=jsonv2&amp;limit=5&amp;addressdetails=1&amp;countrycodes=us">N00</a></p>
+    </div>
+    <div class="hero-score" aria-label="Client Opportunity Score 54 / 100, higher is better">
+      <div class="ring">
+        <svg viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="43" fill="none" stroke="#3D4C55" stroke-width="7"/>
+          <circle cx="50" cy="50" r="43" fill="none" stroke="#C69A3E" stroke-width="7" stroke-linecap="round" stroke-dasharray="146 270"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-num">54</div>
+          <div class="ring-den">/ 100</div>
+        </div>
+      </div>
+      <div>
+        <div class="score-label">CLIENT OPPORTUNITY</div>
+        <div class="score-direction">HIGHER = BETTER</div>
+        <div class="score-context">Public data · Confidence C <a class="cite" href="https://www.census.gov/quickfacts/fact/table/mortonvillageillinois/PST045224">S14</a><a class="cite" href="https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/cities/totals/sub-est2025.csv">S17</a><a class="cite" href="https://www.google.com/maps/search/optometrist+near+Morton%2C+IL">S16</a></div>
+      </div>
+    </div>
+  </header>
+
+  <section class="read">
+    <div class="read-mark" aria-hidden="true">◆</div>
+    <div>
+      <h2>The Read</h2>
+      <p><strong>Room to Win is tight at 43, while Client Opportunity is 54, Practice Competitiveness is 58, and Digital Presence is 57; every displayed score uses higher = better.</strong> <a class="cite" href="https://www.vintageopt.com/">S01</a><a class="cite" href="https://scheduleyourexam.com/v3/index.php/5788">S06</a><a class="cite" href="https://www.google.com/maps/search/optometrist+near+Morton%2C+IL">S16</a> The scores diverge because Vintage already publishes broad services and a booking path, while complete local supply, peer reputation, access conversion, capacity, and economics remain unmeasured. <a class="cite" href="https://www.vintageopt.com/">S01</a><a class="cite" href="https://scheduleyourexam.com/v3/index.php/5788">S06</a><a class="cite" href="https://www.google.com/maps/search/optometrist+near+Morton%2C+IL">S16</a> The action is lane by lane: establish conversion, access, and channel baselines before making growth claims. <a class="cite" href="https://www.vintageopt.com/medical-eye-care/dry-eye-treatment/">S03</a><a class="cite" href="https://www.vintageopt.com/medical-eye-care/myopia-management/">S04</a><a class="cite" href="https://www.vintageopt.com/contact-lenses/specialty-contact-lenses/">S05</a></p>
+    </div>
+  </section>
+
+  <section class="zone">
+    <div class="section-spine"><div class="section-number">1</div></div>
+    <div class="zone-body">
+      <div class="section-label">Your Market</div>
+      <h2>Supportive city context, incomplete catchment proof.</h2>
+      <p class="zone-intro">Morton city data supports a mixed demand read, but city values do not describe the 20-minute drive-time catchment. <a class="cite" href="https://www.census.gov/quickfacts/fact/table/mortonvillageillinois/PST045224">S14</a><a class="cite" href="https://api.census.gov/data/2024/acs/acs5.html">S15</a><a class="cite" href="https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/cities/totals/sub-est2025.csv">S17</a></p>
+      <div class="market-grid">
+        <div class="market-cell">
+          <div class="metric-main score">57 / 100</div>
+          <div class="metric-label">Market Demand-Supply</div>
+          <div class="metric-note">Higher = better · mixed · public-only method. <a class="cite" href="https://www.census.gov/quickfacts/fact/table/mortonvillageillinois/PST045224">S14</a><a class="cite" href="https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/cities/totals/sub-est2025.csv">S17</a></div>
+        </div>
+        <div class="market-cell">
+          <div class="metric-main">17,565</div>
+          <div class="metric-label">2025 city estimate</div>
+          <div class="metric-note">City context only. <a class="cite" href="https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/cities/totals/sub-est2025.csv">S17</a></div>
+        </div>
+        <div class="market-cell">
+          <div class="metric-main">25.9%</div>
+          <div class="metric-label">Under age 18</div>
+          <div class="metric-note">Directional family-demand proxy. <a class="cite" href="https://www.census.gov/quickfacts/fact/table/mortonvillageillinois/PST045224">S14</a></div>
+        </div>
+        <div class="market-cell">
+          <div class="metric-main">23.1%</div>
+          <div class="metric-label">Age 65 or older</div>
+          <div class="metric-note">Directional age-demand proxy. <a class="cite" href="https://www.census.gov/quickfacts/fact/table/mortonvillageillinois/PST045224">S14</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="zone tint">
+    <div class="section-spine"><div class="section-number">2</div></div>
+    <div class="zone-body">
+      <div class="section-label">Your Competition</div>
+      <h2>Nearby choices are real; total supply is still unknown.</h2>
+      <div class="competition-grid">
+        <div>
+          <div class="score-row">
+            <div class="score-top">
+              <span class="score-name">Room to Win <a class="cite warn-cite" href="https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4680865,40.6196077?overview=false&amp;steps=false&amp;alternatives=false">R01</a><a class="cite warn-cite" href="https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.5857929,40.6821622?overview=false&amp;steps=false&amp;alternatives=false">R05</a></span>
+              <span class="score-value warn">43 / 100 <span class="score-cue">higher = better</span></span>
+            </div>
+            <div class="meter"><span class="warn" style="width:43%"></span></div>
+          </div>
+          <div class="score-row">
+            <div class="score-top">
+              <span class="score-name">Practice Competitiveness <a class="cite" href="https://www.vintageopt.com/">S01</a><a class="cite" href="https://scheduleyourexam.com/v3/index.php/5788">S06</a></span>
+              <span class="score-value">58 / 100 <span class="score-cue">higher = better</span></span>
+            </div>
+            <div class="meter"><span style="width:58%"></span></div>
+          </div>
+          <div class="limit-note">Known routed alternatives are a bounded peer set, not a complete supply census or patient-origin choice set. <a class="cite warn-cite" href="https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.432644,40.704092?overview=false&amp;steps=false&amp;alternatives=false">R03</a><a class="cite warn-cite" href="https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4455579,40.7145273?overview=false&amp;steps=false&amp;alternatives=false">R04</a></div>
+        </div>
+        <div>
+          <div class="peer-list">
+            <div class="peer-row">
+              <span class="tier">TIER 1</span>
+              <span class="peer-name">Focus On Eyes</span>
+              <span class="peer-note">Direct Morton peer, 4.07 routed minutes. <a class="cite" href="https://visionsource-focusoneyes.com/">S07</a><a class="cite" href="https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4680865,40.6196077?overview=false&amp;steps=false&amp;alternatives=false">R01</a></span>
+            </div>
+            <div class="peer-row">
+              <span class="tier">TIER 1</span>
+              <span class="peer-name">Tri-County + VCC</span>
+              <span class="peer-note">Regional peers with dry-eye or myopia overlap. <a class="cite" href="https://www.tricountyeyecenter.com/">S08</a><a class="cite" href="https://vcc2020.com/service/myopia-control/">S10</a></span>
+            </div>
+            <div class="peer-row">
+              <span class="tier t2">TIER 2</span>
+              <span class="peer-name">Bard + Illinois Eye</span>
+              <span class="peer-note">Retail and medical-surgical substitutes. <a class="cite" href="https://www.bardoptical.com/eye-doctor-peoria-east/">S11</a><a class="cite" href="https://www.illinoiseyecenter.com/location/washington/">S12</a></span>
+            </div>
+          </div>
+          <div class="limit-note">A complete office and provider census could move Room to Win materially in either direction. <a class="cite warn-cite" href="https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.432644,40.704092?overview=false&amp;steps=false&amp;alternatives=false">R03</a><a class="cite warn-cite" href="https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4455579,40.7145273?overview=false&amp;steps=false&amp;alternatives=false">R04</a> Public peer pages prove stated services, not utilization or patient draw. <a class="cite warn-cite" href="https://www.tricountyeyecenter.com/">S08</a><a class="cite warn-cite" href="https://vcc2020.com/">S09</a><a class="cite warn-cite" href="https://www.illinoiseyecenter.com/location/washington/">S12</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="zone">
+    <div class="section-spine"><div class="section-number">3</div></div>
+    <div class="zone-body">
+      <div class="section-label">Your Opportunity</div>
+      <h2>Three existing specialty lanes are research-next, not forecasts.</h2>
+      <div class="opportunity-grid">
+        <div class="digital-score">
+          <div class="metric-main">57 / 100</div>
+          <div class="metric-label">Digital Presence</div>
+          <div class="metric-note">Higher = better · mixed · Confidence C</div>
+          <p>The site publishes service pages and a booking flow; findability, reputation, and social proof lack peer-normalized baselines. <a class="cite" href="https://www.vintageopt.com/">S01</a><a class="cite" href="https://scheduleyourexam.com/v3/index.php/5788">S06</a><a class="cite" href="https://www.google.com/maps/search/optometrist+near+Morton%2C+IL">S16</a></p>
+        </div>
+        <div>
+          <div class="lane">
+            <div>
+              <div class="lane-name">Dry eye / ocular surface</div>
+              <div class="lane-why">Existing offer plus city age proxy; direct peer overlap constrains the gap. <a class="cite" href="https://www.vintageopt.com/medical-eye-care/dry-eye-treatment/">S03</a><a class="cite" href="https://www.tricountyeyecenter.com/">S08</a><a class="cite" href="https://vcc2020.com/">S09</a></div>
+            </div>
+            <div class="lane-score">52 / 100<small>higher = better</small></div>
+            <div class="lane-read">Research next</div>
+          </div>
+          <div class="lane">
+            <div>
+              <div class="lane-name">Myopia management</div>
+              <div class="lane-why">Existing offer plus city child-share proxy; a regional peer publishes overlap. <a class="cite" href="https://www.vintageopt.com/medical-eye-care/myopia-management/">S04</a><a class="cite" href="https://vcc2020.com/service/myopia-control/">S10</a><a class="cite" href="https://www.census.gov/quickfacts/fact/table/mortonvillageillinois/PST045224">S14</a></div>
+            </div>
+            <div class="lane-score">52 / 100<small>higher = better</small></div>
+            <div class="lane-read">Research next</div>
+          </div>
+          <div class="lane">
+            <div>
+              <div class="lane-name">Specialty contact lenses</div>
+              <div class="lane-why">The public offer is verified; demand, competitive gap, capacity, and economics are not. <a class="cite" href="https://www.vintageopt.com/contact-lenses/specialty-contact-lenses/">S05</a><a class="cite" href="https://visionsource-focusoneyes.com/">S07</a></div>
+            </div>
+            <div class="lane-score">51 / 100<small>higher = better</small></div>
+            <div class="lane-read">Research next</div>
+          </div>
+        </div>
+      </div>
+      <div class="unknown-strip"><strong>Unknown until measured:</strong> all volume, conversion, capacity, collection, and economics inputs. <a class="cite" href="https://www.vintageopt.com/medical-eye-care/dry-eye-treatment/">S03</a><a class="cite" href="https://www.vintageopt.com/medical-eye-care/myopia-management/">S04</a><a class="cite" href="https://www.vintageopt.com/contact-lenses/specialty-contact-lenses/">S05</a><a class="cite" href="https://scheduleyourexam.com/v3/index.php/5788">S06</a> Public pages verify offers and access paths, not starts, completed visits, throughput, or financial performance. <a class="cite" href="https://www.vintageopt.com/medical-eye-care/dry-eye-treatment/">S03</a><a class="cite" href="https://www.vintageopt.com/medical-eye-care/myopia-management/">S04</a><a class="cite" href="https://www.vintageopt.com/contact-lenses/specialty-contact-lenses/">S05</a><a class="cite" href="https://scheduleyourexam.com/v3/index.php/5788">S06</a></div>
+    </div>
+  </section>
+
+  <section class="plan">
+    <div class="plan-head">
+      <h2>First 30 Days</h2>
+      <div class="plan-note">Exactly three GROW Fix Cards · measured baselines before growth claims</div>
+    </div>
+    <div class="fix-grid">
+      <article class="fix-card" data-fix-card="F-001">
+        <div class="fix-top">
+          <span class="fix-id">F-001 · SPECIALTY CONVERSION</span>
+          <span class="confidence">CONFIDENCE: HIGH</span>
+        </div>
+        <h3>Tag the three existing lanes.</h3>
+        <p class="action"><span class="card-label">Action:</span> build a 30-day table for dry eye, myopia, and specialty contacts before adding services or claiming lane ownership. <a class="cite" href="https://www.vintageopt.com/medical-eye-care/dry-eye-treatment/">S03</a><a class="cite" href="https://www.vintageopt.com/medical-eye-care/myopia-management/">S04</a><a class="cite" href="https://www.vintageopt.com/contact-lenses/specialty-contact-lenses/">S05</a></p>
+        <p class="owner-line"><span class="card-label">Owner:</span> practice staff · 30 days · no dependency</p>
+        <div class="math-box"><span class="card-label">Math:</span> inquiry-to-book = booked evaluations / inquiries; book-to-start = starts / booked evaluations; completion = completed plans / starts.</div>
+        <p class="proof"><span class="card-label">Proof:</span> one table shows inquiries, booked evaluations, starts, completions, available slots, and an owner for every lane; missing counts stay null.</p>
+        <div class="fix-links"><a class="cite" href="https://scheduleyourexam.com/v3/index.php/5788">S06</a></div>
+      </article>
+
+      <article class="fix-card" data-fix-card="F-002">
+        <div class="fix-top">
+          <span class="fix-id">F-002 · ACCESS DIAGNOSTIC</span>
+          <span class="confidence">CONFIDENCE: HIGH</span>
+        </div>
+        <h3>Measure the access gap.</h3>
+        <p class="action"><span class="card-label">Action:</span> track calls, booking attempts, live slots, cancellations, no-shows, and requests without an acceptable slot before changing hours or staffing. <a class="cite" href="https://www.vintageopt.com/hours-location/">S02</a><a class="cite" href="https://scheduleyourexam.com/v3/index.php/5788">S06</a></p>
+        <p class="owner-line"><span class="card-label">Owner:</span> practice staff · 30 days · no dependency</p>
+        <div class="math-box"><span class="card-label">Math:</span> access gap = unanswered or abandoned calls + incomplete booking attempts + requests without acceptable slots; gap rate = access gap / total access attempts.</div>
+        <p class="proof"><span class="card-label">Proof:</span> the 30-day table reports call disposition, booking completion, next available slot by visit type, cancellations, no-shows, and unmet requests.</p>
+        <div class="fix-links"><a class="cite" href="https://www.google.com/maps/search/optometrist+near+Morton%2C+IL">S16</a></div>
+      </article>
+
+      <article class="fix-card" data-fix-card="F-003">
+        <div class="fix-top">
+          <span class="fix-id">F-003 · CHANNEL BASELINE</span>
+          <span class="confidence">CONFIDENCE: MEDIUM</span>
+        </div>
+        <h3>Audit listings and source flow.</h3>
+        <p class="action"><span class="card-label">Action:</span> reconcile the current address across tracked surfaces, correct only observed mismatches, and baseline reviews, referrals, and recall before broader awareness work. <a class="cite" href="https://www.vintageopt.com/">S01</a><a class="cite" href="https://www.vintageopt.com/hours-location/">S02</a><a class="cite" href="https://www.google.com/maps/search/optometrist+near+Morton%2C+IL">S16</a></p>
+        <p class="owner-line"><span class="card-label">Owner:</span> practice staff · 30 days · no dependency</p>
+        <div class="math-box"><span class="card-label">Math:</span> listing accuracy = correct tracked listings / tracked listings; review velocity = new verified reviews / 30 days; referral or recall book rate = booked / eligible inquiries or contacts.</div>
+        <p class="proof"><span class="card-label">Proof:</span> a dated audit logs the address on each surface, records corrections only when found, and includes 30-day review, referral, and recall counts with owners.</p>
+        <div class="fix-links"><a class="cite" href="https://nominatim.openstreetmap.org/search?q=605+South+Main+Street%2C+Morton%2C+Illinois+61550&amp;format=jsonv2&amp;limit=5&amp;addressdetails=1&amp;countrycodes=us">N00</a></div>
+      </article>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="cta-copy">
+      <h2>Review the evidence boundary before using this analysis.</h2>
+      <p>Project Room inventory review is required, so this remains an internal, unroomed public-data draft. No external delivery or action is authorized.</p>
+    </div>
+    <a class="cta-button" href="https://meetings.hubspot.com/ankit98/competitive-analysis">Book a MyBCAT working session</a>
+  </section>
+
+  <footer class="fineprint">
+    <p><strong>Method:</strong> public-only, manual directional bands with high-good client scores and Confidence C; official pages support identity, published services, hours, and booking paths; Census supports city context; stored OSRM links support point-to-point route observations. <a class="cite" href="https://www.vintageopt.com/">S01</a><a class="cite" href="https://www.vintageopt.com/hours-location/">S02</a><a class="cite" href="https://www.census.gov/quickfacts/fact/table/mortonvillageillinois/PST045224">S14</a><a class="cite" href="https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/cities/totals/sub-est2025.csv">S17</a><a class="cite" href="https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4680865,40.6196077?overview=false&amp;steps=false&amp;alternatives=false">R01</a></p>
+    <p><strong>Limits:</strong> Morton city demographics are not a drive-time catchment; routed peers are not a complete supply census; the dated Maps result is not a peer-normalized reputation export; published offers do not prove conversion, capacity, outcomes, or economics. <a class="cite" href="https://api.census.gov/data/2024/acs/acs5.html">S15</a><a class="cite" href="https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/cities/totals/sub-est2025.csv">S17</a><a class="cite" href="https://www.google.com/maps/search/optometrist+near+Morton%2C+IL">S16</a><a class="cite" href="https://www.tricountyeyecenter.com/">S08</a><a class="cite" href="https://vcc2020.com/">S09</a></p>
+    <p class="source-key">Source IDs link to the registered public evidence. Internal-only · Unroomed · Not for external use · © 2026 MyBCAT</p>
+  </footer>
+</body>
+</html>

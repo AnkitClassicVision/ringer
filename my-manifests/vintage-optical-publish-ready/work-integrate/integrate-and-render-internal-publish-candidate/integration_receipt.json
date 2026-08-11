@@ -1,0 +1,12 @@
+{
+  "integrated_at": "2026-07-30T04:08:35.365759+00:00",
+  "backup": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/backups/pre-publish-candidate-20260730T040810Z",
+  "report": "/mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30",
+  "onepager_pages": 1,
+  "explainer_pages": 11,
+  "onepager_sha256": "30f6e2f8ba165efc8245a8b57ff4c51f1c22de0f9dc23513c3a4b5c04d676529",
+  "explainer_sha256": "6e4a16816726698bb33a2827aae25f2a7621100278825ef35a7b6c5396c5e683",
+  "status": "PASS",
+  "project_room": "inventory_review_required",
+  "external_actions": "none"
+}

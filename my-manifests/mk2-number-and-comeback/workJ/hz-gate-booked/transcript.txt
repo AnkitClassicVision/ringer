@@ -1,0 +1,8 @@
+GW_COUNT_BEFORE=0
+SEED_OK appt_id=...7063
+TURN 'hi' -> node=e_defer
+  SAID For that you'll have to contact the MK2 Optical office at (212) 219-2219
+END_NODE=e_defer
+CLEANUP cancel ...7063 -> HTTP 200
+CLEANUP_FINAL_COUNT=0
+VERDICT: PASS mode=gate_booked

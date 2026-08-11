@@ -1,0 +1,126 @@
+{
+  "packet_date": "2026-07-30",
+  "receipt_scope": "Every frozen raw or immediate derived data input read by build_reconciled_supply_routing.py",
+  "receipts": [
+    {
+      "source_id": "SUPPLY_CANDIDATES_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-build/build-supply-and-visibility-candidates/supply_candidates.json",
+      "sha256": "f4cbeaa09c24b3637b4e7e00964c0cd479fe9443622a135d8f798ca85f8f63ee",
+      "source_url": "https://npiregistry.cms.hhs.gov/api/",
+      "captured_at": "2026-07-30",
+      "authority": "NPPES public registry plus deterministic local grouping",
+      "method": "Immediate derived candidate packet",
+      "limitation": "Location groups are candidates, not active-office counts."
+    },
+    {
+      "source_id": "CENSUS_GEOCODER_BATCH_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-build/build-supply-and-visibility-candidates/census-geocoder-batch.csv",
+      "sha256": "e54c0ef1c85e3b5d85fbcd98d359a81a077d214b393bcbbdc7cfab12ffb62aa0",
+      "source_url": "https://geocoding.geo.census.gov/geocoder/",
+      "captured_at": "2026-07-30",
+      "authority": "United States Census Bureau batch geocoder",
+      "method": "Immediate derived 24-row batch input",
+      "limitation": "Input addresses contain no returned coordinates."
+    },
+    {
+      "source_id": "CENSUS_GEOCODER_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-build/build-supply-and-visibility-candidates/census-geocoder-results.csv",
+      "sha256": "18a6593c071f7a879e1df83564db1fba84c042882565f5b1b788fef4faba11d2",
+      "source_url": "https://geocoding.geo.census.gov/geocoder/geographies/addressbatch",
+      "captured_at": "2026-07-30",
+      "authority": "United States Census Bureau batch geocoder",
+      "method": "Frozen batch geocoding result",
+      "limitation": "Three rows returned No_Match and retain null coordinates."
+    },
+    {
+      "source_id": "OSRM_TABLE_INDEX_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-build/build-supply-and-visibility-candidates/osrm-table-input-index.json",
+      "sha256": "aadc4efd95d83ca438c2b870635d78412e8ba27e8f7fd356537b45176f1348f8",
+      "source_url": "https://router.project-osrm.org/table/v1/driving",
+      "captured_at": "2026-07-30",
+      "authority": "OSRM input lineage",
+      "method": "Immediate derived origin and destination index",
+      "limitation": "Destinations use Census geocoder candidate points."
+    },
+    {
+      "source_id": "OSRM_TABLE_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-build/build-supply-and-visibility-candidates/osrm-table-results.json",
+      "sha256": "053bacdf7034bd52df37c923291e1cf0af137231b50beed7ac20ce1ad766a801",
+      "source_url": "https://router.project-osrm.org/table/v1/driving",
+      "captured_at": "2026-07-30",
+      "authority": "OSRM public routing service",
+      "method": "Frozen one-to-many driving table",
+      "limitation": "No live traffic and no patient-origin choice evidence."
+    },
+    {
+      "source_id": "OSRM_FOCUS_GOOGLE_PINS_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-build/build-supply-and-visibility-candidates/osrm-vintage-to-focus-google-pins.json",
+      "sha256": "1329262f989ce7d7a8f6c935f22cadfebd699b7a51fca91208e52a839941235f",
+      "source_url": "https://router.project-osrm.org/route/v1/driving",
+      "captured_at": "2026-07-30",
+      "authority": "OSRM public routing service",
+      "method": "Frozen route between two direct Google listing pins",
+      "limitation": "No live traffic."
+    },
+    {
+      "source_id": "LOCAL_VISIBILITY_REPUTATION_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-build/build-supply-and-visibility-candidates/local_visibility_reputation.json",
+      "sha256": "1a56d2092b07279c82b9416faf30c97ca476b2ba73f7e898e7ab81c1b6510c76",
+      "source_url": "https://www.google.com/maps/",
+      "captured_at": "2026-07-30",
+      "authority": "Immediate derived direct and aggregator observation packet",
+      "method": "Frozen source-separated visibility and reputation observations",
+      "limitation": "Dated observations are not a rank grid or complete peer export."
+    },
+    {
+      "source_id": "GOOGLE_MAPS_SAMPLE_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/google-maps-vintage-20260730.json",
+      "sha256": "ff0b01b4642535487a7d3fcf494b151b8490d564a517e4e5c58da007ec449616",
+      "source_url": "https://www.google.com/maps/place/Vintage+Optical/@40.6049094,-89.467024,17z/",
+      "captured_at": "2026-07-30T12:54:08.602Z",
+      "authority": "Direct public Google Maps listing",
+      "method": "Browser DOM observation",
+      "limitation": "Limited dated view with no displayed review count."
+    },
+    {
+      "source_id": "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/google-maps-focus-20260730.json",
+      "sha256": "aabf66762ddb1ac51c3eb42ae53f25700ce5e98af682b275fc0a3238e030bdbb",
+      "source_url": "https://www.google.com/maps/place/Focus+On+Eyes,+P.C.+Member+Of+Vision+Source/@40.6196994,-89.4680886,17z/",
+      "captured_at": "2026-07-30T13:18:44.578Z",
+      "authority": "Direct public Google Maps listing and peer cards",
+      "method": "Browser DOM observation",
+      "limitation": "One dated page observation, not a complete peer export or rank grid."
+    },
+    {
+      "source_id": "NPPES_CURRENT_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/nppes-provider-roster-sanitized.json",
+      "sha256": "c53c847d05ff99fb673aa8bafde18e3e6ee31d19bb834c8f79a8ec1778a53e23",
+      "source_url": "https://npiregistry.cms.hhs.gov/api/",
+      "captured_at": "2026-07-30",
+      "authority": "NPPES public registry",
+      "method": "Sanitized frozen city and taxonomy query roster",
+      "limitation": "Provider records are not office counts; one reported row did not materialize."
+    },
+    {
+      "source_id": "VALHALLA_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-build/build-catchment-and-growth-packet/catchment_windows.geojson",
+      "sha256": "7f733dbece1a217e2a45854731eb823754b0abd7069c3eb2760ee5e6b2b57368",
+      "source_url": "https://valhalla1.openstreetmap.de/isochrone",
+      "captured_at": "2026-07-30",
+      "authority": "Valhalla modeled drive-time isochrones",
+      "method": "Corrected frozen 5, 10, 15, 20, and 30-minute polygons",
+      "limitation": "Modeled driving time with no live traffic."
+    },
+    {
+      "source_id": "CATCHMENT_DEMOGRAPHICS_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-build/build-catchment-and-growth-packet/catchment_demographics.json",
+      "sha256": "5ba62163d5f3cd1316c8f9b39ab27818e1ec208d277dd05210f1453d2f55885f",
+      "source_url": "https://api.census.gov/data/2024/acs/acs5",
+      "captured_at": "2026-07-30",
+      "authority": "Immediate derived ACS, TIGER, CDC PLACES, and Valhalla packet",
+      "method": "Frozen catchment demographic calculations",
+      "limitation": "Canonical full VDU remains null because required terms are incomplete."
+    }
+  ]
+}

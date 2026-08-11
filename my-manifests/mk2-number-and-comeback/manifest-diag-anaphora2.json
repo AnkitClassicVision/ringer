@@ -1,0 +1,16 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workDiagAnaphora2",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-anaphora-v120-envelopes",
+      "engine": "local-shell",
+      "timeout_s": 1200,
+      "verified": "Six full-envelope week-anaphora replays on v120 captured under env1..env6, so the wrong-Monday rate and the exact search variables on any bad run are measured, not guessed.",
+      "spec": "python3 -c \"import json;json.dump(['hi', \\\"I'm out this week how about in two weeks?\\\", 'What about Monday that week?'],open('turns.json','w'))\"; ok=0; for i in 1 2 3 4 5 6; do CAPTURE_TURNS=\"$(cat turns.json)\" HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py 120 env$i > cap$i.txt 2>&1 && ok=$((ok+1)); grep -m1 'TURN=3' cap$i.txt | head -c 200; echo; done; echo CAPTURES_OK=$ok; [ \"$ok\" -eq 6 ]",
+      "check": "grep -q 'CAPTURES_OK=6' <(tail -2 cap6.txt; echo CAPTURES_OK_MARKER) 2>/dev/null; n=0; for i in 1 2 3 4 5 6; do grep -q 'CAPTURE_COMPLETE' cap$i.txt && n=$((n+1)); done; [ \"$n\" -eq 6 ] || { echo \"FAIL: only $n/6 captures completed\"; exit 1; }; for i in 1 2 3 4 5 6; do d=$(grep -oE '08/(10|17)/2026' cap$i.txt | sort -u | tr '\\n' ',' ); echo \"RUN$i dates=$d\"; done; echo 'PASS: 6/6 envelope captures complete'",
+      "expect_files": ["cap1.txt", "cap2.txt", "cap3.txt", "cap4.txt", "cap5.txt", "cap6.txt"]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-source-refresh-report",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-gauge-render",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "integrate-and-render-gauge-onepager",
+      "engine": "local-shell",
+      "task_type": "site-build",
+      "timeout_s": 900,
+      "expect_files": ["integration_receipt.json", "render_receipt.json"],
+      "spec": "set -euo pipefail; target=/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents; candidate=/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-redesign/redesign-onepager-with-template-gauges/onepager.html; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/integrate_gauge_onepager.py --candidate \"$candidate\" --report-dir \"$target\" --receipt \"$PWD/integration_receipt.json\"; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_gauge_onepager_source.py --path \"$target/onepager.html\"; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_report_build_sources.py --dir \"$target\"; PYTHONDONTWRITEBYTECODE=1 python3 \"$target/render_report.py\" --dir \"$target\"; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/set_report_qa_state.py --dir \"$target\" --render complete --visual pending; cp \"$target/render_receipt.json\" \"$PWD/render_receipt.json\"",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_gauge_onepager_source.py --path /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents/onepager.html && PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_report_build_sources.py --dir /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents && PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_rendered_report.py --dir /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents --receipt ./render_receipt.json",
+      "verified": "the gauge-template one-pager replaces the prior layout, the number inventory is rebuilt, both PDFs render freshly, the one-pager remains exactly one Letter page, and source, score, null, and stale-value validators pass with visual QA still pending"
+    }
+  ]
+}

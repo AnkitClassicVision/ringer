@@ -1,0 +1,21 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS27b",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-wrongdate-replay",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": [
+        "capture.log",
+        "turn6.json",
+        "turns.json"
+      ],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS27/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || exit 1; echo REPLAY_VERSION=$V; python3 -c \"import json;json.dump(['hi','cant this week how about in 3 weeks','How late can I come in that Thursday','No Thursday the 27','How late can I come?','Ok I will take 430'],open('turns.json','w'))\" && CAPTURE_TURNS=\"$(cat turns.json)\" HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py $V . > capture.log 2>&1; rc=$?; tail -8 capture.log; exit $rc",
+      "check": "grep -q 'CAPTURE_COMPLETE' capture.log || { echo 'FAIL: capture incomplete'; tail -5 capture.log; exit 1; }; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_spoken_vs_slots.py . > cmp.txt 2>&1; rc=$?; cat cmp.txt; [ $rc -eq 0 ] || exit 1; grep -q 'TURN=4 .*spoken=.\\{0,4\\}08/27/2026' cmp.txt || { echo 'FAIL: the date correction (No Thursday the 27) did not produce 08/27 offers'; exit 1; }; echo 'PASS: correction re-searched and every spoken date is variable-backed'",
+      "verified": "Ankit's wrong-date sequence on the new mint: the 'No Thursday the 27' correction re-searches to real 08/27 inventory, and every spoken date at every turn is backed by the live slot variables - the wrong-date booking class proven dead end to end."
+    }
+  ]
+}

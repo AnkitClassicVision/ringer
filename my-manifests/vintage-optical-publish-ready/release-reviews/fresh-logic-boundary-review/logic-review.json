@@ -1,0 +1,183 @@
+{
+  "review_type": "logic",
+  "verdict": "PASS",
+  "external_actions_taken": "none",
+  "blocking_findings": [],
+  "reviewed_artifact_hashes": {
+    "onepager_pdf": "0ad82c2597c2594131bf9650bd3d45c718db6a8a2000256b2bbb9504f64ce349",
+    "number_explainer_pdf": "4c544174cc06b7c5075cfce1865f6ab25cff24b6e385ec0e5ca9f7a9b8f58b2e",
+    "scores_json": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c"
+  },
+  "validator_results": {
+    "build_source_validator": "PASS",
+    "rendered_report_validator": "PASS",
+    "visual_qa_receipt": "PASS"
+  },
+  "directionality_guard": "Room to Win = 100 - Competitive Pressure Index",
+  "competitive_pressure_index": 57,
+  "room_to_win": 43,
+  "room_to_win_check": "PASS",
+  "preserved_nulls": [
+    "canonical_full_vdu",
+    "canonical_office_count",
+    "rank_grid",
+    "complete_provider_entity_dedupe",
+    "cross_platform_review_total"
+  ],
+  "fix_card_count": 3,
+  "score_logic_review": [
+    {
+      "score": "Market Demand-Supply",
+      "prior_display": 57,
+      "current_display": 61,
+      "result": "PASS",
+      "logic": "Observed village population change and district enrollment change are rubric-defined growth proxies, so Growth / Future Demand can move from 50 to 65. Complete fixed-window demographic evidence directly improves Market Data Confidence from 35 to 50. This is not a reward for record volume: Supply Balance stays 50 because canonical full VDU and canonical office count remain null, and the other component bands do not move."
+    },
+    {
+      "score": "Competitive Pressure Index",
+      "prior_display": 57,
+      "current_display": 57,
+      "result": "PASS",
+      "logic": "The corrected direct-pin route preserves the bounded nearby-peer observation but does not establish patient choice. Candidate supply does not establish saturation, and the dated review comparison does not establish severe pressure. No refreshed evidence crosses a component band, so 57 remains justified."
+    },
+    {
+      "score": "Room to Win",
+      "prior_display": 43,
+      "current_display": 43,
+      "result": "PASS",
+      "logic": "Room to Win is not independently banded. It is the exact display inversion of Competitive Pressure: 100 - 57 = 43."
+    },
+    {
+      "score": "Practice Competitiveness",
+      "prior_display": 58,
+      "current_display": 61,
+      "result": "PASS",
+      "logic": "A source-specific same-page Google comparison supplies rating and volume evidence for the subject and three displayed peers. With fewer than five meaningful peers, the rubric permits a qualitative band at lower confidence. That bounded evidence supports Review Trust vs Peers moving from 50 to 65, but not 80. Visibility, access, differentiation, website clarity, and convenience do not move."
+    },
+    {
+      "score": "Client Opportunity",
+      "prior_display": 54,
+      "current_display": 54,
+      "result": "PASS",
+      "logic": "The required computed Market Demand-Supply input rises from 57 to 61, changing the full-precision total from 53.65 to 54.45. The display remains 54 under the approved half-up rule. No unsupported competitor weakness, leakage, capacity, conversion, or execution band is promoted."
+    },
+    {
+      "score": "Digital Presence",
+      "prior_display": 57,
+      "current_display": 60,
+      "result": "PASS",
+      "logic": "The bounded direct Google rating-and-volume comparison supports Reputation moving from 50 to 65 at confidence C. It is not raw star rating alone, a complete peer export, or a cross-platform total. Findability stays 50 because no rank grid ran, and all other components stay unchanged."
+    },
+    {
+      "score": "Dry eye / ocular surface",
+      "prior_display": 52,
+      "current_display": 53,
+      "result": "PASS",
+      "logic": "Recent fixed-window age and diabetes proxies directly improve the strength and recency of lane evidence, which supports Evidence Confidence moving from 35 to 50. Local Demand Fit remains 65. Search demand, referrals, capacity, conversion, outcomes, payer evidence, and economics remain unproven."
+    },
+    {
+      "score": "Myopia management",
+      "prior_display": 52,
+      "current_display": 53,
+      "result": "PASS",
+      "logic": "Fixed-window child counts and an observed first-party enrollment series directly improve Evidence Confidence from 35 to 50. Local Demand Fit remains 65. The missing school year is explicit, and the proxy is not converted into patient demand, starts, willingness to pay, referrals, capacity, or economics."
+    },
+    {
+      "score": "Specialty contact lenses",
+      "prior_display": 51,
+      "current_display": 51,
+      "result": "PASS",
+      "logic": "The refreshed demographic, route, and reputation evidence does not establish contact-lens demand, keratoconus burden, competitive depth, fitting capacity, outcomes, referrals, or economics. No component crosses a rubric band."
+    }
+  ],
+  "contradictions": [
+    {
+      "contradiction": "Birdeye displays Google components of 398 and 210, while the dated direct Google comparison displays 348 and 182.",
+      "resolution": "Both observations remain source-specific. The differences of 50 and 28 are shown, and no direct count is overwritten, averaged, or combined.",
+      "status": "RESOLVED_NONBLOCKING"
+    },
+    {
+      "contradiction": "The direct Google observation uses the current subject address, while Birdeye displays a legacy address.",
+      "resolution": "The current direct listing pin is used for routing. The legacy citation remains disclosed without a claim about current operating status.",
+      "status": "RESOLVED_NONBLOCKING"
+    },
+    {
+      "contradiction": "NPPES queries report 40 results, but only 39 provider candidate records materialized.",
+      "resolution": "Both counts and the one-record deficit remain visible. Neither count is promoted to an office, provider, or active-supply census.",
+      "status": "RESOLVED_NONBLOCKING"
+    },
+    {
+      "contradiction": "Earlier route lineage used 4.07 minutes, while the corrected direct-pin route is 3.89 minutes.",
+      "resolution": "The corrected route supersedes the stale value throughout the rendered package and preserves the same bounded nearby-peer interpretation.",
+      "status": "RESOLVED_NONBLOCKING"
+    }
+  ],
+  "disconfirmers": [
+    {
+      "claim_at_risk": "The bounded Google review-trust advantage",
+      "disconfirming_evidence": "A complete comparable peer export with stable entity rules, review recency, themes, response behavior, and more meaningful peers could erase or reverse the observed advantage."
+    },
+    {
+      "claim_at_risk": "The supportive observed-growth proxy",
+      "disconfirming_evidence": "Later Census revisions, a different comparable period, or catchment-level evidence that diverges from the village and district series could weaken the Growth / Future Demand band."
+    },
+    {
+      "claim_at_risk": "The unchanged competitive-pressure state",
+      "disconfirming_evidence": "A complete active-office census, canonical full VDU, provider entity dedupe, and population-weighted patient-choice model could move Competitive Pressure and Room to Win in either direction."
+    },
+    {
+      "claim_at_risk": "The practical relevance of nearby routes",
+      "disconfirming_evidence": "Patient-origin, trip-tolerance, or traffic-aware evidence could show that modeled proximity does not translate into meaningful patient choice."
+    }
+  ],
+  "remaining_risks": [
+    "The active-office census, provider entity join, and canonical full VDU remain incomplete, so supply balance and saturation cannot be calculated canonically.",
+    "The Review Trust vs Peers and Reputation changes rely on one dated same-page Google comparison and are the weakest changed bands.",
+    "No rank grid or complete comparable peer-review export exists, so visibility and reputation comparisons remain bounded.",
+    "Routes contain no live traffic, patient-origin, trip-tolerance, choice, capacity, or draw evidence.",
+    "Public evidence does not establish conversion, capacity, outcomes, referrals, payer mix, realized specialty demand, patient growth, revenue growth, or service-line economics.",
+    "Human Project Room approval of the exact rendered package is still required before any external use."
+  ],
+  "logic_checks": [
+    {
+      "check": "candidate_supply_not_canonicalized",
+      "result": "PASS",
+      "basis": "NPPES and geocoded counts are consistently labeled provider or location candidates, not a canonical active-office census. Canonical office count remains null."
+    },
+    {
+      "check": "review_sources_separated",
+      "result": "PASS",
+      "basis": "Direct Google and Birdeye observations remain source-specific. Ratings are not averaged, counts are not summed, and the cross-platform review total remains null."
+    },
+    {
+      "check": "growth_not_forecast",
+      "result": "PASS",
+      "basis": "Village population and district enrollment changes are labeled observed proxies, not catchment growth, forecasts, patient growth, starts, or realized demand."
+    },
+    {
+      "check": "routes_not_patient_choice",
+      "result": "PASS",
+      "basis": "OSRM and Valhalla outputs are limited to modeled route and catchment geometry. The package explicitly excludes patient origins, patient choice, trip tolerance, live traffic, capacity, and draw."
+    },
+    {
+      "check": "unknown_not_zero",
+      "result": "PASS",
+      "basis": "Missing denominators and canonical fields remain null or not calculable. The package explicitly rejects interpreting unknown as zero, average, normal, no demand, no competition, or no problem."
+    },
+    {
+      "check": "three_fix_cards_only",
+      "result": "PASS",
+      "basis": "Exactly three named Fix Cards appear: Visibility baseline, Reputation source control, and Booking completion. No fourth card appears."
+    },
+    {
+      "check": "internal_only_boundary",
+      "result": "PASS",
+      "basis": "The one-pager and every explainer page retain internal-only and human Project Room approval language. No external delivery is authorized."
+    },
+    {
+      "check": "score_band_changes_evidence_supported",
+      "result": "PASS",
+      "basis": "Each changed component maps to the rubric factor improved by the new evidence. Growth proxies affect Growth / Future Demand, completed demographic coverage affects confidence, platform-specific rating and volume affect reputation, and lane-specific demographic proxies affect Evidence Confidence. Unresolved supply, rank, patient-choice, operational, and economic gaps receive no stronger bands merely because more records were collected."
+    }
+  ]
+}

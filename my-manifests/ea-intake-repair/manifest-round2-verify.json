@@ -1,0 +1,43 @@
+{
+  "run_name": "ea-intake-repair",
+  "workdir": "/mnt/d_drive/ringer-work/ea-intake-repair/round2verify",
+  "max_parallel": 3,
+  "tasks": [
+    {
+      "key": "verify-lane-a-linkedin-threads",
+      "engine": "local-shell",
+      "task_type": "code-review",
+      "timeout_s": 600,
+      "spec": "set -o pipefail; python3 /tmp/claude-1000/-mnt-d-drive-repos-EA/16e106db-dbb9-44a1-936b-63218d06190f/scratchpad/check_lane.py --lane A 2>&1 | tee receipt.md",
+      "check": "python3 /tmp/claude-1000/-mnt-d-drive-repos-EA/16e106db-dbb9-44a1-936b-63218d06190f/scratchpad/check_lane.py --lane A",
+      "verified": "lane A's module satisfies the frozen test under the corrected hash; round 2's FAIL was a stale-hash checker defect, not a product defect.",
+      "expect_files": [
+        "receipt.md"
+      ]
+    },
+    {
+      "key": "verify-lane-c-hubspot-engagements",
+      "engine": "local-shell",
+      "task_type": "code-review",
+      "timeout_s": 600,
+      "spec": "set -o pipefail; python3 /tmp/claude-1000/-mnt-d-drive-repos-EA/16e106db-dbb9-44a1-936b-63218d06190f/scratchpad/check_lane.py --lane C 2>&1 | tee receipt.md",
+      "check": "python3 /tmp/claude-1000/-mnt-d-drive-repos-EA/16e106db-dbb9-44a1-936b-63218d06190f/scratchpad/check_lane.py --lane C",
+      "verified": "lane C's module satisfies the frozen test under the corrected hash; round 2's FAIL was a stale-hash checker defect, not a product defect.",
+      "expect_files": [
+        "receipt.md"
+      ]
+    },
+    {
+      "key": "verify-lane-d1-vault-wiring",
+      "engine": "local-shell",
+      "task_type": "code-review",
+      "timeout_s": 600,
+      "spec": "set -o pipefail; python3 /tmp/claude-1000/-mnt-d-drive-repos-EA/16e106db-dbb9-44a1-936b-63218d06190f/scratchpad/check_lane.py --lane D1 2>&1 | tee receipt.md",
+      "check": "python3 /tmp/claude-1000/-mnt-d-drive-repos-EA/16e106db-dbb9-44a1-936b-63218d06190f/scratchpad/check_lane.py --lane D1",
+      "verified": "lane D1's module and link map satisfy the frozen test under the corrected hash, including its self-proving leak canary; round 2's FAIL was a stale-hash checker defect.",
+      "expect_files": [
+        "receipt.md"
+      ]
+    }
+  ]
+}

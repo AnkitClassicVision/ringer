@@ -1,0 +1,6 @@
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN=1 WALL_MS=5987 N_MSGS=0 NODE=n_appt_check SAID=
+TURN=2 WALL_MS=2036 N_MSGS=1 NODE=n_goal_response SAID=Which specific date would you like? For example, August 12.
+TURN=3 WALL_MS=4663 N_MSGS=2 NODE=n_goal_response SAID=Okay, let me check availability for Tuesday, August 18th. | I have Tuesday 10:00 AM or Tuesday 2:00 PM at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+RESULT label=gl-never-term turns=3 total_wall_ms=12686 filler_hits=0 candidate=0

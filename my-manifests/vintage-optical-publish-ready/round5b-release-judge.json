@@ -1,0 +1,18 @@
+{
+  "run_name": "vintage-optical-publish-ready",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-release-judge",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "synthesize-final-release-verdict",
+      "engine": "codex",
+      "engine_args": ["-c", "model_reasoning_effort=high"],
+      "task_type": "review",
+      "timeout_s": 1800,
+      "expect_files": ["release-verdict.json", "release-verdict.md"],
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_release_verdict.py --dir .",
+      "verified": "a final fresh-context judge synthesizes all three independent reviews, verifies the final packet and room state, and names READY_FOR_PROJECT_ROOM_REVIEW as the highest truthful state with source-inventory approval still required",
+      "spec": "You are the final fresh-context release judge. Write only ./release-verdict.json and ./release-verdict.md. Do not modify any report, review, Project Room state, or source. Do not call MCP/Apps, capture memory, contact anyone, publish, send, commit, push, or deploy.\n\nRead all three independent final review directories under /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-final-reviews-v3, the final report packet at /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30, the integration receipt at /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-integrate-s18/integrate-s18-lineage-and-rerender/integration_receipt.json, and the Project Room JSON. Treat the user goal as a publication-quality, number-defensible package, but do not override the human source-authority gate. Recheck the review outputs rather than copying their verdicts blindly.\n\nrelease-verdict.json must contain: verdict PASS or FAIL; highest_true_state; project_room_status; external_use_authorized false; review_count 3; all_review_verdicts PASS only if true; fatal_issues/material_issues/minor_issues arrays; onepager_pages; explainer_pages; source_count; score_changes_after_refresh; final score map; current population 17565; historical population 17557; route minutes 4.07; onepager and explainer SHA-256 values; external_actions none; and user_action_required explicitly asking Ankit to approve the source inventory before external use.\n\nThe highest true state may be READY_FOR_PROJECT_ROOM_REVIEW only if all three reviews pass, no issue remains, technical and visual QA are green, scores and sources reconcile, and the room status is inventory_review_required. It must never be PUBLISH_READY while human review is pending. release-verdict.md must explain the numeric proof, logic proof, visual/technical proof, source refresh, unchanged scores, what approval still means, and include exact lines `Verdict: PASS`, `No fatal, material, or minor issues`, `Highest true state: READY_FOR_PROJECT_ROOM_REVIEW`, `External use authorized: no`, and a heading or sentence containing `Source inventory approval`. Use no em dashes."
+    }
+  ]
+}

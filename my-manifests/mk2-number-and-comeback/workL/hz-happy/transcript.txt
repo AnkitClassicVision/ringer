@@ -1,0 +1,24 @@
+GW_COUNT_BEFORE=0
+TURN 'hi' -> node=n_ask
+  SAID Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.
+
+Many vision insurance benefits renew yearly, so don't let your benefits go unused!
+
+When would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.
+
+如需中文服务，请直接用中文回复。
+TURN 'the first available time works' -> node=n_offer
+  SAID I have Tuesday 08/04/2026 10:45 am or Tuesday 08/04/2026 11:00 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+TURN '1' -> node=n_gate_1
+  SAID To confirm, your eye exam would be 08/04/2026 10:45 am at MK2 Optical. Reply YES to book it, or NO to look at other times.
+TURN 'yes' -> node=n_confirm
+  SAID Your appointment is booked for 08/04/2026 10:45 am. You're all set. If you have further questions, please call MK2 Optical at (212) 219-2219
+TURN 'thank you' -> node=e_booked
+  SAID Thank you. We look forward to seeing you.
+END_NODE=e_booked
+GW_COUNT_AFTER=1
+CLEANUP cancel ...5521 -> HTTP 200
+CLEANUP_FINAL_COUNT=0
+VERDICT: PASS mode=happy

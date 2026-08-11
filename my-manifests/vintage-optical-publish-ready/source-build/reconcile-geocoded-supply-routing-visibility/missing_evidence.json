@@ -1,0 +1,103 @@
+{
+  "packet_date": "2026-07-30",
+  "status": "open_evidence_gaps_preserved",
+  "gaps": [
+    {
+      "gap_id": "GAP_OFFICE_CENSUS_INCOMPLETE",
+      "field": "canonical_office_count",
+      "decision_impact": "Prevents a defensible active-office denominator and saturation claim.",
+      "attempted_sources": [
+        "NPPES_CURRENT_20260730",
+        "CENSUS_GEOCODER_20260730"
+      ],
+      "exact_failure": "Provider registry locations do not prove active, distinct offices.",
+      "fallback_tried": "Retained 24 location candidates and polygon counts without promoting them to offices.",
+      "owner": "Vintage Optical evidence owner",
+      "status": "incomplete",
+      "upgrade_evidence": "Direct entity evidence and a documented, deduplicated active-office census."
+    },
+    {
+      "gap_id": "GAP_NPPES_SOURCE_DEFICIT",
+      "field": "materialized_provider_candidate_count",
+      "decision_impact": "The materialized roster is one row below the source-reported total.",
+      "attempted_sources": [
+        "NPPES_CURRENT_20260730"
+      ],
+      "exact_failure": "The Pekin Optometrist query reported 11 results but only 10 records materialized, leaving a deficit of 1.",
+      "fallback_tried": "Preserved both the reported total of 40 and materialized count of 39.",
+      "owner": "NPPES source reconciliation owner",
+      "status": "failed",
+      "upgrade_evidence": "A frozen response that materializes all reported rows or documents the API mismatch."
+    },
+    {
+      "gap_id": "GAP_GEOCODER_NO_MATCHES",
+      "field": "candidate_coordinates",
+      "decision_impact": "Three candidates cannot be tested against catchment polygons or routed.",
+      "attempted_sources": [
+        "CENSUS_GEOCODER_20260730"
+      ],
+      "exact_failure": "Three of 24 Census batch rows returned No_Match.",
+      "fallback_tried": "Coordinates remain null; the candidates are preserved in the no-match limitation collection.",
+      "owner": "Geocoding evidence owner",
+      "status": "no_match",
+      "upgrade_evidence": "A reproducible authoritative geocoder match for each unresolved address."
+    },
+    {
+      "gap_id": "GAP_RANK_GRID_NOT_RUN",
+      "field": "local_search_rank_grid",
+      "decision_impact": "No geographic local-search visibility distribution can be claimed.",
+      "attempted_sources": [
+        "DATAFORSEO_PREFLIGHT_20260730",
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+      ],
+      "exact_failure": "DataForSEO credentials were unavailable, no paid request was sent, and the rank grid was not run.",
+      "fallback_tried": "Retained dated direct Google observations as samples only.",
+      "owner": "Local visibility evidence owner",
+      "status": "not_run",
+      "upgrade_evidence": "A dated, query-defined, geography-defined rank-grid export."
+    },
+    {
+      "gap_id": "GAP_FULL_VDU_INCOMPLETE",
+      "field": "canonical_full_vdu",
+      "decision_impact": "Prevents use of a canonical full VDU value.",
+      "attempted_sources": [
+        "CATCHMENT_DEMOGRAPHICS_20260730"
+      ],
+      "exact_failure": "The frozen demographic packet omits diabetes-indexed and commercial-pay-indexed canonical terms.",
+      "fallback_tried": "The partial diagnostic remains labeled non-canonical and is not used as full VDU.",
+      "owner": "Catchment methodology owner",
+      "status": "incomplete",
+      "upgrade_evidence": "All canonical VDU terms with frozen inputs and a validated formula."
+    },
+    {
+      "gap_id": "GAP_PROVIDER_ENTITY_DEDUPE",
+      "field": "distinct_active_office_entities",
+      "decision_impact": "Candidate rows and repeated addresses cannot be converted into distinct competitor offices.",
+      "attempted_sources": [
+        "NPPES_CURRENT_20260730",
+        "GOOGLE_MAPS_SAMPLE_20260730"
+      ],
+      "exact_failure": "Direct entity evidence exists only for the current and legacy subject-address exclusions.",
+      "fallback_tried": "All other rows remain unresolved provider-registry location candidates.",
+      "owner": "Provider entity-resolution owner",
+      "status": "not_run",
+      "upgrade_evidence": "Direct current listings, entity ownership evidence, and a documented address/entity deduplication review."
+    },
+    {
+      "gap_id": "GAP_LIVE_TRAFFIC",
+      "field": "traffic_adjusted_route_time",
+      "decision_impact": "Modeled route times cannot represent current or typical traffic.",
+      "attempted_sources": [
+        "OSRM_TABLE_20260730",
+        "OSRM_FOCUS_GOOGLE_PINS_20260730",
+        "VALHALLA_20260730"
+      ],
+      "exact_failure": "Frozen OSRM routes and Valhalla polygons contain no live traffic.",
+      "fallback_tried": "Reported modeled driving time with a no-live-traffic label.",
+      "owner": "Routing evidence owner",
+      "status": "unavailable",
+      "upgrade_evidence": "A dated traffic-aware route receipt using the same verified endpoints."
+    }
+  ]
+}

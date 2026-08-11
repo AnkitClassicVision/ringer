@@ -1,0 +1,18 @@
+{
+  "run_name": "grok-build-probe",
+  "workdir": "/tmp/ringer-lane-probes/grok",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "grok-build",
+      "engine": "grok",
+      "model": "grok-composer-2.5-fast",
+      "task_type": "probe",
+      "spec": "Create a Python script named lane_probe.py in the current working directory. It must print exactly GROK_BUILD_OK when executed. Do not write outside the current directory. Do not create extra files except lane_probe.py.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np=Path('lane_probe.py')\nif not p.exists():\n    print('FAIL: lane_probe.py was not created')\n    sys.exit(1)\nif p.stat().st_size == 0:\n    print('FAIL: lane_probe.py is empty')\n    sys.exit(1)\nproc=subprocess.run([sys.executable, str(p)], text=True, capture_output=True, timeout=10)\nout=proc.stdout.strip()\nif proc.returncode != 0:\n    print('FAIL: lane_probe.py exited', proc.returncode)\n    print(proc.stdout)\n    print(proc.stderr)\n    sys.exit(1)\nif out != 'GROK_BUILD_OK':\n    print(f'FAIL: expected GROK_BUILD_OK but got {out!r}')\n    print('stderr:', proc.stderr)\n    sys.exit(1)\nprint('PASS: lane_probe.py executed and printed GROK_BUILD_OK')\nPY",
+      "expect_files": ["lane_probe.py"],
+      "timeout_s": 900,
+      "verified": "executing the worker-created Python artifact proves the Grok Build lane can write and run checked artifacts"
+    }
+  ]
+}

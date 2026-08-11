@@ -1,0 +1,21 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW46v4",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-lane46-fullsuite-verify",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": [
+        "pytest.out",
+        "anaph.out",
+        "proof.out"
+      ],
+      "spec": "cp -r /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW44b/gw-week-vocab-live-fix/gwtest ./gwtest && find ./gwtest -name __pycache__ -type d -exec rm -rf {} + 2>/dev/null; cp /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW46/gw-anaphora-defer-fix/fixed-bland_gateway.py ./gwtest/container/bland_gateway.py && cd gwtest && PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q > ../pytest.out 2>&1; rc=$?; cd ..; tail -2 pytest.out; mkdir -p anaphtree && cp /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW46/gw-anaphora-defer-fix/gwtest/test_anaphora_defer.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW46/gw-anaphora-defer-fix/gwtest/conftest.py anaphtree/ && cp /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW46/gw-anaphora-defer-fix/fixed-bland_gateway.py anaphtree/bland_gateway.py && cd anaphtree && PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q > ../anaph.out 2>&1; arc=$?; cd ..; tail -1 anaph.out; cp /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW46/gw-anaphora-defer-fix/proof_defer.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW46/gw-anaphora-defer-fix/fixed-bland_gateway.py . && PYTHONDONTWRITEBYTECODE=1 python3 ./proof_defer.py > proof.out 2>&1; prc=$?; cat proof.out; exit $((rc+arc+prc))",
+      "check": "summary=$(tail -1 pytest.out); echo \"$summary\" | grep -qE '^[0-9]+ passed' || { echo \"FAIL: full suite not clean: $summary\"; tail -10 pytest.out; exit 1; }; n=$(echo \"$summary\" | grep -oE '^[0-9]+'); [ \"$n\" -ge 85 ] || { echo \"FAIL: only $n full-suite tests ran\"; exit 1; }; asum=$(tail -1 anaph.out); echo \"$asum\" | grep -qE '^15 passed' || { echo \"FAIL: anaphora tests not 15-green: $asum\"; exit 1; }; exp=$(python3 -c \"import datetime;print((datetime.date.today()+datetime.timedelta(days=14)).isoformat())\"); for c in 'CASE=anaphora-week FROM=2026-08-17' 'CASE=anaphora-day FROM=2026-08-17' \"CASE=away-override DATE=$exp\"; do grep -q \"$c\" proof.out || { echo \"FAIL: missing $c\"; cat proof.out; exit 1; }; done; echo \"PASS: full suite ($summary) + anaphora suite ($asum) + proofs green on the lane-46 file\"",
+      "verified": "The lane-46 anaphora-deference file passes the ENTIRE cumulative gateway suite (>=85 tests) plus all three deference proofs - closing the worker's partial-tree gap before any deploy."
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+GRAPH_FETCHED version=120
+CHAT_CREATED keys=['chat_id', 'message', 'variables']
+TURN=1 keys=['assistant_responses', 'chat_history', 'chat_id', 'completed', 'current_node_id', 'current_node_name', 'pathway_id', 'pathway_version', 'use_candidate_model', 'variables'] node=n_goal_ask
+TURN=2 keys=['assistant_responses', 'chat_history', 'chat_id', 'completed', 'current_node_id', 'current_node_name', 'pathway_id', 'pathway_version', 'use_candidate_model', 'variables'] node=n_goal_response
+TURN=3 keys=['assistant_responses', 'chat_history', 'chat_id', 'completed', 'current_node_id', 'current_node_name', 'pathway_id', 'pathway_version', 'use_candidate_model', 'variables'] node=n_goal_response
+CAPTURE_COMPLETE version=120 turns=3

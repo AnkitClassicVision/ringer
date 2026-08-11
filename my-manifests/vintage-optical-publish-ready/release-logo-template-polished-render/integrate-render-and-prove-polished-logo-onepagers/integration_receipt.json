@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "onepager_before_sha256": "db33166e8f3fd5a468ed5b0cbfb90ebd617ba1b58d8cd2c7d86e8b1360fce868",
+  "onepager_after_sha256": "db33166e8f3fd5a468ed5b0cbfb90ebd617ba1b58d8cd2c7d86e8b1360fce868",
+  "backup": "onepager-before-gauge-db33166e8f3f.html",
+  "number_inventory_entries": 3431,
+  "substantive_lineage_coverage_percent": 100,
+  "unexplained_substantive_number_count": 0,
+  "visual_qa_reset": true,
+  "external_actions_taken": "none"
+}

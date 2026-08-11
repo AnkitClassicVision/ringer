@@ -1,0 +1,1933 @@
+Reading additional input from stdin...
+OpenAI Codex v0.145.0
+--------
+workdir: /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: medium
+reasoning summaries: none
+session id: 019fa95e-a55b-7601-af12-d5b833038014
+--------
+user
+DO NOT modify any files. Analyze only, output text only. Role: ADVERSARIAL REVIEWER, final pre-deploy pass. Read ./bland_gateway.py focusing ONLY on the new raw-text authority code: _RAW_TEXT_DATES flag, extract_date_from_text, resolve_from_conversation, _fetch_conversation (note the id-shape guard), and the wiring at the top of clamp_availability_range. Context: Mott-only flag (default OFF), TENANT_ID guard, fail-open to model-extracted values, callID popped unconditionally, graded by a 190-phrase frozen gate plus 5 wiring tests plus a hostile-id probe, all green. ATTACK: (1) parser false POSITIVES on real SMS chatter a patient might send that contains incidental date-like tokens ('I paid on the 5th last time', 'my insurance renewed in june', numbers inside addresses) — name concrete sentences that would wrongly resolve and steer the search window; (2) regex or window-scan pathologies (backtracking, very long messages, emoji, newlines); (3) the latest-USER-message-only rule — conversational flows where the date lives one turn earlier and the override makes things WORSE than fallback; (4) latency/retry behavior of two sequential 2s-timeout fetches on the availability hot path; (5) log hygiene (only date_source codes, no bodies) and key handling (ECP_BLAND_API_KEY env); (6) anything that could change CVC behavior despite guards. Return packet: verdict (ship|revise|block), confidence 0-1, concrete_failing_sentences (list with expected-vs-got reasoning), worst_risk, required_fixes (only if revise/block), nice_to_haves.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+codex
+Ankit — I’m doing a read-only final pass focused only on the named raw-text authority path. I’ll first load the repo operating and review instructions, then inspect the exact code and tests without modifying anything.
+codex
+I’m using the Codex Operating Card, code-reviewer, and Compound Engineering review guidance because this is a serious pre-deploy repo review. They require evidence from the actual implementation and a report-only review; the no-file-modification boundary remains in force.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Failed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "find /home/ankit114/.agents/skills /home/ankit114/.claude/skills -path '*/cross-review-qa/SKILL.md' -print 2>/dev/null; rg --files -g 'AGENTS.md' -g 'MODULE_MAP.md' -g '.ai/fable-proof-run.md' -g 'bland_gateway.py' -g '*raw*text*' -g '*test*' . | sed -n '1,240p'" in /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+ succeeded in 0ms:
+/home/ankit114/.claude/skills/cross-review-qa/SKILL.md
+./bland_gateway.py
+./test_raw_wiring.py
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '1,360p' /home/ankit114/.claude/skills/cross-review-qa/SKILL.md; sed -n '1,240p' /home/ankit114/.claude/skills/code-reviewer/references/codex-compat.md; wc -l -w -c bland_gateway.py test_raw_wiring.py; rg -n '_RAW_TEXT_DATES|extract_date_from_text|resolve_from_conversation|_fetch_conversation|clamp_availability_range|callID|ECP_BLAND_API_KEY|TENANT_ID|date_source' bland_gateway.py test_raw_wiring.py" in /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+ succeeded in 0ms:
+---
+name: cross-review-qa
+description: >
+  Mandatory fresh-context QA loop for PR reviews, milestone reviews, code-review gates, pre-merge checks, "done" claims on maintainable/high-stakes work, and agent-built artifacts. Use whenever an implementation or milestone produced by Claude, Codex, Hermes, Gemini, or any AI coding agent needs review before merge, completion, or handoff. Spawns a brand-new read-only QA worker (Codex gate by default; Claude Code via `tmux-model-workers` when Claude is used), gives it the original plan/spec/ATLAS and diff/artifacts rather than the builder's summary, asks it to enumerate only issues by severity, sends those issues back to the main agent for fixes, and iterates until HIGH/BLOCK issues are gone.
+---
+
+# Cross-Review QA
+
+This skill makes cross-review the default QA gate for serious PRs and milestones. One model/context builds; a fresh QA worker reviews against the original plan/spec; the main agent fixes; the fresh reviewer re-checks. The reviewer must not inherit the builder's excuses.
+
+When the QA worker is Claude Code, invoke it through `tmux-model-workers` in a named tmux session, never as a blind headless `claude -p` call. Codex CLI interactive QA may also use tmux; Codex `exec -s read-only` remains acceptable only when a one-shot read-only review is sufficient and the output is independently captured.
+
+## Core rule
+
+For every PR review or milestone review with maintainable, client-impacting, security/auth/data, production, or multi-file agent-built work:
+
+1. Preserve the original yardstick: plan/spec/acceptance criteria, relevant ATLAS Index/SPINE, task card, and expected tests.
+2. Spawn a **brand-new read-only QA worker**. Prefer a fresh Codex QA context for the existing mandatory Codex gate; when Claude Code is used for QA, launch it via `tmux-model-workers` in the repo/workspace and keep it read-only unless an explicit fix pass is authorized.
+3. Give the QA worker the original yardstick + diff/artifacts + test evidence. Do **not** give it the builder's self-summary as the review source.
+4. Require the QA worker to **do thought experiments**: simulate likely runtime states, variable values, branches, edge cases, and reproduction conditions against the diff/artifacts before judging PASS.
+5. Require the QA worker to enumerate **only issues**, labeled `BLOCK`, `HIGH`, `MEDIUM`, or `LOW`, with file/section evidence and suggested fix direction.
+6. Main agent fixes `BLOCK`/`HIGH` issues, reruns verification, and sends the updated packet back through a fresh QA re-review.
+7. Stop only when no `BLOCK`/`HIGH` issues remain. Queue `MEDIUM`/`LOW` for human judgment unless they are cheap and clearly correct to fix.
+
+Prefer **reciprocal cross-model QA** when an alternate primary coding surface is available: Claude-built or Claude-called work should be reviewed by Codex; Codex-built or Codex-called work should be reviewed by Claude Code; Hermes/Gemini work should route to the configured opposite reviewer. Fresh context remains mandatory, but for high-stakes/milestone work model diversity is now part of the expected gate. If the counterpart is unavailable, use the best independent fresh reviewer available, mark the gate degraded (for example `counterpart_unavailable=true`), and do not claim the reciprocal cross-model gate passed.
+
+See `references/reciprocal-cross-model-qa.md` for the routing matrix, receipt expectations, and a proven recheck pattern from the project-lane normalization session.
+
+## Trigger boundaries
+
+Run this skill for:
+- PR reviews before merge.
+- Milestone reviews before claiming implementation/design complete.
+- Agent-produced code or specs that will be maintained longer than a week.
+- Auth, permissions, PHI/PII, tenant isolation, payments/finance, CRM/EHR, external sends, deploy, or production-write paths.
+- A model has looped on a bug, finished suspiciously fast, or touched many files.
+- Kanban/code tasks where the final state needs human review before `done`.
+
+Skip or downshift for:
+- Throwaway scripts, local prototypes, exploratory notebooks, or disposable one-off scrapes with no client/production/security impact.
+- Purely conversational drafts with no implementation milestone.
+
+## Security harness overlay
+
+When QA touches auth, permissions, tenant isolation, secrets, PHI/PII, payments/finance, CRM/EHR, external sends, dependency/security changes, sandboxing, agent tool authority, or production-write paths, add a **read-only Defending Code Security Harness lane** to the fresh QA packet.
+
+Use `defending-code-security-harness` as a reference/skill inside the fresh QA review. The reviewer must:
+
+1. stay read-only/static unless the user explicitly approved sandboxed execution;
+2. run the relevant mode: threat-model delta, static vulnerability scan, triage, or patch-review/re-attack plan;
+3. anchor security claims to source paths/lines, not vibes;
+4. output security issues as `SEC-QA-*` with `BLOCK/HIGH/MEDIUM/LOW` severity;
+5. mark missing sandbox/preflight/test evidence as `BLOCK` or `HIGH` when it affects a required claim;
+6. never include raw secrets, PHI, raw CRM/contact IDs, payment IDs, or client-sensitive bodies in the prompt/output.
+
+This overlay is a QA lens, not an autonomous scanner. Do not let it create CI jobs, recurring scans, target execution, fuzzing, network probes, or security patches without separate approval and the normal gates.
+
+## Inputs to gather before spawning QA
+
+Minimum packet:
+
+```text
+review_type: pr | milestone | artifact | pre-merge | pre-handoff
+base_ref: <branch/commit/tag if PR>
+head_ref: <branch/commit/tag or workspace state>
+original_yardstick:
+  - PLAN.md / PRD / task body / acceptance criteria
+  - relevant ATLAS Index/SPINE + cluster, if project has ATLAS
+  - explicit non-goals and safety gates
+evidence:
+  - git diff/stat or artifact list
+  - tests/checks run with real output
+  - known blockers or skipped checks, without excuses
+safety:
+  - no raw secrets, PHI, raw CRM/contact IDs, payment IDs, or client-sensitive bodies in prompt/output
+```
+
+If a plan/spec is missing, the QA worker should flag `BLOCK: no original yardstick`; do not let the builder's recap substitute for the yardstick.
+
+## ATLAS / THROUGHLINE overlay
+
+When a project ATLAS exists or an ATLAS hook fired, include the smallest relevant ATLAS Index/cluster in the QA packet and require inline THROUGHLINE:
+
+- **Aim:** Does the output serve the SPINE/objective?
+- **Ground:** Are claims, readiness labels, and completion claims tied to evidence, tests, or Evidenced nodes?
+- **Thread:** Do the implementation/artifact pieces still connect through the typed edges/prereqs, or did the build drift?
+
+ATLAS is not authorization. External sends, CRM/EHR/finance writes, deploys, merges, cron autonomy, and human-impacting labels still need their normal gates.
+
+## How to spawn the fresh QA worker
+
+Prefer read-only Codex. From the repo/workspace root:
+
+```bash
+codex exec -s read-only "$(cat /tmp/cross-review-qa-prompt.txt)"
+```
+
+For a normal git PR/diff, the prompt should tell Codex to inspect the diff itself:
+
+```bash
+codex exec -s read-only "Fresh QA review only. Do not modify files. Read the original plan/spec and relevant ATLAS files named below, inspect the diff against <base_ref>, inspect tests/results, and enumerate only issues as BLOCK/HIGH/MEDIUM/LOW. Do not include praise or summary. Do not rely on the builder's summary. Paths/refs: <packet>."
+```
+
+`codex review --base <base_ref>` may be used when it preserves the same contract, but `codex exec -s read-only` is preferred for milestone reviews because it can read the plan/spec and artifact packet.
+
+Use `references/codex-qa-prompt.md` as the prompt template.
+
+## Claude / tmux QA worker lane
+
+When the independent reviewer is Claude Code, or when Ankit asks for Claude as the QA lane, load `tmux-model-workers` and run Claude through tmux from the repo/workspace root. Keep the worker read-only for the review pass.
+
+Minimum pattern:
+
+```bash
+SESSION="claude-qa-$(date +%Y%m%d-%H%M)"
+WORKDIR="/absolute/path/to/repo-or-workspace"
+tmux new-session -d -s "$SESSION" -x 140 -y 45 -c "$WORKDIR" 'claude'
+```
+
+Send a scoped packet that says:
+
+```text
+Role: Fresh QA reviewer called by Hermes through tmux.
+Allowed: read files, inspect diff/artifacts, run read-only checks only if explicitly safe.
+Forbidden: edit files, push, merge, deploy, send, publish, secrets/PHI/raw credential inspection.
+Review source: original yardstick + diff/artifacts + test evidence, not builder summary.
+Output: enumerate only issues as BLOCK/HIGH/MEDIUM/LOW using CROSS_REVIEW_QA_RESULT schema.
+If no BLOCK/HIGH remain, say PASS or PASS_WITH_MEDIUM_LOW.
+```
+
+Capture with:
+
+```bash
+tmux capture-pane -t "$SESSION" -p -S -240
+```
+
+### Claude Code OAuth context-overflow fallback
+
+Claude Code can fail or hang on review packets because its loaded system prompt/tool/MCP context consumes ~200k tokens before the user prompt. If a Claude QA lane stalls or reports `Prompt is too long`, relaunch with an explicitly minimal context and no tools, embedding only the sanitized diff/evidence needed for the verdict:
+
+```bash
+printf '{"mcpServers":{}}' > /tmp/empty_mcp.json
+timeout 180 env -u ANTHROPIC_API_KEY -u ANTHROPIC_AUTH_TOKEN HOME=/home/ankit114 \
+  claude -p --safe-mode --strict-mcp-config --mcp-config /tmp/empty_mcp.json \
+  --tools "" --no-session-persistence --disable-slash-commands \
+  --exclude-dynamic-system-prompt-sections --permission-mode plan \
+  --output-format text "$(cat /tmp/qa-prompt-schema-only.txt)"
+```
+
+In this fallback, tell Claude explicitly: **no tools are available; answer from supplied evidence only; return the schema immediately.** Mark the gate as `qa_worker: claude-oauth-mincontext` (or similar) and note that it is evidence-packet review, not live file inspection.
+
+Relay loop rule: paste the QA worker's enumerated `BLOCK`/`HIGH` findings back to the main agent/builder as a fix packet; the main agent fixes, reruns tests, then sends an updated packet back to a fresh QA worker or a reset tmux QA session. Continue until the QA verdict is `PASS` or `PASS_WITH_MEDIUM_LOW`. Do not let Claude implement fixes inside the QA session unless explicitly switched from reviewer to builder with user approval.
+
+## Reviewer output contract
+
+QA worker must output exactly:
+
+```text
+CROSS_REVIEW_QA_RESULT
+verdict: BLOCK | REQUEST_CHANGES | PASS_WITH_MEDIUM_LOW | PASS
+qa_worker: codex | claude-tmux | other
+codex_unavailable: false
+reviewed_yardstick:
+- <plan/spec/ATLAS/test evidence actually read>
+issues:
+- id: QA-001
+  severity: BLOCK | HIGH | MEDIUM | LOW
+  file_or_artifact: <path or artifact>
+  line_or_section: <line/section if known>
+  finding: <one sentence>
+  why_it_matters: <failure mode / risk>
+  evidence: <diff/test/spec evidence, no raw sensitive values>
+  suggested_fix: <minimal fix direction>
+missing_evidence:
+- <checks or artifacts missing from packet>
+recheck_required: true | false
+```
+
+No positive observations. No broad tutorial. No implementation unless explicitly asked in a separate builder pass.
+
+Severity definitions:
+- `BLOCK`: Cannot honestly review/pass; missing yardstick, missing diff/artifacts, unsafe prompt contents, no test evidence for required gate, or likely high-blast-radius failure.
+- `HIGH`: Must fix before merge/milestone completion; correctness, security, PHI/PII, tenant isolation, data loss, auth/permissions, broken tests, readiness-label mismatch, deploy/rollback gap.
+- `MEDIUM`: Real defect or maintainability risk; human/product judgment may accept temporarily.
+- `LOW`: Nits, naming, style, optional cleanup.
+
+## Main-agent fix loop
+
+After the QA worker returns:
+
+1. Parse issues; do not bury `BLOCK`/`HIGH` under narrative.
+2. Fix every `BLOCK`/`HIGH`, or explicitly block/escalate if a human decision is required.
+3. Run the relevant tests/checks again and preserve real output.
+4. Spawn a fresh QA re-review with the original yardstick, updated diff/artifacts, and new test evidence.
+5. Repeat until `verdict` is `PASS` or `PASS_WITH_MEDIUM_LOW`.
+6. Report final status with: reviews run, remaining MEDIUM/LOW decisions, tests run, and whether merge/completion is still gated.
+
+Do not auto-merge, deploy, send externally, write CRM/EHR/finance records, or mark a human-impacting label solely because QA passed.
+
+## Milestone review variant
+
+For non-PR milestones, replace `git diff` with an artifact manifest:
+
+- plan/spec/acceptance criteria
+- produced docs/code/config/screenshots/reports
+- test/eval outputs
+- known skipped checks
+- relevant ATLAS SPINE/cluster
+
+The QA worker reviews whether the milestone claim is supported. If artifact status says "done" but tests/evidence are missing, that is at least `BLOCK` or `HIGH` depending on blast radius.
+
+## Handoff format
+
+When handing back to the user/board/reviewer:
+
+```text
+Cross-review QA status: PASS | PASS_WITH_MEDIUM_LOW | REQUEST_CHANGES | BLOCK
+Fresh QA runs: <n> (<worker type: codex | claude-tmux | other>)
+BLOCK/HIGH fixed: <count/list>
+Remaining MEDIUM/LOW: <count/list or none>
+Verification run: <commands + short real result>
+Gate status: <merge/completion still gated? yes/no and why>
+```
+
+Keep summaries sanitized. Never include raw secrets, PHI, raw IDs, payment IDs, or raw message bodies.
+# Codex compatibility note
+
+Status: **Codex usable with surface-translation.**
+
+This skill is exposed through Codex's official user-skill path (`$HOME/.agents/skills`). It may mention Claude Code, `CLAUDE.md`, slash commands, hooks, or Claude tool names because the source skill also supports Claude surfaces.
+
+Codex translation rules:
+- Treat Claude Code slash commands as examples; use natural-language Codex prompts or Codex CLI equivalents instead.
+- Treat Claude hook/settings references as non-enforced unless Codex config/execpolicy implements the same guard.
+- Treat `CLAUDE.md` references as repo/global instruction references; for Codex, check `AGENTS.md` and `.agents/skills` first.
+- Preserve the workflow intent, safety gates, verification requirements, and PHI/secret redaction rules.
+
+Plain Codex invocation:
+> Use the `code-reviewer` skill, translating any Claude-specific syntax into Codex CLI/project-instruction equivalents. Follow the skill's workflow intent and verify with real output before claiming completion.
+ 2269  8331 94833 bland_gateway.py
+   87   239  2621 test_raw_wiring.py
+ 2356  8570 97454 total
+test_raw_wiring.py:14:    os.environ["ECP_RAW_TEXT_DATES"] = raw
+test_raw_wiring.py:15:    os.environ["ECP_TENANT_ID"] = tenant
+test_raw_wiring.py:35:    return {"store": "711", "from": "thursday", "to": "thursday", "callID": "x"}
+test_raw_wiring.py:39:    mod._fetch_conversation = lambda call_id: [
+test_raw_wiring.py:44:    mod.clamp_availability_range(body)
+test_raw_wiring.py:46:    assert "callID" not in body
+test_raw_wiring.py:52:    mod._fetch_conversation = fail
+test_raw_wiring.py:54:    mod.clamp_availability_range(body)
+test_raw_wiring.py:56:    assert "callID" not in body
+test_raw_wiring.py:62:    mod._fetch_conversation = lambda call_id: called.append(call_id)
+test_raw_wiring.py:64:    mod.clamp_availability_range(body)
+test_raw_wiring.py:66:    assert "callID" not in body
+test_raw_wiring.py:72:    mod._fetch_conversation = lambda call_id: called.append(call_id)
+test_raw_wiring.py:74:    mod.clamp_availability_range(body)
+test_raw_wiring.py:76:    assert "callID" not in body
+test_raw_wiring.py:80:    mod._fetch_conversation = lambda call_id: [
+test_raw_wiring.py:85:    mod.clamp_availability_range(body)
+test_raw_wiring.py:87:    assert "callID" not in body
+bland_gateway.py:53:TENANT_ID = os.environ.get("ECP_TENANT_ID", "cvc")
+bland_gateway.py:161:_RAW_TEXT_DATES = _env_bool("ECP_RAW_TEXT_DATES", False)
+bland_gateway.py:618:    if _DATE_ORDINAL_FALLBACK and TENANT_ID != "cvc":
+bland_gateway.py:622:    if _DATE_ORDINAL_FALLBACK and TENANT_ID != "cvc":
+bland_gateway.py:634:def extract_date_from_text(text) -> str | None:
+bland_gateway.py:703:def resolve_from_conversation(messages) -> tuple:
+bland_gateway.py:713:    resolved = extract_date_from_text(latest)
+bland_gateway.py:717:def _fetch_conversation(call_id) -> list | None:
+bland_gateway.py:723:        "Authorization": os.environ.get("ECP_BLAND_API_KEY", ""),
+bland_gateway.py:746:def clamp_availability_range(body: dict) -> None:
+bland_gateway.py:747:    call_id = str(body.pop("callID", "") or "").strip()
+bland_gateway.py:748:    if _RAW_TEXT_DATES and TENANT_ID != "cvc" and call_id:
+bland_gateway.py:750:            msgs = _fetch_conversation(call_id)
+bland_gateway.py:752:                raw_from, raw_to = resolve_from_conversation(msgs)
+bland_gateway.py:755:                    log.info("date_source=raw")
+bland_gateway.py:757:                    log.info("date_source=fallback")
+bland_gateway.py:759:            log.info("date_source=error_fallback")
+bland_gateway.py:1076:    if matched["tenant"] != TENANT_ID or matched["principal"] != READ_PRINCIPAL:
+bland_gateway.py:1111:        or record["tenant"] != TENANT_ID
+bland_gateway.py:1283:        clamp_availability_range(body)
+
+hook: PostToolUse
+hook: PostToolUse Failed
+codex
+The review skill requires a fresh, read-only QA context for a pre-deploy production path. I’m launching one narrowly scoped adversarial reviewer with no inherited conversation, while I independently inspect the implementation and test evidence. It is report-only and cannot edit files.
+hook: PreToolUse
+hook: PreToolUse Completed
+2026-07-28T15:37:22.150751Z ERROR codex_core::tools::router: error=Service tier `priority` is not supported for model `gpt-5.23-codex`. Supported service tiers: none
+hook: PreToolUse
+hook: PreToolUse Completed
+2026-07-28T15:37:32.033782Z ERROR codex_core::tools::router: error=Service tier `none` is not supported for model `gpt-5.23-codex`. Supported service tiers: none
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+The dedicated reviewer profile could not start because its fixed model is unavailable on this ChatGPT account. I’m rerouting the same read-only packet to an available fresh worker and will mark the cross-review lane degraded if that also fails.
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba bland_gateway.py | sed -n '35,180p'; nl -ba bland_gateway.py | sed -n '570,790p'; nl -ba test_raw_wiring.py; find . -maxdepth 2 -type f -printf '%P\\n' | sort | sed -n '1,240p'" in /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+ succeeded in 0ms:
+    35	AWS_ENV_WRAPPER = os.environ.get("ECP_AWS_ENV_WRAPPER", str(Path.home() / ".local/bin/eyecloud-pro-aws-env"))
+    36	HOST = os.environ.get("ECP_SHIM_HOST", "127.0.0.1")
+    37	PORT = int(os.environ.get("ECP_SHIM_PORT", "8431"))
+    38	TIMEOUT_S = int(os.environ.get("ECP_CLI_TIMEOUT_S", "90"))
+    39	MAX_BODY = 16 * 1024
+    40	MAX_VALUE_LEN = 200
+    41	
+    42	TEST_MODE = os.environ.get("ECP_SHIM_TEST_MODE", "0") == "1"
+    43	ECP_QUERY_RELEASE_GATE = os.environ.get("ECP_QUERY_RELEASE_GATE", "BLOCK")
+    44	TEST_LAST_PREFIX = os.environ.get("ECP_SHIM_TEST_LAST_PREFIX", "ZZTEST")
+    45	TEST_PATIENT_IDS = {
+    46	    p.strip()
+    47	    for p in os.environ.get("ECP_SHIM_TEST_PATIENTS", "4274030798").split(",")
+    48	    if p.strip()
+    49	}
+    50	
+    51	API_KEY = os.environ.get("ECP_SHIM_BEARER", "")
+    52	READ_PRINCIPAL = os.environ.get("ECP_READ_PRINCIPAL", "bland-read")
+    53	TENANT_ID = os.environ.get("ECP_TENANT_ID", "cvc")
+    54	
+    55	
+    56	def load_query_credential_record(raw: str) -> dict:
+    57	    """Parse the deployment-bound /query credential without logging its value."""
+    58	    try:
+    59	        record = json.loads(raw)
+    60	    except (TypeError, json.JSONDecodeError):
+    61	        return {}
+    62	    if not isinstance(record, dict) or set(record) != {"token", "tenant", "principal"}:
+    63	        return {}
+    64	    if not all(isinstance(record[key], str) and record[key].strip() for key in record):
+    65	        return {}
+    66	    return {key: record[key].strip() for key in record}
+    67	
+    68	
+    69	CONSUMER_CREDENTIAL_FIELDS = {
+    70	    "consumer_id",
+    71	    "token",
+    72	    "tenant",
+    73	    "principal",
+    74	    "enabled",
+    75	    "routes",
+    76	    "rate_per_minute",
+    77	}
+    78	
+    79	
+    80	def load_consumer_credential_set(raw: str) -> tuple[list[dict], bool]:
+    81	    """Parse all consumer credentials atomically without logging their values."""
+    82	    if not isinstance(raw, str) or not raw.strip():
+    83	        return [], False
+    84	    try:
+    85	        document = json.loads(raw)
+    86	    except (TypeError, json.JSONDecodeError):
+    87	        return [], True
+    88	    if (
+    89	        not isinstance(document, dict)
+    90	        or set(document) != {"version", "consumers"}
+    91	        or not isinstance(document["version"], int)
+    92	        or isinstance(document["version"], bool)
+    93	        or not isinstance(document["consumers"], list)
+    94	    ):
+    95	        return [], True
+    96	
+    97	    consumers = []
+    98	    consumer_ids = set()
+    99	    tokens = []
+   100	    for record in document["consumers"]:
+   101	        if not isinstance(record, dict) or set(record) != CONSUMER_CREDENTIAL_FIELDS:
+   102	            return [], True
+   103	        if not all(
+   104	            isinstance(record[key], str) and record[key].strip()
+   105	            for key in ("consumer_id", "token", "tenant", "principal")
+   106	        ):
+   107	            return [], True
+   108	        if not isinstance(record["enabled"], bool):
+   109	            return [], True
+   110	        if (
+   111	            not isinstance(record["routes"], list)
+   112	            or not all(isinstance(route, str) and route.strip() for route in record["routes"])
+   113	        ):
+   114	            return [], True
+   115	        if (
+   116	            not isinstance(record["rate_per_minute"], int)
+   117	            or isinstance(record["rate_per_minute"], bool)
+   118	        ):
+   119	            return [], True
+   120	
+   121	        consumer_id = record["consumer_id"].strip()
+   122	        token = record["token"].strip()
+   123	        if consumer_id in consumer_ids or any(
+   124	            hmac.compare_digest(token, existing_token) for existing_token in tokens
+   125	        ):
+   126	            return [], True
+   127	        consumer_ids.add(consumer_id)
+   128	        tokens.append(token)
+   129	        consumers.append(
+   130	            {
+   131	                **record,
+   132	                "consumer_id": consumer_id,
+   133	                "token": token,
+   134	                "tenant": record["tenant"].strip(),
+   135	                "principal": record["principal"].strip(),
+   136	                "routes": [route.strip() for route in record["routes"]],
+   137	            }
+   138	        )
+   139	    return consumers, False
+   140	
+   141	
+   142	def _env_bool(name: str, default: bool) -> bool:
+   143	    raw = os.environ.get(name)
+   144	    if raw is None:
+   145	        return default
+   146	    return raw.strip().lower() in {"1", "true", "yes", "on"}
+   147	
+   148	
+   149	QUERY_CREDENTIAL = load_query_credential_record(
+   150	    os.environ.get("ECP_QUERY_CREDENTIAL_RECORD", "")
+   151	)
+   152	if QUERY_CREDENTIAL:
+   153	    API_KEY = API_KEY or QUERY_CREDENTIAL["token"]
+   154	_CONSUMER_CREDENTIALS_RAW = os.environ.get("ECP_CONSUMER_CREDENTIALS", "")
+   155	CONSUMER_CREDENTIALS_CONFIGURED = bool(_CONSUMER_CREDENTIALS_RAW.strip())
+   156	CONSUMER_CREDENTIALS, CONSUMER_CREDENTIALS_LOAD_FAILED = load_consumer_credential_set(
+   157	    _CONSUMER_CREDENTIALS_RAW
+   158	)
+   159	CONSUMER_ACCEPT_LEGACY = _env_bool("ECP_CONSUMER_ACCEPT_LEGACY", True)
+   160	_DATE_ORDINAL_FALLBACK = _env_bool("ECP_DATE_ORDINAL_FALLBACK", False)
+   161	_RAW_TEXT_DATES = _env_bool("ECP_RAW_TEXT_DATES", False)
+   162	CAPABILITY_MANIFEST = load_manifest()
+   163	
+   164	logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+   165	log = logging.getLogger("cvc-booking-gateway")
+   166	
+   167	ENDPOINTS = {
+   168	    "/availability": (
+   169	        "availability",
+   170	        {
+   171	            "store": "--store",
+   172	            "from": "--from",
+   173	            "to": "--to",
+   174	            "doctor": "--doctor",
+   175	            "min_minutes": "--min-minutes",
+   176	            "slot_minutes": "--slot-minutes",
+   177	            "after": "--after",
+   178	            "before": "--before",
+   179	        },
+   180	        False,
+   570	    if match:
+   571	        count = int(match.group(1)) if match.group(1).isdigit() else zh_numbers[match.group(1)]
+   572	        return emit(today + timedelta(days=7 * count))
+   573	
+   574	    zh_weekdays = {"一": 0, "二": 1, "三": 2, "四": 3, "五": 4, "六": 5, "日": 6, "天": 6}
+   575	    match = re.fullmatch(r"(下下|下|这|本)?(?:周|星期|礼拜)([一二三四五六日天])", t)
+   576	    if match:
+   577	        prefix, day_text = match.groups()
+   578	        weekday = zh_weekdays[day_text]
+   579	        if prefix == "下":
+   580	            return emit(calendar_weekday(weekday, 1))
+   581	        if prefix == "下下":
+   582	            return emit(calendar_weekday(weekday, 2))
+   583	        return emit(next_weekday(weekday))
+   584	
+   585	    weekday_pattern = "|".join(sorted(_WEEKDAYS, key=len, reverse=True))
+   586	    match = re.fullmatch(rf"(?:day after next|the day after) ({weekday_pattern})", t)
+   587	    if match:
+   588	        return emit(next_weekday(_WEEKDAYS[match.group(1)]) + timedelta(days=1))
+   589	    match = re.fullmatch(rf"({weekday_pattern}) after next", t)
+   590	    if match:
+   591	        return emit(calendar_weekday(_WEEKDAYS[match.group(1)], 2))
+   592	    match = re.fullmatch(rf"(?:a week from ({weekday_pattern})|({weekday_pattern}) next week)", t)
+   593	    if match:
+   594	        weekday_text = match.group(1) or match.group(2)
+   595	        return emit(calendar_weekday(_WEEKDAYS[weekday_text], 1))
+   596	
+   597	    weekday_text = re.sub(r"^(this|next|on|coming)\s+", "", t)
+   598	    if weekday_text in _WEEKDAYS:
+   599	        return emit(next_weekday(_WEEKDAYS[weekday_text]))
+   600	    for fmt in ("%m/%d/%Y", "%Y-%m-%d", "%m-%d-%Y", "%B %d %Y", "%b %d %Y"):
+   601	        try:
+   602	            return datetime.strptime(t, fmt).date().strftime("%m/%d/%Y")
+   603	        except ValueError:
+   604	            continue
+   605	    # Yearless dates: the year is ours to pick, so a day that already passed
+   606	    # this year means the next occurrence.
+   607	    for fmt in ("%m/%d", "%B %d", "%b %d"):
+   608	        try:
+   609	            d = datetime.strptime(t, fmt).date().replace(year=today.year)
+   610	        except ValueError:
+   611	            continue
+   612	        if d < today:
+   613	            try:
+   614	                d = d.replace(year=d.year + 1)
+   615	            except ValueError:  # Feb 29
+   616	                d = d.replace(month=2, day=28, year=d.year + 1)
+   617	        return d.strftime("%m/%d/%Y")
+   618	    if _DATE_ORDINAL_FALLBACK and TENANT_ID != "cvc":
+   619	        m = re.fullmatch(r"(" + _ORDINAL_MONTHS + r") (\d{1,2})(st|nd|rd|th)( \d{4})?", t)
+   620	        if m and 1 <= int(m.group(2)) <= 31 and m.group(3) == _ordinal_suffix(int(m.group(2))):
+   621	            return resolve_relative_date(f"{m.group(1)} {m.group(2)}{m.group(4) or ''}")
+   622	    if _DATE_ORDINAL_FALLBACK and TENANT_ID != "cvc":
+   623	        _RELATIVE_PREFIX = {"today", "tomorrow", "tmrw", "tmr"}
+   624	        _compound_words = t.split()
+   625	        if len(_compound_words) >= 3 and (_compound_words[0] in _RELATIVE_PREFIX or _compound_words[0] in _WEEKDAYS):
+   626	            remainder = " ".join(_compound_words[1:])
+   627	            if any(m in remainder for m in _ORDINAL_MONTHS.split("|")):
+   628	                result = resolve_relative_date(remainder)
+   629	                if result is not None:
+   630	                    return result
+   631	    return None
+   632	
+   633	
+   634	def extract_date_from_text(text) -> str | None:
+   635	    normalized = re.sub(r"\s+", " ", str(text or "").lower()).strip()
+   636	    shorthand = {
+   637	        "nxt": "next", "wk": "week", "wks": "weeks",
+   638	        "tmrw": "tomorrow", "tmr": "tomorrow", "2day": "today",
+   639	        "2moro": "tomorrow", "2morrow": "tomorrow",
+   640	    }
+   641	    normalized = " ".join(shorthand.get(token, token) for token in normalized.split())
+   642	    if not normalized:
+   643	        return None
+   644	
+   645	    explicit = re.compile(
+   646	        r"\b(" + _ORDINAL_MONTHS + r")\s+(\d{1,2})(st|nd|rd|th)?"
+   647	        r"(?:\s*,?\s*(\d{4}))?\b"
+   648	    )
+   649	    matches = list(explicit.finditer(normalized))
+   650	    if matches:
+   651	        match = matches[-1]
+   652	        day = int(match.group(2))
+   653	        suffix = match.group(3)
+   654	        if 1 <= day <= 31 and (suffix is None or suffix == _ordinal_suffix(day)):
+   655	            phrase = f"{match.group(1)} {day}"
+   656	            if match.group(4):
+   657	                phrase += f" {match.group(4)}"
+   658	            return resolve_relative_date(phrase)
+   659	        return None
+   660	
+   661	    chinese = list(re.finditer(r"(\d{1,2})月(\d{1,2})[号日]", normalized))
+   662	    if chinese:
+   663	        month, day = chinese[-1].groups()
+   664	        result = resolve_relative_date(f"{month}/{day}")
+   665	        if result:
+   666	            return result
+   667	
+   668	    result = resolve_relative_date(normalized)
+   669	    if result:
+   670	        return result
+   671	
+   672	    tokens = normalized.split()
+   673	    for size in (4, 3, 2, 1):
+   674	        for start in range(len(tokens) - size + 1):
+   675	            window = " ".join(tokens[start:start + size])
+   676	            if re.fullmatch(r"\d+", window):
+   677	                continue
+   678	            result = resolve_relative_date(window)
+   679	            if result:
+   680	                return result
+   681	
+   682	    today = _eastern_today().date()
+   683	    for match in re.finditer(r"\b(?:the\s+)?(\d{1,2})(st|nd|rd|th)\b", normalized):
+   684	        day = int(match.group(1))
+   685	        if not 1 <= day <= 31 or match.group(2) != _ordinal_suffix(day):
+   686	            continue
+   687	        year, month = today.year, today.month
+   688	        if day < today.day:
+   689	            month += 1
+   690	            if month == 13:
+   691	                year, month = year + 1, 1
+   692	        while True:
+   693	            try:
+   694	                candidate = datetime(year, month, day)
+   695	                return candidate.strftime("%m/%d/%Y")
+   696	            except ValueError:
+   697	                month += 1
+   698	                if month == 13:
+   699	                    year, month = year + 1, 1
+   700	    return None
+   701	
+   702	
+   703	def resolve_from_conversation(messages) -> tuple:
+   704	    latest = None
+   705	    for message in messages or []:
+   706	        if not isinstance(message, dict):
+   707	            continue
+   708	        role = message.get("sender", message.get("role", ""))
+   709	        if str(role or "").upper() == "USER":
+   710	            latest = message.get("message", message.get("content", ""))
+   711	    if latest is None:
+   712	        return None, None
+   713	    resolved = extract_date_from_text(latest)
+   714	    return (resolved, resolved) if resolved else (None, None)
+   715	
+   716	
+   717	def _fetch_conversation(call_id) -> list | None:
+   718	    # Defense-in-depth: the id is spliced into a URL path with our API key
+   719	    # attached, so only a plain conversation-id shape may pass.
+   720	    if not re.fullmatch(r"[A-Za-z0-9-]{8,64}", str(call_id or "")):
+   721	        return None
+   722	    headers = {
+   723	        "Authorization": os.environ.get("ECP_BLAND_API_KEY", ""),
+   724	        "User-Agent": "mott-gateway",
+   725	    }
+   726	    urls = (
+   727	        f"https://api.bland.ai/v1/sms/conversations/{call_id}",
+   728	        f"https://api.bland.ai/v1/pathway/chat/{call_id}",
+   729	    )
+   730	    for url in urls:
+   731	        try:
+   732	            request = urllib.request.Request(url, headers=headers)
+   733	            with urllib.request.urlopen(request, timeout=2) as response:
+   734	                payload = json.loads(response.read())
+   735	            data = payload.get("data", payload) if isinstance(payload, dict) else {}
+   736	            if not isinstance(data, dict):
+   737	                continue
+   738	            messages = data.get("messages") or data.get("chat_history")
+   739	            if isinstance(messages, list) and messages:
+   740	                return messages
+   741	        except Exception:
+   742	            continue
+   743	    return None
+   744	
+   745	
+   746	def clamp_availability_range(body: dict) -> None:
+   747	    call_id = str(body.pop("callID", "") or "").strip()
+   748	    if _RAW_TEXT_DATES and TENANT_ID != "cvc" and call_id:
+   749	        try:
+   750	            msgs = _fetch_conversation(call_id)
+   751	            if msgs:
+   752	                raw_from, raw_to = resolve_from_conversation(msgs)
+   753	                if raw_from:
+   754	                    body["from"], body["to"] = raw_from, raw_to
+   755	                    log.info("date_source=raw")
+   756	                else:
+   757	                    log.info("date_source=fallback")
+   758	        except Exception:
+   759	            log.info("date_source=error_fallback")
+   760	    # first_available=1 replaces from/to with tomorrow..+6 days (Eastern) —
+   761	    # closed days simply return no slots, so no business-day logic is needed.
+   762	    # Otherwise from/to go through resolve_relative_date; bad/inverted "to"
+   763	    # collapses to same-day; spans are capped at 14 days.
+   764	    from datetime import datetime, timedelta
+   765	
+   766	    first = str(body.pop("first_available", "")).strip().lower()
+   767	    if first in ("1", "true", "yes"):
+   768	        start = _eastern_today() + timedelta(days=1)
+   769	        body["from"] = start.strftime("%m/%d/%Y")
+   770	        body["to"] = (start + timedelta(days=6)).strftime("%m/%d/%Y")
+   771	        return
+   772	
+   773	    def parse(v):
+   774	        try:
+   775	            return datetime.strptime(str(v).strip(), "%m/%d/%Y")
+   776	        except ValueError:
+   777	            return None
+   778	
+   779	    resolved = resolve_relative_date(body.get("from"))
+   780	    if resolved is None:
+   781	        return
+   782	    body["from"] = resolved
+   783	    frm = parse(resolved)
+   784	    to_resolved = resolve_relative_date(body.get("to"))
+   785	    to = parse(to_resolved) if to_resolved else None
+   786	    if to is None or to < frm:
+   787	        to = frm
+   788	    if (to - frm).days > 13:
+   789	        to = frm + timedelta(days=13)
+   790	    body["to"] = to.strftime("%m/%d/%Y")
+     1	#!/usr/bin/env python3
+     2	import importlib.util
+     3	import os
+     4	import sys
+     5	import types
+     6	from datetime import datetime
+     7	from pathlib import Path
+     8	
+     9	import pytest
+    10	
+    11	
+    12	def load_gateway(name, raw="1", tenant="mott"):
+    13	    os.environ["ECP_DATE_ORDINAL_FALLBACK"] = "1"
+    14	    os.environ["ECP_RAW_TEXT_DATES"] = raw
+    15	    os.environ["ECP_TENANT_ID"] = tenant
+    16	    stub = types.ModuleType("capability_registry")
+    17	    stub.QueryError = type("QE", (Exception,), {})
+    18	    stub.load_manifest = lambda *a, **k: {}
+    19	    stub.prepare_query = lambda *a, **k: {}
+    20	    stub.render_query_result = lambda *a, **k: {}
+    21	    sys.modules["capability_registry"] = stub
+    22	    spec = importlib.util.spec_from_file_location(name, Path(__file__).with_name("bland_gateway.py"))
+    23	    mod = importlib.util.module_from_spec(spec)
+    24	    spec.loader.exec_module(mod)
+    25	    mod._eastern_today = lambda: datetime(2026, 7, 27, 12, 0, 0)
+    26	    return mod
+    27	
+    28	
+    29	@pytest.fixture
+    30	def mod():
+    31	    return load_gateway("bland_gateway_raw")
+    32	
+    33	
+    34	def availability_body():
+    35	    return {"store": "711", "from": "thursday", "to": "thursday", "callID": "x"}
+    36	
+    37	
+    38	def test_raw_override(mod):
+    39	    mod._fetch_conversation = lambda call_id: [
+    40	        {"sender": "AGENT", "message": "What date?"},
+    41	        {"sender": "USER", "message": "Tomorrow july 28th"},
+    42	    ]
+    43	    body = availability_body()
+    44	    mod.clamp_availability_range(body)
+    45	    assert body["from"] == body["to"] == "07/28/2026"
+    46	    assert "callID" not in body
+    47	
+    48	
+    49	def test_fail_open(mod):
+    50	    def fail(call_id):
+    51	        raise RuntimeError("fetch failed")
+    52	    mod._fetch_conversation = fail
+    53	    body = availability_body()
+    54	    mod.clamp_availability_range(body)
+    55	    assert body["from"] == body["to"] == "07/30/2026"
+    56	    assert "callID" not in body
+    57	
+    58	
+    59	def test_flag_off():
+    60	    mod = load_gateway("bland_gateway_off", raw="0")
+    61	    called = []
+    62	    mod._fetch_conversation = lambda call_id: called.append(call_id)
+    63	    body = availability_body()
+    64	    mod.clamp_availability_range(body)
+    65	    assert not called
+    66	    assert "callID" not in body
+    67	
+    68	
+    69	def test_cvc_tenant():
+    70	    mod = load_gateway("bland_gateway_cvc", tenant="cvc")
+    71	    called = []
+    72	    mod._fetch_conversation = lambda call_id: called.append(call_id)
+    73	    body = availability_body()
+    74	    mod.clamp_availability_range(body)
+    75	    assert not called
+    76	    assert "callID" not in body
+    77	
+    78	
+    79	def test_no_date_latest_message(mod):
+    80	    mod._fetch_conversation = lambda call_id: [
+    81	        {"role": "USER", "content": "tomorrow"},
+    82	        {"role": "USER", "content": "1"},
+    83	    ]
+    84	    body = availability_body()
+    85	    mod.clamp_availability_range(body)
+    86	    assert body["from"] == body["to"] == "07/30/2026"
+    87	    assert "callID" not in body
+.pytest_cache/.gitignore
+.pytest_cache/CACHEDIR.TAG
+.pytest_cache/README.md
+__pycache__/bland_gateway.cpython-314.pyc
+__pycache__/test_raw_wiring.cpython-314-pytest-9.0.2.pyc
+bland_gateway.py
+report.md
+test_raw_wiring.py
+worker.log
+
+hook: PostToolUse
+hook: PostToolUse Failed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '1,320p' report.md; sed -n '1,260p' worker.log; git status --short; git diff -- bland_gateway.py test_raw_wiring.py | sed -n '1,360p'" in /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+ succeeded in 0ms:
+# Raw-Text Date Authority
+
+## Summary
+
+- Added an opt-in raw-message date authority guarded by `ECP_RAW_TEXT_DATES` and the non-CVC tenant check.
+- The latest user message can override model-extracted availability dates; fetch and parse failures preserve the model fallback.
+- `callID` is always removed before downstream CLI argument handling.
+
+## Parser Pipeline
+
+1. Normalize text, collapse whitespace, and expand supported texting shorthand token by token.
+2. Resolve the last valid explicit English month-and-day match, treating later dates as corrections.
+3. Resolve an explicit Chinese month-and-day match before relative language.
+4. Try the entire normalized string as a clean date phrase.
+5. Scan token windows of sizes 4, 3, 2, then 1 from left to right, excluding digit-only windows.
+6. Resolve a valid bare ordinal day to its next calendar occurrence, advancing past short months.
+7. Return `None` when no deterministic date is found.
+
+## Verify
+
+`CHECK PASSED: flag-off byte-identical to ORIGINAL (153 phrases, computed live); flag-on zero drift on 120 legacy; 12 new month-day phrases resolve; 8 compound phrases resolve; 13 over-broad/malformed inputs stay None; CVC inert under the tenant guard even with the flag on; source diff is additions only.`
+
+`5 passed, 5 warnings in 0.14s`
+
+## Risks
+
+- The existing yearless `datetime.strptime` path emits a Python 3.15 deprecation warning. It is unchanged because `resolve_relative_date` was required to remain untouched.
+- Conversation fetches add up to two sequential two-second attempts when the feature is enabled and both endpoints fail.
+
+[ringer.py] attempt 1 started 2026-07-28T15:33:20.966982+00:00
+[ringer.py] engine: codex
+[ringer.py] command: /home/ankit114/repos/ringer/engines/codex-oauth.sh exec --ignore-user-config --skip-git-repo-check --sandbox workspace-write -C /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority 'You are adding a RAW-TEXT DATE AUTHORITY to an SMS booking gateway. BOUNDARY: write only inside your task directory; no git, no network, no MCP, no skills. You own exactly three output files: ./bland_gateway.py, ./test_raw_wiring.py, ./report.md.
+
+STEP 1. Copy /mnt/d_drive/repos/cvc-booking-gateway/container/bland_gateway.py to ./bland_gateway.py. It already contains an ordinal fallback and a compound normalizer inside resolve_relative_date (lines ~616-628), module constants _ORDINAL_MONTHS and _ordinal_suffix (~line 476), _WEEKDAYS (~line 468), _env_bool (~line 141), _DATE_ORDINAL_FALLBACK (~line 159), TENANT_ID (~line 52), and clamp_availability_range (~line 632).
+
+WHY. The small extraction model sometimes DESTROYS the date ('"'"'Tomorrow july 28th'"'"' -> it extracts '"'"'thursday'"'"', month dropped). Measured across 1,890 live probes; no prompt wording fixes it without breaking other phrases. The fix: the gateway fetches the patient'"'"'s RAW message (the webhook carries the conversation id as callID; the transcript is fetchable server-side) and parses the patient'"'"'s own words deterministically. The model extraction becomes a fallback only.
+
+ADD 1 - flag, next to _DATE_ORDINAL_FALLBACK:
+    _RAW_TEXT_DATES = _env_bool("ECP_RAW_TEXT_DATES", False)
+
+ADD 2 - free-text parser (module level, after the compound-normalizer section of resolve_relative_date, i.e. after the function ends). Signature EXACTLY:
+    def extract_date_from_text(text) -> str | None:
+Deterministic; uses _eastern_today() for '"'"'today'"'"' (tests freeze it). Pipeline:
+  a. Normalize: str(text or '"'"''"'"'), lowercase, collapse whitespace. Expand texting shorthand tokens word-by-word BEFORE parsing: nxt->next, wk->week, wks->weeks, tmrw/tmr->tomorrow, 2day->today, 2moro/2morrow->tomorrow.
+  b. EXPLICIT MONTH+DAY WINS. Find ALL matches of: (month name from _ORDINAL_MONTHS) + space + day 1-31 + optional valid ordinal suffix + optional 4-digit year. Use finditer over the normalized text with punctuation (commas etc) stripped around tokens. If any matches: take the LAST one (a later date in the same message is a correction: '"'"'july 28, no wait, august 3'"'"' -> august 3). Validate ordinal suffix with _ordinal_suffix (reject '"'"'july 11st'"'"'). Resolve by calling resolve_relative_date on '"'"'month day[ year]'"'"' WITHOUT the suffix. Return it.
+  c. CHINESE explicit: regex (\d{1,2})月(\d{1,2})[号日] anywhere -> resolve via resolve_relative_date('"'"'{m}/{d}'"'"'). This outranks relative words too ('"'"'明天7月28号'"'"' -> 07/28).
+  d. Whole-string try: resolve_relative_date(normalized_text) - catches clean single phrases including Chinese ('"'"'下周三'"'"').
+  e. TOKEN-WINDOW SCAN: split into tokens; for window sizes 4,3,2,1 (largest first), slide left-to-right, join window with spaces, SKIP windows that are purely digits (r'"'"'^\d+$'"'"' - slot picks like '"'"'1'"'"' must never resolve), call resolve_relative_date(window); first hit wins. This catches '"'"'can you do tomorrow?'"'"', '"'"'how about this thursday'"'"', '"'"'day after tomorrow maybe'"'"', '"'"'I'"'"'m free wed or thurs'"'"' (wed wins, leftmost), '"'"'tuesday next week'"'"', '"'"'in 2 weeks'"'"'.
+  f. BARE DAY-OF-MONTH: if still nothing, regex \b(?:the\s+)?(\d{1,2})(st|nd|rd|th)\b with valid suffix and 1-31: next occurrence of that day-of-month (today'"'"'s month if day >= today.day else next month; handle month rollover and short months by advancing to the next month that has that day). '"'"'any openings on the 28th?'"'"' at Mon 07/27 -> 07/28/2026.
+  g. Nothing found -> return None. NEVER guess.
+
+ADD 3 - conversation helper (module level). Signature EXACTLY:
+    def resolve_from_conversation(messages) -> tuple:
+messages is a list of dicts. A user message is one whose sender/role value (any of keys '"'"'sender'"'"','"'"'role'"'"') upper()=='"'"'USER'"'"'. Its text is under '"'"'message'"'"' or '"'"'content'"'"'. Take ONLY the LATEST user message; run extract_date_from_text on it; if a date d -> return (d, d); else return (None, None). Do not mine older messages.
+
+ADD 4 - fetch seam (module level):
+    def _fetch_conversation(call_id) -> list | None:
+Uses urllib.request with header Authorization: os.environ.get('"'"'ECP_BLAND_API_KEY'"'"','"'"''"'"'), User-Agent '"'"'mott-gateway'"'"'. Try GET https://api.bland.ai/v1/sms/conversations/{call_id} then https://api.bland.ai/v1/pathway/chat/{call_id}, timeout 2 seconds each. Parse JSON; the payload is under '"'"'data'"'"' (fallback: whole object); messages under '"'"'messages'"'"' (SMS shape: sender/message) or '"'"'chat_history'"'"' (chat shape: role/content). Return the list, or None on any error/no messages. Must never raise.
+
+ADD 5 - wiring inside clamp_availability_range, as the FIRST statements of the function body:
+    call_id = str(body.pop("callID", "") or "").strip()
+    if _RAW_TEXT_DATES and TENANT_ID != "cvc" and call_id:
+        try:
+            msgs = _fetch_conversation(call_id)
+            if msgs:
+                raw_from, raw_to = resolve_from_conversation(msgs)
+                if raw_from:
+                    body["from"], body["to"] = raw_from, raw_to
+                    log.info("date_source=raw")
+                else:
+                    log.info("date_source=fallback")
+        except Exception:
+            log.info("date_source=error_fallback")
+The callID pop is UNCONDITIONAL (outside the if) so an unknown field can never reach the CLI arg builder even with the flag off. Never log message bodies or phone numbers here; only those fixed source codes.
+
+HARD RULES: change nothing else. resolve_relative_date itself is untouched. No new third-party imports (urllib/json/os/re/datetime only). All new behavior is inert unless ECP_RAW_TEXT_DATES is on AND tenant is not cvc, except the harmless callID pop.
+
+./test_raw_wiring.py - executable pytest proof of the wiring (import ./bland_gateway.py as a module with capability_registry stubbed exactly like this:
+    import types, sys
+    stub = types.ModuleType('"'"'capability_registry'"'"'); stub.QueryError = type('"'"'QE'"'"',(Exception,),{})
+    stub.load_manifest = lambda *a, **k: {}; stub.prepare_query = lambda *a, **k: {}; stub.render_query_result = lambda *a, **k: {}
+    sys.modules['"'"'capability_registry'"'"'] = stub
+and os.environ ECP_DATE_ORDINAL_FALLBACK=1, ECP_RAW_TEXT_DATES=1, ECP_TENANT_ID=mott set BEFORE import; freeze mod._eastern_today to datetime(2026,7,27,12,0,0)). Tests:
+  1. raw override: stub mod._fetch_conversation to return a Kenneth-style transcript (USER '"'"'Tomorrow july 28th'"'"'); clamp_availability_range({'"'"'store'"'"':'"'"'711'"'"','"'"'from'"'"':'"'"'thursday'"'"','"'"'to'"'"':'"'"'thursday'"'"','"'"'callID'"'"':'"'"'x'"'"'}) ends with from==to=='"'"'07/28/2026'"'"' and no '"'"'callID'"'"' key.
+  2. fail-open: stub seam to raise RuntimeError; same body -> from/to resolve as plain '"'"'thursday'"'"' would (the model fallback), no exception, no '"'"'callID'"'"' key.
+  3. flag off: reimport module fresh with ECP_RAW_TEXT_DATES=0 under a different module name; stub seam with a counter; clamp -> seam never called, callID still popped.
+  4. cvc tenant: fresh import with ECP_TENANT_ID=cvc and flag on -> seam never called.
+  5. no-date latest message: seam returns transcript ending USER '"'"'1'"'"' -> falls back to model values.
+Run the tests yourself: python3 -m pytest -q test_raw_wiring.py must pass.
+
+VERIFY - run exactly this; it is how you are graded:
+    python3 /mnt/d_drive/repos/mott/gw-temporal-check/check_gateway_datefix.py --original /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py --candidate ./bland_gateway.py && python3 -m pytest -q test_raw_wiring.py
+The check runs ~190 frozen-clock phrases including 32 raw-text sentences (explicit-wins, corrections, Chinese, bare '"'"'28th'"'"', slot-pick '"'"'1'"'"' -> None) plus zero-drift, tenant-guard, and shape sections. Iterate until CHECK PASSED and pytest green.
+
+./report.md: '"'"'# Raw-Text Date Authority'"'"', '"'"'## Summary'"'"' (3 bullets max), '"'"'## Parser Pipeline'"'"' (the a-g order you implemented), '"'"'## Verify'"'"' (paste the CHECK PASSED line and pytest tail), '"'"'## Risks'"'"' (anything you saw). Under 400 words.' < /dev/null
+Reading additional input from stdin...
+OpenAI Codex v0.145.0
+--------
+workdir: /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: none
+reasoning summaries: none
+session id: 019fa95b-ed78-7ed1-8568-ccd5f04c94f6
+--------
+user
+You are adding a RAW-TEXT DATE AUTHORITY to an SMS booking gateway. BOUNDARY: write only inside your task directory; no git, no network, no MCP, no skills. You own exactly three output files: ./bland_gateway.py, ./test_raw_wiring.py, ./report.md.
+
+STEP 1. Copy /mnt/d_drive/repos/cvc-booking-gateway/container/bland_gateway.py to ./bland_gateway.py. It already contains an ordinal fallback and a compound normalizer inside resolve_relative_date (lines ~616-628), module constants _ORDINAL_MONTHS and _ordinal_suffix (~line 476), _WEEKDAYS (~line 468), _env_bool (~line 141), _DATE_ORDINAL_FALLBACK (~line 159), TENANT_ID (~line 52), and clamp_availability_range (~line 632).
+
+WHY. The small extraction model sometimes DESTROYS the date ('Tomorrow july 28th' -> it extracts 'thursday', month dropped). Measured across 1,890 live probes; no prompt wording fixes it without breaking other phrases. The fix: the gateway fetches the patient's RAW message (the webhook carries the conversation id as callID; the transcript is fetchable server-side) and parses the patient's own words deterministically. The model extraction becomes a fallback only.
+
+ADD 1 - flag, next to _DATE_ORDINAL_FALLBACK:
+    _RAW_TEXT_DATES = _env_bool("ECP_RAW_TEXT_DATES", False)
+
+ADD 2 - free-text parser (module level, after the compound-normalizer section of resolve_relative_date, i.e. after the function ends). Signature EXACTLY:
+    def extract_date_from_text(text) -> str | None:
+Deterministic; uses _eastern_today() for 'today' (tests freeze it). Pipeline:
+  a. Normalize: str(text or ''), lowercase, collapse whitespace. Expand texting shorthand tokens word-by-word BEFORE parsing: nxt->next, wk->week, wks->weeks, tmrw/tmr->tomorrow, 2day->today, 2moro/2morrow->tomorrow.
+  b. EXPLICIT MONTH+DAY WINS. Find ALL matches of: (month name from _ORDINAL_MONTHS) + space + day 1-31 + optional valid ordinal suffix + optional 4-digit year. Use finditer over the normalized text with punctuation (commas etc) stripped around tokens. If any matches: take the LAST one (a later date in the same message is a correction: 'july 28, no wait, august 3' -> august 3). Validate ordinal suffix with _ordinal_suffix (reject 'july 11st'). Resolve by calling resolve_relative_date on 'month day[ year]' WITHOUT the suffix. Return it.
+  c. CHINESE explicit: regex (\d{1,2})月(\d{1,2})[号日] anywhere -> resolve via resolve_relative_date('{m}/{d}'). This outranks relative words too ('明天7月28号' -> 07/28).
+  d. Whole-string try: resolve_relative_date(normalized_text) - catches clean single phrases including Chinese ('下周三').
+  e. TOKEN-WINDOW SCAN: split into tokens; for window sizes 4,3,2,1 (largest first), slide left-to-right, join window with spaces, SKIP windows that are purely digits (r'^\d+$' - slot picks like '1' must never resolve), call resolve_relative_date(window); first hit wins. This catches 'can you do tomorrow?', 'how about this thursday', 'day after tomorrow maybe', 'I'm free wed or thurs' (wed wins, leftmost), 'tuesday next week', 'in 2 weeks'.
+  f. BARE DAY-OF-MONTH: if still nothing, regex \b(?:the\s+)?(\d{1,2})(st|nd|rd|th)\b with valid suffix and 1-31: next occurrence of that day-of-month (today's month if day >= today.day else next month; handle month rollover and short months by advancing to the next month that has that day). 'any openings on the 28th?' at Mon 07/27 -> 07/28/2026.
+  g. Nothing found -> return None. NEVER guess.
+
+ADD 3 - conversation helper (module level). Signature EXACTLY:
+    def resolve_from_conversation(messages) -> tuple:
+messages is a list of dicts. A user message is one whose sender/role value (any of keys 'sender','role') upper()=='USER'. Its text is under 'message' or 'content'. Take ONLY the LATEST user message; run extract_date_from_text on it; if a date d -> return (d, d); else return (None, None). Do not mine older messages.
+
+ADD 4 - fetch seam (module level):
+    def _fetch_conversation(call_id) -> list | None:
+Uses urllib.request with header Authorization: os.environ.get('ECP_BLAND_API_KEY',''), User-Agent 'mott-gateway'. Try GET https://api.bland.ai/v1/sms/conversations/{call_id} then https://api.bland.ai/v1/pathway/chat/{call_id}, timeout 2 seconds each. Parse JSON; the payload is under 'data' (fallback: whole object); messages under 'messages' (SMS shape: sender/message) or 'chat_history' (chat shape: role/content). Return the list, or None on any error/no messages. Must never raise.
+
+ADD 5 - wiring inside clamp_availability_range, as the FIRST statements of the function body:
+    call_id = str(body.pop("callID", "") or "").strip()
+    if _RAW_TEXT_DATES and TENANT_ID != "cvc" and call_id:
+        try:
+            msgs = _fetch_conversation(call_id)
+            if msgs:
+                raw_from, raw_to = resolve_from_conversation(msgs)
+                if raw_from:
+                    body["from"], body["to"] = raw_from, raw_to
+                    log.info("date_source=raw")
+                else:
+                    log.info("date_source=fallback")
+        except Exception:
+            log.info("date_source=error_fallback")
+The callID pop is UNCONDITIONAL (outside the if) so an unknown field can never reach the CLI arg builder even with the flag off. Never log message bodies or phone numbers here; only those fixed source codes.
+
+HARD RULES: change nothing else. resolve_relative_date itself is untouched. No new third-party imports (urllib/json/os/re/datetime only). All new behavior is inert unless ECP_RAW_TEXT_DATES is on AND tenant is not cvc, except the harmless callID pop.
+
+./test_raw_wiring.py - executable pytest proof of the wiring (import ./bland_gateway.py as a module with capability_registry stubbed exactly like this:
+    import types, sys
+    stub = types.ModuleType('capability_registry'); stub.QueryError = type('QE',(Exception,),{})
+    stub.load_manifest = lambda *a, **k: {}; stub.prepare_query = lambda *a, **k: {}; stub.render_query_result = lambda *a, **k: {}
+    sys.modules['capability_registry'] = stub
+and os.environ ECP_DATE_ORDINAL_FALLBACK=1, ECP_RAW_TEXT_DATES=1, ECP_TENANT_ID=mott set BEFORE import; freeze mod._eastern_today to datetime(2026,7,27,12,0,0)). Tests:
+  1. raw override: stub mod._fetch_conversation to return a Kenneth-style transcript (USER 'Tomorrow july 28th'); clamp_availability_range({'store':'711','from':'thursday','to':'thursday','callID':'x'}) ends with from==to=='07/28/2026' and no 'callID' key.
+  2. fail-open: stub seam to raise RuntimeError; same body -> from/to resolve as plain 'thursday' would (the model fallback), no exception, no 'callID' key.
+  3. flag off: reimport module fresh with ECP_RAW_TEXT_DATES=0 under a different module name; stub seam with a counter; clamp -> seam never called, callID still popped.
+  4. cvc tenant: fresh import with ECP_TENANT_ID=cvc and flag on -> seam never called.
+  5. no-date latest message: seam returns transcript ending USER '1' -> falls back to model values.
+Run the tests yourself: python3 -m pytest -q test_raw_wiring.py must pass.
+
+VERIFY - run exactly this; it is how you are graded:
+    python3 /mnt/d_drive/repos/mott/gw-temporal-check/check_gateway_datefix.py --original /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py --candidate ./bland_gateway.py && python3 -m pytest -q test_raw_wiring.py
+The check runs ~190 frozen-clock phrases including 32 raw-text sentences (explicit-wins, corrections, Chinese, bare '28th', slot-pick '1' -> None) plus zero-drift, tenant-guard, and shape sections. Iterate until CHECK PASSED and pytest green.
+
+./report.md: '# Raw-Text Date Authority', '## Summary' (3 bullets max), '## Parser Pipeline' (the a-g order you implemented), '## Verify' (paste the CHECK PASSED line and pytest tail), '## Risks' (anything you saw). Under 400 words.
+warning: Ignoring malformed agent role definition: agent role file at /home/ankit114/.codex/agents/custom-explorer.toml must define `developer_instructions`
+warning: Ignoring malformed agent role definition: agent role file at /home/ankit114/.codex/agents/reviewer.toml must define a non-empty `name`
+warning: Ignoring malformed agent role definition: agent role file at /home/ankit114/.codex/agents/ui-to-code.toml must define a non-empty `name`
+warning: Ignoring malformed agent role definition: agent role file at /home/ankit114/.codex/agents/custom-explorer.toml must define `developer_instructions`
+warning: Ignoring malformed agent role definition: agent role file at /home/ankit114/.codex/agents/reviewer.toml must define a non-empty `name`
+warning: Ignoring malformed agent role definition: agent role file at /home/ankit114/.codex/agents/ui-to-code.toml must define a non-empty `name`
+warning: Skill descriptions were shortened to fit the 2% skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest.
+codex
+Ankit — I’ll make only the three authorized files, preserve the copied gateway except for the requested additions, then run the exact grader and pytest commands. CANARY: blue paperclip
+exec
+/bin/bash -lc "cp /mnt/d_drive/repos/cvc-booking-gateway/container/bland_gateway.py ./bland_gateway.py && sed -n '1,210p' bland_gateway.py && sed -n '440,700p' bland_gateway.py" in /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+ succeeded in 0ms:
+#!/usr/bin/env python3
+"""CVC Bland-facing shim for the five locked EyeCloud appointment endpoints."""
+
+from __future__ import annotations
+
+import errno
+import fcntl
+import hmac
+import json
+import logging
+import os
+import re
+import secrets
+import subprocess
+import sys
+import threading
+import time
+from contextlib import contextmanager
+from datetime import datetime, timedelta
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from typing import NamedTuple
+from zoneinfo import ZoneInfo
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from capability_registry import QueryError, load_manifest, prepare_query, render_query_result
+
+try:  # boto3 is optional so the gateway and offline tests import without it.
+    import boto3
+except ImportError:  # pragma: no cover - exercised only where boto3 is absent
+    boto3 = None
+
+CLI = os.environ.get("ECP_CLI", "/usr/local/bin/eyecloud-pro-pp-cli")
+AWS_ENV_WRAPPER = os.environ.get("ECP_AWS_ENV_WRAPPER", str(Path.home() / ".local/bin/eyecloud-pro-aws-env"))
+HOST = os.environ.get("ECP_SHIM_HOST", "127.0.0.1")
+PORT = int(os.environ.get("ECP_SHIM_PORT", "8431"))
+TIMEOUT_S = int(os.environ.get("ECP_CLI_TIMEOUT_S", "90"))
+MAX_BODY = 16 * 1024
+MAX_VALUE_LEN = 200
+
+TEST_MODE = os.environ.get("ECP_SHIM_TEST_MODE", "0") == "1"
+ECP_QUERY_RELEASE_GATE = os.environ.get("ECP_QUERY_RELEASE_GATE", "BLOCK")
+TEST_LAST_PREFIX = os.environ.get("ECP_SHIM_TEST_LAST_PREFIX", "ZZTEST")
+TEST_PATIENT_IDS = {
+    p.strip()
+    for p in os.environ.get("ECP_SHIM_TEST_PATIENTS", "4274030798").split(",")
+    if p.strip()
+}
+
+API_KEY = os.environ.get("ECP_SHIM_BEARER", "")
+READ_PRINCIPAL = os.environ.get("ECP_READ_PRINCIPAL", "bland-read")
+TENANT_ID = os.environ.get("ECP_TENANT_ID", "cvc")
+
+
+def load_query_credential_record(raw: str) -> dict:
+    """Parse the deployment-bound /query credential without logging its value."""
+    try:
+        record = json.loads(raw)
+    except (TypeError, json.JSONDecodeError):
+        return {}
+    if not isinstance(record, dict) or set(record) != {"token", "tenant", "principal"}:
+        return {}
+    if not all(isinstance(record[key], str) and record[key].strip() for key in record):
+        return {}
+    return {key: record[key].strip() for key in record}
+
+
+CONSUMER_CREDENTIAL_FIELDS = {
+    "consumer_id",
+    "token",
+    "tenant",
+    "principal",
+    "enabled",
+    "routes",
+    "rate_per_minute",
+}
+
+
+def load_consumer_credential_set(raw: str) -> tuple[list[dict], bool]:
+    """Parse all consumer credentials atomically without logging their values."""
+    if not isinstance(raw, str) or not raw.strip():
+        return [], False
+    try:
+        document = json.loads(raw)
+    except (TypeError, json.JSONDecodeError):
+        return [], True
+    if (
+        not isinstance(document, dict)
+        or set(document) != {"version", "consumers"}
+        or not isinstance(document["version"], int)
+        or isinstance(document["version"], bool)
+        or not isinstance(document["consumers"], list)
+    ):
+        return [], True
+
+    consumers = []
+    consumer_ids = set()
+    tokens = []
+    for record in document["consumers"]:
+        if not isinstance(record, dict) or set(record) != CONSUMER_CREDENTIAL_FIELDS:
+            return [], True
+        if not all(
+            isinstance(record[key], str) and record[key].strip()
+            for key in ("consumer_id", "token", "tenant", "principal")
+ M ../../../../README.md
+ M ../../../../config.sample.toml
+ M ../../../../docs/MODEL-NOTES.md
+ M ../../../../registry/model-identity.toml
+ M ../../../../ringer.py
+ M ../../../../templates/README.md
+ M ../../../../templates/asset-swarm/README.md
+ M ../../../../tests/test_catalog.py
+ M ../../../../tests/test_model_db.py
+ M ../../../../tests/test_model_field.py
+ M ../../../../tests/test_model_log.py
+ M ../../../../tests/test_scoreboard_page.py
+?? ../../../../docs/MANIFEST-GUIDE.md
+?? ../../../../docs/MODEL-MENU.md
+?? ../../../../docs/SEEDANCE-VIDEO.md
+?? ../../../../docs/sales-ops-full-automation-plan.md
+?? ../../../../engines/claude-oauth.sh
+?? ../../../../engines/codex-oauth.sh
+?? ../../../../engines/gemini-oauth-settings.json
+?? ../../../../engines/gemini-oauth.sh
+?? ../../../../engines/opencode-auth-policy.sh
+?? ../../../../engines/opencode-xai-aws.sh
+?? ../../../../engines/openrouter-video.py
+?? ../../../../engines/test_gemini_oauth_wrapper.py
+?? ../../../../local-probes/
+?? ../../../../local-sales-ops/
+?? ../../../
+?? ../../../../swarm.json
+?? ../../../../templates/asset-swarm/checks/check_generated_video.py
+?? ../../../../templates/asset-swarm/seedance.manifest.json
+?? ../../../../templates/fable-sol-loop/
+?? ../../../../tests/test_codex_isolation.py
+?? ../../../../tests/test_oauth_routing_local.py
+?? ../../../../tests/test_oauth_wrappers.py
+?? ../../../../tests/test_openrouter_video.py
+
+hook: PostToolUse
+hook: PostToolUse Failed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba bland_gateway.py | sed -n '430,634p'; nl -ba bland_gateway.py | sed -n '1260,1300p'; rg -n 'clamp_availability_range\\(' bland_gateway.py; stat -c '%n %Y %s' bland_gateway.py test_raw_wiring.py report.md .pytest_cache 2>/dev/null" in /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+ succeeded in 0ms:
+   430	        last = win[1] - timedelta(minutes=30)
+   431	        if book_start > last:
+   432	            book_start = last
+   433	        return {"mode": "same_day", "avail_from": _fmt(now), "avail_to": _fmt(win[1]),
+   434	                "book_start": _fmt(book_start), "book_end": _fmt(book_start + timedelta(minutes=30))}
+   435	    first_am = _next_open_dt(cfg, store_cfg, now)
+   436	    return {"mode": "first_am", "avail_from": _fmt(first_am),
+   437	            "avail_to": _fmt(first_am + timedelta(hours=4)),
+   438	            "book_start": _fmt(first_am), "book_end": _fmt(first_am + timedelta(minutes=30))}
+   439	
+   440	
+   441	def verify_booking(book_pid: str, new_id: str, run_list_fn) -> bool:
+   442	    """BOOK-PROOF read-after-write. Returns True only when the freshly-created
+   443	    appointment id is actually present in a re-read of the patient's appointment
+   444	    list. run_list_fn(patient_id) -> parsed CLI 'appt list' result (or None on
+   445	    failure). Any failure, missing id, or unparseable read -> False (never a
+   446	    false 'booked')."""
+   447	    new_id = str(new_id or "").strip()
+   448	    if len(new_id) < 4 or not book_pid:
+   449	        return False
+   450	    try:
+   451	        listing = run_list_fn(book_pid)
+   452	    except Exception:
+   453	        return False
+   454	    if listing is None:
+   455	        return False
+   456	    return new_id in json.dumps(listing)
+   457	
+   458	
+   459	def alert_sms_recipients(state: str) -> list:
+   460	    """Hours-conditional SMS ping recipients. Open/about-to-close -> front desk;
+   461	    after-hours -> on-call doctor. Falls back to the flat list when the split
+   462	    envs are unset."""
+   463	    flat = os.environ.get("CVC_ALERT_SMS_TO", "").strip()
+   464	    if state in ("open", "about_to_close"):
+   465	        picked = os.environ.get("CVC_ALERT_SMS_TO_OPEN", "").strip() or flat
+   466	    else:
+   467	        picked = os.environ.get("CVC_ALERT_SMS_TO_AFTERHOURS", "").strip() or flat
+   468	    return [n.strip() for n in picked.split(",") if n.strip()]
+   469	
+   470	
+   471	_WEEKDAYS = {
+   472	    "monday": 0, "mon": 0, "tuesday": 1, "tue": 1, "tues": 1,
+   473	    "wednesday": 2, "wed": 2, "thursday": 3, "thu": 3, "thur": 3, "thurs": 3,
+   474	    "friday": 4, "fri": 4, "saturday": 5, "sat": 5, "sunday": 6, "sun": 6,
+   475	}
+   476	
+   477	
+   478	_ORDINAL_MONTHS = (
+   479	    "january|february|march|april|may|june|july|august|september|"
+   480	    "october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec"
+   481	)
+   482	
+   483	
+   484	def _ordinal_suffix(day: int) -> str:
+   485	    if 11 <= day % 100 <= 13:
+   486	        return "th"
+   487	    return {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
+   488	
+   489	
+   490	def resolve_relative_date(raw) -> str | None:
+   491	    # Dates reach us from LLM-extracted variables; the CLI only accepts
+   492	    # MM/DD/YYYY or YYYY-MM-DD, so anything else must be resolved here, not
+   493	    # left for the model to format (live failure 2026-07-21: "Friday" reached
+   494	    # the CLI verbatim -> 409). Bare/this/next weekday means the next future
+   495	    # occurrence (Eastern, never today). "Next week" means the next calendar
+   496	    # week's Monday. English and Chinese weekday-plus-week phrases use that
+   497	    # weekday in the next/second-next Monday-anchored calendar week.
+   498	    # Explicit-year dates pass through unmodified; rewriting a year the caller
+   499	    # stated would surprise them.
+   500	    from datetime import datetime, timedelta
+   501	
+   502	    today = _eastern_today().date()
+   503	    t = re.sub(r"[.,!?]", "", str(raw or "").strip().lower())
+   504	    t = re.sub(r"\s+", " ", t)
+   505	    if not t:
+   506	        return None
+   507	
+   508	    def emit(day):
+   509	        return day.strftime("%m/%d/%Y")
+   510	
+   511	    def next_weekday(weekday):
+   512	        ahead = (weekday - today.weekday()) % 7 or 7
+   513	        return today + timedelta(days=ahead)
+   514	
+   515	    def calendar_weekday(weekday, weeks_ahead):
+   516	        monday = today - timedelta(days=today.weekday())
+   517	        return monday + timedelta(weeks=weeks_ahead, days=weekday)
+   518	
+   519	    simple_days = {
+   520	        "today": 0, "tomorrow": 1, "tmrw": 1, "tmr": 1,
+   521	        "day after tomorrow": 2,
+   522	        "今天": 0, "明天": 1, "后天": 2, "大后天": 3,
+   523	    }
+   524	    if t in simple_days:
+   525	        return emit(today + timedelta(days=simple_days[t]))
+   526	
+   527	    if t in ("next week", "下周"):
+   528	        return emit(calendar_weekday(0, 1))
+   529	
+   530	    # "Coming weekend" follows the existing bare-weekday rule: it is always
+   531	    # the next future Saturday, even when today is Saturday.
+   532	    if t in ("weekend", "this weekend", "周末", "这周末"):
+   533	        return emit(next_weekday(5))
+   534	    if t == "next weekend":
+   535	        return emit(next_weekday(5) + timedelta(days=7))
+   536	    if t == "下周末":
+   537	        return emit(calendar_weekday(5, 1))
+   538	
+   539	    match = re.fullmatch(r"(?:in )?(\d+) days(?: from now)?", t)
+   540	    if not match:
+   541	        match = re.fullmatch(r"(\d+) days from now", t)
+   542	    if match:
+   543	        return emit(today + timedelta(days=int(match.group(1))))
+   544	
+   545	    number_words = {
+   546	        "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+   547	        "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+   548	        "couple": 2,
+   549	    }
+   550	    match = re.fullmatch(r"in (?:a|a (couple)|(\d+|one|two|three|four|five|six|seven|eight|nine|ten|couple)) weeks?", t)
+   551	    if match:
+   552	        count_text = match.group(1) or match.group(2)
+   553	        count = 1 if count_text is None else number_words.get(
+   554	            count_text, int(count_text) if count_text.isdigit() else None
+   555	        )
+   556	        return emit(today + timedelta(days=7 * count))
+   557	    match = re.fullmatch(r"(\d+) weeks (?:from now|out)", t)
+   558	    if match:
+   559	        return emit(today + timedelta(days=7 * int(match.group(1))))
+   560	
+   561	    zh_numbers = {
+   562	        "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5,
+   563	        "六": 6, "七": 7, "八": 8, "九": 9, "十": 10,
+   564	    }
+   565	    match = re.fullmatch(r"(\d+|[一二两三四五六七八九十])天后", t)
+   566	    if match:
+   567	        count = int(match.group(1)) if match.group(1).isdigit() else zh_numbers[match.group(1)]
+   568	        return emit(today + timedelta(days=count))
+   569	    match = re.fullmatch(r"(\d+|[一二两三四五六七八九十])(?:周|个星期)后", t)
+   570	    if match:
+   571	        count = int(match.group(1)) if match.group(1).isdigit() else zh_numbers[match.group(1)]
+   572	        return emit(today + timedelta(days=7 * count))
+   573	
+   574	    zh_weekdays = {"一": 0, "二": 1, "三": 2, "四": 3, "五": 4, "六": 5, "日": 6, "天": 6}
+   575	    match = re.fullmatch(r"(下下|下|这|本)?(?:周|星期|礼拜)([一二三四五六日天])", t)
+   576	    if match:
+   577	        prefix, day_text = match.groups()
+   578	        weekday = zh_weekdays[day_text]
+   579	        if prefix == "下":
+   580	            return emit(calendar_weekday(weekday, 1))
+   581	        if prefix == "下下":
+   582	            return emit(calendar_weekday(weekday, 2))
+   583	        return emit(next_weekday(weekday))
+   584	
+   585	    weekday_pattern = "|".join(sorted(_WEEKDAYS, key=len, reverse=True))
+   586	    match = re.fullmatch(rf"(?:day after next|the day after) ({weekday_pattern})", t)
+   587	    if match:
+   588	        return emit(next_weekday(_WEEKDAYS[match.group(1)]) + timedelta(days=1))
+   589	    match = re.fullmatch(rf"({weekday_pattern}) after next", t)
+   590	    if match:
+   591	        return emit(calendar_weekday(_WEEKDAYS[match.group(1)], 2))
+   592	    match = re.fullmatch(rf"(?:a week from ({weekday_pattern})|({weekday_pattern}) next week)", t)
+   593	    if match:
+   594	        weekday_text = match.group(1) or match.group(2)
+   595	        return emit(calendar_weekday(_WEEKDAYS[weekday_text], 1))
+   596	
+   597	    weekday_text = re.sub(r"^(this|next|on|coming)\s+", "", t)
+   598	    if weekday_text in _WEEKDAYS:
+   599	        return emit(next_weekday(_WEEKDAYS[weekday_text]))
+   600	    for fmt in ("%m/%d/%Y", "%Y-%m-%d", "%m-%d-%Y", "%B %d %Y", "%b %d %Y"):
+   601	        try:
+   602	            return datetime.strptime(t, fmt).date().strftime("%m/%d/%Y")
+   603	        except ValueError:
+   604	            continue
+   605	    # Yearless dates: the year is ours to pick, so a day that already passed
+   606	    # this year means the next occurrence.
+   607	    for fmt in ("%m/%d", "%B %d", "%b %d"):
+   608	        try:
+   609	            d = datetime.strptime(t, fmt).date().replace(year=today.year)
+   610	        except ValueError:
+   611	            continue
+   612	        if d < today:
+   613	            try:
+   614	                d = d.replace(year=d.year + 1)
+   615	            except ValueError:  # Feb 29
+   616	                d = d.replace(month=2, day=28, year=d.year + 1)
+   617	        return d.strftime("%m/%d/%Y")
+   618	    if _DATE_ORDINAL_FALLBACK and TENANT_ID != "cvc":
+   619	        m = re.fullmatch(r"(" + _ORDINAL_MONTHS + r") (\d{1,2})(st|nd|rd|th)( \d{4})?", t)
+   620	        if m and 1 <= int(m.group(2)) <= 31 and m.group(3) == _ordinal_suffix(int(m.group(2))):
+   621	            return resolve_relative_date(f"{m.group(1)} {m.group(2)}{m.group(4) or ''}")
+   622	    if _DATE_ORDINAL_FALLBACK and TENANT_ID != "cvc":
+   623	        _RELATIVE_PREFIX = {"today", "tomorrow", "tmrw", "tmr"}
+   624	        _compound_words = t.split()
+   625	        if len(_compound_words) >= 3 and (_compound_words[0] in _RELATIVE_PREFIX or _compound_words[0] in _WEEKDAYS):
+   626	            remainder = " ".join(_compound_words[1:])
+   627	            if any(m in remainder for m in _ORDINAL_MONTHS.split("|")):
+   628	                result = resolve_relative_date(remainder)
+   629	                if result is not None:
+   630	                    return result
+   631	    return None
+   632	
+   633	
+   634	def extract_date_from_text(text) -> str | None:
+  1260	        # open, on-call doctor after hours.
+  1261	        state = "after_hours"
+  1262	        try:
+  1263	            state = hours_state(store, datetime.now(ZoneInfo("America/New_York")))["state"]
+  1264	        except Exception:
+  1265	            pass
+  1266	        recipients = alert_sms_recipients(state)
+  1267	        if os.environ.get("CVC_ALERT_SMS_ENABLED") == "1" and recipients:
+  1268	            try:
+  1269	                # PHI-free: only the constant SMS_PING is ever published.
+  1270	                for num in recipients:
+  1271	                    _sns().publish(PhoneNumber=num, Message=SMS_PING)
+  1272	                sms = "sent"
+  1273	            except Exception:
+  1274	                log.warning("urgent SMS ping failed (secure-channel alert unaffected)")
+  1275	                sms = "failed"
+  1276	    return {"ok": True, "delivered": True, "email": True, "google_chat": gchat,
+  1277	            "sms": sms, "message_id": resp.get("MessageId", "")}
+  1278	
+  1279	
+  1280	def build_argv(path: str, body: dict) -> tuple[list[str], bool]:
+  1281	    verb, flagmap, is_write = ENDPOINTS[path]
+  1282	    if path == "/availability":
+  1283	        clamp_availability_range(body)
+  1284	    argv = [CLI, "appt", verb, "--agent", "--reason", f"bland-{verb}"]
+  1285	    pref = str(body.pop("time_pref", "")).strip().lower()
+  1286	    for flag, val in TIME_PREFS.get(pref, []):
+  1287	        argv += [flag, val]
+  1288	    # Force the store's real provider (ignore any caller-supplied doctor) so only
+  1289	    # Bhumi@Kennesaw / Mital@East Cobb slots are ever offered or booked.
+  1290	    forced_doctor = STORE_DOCTORS.get(str(body.get("store", "")).strip().lower()) if "doctor" in flagmap else None
+  1291	    if forced_doctor:
+  1292	        body.pop("doctor", None)
+  1293	    allow_conflict = body.pop("allow_conflict", None) if path == "/book" else None
+  1294	    status = body.pop("status", None) if path == "/book" else None
+  1295	    category = body.pop("category", None) if path in ("/book", "/book-new-patient") else None
+  1296	    # Reschedule resolves the target patient's id inside the CLI.  The gateway
+  1297	    # accepts an optional already-resolved id solely to open the CLI's per-call
+  1298	    # test-patient firebreak; it must never become a CLI flag.
+  1299	    firebreak_patient_id = body.pop("patient_id", None) if path == "/reschedule" else None
+  1300	    if firebreak_patient_id is not None and not re.fullmatch(r"\d+", str(firebreak_patient_id).strip()):
+746:def clamp_availability_range(body: dict) -> None:
+1283:        clamp_availability_range(body)
+bland_gateway.py 1785252940 94833
+test_raw_wiring.py 1785252853 2621
+report.md 1785252868 1604
+.pytest_cache 1785252858 64
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+Step 2 of 3: the core risk is now clear. The parser is linear, not catastrophically backtracking, but it treats any recognized date token as intent and does not understand negation, historical context, addresses, or corrections outside its narrow “last explicit month+day” rule. I’m running bounded synthetic probes to pin down exact wrong outputs and long-message cost.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "PYTHONDONTWRITEBYTECODE=1 ECP_RAW_TEXT_DATES=1 ECP_DATE_ORDINAL_FALLBACK=1 ECP_TENANT_ID=mott python3 -B - <<'PY'
+import importlib.util, sys, types, time
+from datetime import datetime
+from pathlib import Path
+stub=types.ModuleType('capability_registry')
+stub.QueryError=type('QE',(Exception,),{})
+stub.load_manifest=lambda *a,**k:{}
+stub.prepare_query=lambda *a,**k:{}
+stub.render_query_result=lambda *a,**k:{}
+sys.modules['capability_registry']=stub
+spec=importlib.util.spec_from_file_location('probe_gateway', Path('bland_gateway.py'))
+m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+m._eastern_today=lambda: datetime(2026,7,27,12,0,0)
+samples=[
+'I paid on the 5th last time',
+'My insurance renewed in june',
+'My insurance renewed June 5 years ago',
+'My address is May 5th Avenue, apartment 2',
+'My unit is 12/5 on Peachtree Road',
+'I cannot do July 28; Wednesday is better',
+'Not the 5th, the 8th',
+'Anything but Friday',
+'I work Monday through Friday',
+'June 5 is my birthday; I need next Tuesday',
+'I asked about next Tuesday earlier. Thursday will not work.',
+'Can you do tomorrow? 😊',
+'Can you do tomorrow😊',
+'Can you do\\ntomorrow?',
+]
+for s in samples:
+ print(repr(s), '=>', m.extract_date_from_text(s))
+for n in (1000,10000,100000):
+ s=('ordinaryword ' * n) + 'tomorrow'
+ t=time.perf_counter(); got=m.extract_date_from_text(s); dt=time.perf_counter()-t
+ print('TOKENS',n+1,'SECONDS',round(dt,4),'RESULT',got)
+PY" in /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+ succeeded in 33391ms:
+'I paid on the 5th last time' => 08/05/2026
+'My insurance renewed in june' => None
+'My insurance renewed June 5 years ago' => 06/05/2027
+'My address is May 5th Avenue, apartment 2' => 05/05/2027
+'My unit is 12/5 on Peachtree Road' => 12/05/2026
+'I cannot do July 28; Wednesday is better' => 07/28/2026
+'Not the 5th, the 8th' => 08/05/2026
+'Anything but Friday' => 07/31/2026
+'I work Monday through Friday' => 08/03/2026
+'June 5 is my birthday; I need next Tuesday' => 06/05/2027
+'I asked about next Tuesday earlier. Thursday will not work.' => 07/28/2026
+'Can you do tomorrow? 😊' => 07/28/2026
+'Can you do tomorrow😊' => None
+'Can you do\ntomorrow?' => 07/28/2026
+TOKENS 1001 SECONDS 0.2948 RESULT 07/28/2026
+TOKENS 10001 SECONDS 2.9844 RESULT 07/28/2026
+TOKENS 100001 SECONDS 29.7875 RESULT 07/28/2026
+
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "PYTHONDONTWRITEBYTECODE=1 ECP_RAW_TEXT_DATES=1 ECP_DATE_ORDINAL_FALLBACK=1 ECP_TENANT_ID=mott python3 -uB - <<'PY'
+import importlib.util, sys, types, time
+from datetime import datetime
+from pathlib import Path
+stub=types.ModuleType('capability_registry'); stub.QueryError=type('QE',(Exception,),{}); stub.load_manifest=lambda *a,**k:{}; stub.prepare_query=lambda *a,**k:{}; stub.render_query_result=lambda *a,**k:{}; sys.modules['capability_registry']=stub
+spec=importlib.util.spec_from_file_location('probe_gateway2', Path('bland_gateway.py')); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); m._eastern_today=lambda: datetime(2026,7,27,12,0,0)
+samples=['I paid on the 5th last time','My insurance renewed in june','My insurance renewed June 5 years ago','My address is May 5th Avenue, apartment 2','My unit is 12/5 on Peachtree Road','I cannot do July 28; Wednesday is better','Not the 5th, the 8th','Anything but Friday','I work Monday through Friday','June 5 is my birthday; I need next Tuesday','I asked about next Tuesday earlier. Thursday will not work.','Can you do tomorrow? 😊','Can you do tomorrow😊','Can you do\\ntomorrow?']
+for s in samples: print(repr(s),'=>',m.extract_date_from_text(s),flush=True)
+for n in (1000,10000):
+ s=('ordinaryword ' * n)+'tomorrow'; t=time.perf_counter(); got=m.extract_date_from_text(s); print('TOKENS',n+1,'SECONDS',round(time.perf_counter()-t,4),'RESULT',got,flush=True)
+PY" in /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+hook: PostToolUse
+ succeeded in 3598ms:
+'I paid on the 5th last time' => 08/05/2026
+'My insurance renewed in june' => None
+'My insurance renewed June 5 years ago' => 06/05/2027
+'My address is May 5th Avenue, apartment 2' => 05/05/2027
+'My unit is 12/5 on Peachtree Road' => 12/05/2026
+'I cannot do July 28; Wednesday is better' => 07/28/2026
+'Not the 5th, the 8th' => 08/05/2026
+'Anything but Friday' => 07/31/2026
+'I work Monday through Friday' => 08/03/2026
+'June 5 is my birthday; I need next Tuesday' => 06/05/2027
+'I asked about next Tuesday earlier. Thursday will not work.' => 07/28/2026
+'Can you do tomorrow? 😊' => 07/28/2026
+'Can you do tomorrow😊' => None
+'Can you do\ntomorrow?' => 07/28/2026
+TOKENS 1001 SECONDS 0.2804 RESULT 07/28/2026
+TOKENS 10001 SECONDS 2.9948 RESULT 07/28/2026
+
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba bland_gateway.py | sed -n '1280,1355p'; python3 - <<'PY'
+import ast
+p='bland_gateway.py'
+with open(p,encoding='utf-8') as f: tree=ast.parse(f.read())
+for n in ast.walk(tree):
+ if isinstance(n,(ast.Call,ast.Attribute,ast.Subscript,ast.Name)):
+  pass
+PY" in /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+hook: PostToolUse
+ succeeded in 117ms:
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "python3 - <<'PY'
+import inspect, urllib.request
+print(inspect.getsource(urllib.request.HTTPRedirectHandler.redirect_request))
+PY" in /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+hook: PostToolUse
+ succeeded in 101ms:
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "diff -u /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py bland_gateway.py | sed -n '1,320p'" in /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work/raw-text-authority
+ succeeded in 0ms:
+--- /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py	2026-07-27 15:55:40.247916734 -0400
++++ bland_gateway.py	2026-07-28 11:35:40.462482612 -0400
+@@ -15,6 +15,7 @@
+ import sys
+ import threading
+ import time
++import urllib.request
+ from contextlib import contextmanager
+ from datetime import datetime, timedelta
+ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+@@ -156,6 +157,8 @@
+     _CONSUMER_CREDENTIALS_RAW
+ )
+ CONSUMER_ACCEPT_LEGACY = _env_bool("ECP_CONSUMER_ACCEPT_LEGACY", True)
++_DATE_ORDINAL_FALLBACK = _env_bool("ECP_DATE_ORDINAL_FALLBACK", False)
++_RAW_TEXT_DATES = _env_bool("ECP_RAW_TEXT_DATES", False)
+ CAPABILITY_MANIFEST = load_manifest()
+ 
+ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+@@ -472,6 +475,18 @@
+ }
+ 
+ 
++_ORDINAL_MONTHS = (
++    "january|february|march|april|may|june|july|august|september|"
++    "october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec"
++)
++
++
++def _ordinal_suffix(day: int) -> str:
++    if 11 <= day % 100 <= 13:
++        return "th"
++    return {1: "st", 2: "nd", 3: "rd"}.get(day % 10, "th")
++
++
+ def resolve_relative_date(raw) -> str | None:
+     # Dates reach us from LLM-extracted variables; the CLI only accepts
+     # MM/DD/YYYY or YYYY-MM-DD, so anything else must be resolved here, not
+@@ -600,10 +615,148 @@
+             except ValueError:  # Feb 29
+                 d = d.replace(month=2, day=28, year=d.year + 1)
+         return d.strftime("%m/%d/%Y")
++    if _DATE_ORDINAL_FALLBACK and TENANT_ID != "cvc":
++        m = re.fullmatch(r"(" + _ORDINAL_MONTHS + r") (\d{1,2})(st|nd|rd|th)( \d{4})?", t)
++        if m and 1 <= int(m.group(2)) <= 31 and m.group(3) == _ordinal_suffix(int(m.group(2))):
++            return resolve_relative_date(f"{m.group(1)} {m.group(2)}{m.group(4) or ''}")
++    if _DATE_ORDINAL_FALLBACK and TENANT_ID != "cvc":
++        _RELATIVE_PREFIX = {"today", "tomorrow", "tmrw", "tmr"}
++        _compound_words = t.split()
++        if len(_compound_words) >= 3 and (_compound_words[0] in _RELATIVE_PREFIX or _compound_words[0] in _WEEKDAYS):
++            remainder = " ".join(_compound_words[1:])
++            if any(m in remainder for m in _ORDINAL_MONTHS.split("|")):
++                result = resolve_relative_date(remainder)
++                if result is not None:
++                    return result
++    return None
++
++
++def extract_date_from_text(text) -> str | None:
++    normalized = re.sub(r"\s+", " ", str(text or "").lower()).strip()
++    shorthand = {
++        "nxt": "next", "wk": "week", "wks": "weeks",
++        "tmrw": "tomorrow", "tmr": "tomorrow", "2day": "today",
++        "2moro": "tomorrow", "2morrow": "tomorrow",
++    }
++    normalized = " ".join(shorthand.get(token, token) for token in normalized.split())
++    if not normalized:
++        return None
++
++    explicit = re.compile(
++        r"\b(" + _ORDINAL_MONTHS + r")\s+(\d{1,2})(st|nd|rd|th)?"
++        r"(?:\s*,?\s*(\d{4}))?\b"
++    )
++    matches = list(explicit.finditer(normalized))
++    if matches:
++        match = matches[-1]
++        day = int(match.group(2))
++        suffix = match.group(3)
++        if 1 <= day <= 31 and (suffix is None or suffix == _ordinal_suffix(day)):
++            phrase = f"{match.group(1)} {day}"
++            if match.group(4):
++                phrase += f" {match.group(4)}"
++            return resolve_relative_date(phrase)
++        return None
++
++    chinese = list(re.finditer(r"(\d{1,2})月(\d{1,2})[号日]", normalized))
++    if chinese:
++        month, day = chinese[-1].groups()
++        result = resolve_relative_date(f"{month}/{day}")
++        if result:
++            return result
++
++    result = resolve_relative_date(normalized)
++    if result:
++        return result
++
++    tokens = normalized.split()
++    for size in (4, 3, 2, 1):
++        for start in range(len(tokens) - size + 1):
++            window = " ".join(tokens[start:start + size])
++            if re.fullmatch(r"\d+", window):
++                continue
++            result = resolve_relative_date(window)
++            if result:
++                return result
++
++    today = _eastern_today().date()
++    for match in re.finditer(r"\b(?:the\s+)?(\d{1,2})(st|nd|rd|th)\b", normalized):
++        day = int(match.group(1))
++        if not 1 <= day <= 31 or match.group(2) != _ordinal_suffix(day):
++            continue
++        year, month = today.year, today.month
++        if day < today.day:
++            month += 1
++            if month == 13:
++                year, month = year + 1, 1
++        while True:
++            try:
++                candidate = datetime(year, month, day)
++                return candidate.strftime("%m/%d/%Y")
++            except ValueError:
++                month += 1
++                if month == 13:
++                    year, month = year + 1, 1
++    return None
++
++
++def resolve_from_conversation(messages) -> tuple:
++    latest = None
++    for message in messages or []:
++        if not isinstance(message, dict):
++            continue
++        role = message.get("sender", message.get("role", ""))
++        if str(role or "").upper() == "USER":
++            latest = message.get("message", message.get("content", ""))
++    if latest is None:
++        return None, None
++    resolved = extract_date_from_text(latest)
++    return (resolved, resolved) if resolved else (None, None)
++
++
++def _fetch_conversation(call_id) -> list | None:
++    # Defense-in-depth: the id is spliced into a URL path with our API key
++    # attached, so only a plain conversation-id shape may pass.
++    if not re.fullmatch(r"[A-Za-z0-9-]{8,64}", str(call_id or "")):
++        return None
++    headers = {
++        "Authorization": os.environ.get("ECP_BLAND_API_KEY", ""),
++        "User-Agent": "mott-gateway",
++    }
++    urls = (
++        f"https://api.bland.ai/v1/sms/conversations/{call_id}",
++        f"https://api.bland.ai/v1/pathway/chat/{call_id}",
++    )
++    for url in urls:
++        try:
++            request = urllib.request.Request(url, headers=headers)
++            with urllib.request.urlopen(request, timeout=2) as response:
++                payload = json.loads(response.read())
++            data = payload.get("data", payload) if isinstance(payload, dict) else {}
++            if not isinstance(data, dict):
++                continue
++            messages = data.get("messages") or data.get("chat_history")
++            if isinstance(messages, list) and messages:
++                return messages
++        except Exception:
++            continue
+     return None
+ 
+ 
+ def clamp_availability_range(body: dict) -> None:
++    call_id = str(body.pop("callID", "") or "").strip()
++    if _RAW_TEXT_DATES and TENANT_ID != "cvc" and call_id:
++        try:
++            msgs = _fetch_conversation(call_id)
++            if msgs:
++                raw_from, raw_to = resolve_from_conversation(msgs)
++                if raw_from:
++                    body["from"], body["to"] = raw_from, raw_to
++                    log.info("date_source=raw")
++                else:
++                    log.info("date_source=fallback")
++        except Exception:
++            log.info("date_source=error_fallback")
+     # first_available=1 replaces from/to with tomorrow..+6 days (Eastern) —
+     # closed days simply return no slots, so no business-day logic is needed.
+     # Otherwise from/to go through resolve_relative_date; bad/inverted "to"
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+Ankit —
+
+CANARY: blue paperclip
+
+```yaml
+verdict: block
+confidence: 0.96
+
+concrete_failing_sentences:
+  - sentence: "I paid on the 5th last time."
+    expected: No override because this describes payment history.
+    got: 08/05/2026 under the frozen 2026-07-27 clock.
+
+  - sentence: "My insurance renewed June 5 years ago."
+    expected: No override because this concerns insurance history.
+    got: 06/05/2027.
+
+  - sentence: "My address is May 5th Avenue, apartment 2."
+    expected: No override because May 5th is part of an address.
+    got: 05/05/2027.
+
+  - sentence: "My unit is 12/5 on Peachtree Road."
+    expected: No override because 12/5 is an address or unit.
+    got: 12/05/2026.
+
+  - sentence: "I cannot do July 28; Wednesday is better."
+    expected: Wednesday, 07/29/2026.
+    got: 07/28/2026 because explicit month-day always wins over the correction.
+
+  - sentence: "Not the 5th, the 8th."
+    expected: 08/08/2026.
+    got: 08/05/2026 because bare-ordinal scanning returns the first match.
+
+  - sentence: "Anything but Friday."
+    expected: No Friday override.
+    got: 07/31/2026 because negation is ignored.
+
+  - sentence: "June 5 is my birthday; I need next Tuesday."
+    expected: 07/28/2026.
+    got: 06/05/2027 because an incidental explicit date outranks appointment intent.
+
+  - sentence: "Can you do tomorrow😊"
+    expected: 07/28/2026.
+    got: None because attached emoji prevents token matching. Newlines and separated emoji worked.
+
+worst_risk: >
+  A natural negation, historical date, or address in the latest user message silently
+  replaces correct model-extracted dates and searches the wrong appointment window.
+  The frozen gate proves parser conformance, but not appointment-intent authority.
+  Latest-user-only is not itself worse when the latest reply has no date because fallback
+  remains intact. It becomes worse when that reply contains an incidental or rejected date.
+
+required_fixes:
+  - >
+    Add an authority gate. Override only for a date-focused reply in an appointment-date
+    context, preferably immediately after the agent asks for the desired date. Reject
+    negation, historical/account/address context, and contradictory corrections; otherwise
+    retain model values.
+  - >
+    Enforce Mott positively with a normalized equality check. The current TENANT_ID != "cvc"
+    condition enables every unknown tenant, plus "CVC" or whitespace variants.
+  - >
+    Bound the hot path: skip fetching when first_available will discard the result, require
+    a nonempty ECP_BLAND_API_KEY, impose one total fetch deadline, cap response/message size
+    and parser tokens. Current worst case is two sequential 2-second attempts, and urllib's
+    timeout is not a complete transaction deadline. A synthetic 10,001-token message added
+    about 3 seconds of parsing locally.
+  - >
+    Prevent Authorization from crossing origins on redirects. Python urllib redirect handling
+    copies request headers. Disable redirects or allow only same-origin redirects.
+  - >
+    Add frozen adversarial tests for every failing sentence above, unknown/case-variant
+    tenants, reversed conversation ordering, missing API key, oversized messages, and
+    first_available requests.
+
+nice_to_haves:
+  - >
+    Logging is body-safe and key-safe: the new application logs contain only fixed
+    date_source codes, and the key comes from ECP_BLAND_API_KEY. However, fetch timeout,
+    invalid ID, missing key, empty response, and JSON failure currently produce no
+    date_source entry because _fetch_conversation swallows them and returns None.
+  - >
+    Tighten the ID grammar. The guard blocks slash/query injection, but values such as
+    eight hyphens still pass and trigger both requests.
+  - >
+    Confirm Bland's message ordering contract or select by a trusted timestamp. The code
+    assumes the last list element is newest.
+  - >
+    Exact lowercase CVC avoids raw fetching, but CVC is not behavior-identical:
+    callID is always removed, turning a formerly unknown-field rejection into an accepted
+    availability request. That may be intentional, but it should be documented and tested.
+```
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Completed
+tokens used
+93,787
+Ankit —
+
+CANARY: blue paperclip
+
+```yaml
+verdict: block
+confidence: 0.96
+
+concrete_failing_sentences:
+  - sentence: "I paid on the 5th last time."
+    expected: No override because this describes payment history.
+    got: 08/05/2026 under the frozen 2026-07-27 clock.
+
+  - sentence: "My insurance renewed June 5 years ago."
+    expected: No override because this concerns insurance history.
+    got: 06/05/2027.
+
+  - sentence: "My address is May 5th Avenue, apartment 2."
+    expected: No override because May 5th is part of an address.
+    got: 05/05/2027.
+
+  - sentence: "My unit is 12/5 on Peachtree Road."
+    expected: No override because 12/5 is an address or unit.
+    got: 12/05/2026.
+
+  - sentence: "I cannot do July 28; Wednesday is better."
+    expected: Wednesday, 07/29/2026.
+    got: 07/28/2026 because explicit month-day always wins over the correction.
+
+  - sentence: "Not the 5th, the 8th."
+    expected: 08/08/2026.
+    got: 08/05/2026 because bare-ordinal scanning returns the first match.
+
+  - sentence: "Anything but Friday."
+    expected: No Friday override.
+    got: 07/31/2026 because negation is ignored.
+
+  - sentence: "June 5 is my birthday; I need next Tuesday."
+    expected: 07/28/2026.
+    got: 06/05/2027 because an incidental explicit date outranks appointment intent.
+
+  - sentence: "Can you do tomorrow😊"
+    expected: 07/28/2026.
+    got: None because attached emoji prevents token matching. Newlines and separated emoji worked.
+
+worst_risk: >
+  A natural negation, historical date, or address in the latest user message silently
+  replaces correct model-extracted dates and searches the wrong appointment window.
+  The frozen gate proves parser conformance, but not appointment-intent authority.
+  Latest-user-only is not itself worse when the latest reply has no date because fallback
+  remains intact. It becomes worse when that reply contains an incidental or rejected date.
+
+required_fixes:
+  - >
+    Add an authority gate. Override only for a date-focused reply in an appointment-date
+    context, preferably immediately after the agent asks for the desired date. Reject
+    negation, historical/account/address context, and contradictory corrections; otherwise
+    retain model values.
+  - >
+    Enforce Mott positively with a normalized equality check. The current TENANT_ID != "cvc"
+    condition enables every unknown tenant, plus "CVC" or whitespace variants.
+  - >
+    Bound the hot path: skip fetching when first_available will discard the result, require
+    a nonempty ECP_BLAND_API_KEY, impose one total fetch deadline, cap response/message size
+    and parser tokens. Current worst case is two sequential 2-second attempts, and urllib's
+    timeout is not a complete transaction deadline. A synthetic 10,001-token message added
+    about 3 seconds of parsing locally.
+  - >
+    Prevent Authorization from crossing origins on redirects. Python urllib redirect handling
+    copies request headers. Disable redirects or allow only same-origin redirects.
+  - >
+    Add frozen adversarial tests for every failing sentence above, unknown/case-variant
+    tenants, reversed conversation ordering, missing API key, oversized messages, and
+    first_available requests.
+
+nice_to_haves:
+  - >
+    Logging is body-safe and key-safe: the new application logs contain only fixed
+    date_source codes, and the key comes from ECP_BLAND_API_KEY. However, fetch timeout,
+    invalid ID, missing key, empty response, and JSON failure currently produce no
+    date_source entry because _fetch_conversation swallows them and returns None.
+  - >
+    Tighten the ID grammar. The guard blocks slash/query injection, but values such as
+    eight hyphens still pass and trigger both requests.
+  - >
+    Confirm Bland's message ordering contract or select by a trusted timestamp. The code
+    assumes the last list element is newest.
+  - >
+    Exact lowercase CVC avoids raw fetching, but CVC is not behavior-identical:
+    callID is always removed, turning a formerly unknown-field rejection into an accepted
+    availability request. That may be intentional, but it should be documented and tested.
+```

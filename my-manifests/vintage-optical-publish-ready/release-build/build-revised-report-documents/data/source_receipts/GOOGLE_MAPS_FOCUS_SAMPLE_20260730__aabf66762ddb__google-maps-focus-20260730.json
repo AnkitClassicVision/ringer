@@ -1,0 +1,50 @@
+{
+  "source_id": "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+  "captured_at": "2026-07-30T13:18:44.578Z",
+  "collection_method": "direct public Google Maps browser DOM observation",
+  "url": "https://www.google.com/maps/place/Focus+On+Eyes,+P.C.+Member+Of+Vision+Source/@40.6196994,-89.4680886,17z/",
+  "observed": {
+    "name": "Focus On Eyes, P.C. Member Of Vision Source",
+    "category": "Optometrist",
+    "rating": 4.8,
+    "review_count": 182,
+    "address": "829 W Jackson St, Morton, IL 61550",
+    "website_domain": "visionsource-focusoneyes.com",
+    "public_listing_latitude": 40.6196994,
+    "public_listing_longitude": -89.4680886,
+    "popular_times_visible": true,
+    "people_also_search": [
+      {
+        "name": "Vintage Optical",
+        "rating": 4.9,
+        "review_count": 348,
+        "category": "Optometrist"
+      },
+      {
+        "name": "Walmart Vision & Glasses",
+        "rating": 3.5,
+        "review_count": 8,
+        "category": "Optician"
+      },
+      {
+        "name": "Tri-County Eye Center",
+        "rating": 4.9,
+        "review_count": 271,
+        "category": "Optometrist"
+      }
+    ]
+  },
+  "comparison_observation": {
+    "vintage_rating": 4.9,
+    "vintage_review_count": 348,
+    "focus_rating": 4.8,
+    "focus_review_count": 182,
+    "same_google_maps_page_and_capture": true
+  },
+  "limitations": [
+    "This is one dated Google Maps observation, not a complete peer review export or rank grid.",
+    "People-also-search cards can change by query, geography, and time.",
+    "Review counts can change continuously and do not prove clinical outcomes, conversion, capacity, or patient draw.",
+    "Birdeye displayed different Google-component counts for both entities, so aggregator composition is not treated as the direct Google count."
+  ]
+}

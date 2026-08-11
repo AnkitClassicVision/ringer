@@ -1,0 +1,5 @@
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN=1 WALL_MS=6993 N_MSGS=1 NODE=n_post_booking SAID=Hi Rachel! I'm just calling to confirm that your appointment is all set. How can I help you today?
+TURN=2 WALL_MS=2168 N_MSGS=1 NODE=n_post_booking SAID=I understand you'll be away for a couple of weeks. Since I can't make changes to the appointment from here, you'll need to call the office directly at (212) 219-2219 to reschedule. They'll be able to 
+RESULT label=gl16-away-sentence turns=2 total_wall_ms=9161 filler_hits=0 candidate=0

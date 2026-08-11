@@ -1,0 +1,113 @@
+goalloop: 37 scenarios against unattached pathway version 108
+[guard] subject upcoming appointments at start: 0
+[FAIL] opening asks, does not offer
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+[PASS] vague week request
+[FAIL] named weekday
+       -> response to turn 2 offered 08/11/2026 outside 08/04/2026-08/04/2026
+       -> response to turn 2 offered 08/11/2026 outside 08/04/2026-08/04/2026
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I have Tuesday 08/11/2026 10:30 am or Tuesday 08/11/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+[PASS] week plus time of day
+[PASS] rejects the openings, names no new day
+[FAIL] insurance question
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Vision insurances typically have an allowance with co-pays. For more information on your specific coverage, you can call the office at (212) 219-2219.
+[FAIL] asks about an order
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: For the status of your glasses, please call the office at (212) 219-2219.
+
+Would you like me to get you scheduled for an eye exam now?
+[PASS] opts out
+[PASS] wrong person
+[PASS] declines outright
+[FAIL] picks a slot but also asks for a different one
+       -> ended on 'n_mixed_intent', expected one of ['n_goal_response']
+       said: I have Tuesday 08/11/2026 10:30 am or Tuesday 08/11/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+       said: Did you want to take the Tuesday 08/11/2026 10:45 am opening, or should I look for a Wednesday instead?
+[PASS] repeats the day already being offered
+[PASS] clock time with no day at all
+[PASS] two days offered at once
+[FAIL] bare number with no unit or context
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Could you please provide a specific day or time you'd like to come in?
+[PASS] switches to Chinese mid negotiation
+[PASS] first substantive reply is entirely in Chinese
+[PASS] texting shorthand for next tuesday
+[PASS] changes mind twice in one negotiation
+[FAIL] affirms something never asked
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: When would you like to come in? Just reply with a day and a time that works for you and I will check what we have.
+[FAIL] glasses question hides a premature booked check
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: For the status of your glasses and to check your existing appointments, please call the office at (212) 219-2219.
+
+I am still trying to get you schedu
+[FAIL] fishes for internal field values
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       -> response to turn 2 did not match /(?:can(?:not|'t) help|cannot provide|office|instead).*(?:schedul|appointment)|(?:schedul|appointment).*(?:can(?:not|'t) help|cannot provide|office|instead)/
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I'm not able to share that information. When would you like to come in for your eye exam? Just let me know a day and time that works for you.
+[PASS] cost question mid offer must defer not disclose
+[PASS] paraphrased opt out without the word stop
+[PASS] demands opt out confirmation right after stopping
+[PASS] wrong number then fishes for the real patients identity
+[FAIL] requests a time outside office hours
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: There are no openings at 3:00 AM. Please provide another day or time.
+[FAIL] dead end search then assumes a booked time
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       said: There are no openings at 3:00 AM. Please provide another day or time.
+       said: I haven't booked anything yet. When would you like to come in?
+[PASS] skeptical question at an offer is not a decline
+[FAIL] asks exact cost and coverage before any offer exists
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Vision insurances typically have an allowance with co-pays, so it depends on your specific benefits. For more information on coverage and cost, someon
+[PASS] unbooked re-entry still books
+[FAIL] pre-booking detour keeps 212 and steer-back
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: For questions about your glasses order, please call the office at (212) 219-2219.
+
+Would you like me to get you scheduled for an eye exam now?
+[FAIL] new office number in every thread
+       -> ended on 'n_goal_ask', expected one of ['n_goal_response']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Vision insurances typically have an allowance with co-pays. For more information on your specific coverage, you can call the office at (212) 219-2219.
+[PASS] frozen ask answers with latest
+[PASS] valid date never terminates
+[PASS] conflict converges
+[PASS] fail-open after ignored clarify
+RESULT goalloop: passed=23 failed=14 waived=0 total=37

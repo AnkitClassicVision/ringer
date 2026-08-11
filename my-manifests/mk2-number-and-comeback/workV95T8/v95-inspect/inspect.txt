@@ -1,0 +1,11 @@
+VERSION 95 name='Codex Test' created=2026-08-04T03:31:04.157Z
+VERSION 94 name='Mott recall' created=2026-08-04T01:51:59.842Z
+VERSION 93 name='Mott recall' created=2026-08-03T22:30:03.439Z
+V95_NODES=28 V95_EDGES=51
+NODES_ONLY_IN_95=['ct_collect', 'ct_offer', 'ct_reconcile', 'ct_search']
+NODES_MISSING_VS_94=['e_booking_failed', 'e_defer', 'e_timeout', 'n_ask', 'n_clarify', 'n_date_conflict', 'n_date_conflict_retry', 'n_miss_empty', 'n_miss_thin', 'n_miss_time', 'n_miss_unbookable', 'n_miss_unread', 'n_negotiate', 'n_offer', 'n_offer_2']
+HAS_RETRY_NODE=False
+EXTRACT_NODES=5 ['ct_collect', 'ct_offer', 'n_confirm', 'n_gate_1', 'n_gate_2']
+FILLER_ONE_MOMENT=3
+FILLER_LET_ME_CHECK=0
+INSPECT_DONE

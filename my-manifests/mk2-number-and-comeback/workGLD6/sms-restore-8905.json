@@ -1,0 +1,20 @@
+{
+  "phone_number": "+14158778905",
+  "sms_config": {
+    "webhook": "https://cvc-booking-gw.mail.mybcat.com/sms-postconv",
+    "request_data": [],
+    "time_out": 259200,
+    "timezone": null,
+    "messaging_service_sid": null,
+    "objective": null,
+    "tools": [],
+    "temperature": 0,
+    "pathway_id": "09ed1fbb-2388-45c7-9131-ec1ad20119c0",
+    "pathway_version": 16,
+    "start_node_id": null,
+    "restart_after_end_call": true,
+    "citation_schema_ids": [],
+    "disposition_ids": [],
+    "summary_prompt": null
+  }
+}

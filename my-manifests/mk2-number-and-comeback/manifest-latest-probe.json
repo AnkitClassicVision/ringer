@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workLatestP",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "live-latest-probe",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["probe.txt"],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u - <<'PY' > probe.txt 2>&1\nimport json, os, urllib.error, urllib.request\nauth = os.environ[\"GW_TOKEN\"].strip()\nif not auth.lower().startswith(\"bearer\"):\n    auth = \"Bearer \" + auth\n\ndef avail(body):\n    req = urllib.request.Request(\"https://mott-booking-gw.mail.mybcat.com/availability\", data=json.dumps(body).encode(), method=\"POST\", headers={\"Content-Type\": \"application/json\", \"User-Agent\": \"mybcat-cli\", \"Authorization\": auth})\n    try:\n        with urllib.request.urlopen(req, timeout=120) as r:\n            res = (json.loads(r.read().decode() or \"{}\").get(\"result\") or {})\n        return res.get(\"count\"), [s.get(\"start\") for s in (res.get(\"slots\") or [])][:3]\n    except urllib.error.HTTPError as e:\n        return \"HTTP_%s\" % e.code, [e.read().decode(errors=\"replace\")[:120]]\n\nbase = {\"store\": \"711\", \"from\": \"thursday\", \"to\": \"thursday\", \"slot_minutes\": \"15\", \"after\": \"none\", \"before\": \"none\", \"time_pref\": \"none\"}\nc1, s1 = avail(base)\nprint(\"DEFAULT count=%s first3=%s\" % (c1, s1))\nc2, s2 = avail({**base, \"time_pref\": \"latest\"})\nprint(\"LATEST  count=%s first3=%s\" % (c2, s2))\nc3, s3 = avail({**base, \"time_pref\": \"anchor=12:00\"})\nprint(\"ANCHOR  count=%s first3=%s\" % (c3, s3))\nif isinstance(c2, str):\n    print(\"VERDICT: LATEST-MODE-ERRORS (%s)\" % c2)\nelif s1 and s2 and s2[0] != s1[0] and str(s2[0]) > str(s1[0]):\n    print(\"VERDICT: LATEST-WORKS default_first=%s latest_first=%s\" % (s1[0], s2[0]))\nelif s1 and s2 and s2[0] == s1[0]:\n    print(\"VERDICT: LATEST-IGNORED (same first slot as default - lane-38 ordering not active on this path)\")\nelse:\n    print(\"VERDICT: INCONCLUSIVE s1=%s s2=%s\" % (s1[:1], s2[:1]))\nprint(\"PROBE_DONE\")\nPY\nrc=$?; cat probe.txt; exit $rc",
+      "check": "grep -q 'PROBE_DONE' probe.txt || { echo 'FAIL: probe did not finish'; tail -3 probe.txt; exit 1; }; grep -qE '^VERDICT: ' probe.txt || { echo 'FAIL: no verdict'; exit 1; }; echo \"MEASURED: $(grep -m1 '^VERDICT:' probe.txt)\"; grep -q 'VERDICT: LATEST-WORKS' probe.txt || exit 1",
+      "verified": "Production's availability path interrogated directly: default vs latest vs anchor first-slots side by side, yielding a works/ignored/errors verdict for the lane-38 capability."
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+  File "<stdin>", line 13
+    sent=\"I'm leaving town today and won't be back for 2 weeks about then?\"\nfor label,frm,pref,ut in (('away-sentence','in 2 weeks','none',sent),('relative','2 weeks from today','none',None),('datetime','08/06/2026 10:30 am','latest',None),('latest-reg','thursday','latest',None),('baseline','thursday','none',None)):
+          ^
+SyntaxError: unexpected character after line continuation character

@@ -1,0 +1,6 @@
+ORIGINAL_PATH=/home/ankit114/repos/gw-diag-snap/container/bland_gateway.py
+ORIGINAL_SHA=c2201d9ff977473cfd8144e5db3b1fd0b39efc70607e186c9fe0dd2a02ee9dad
+P6_LATEST=OK
+P7_ANCHOR=OK
+P8_DEFAULT_PARITY=OK
+P9_DIFFS=0

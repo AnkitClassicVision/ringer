@@ -1,0 +1,5 @@
+AB=v119 run=1 turn3_dates=['08/10/2026'] said='I have Monday 08/10/2026 11:15 am or Monday 08/10/2026 11:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me ano'
+AB=v119 run=2 turn3_dates=['08/10/2026'] said='I have Monday 08/10/2026 11:15 am or Monday 08/10/2026 11:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me ano'
+AB=v120 run=1 turn3_dates=['08/17/2026'] said='I have Monday 08/17/2026 01:00 pm or Monday 08/17/2026 01:15 pm at MK2 Optical. Reply 1 or 2 to take one, or tell me ano'
+AB=v120 run=2 turn3_dates=['08/17/2026'] said='I have Monday 08/17/2026 01:00 pm or Monday 08/17/2026 01:15 pm at MK2 Optical. Reply 1 or 2 to take one, or tell me ano'
+AB_DONE completed=4 expected=4

@@ -1,0 +1,67 @@
+Reading additional input from stdin...
+OpenAI Codex v0.145.0
+--------
+workdir: /home/ankit114/repos/ringer/my-manifests/mott-v63-prompt/work/v63-prompt-fix
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: medium
+reasoning summaries: none
+session id: 019fa879-aac5-73c0-87ac-5b7993f463ff
+--------
+user
+DO NOT modify any files. Analyze only, output text only. Role: CONTRARIAN. You are reviewing a prompt regression fix for an SMS pathway date extraction. The extraction model is Bland AI's built-in small node model, NOT GPT/Claude. It reads patient SMS messages and extracts a date phrase into preference_from. FAILURE PATTERN from 630 probes: when we added 'If the patient said both a relative word like tomorrow and a month and day like july 28th, write ONLY the month and day' the model started BLANKING on standalone 'july 28 works for me' (0/30) and PASSING THROUGH the whole compound 'Tuesday July 28' (0/30) instead of extracting just 'july 28'. The ORIGINAL wording without the compound rule handled both of those at 30/30. The KEY CONSTRAINT: Bland's small model has limited instruction-following capacity. Long, complex rules confuse it. The old prompt was already 600+ chars for preference_from. The regression likely happened because the compound rule's length and complexity overwhelmed the model's attention. ATTACK these: (1) Can ANY compound-priority sentence be short enough for this small model to follow without regressing on clean dates? Or is the compound rule fundamentally incompatible with the model's capacity? (2) If the model blanks on 'july 28 works for me' after seeing the compound rule, will ANY rephrasing fix that, or is the problem the EXISTENCE of the rule, not its wording? (3) Alternative: instead of telling the model to handle compounds, should we keep the old simple instructions and handle compounds in the GATEWAY (strip leading relative words before resolving)? That moves the compound logic onto deterministic code and keeps the model instructions short. Return: can_compound_rule_work_on_small_model (yes/no + why), alternative_gateway_approach (describe it or none), recommendation, confidence 0-1.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+codex
+Ankit —
+
+can_compound_rule_work_on_small_model: **No, not reliably.** The 630-probe evidence shows that merely adding the rule damaged previously perfect cases. A shorter rephrasing might pass selected probes, but there is no evidence it will preserve the full clean-date distribution. This looks like a capacity/interference problem, not just bad wording.
+
+alternative_gateway_approach: **Restore the original prompt and normalize compounds deterministically in the gateway.** Parse the raw SMS or returned phrase for an explicit month-and-day. If present, remove leading weekday/relative tokens such as “Tuesday,” “tomorrow,” or “next Tuesday,” then resolve the explicit date. Keep existing behavior when no explicit date exists. Add regression tests for standalone, relative-only, and compound forms.
+
+recommendation: **Remove the compound-priority sentence. Handle compound precedence in gateway code.** Do not spend more prompt complexity on a small model when deterministic code can enforce the rule without damaging extraction recall.
+
+confidence: **0.96**
+
+Status
+- % to true goal: 90% (96%)
+- % to current goal: 100% (98%)
+- Done / ready: Contrarian recommendation is ready for implementation review (98%)
+- In flight: nothing
+- Not done: Gateway implementation and regression testing have not started (99%)
+- Blocked: nothing
+- Needs you: approve moving compound normalization into the gateway (96%)
+
+Assumptions: The reported 30/30 baseline and 0/30 regressions are comparable runs, and the gateway can access either the raw SMS or compound extraction.
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Completed
+tokens used
+34,714
+Ankit —
+
+can_compound_rule_work_on_small_model: **No, not reliably.** The 630-probe evidence shows that merely adding the rule damaged previously perfect cases. A shorter rephrasing might pass selected probes, but there is no evidence it will preserve the full clean-date distribution. This looks like a capacity/interference problem, not just bad wording.
+
+alternative_gateway_approach: **Restore the original prompt and normalize compounds deterministically in the gateway.** Parse the raw SMS or returned phrase for an explicit month-and-day. If present, remove leading weekday/relative tokens such as “Tuesday,” “tomorrow,” or “next Tuesday,” then resolve the explicit date. Keep existing behavior when no explicit date exists. Add regression tests for standalone, relative-only, and compound forms.
+
+recommendation: **Remove the compound-priority sentence. Handle compound precedence in gateway code.** Do not spend more prompt complexity on a small model when deterministic code can enforce the rule without damaging extraction recall.
+
+confidence: **0.96**
+
+Status
+- % to true goal: 90% (96%)
+- % to current goal: 100% (98%)
+- Done / ready: Contrarian recommendation is ready for implementation review (98%)
+- In flight: nothing
+- Not done: Gateway implementation and regression testing have not started (99%)
+- Blocked: nothing
+- Needs you: approve moving compound normalization into the gateway (96%)
+
+Assumptions: The reported 30/30 baseline and 0/30 regressions are comparable runs, and the gateway can access either the raw SMS or compound extraction.

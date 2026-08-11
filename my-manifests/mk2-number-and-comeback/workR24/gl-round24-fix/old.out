@@ -1,0 +1,10 @@
+FAIL: assertion 8: n_goal_response lacks exact offered-date route n_goal_search_offered_time: asks for any time qualifier on the already offered date
+FAIL: assertion 10: n_goal_response lacks the exact mixed-intent clarification edge
+FAIL: assertion 21: offered_time edge label lacks offered-day time-qualifier routing
+FAIL: assertion 21: n_goal_response prompt does not mirror the offered_time after-hour refinement description
+FAIL: assertion 22: n_goal_response has 9 outbound edges, maximum is 8
+FAIL: assertion 22: n_gate_1 selection label does not exclude time qualifiers
+FAIL: assertion 22: n_gate_2 selection label does not exclude time qualifiers
+FAIL: assertion 24: offered-time edge does not cover time qualifiers even if an offered option is referenced
+FAIL: assertion 24: n_goal_response prompt lacks NEGATIVE-REQUIRES-SEARCH marker
+FAIL: 9 of 550 assertions failed

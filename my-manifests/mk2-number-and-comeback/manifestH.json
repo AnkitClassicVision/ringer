@@ -1,0 +1,47 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workH",
+  "max_parallel": 4,
+  "tasks": [
+    {
+      "key": "v91-validator",
+      "engine": "codex",
+      "task_type": "code-feature",
+      "timeout_s": 1800,
+      "expect_files": ["check_v91_graph.py", "stub-classification.json"],
+      "spec": "You are a build worker producing a mechanical graph validator. OFFLINE: no network, no git, no MCP, no skills; write only inside your working directory.\n\nINPUTS (read-only): /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/SPEC-v91.md section '## 4. Mechanical validator' is the AUTHORITATIVE requirements list — read the whole section and implement EVERY numbered assertion it contains (structure, per-delta checks D1-D4, classification-gate checks, text invariants). Reference graphs for field shapes: pathway-v86.json and pathway-v90.json in the same directory.\n\nTASK: write ./check_v91_graph.py implementing the spec'd CLI exactly: python3 check_v91_graph.py --base <v86> --draft <candidate> --v88-ref <v90> --classification <json>. Exit 0 is the only PASS. Every failed assertion prints a line beginning with ' - ' explaining exactly what broke and where (node id, field). Collect ALL failures before exiting, do not stop at the first. No assertion may be a tautology. Also write ./stub-classification.json containing exactly {} for red-proof testing.\n\nDESIGN NOTES: byte-identical comparisons via json.dumps(obj, sort_keys=True) equality; the untouched-node set and untouched-edge set are enumerated in the spec; position/x/y/height/width ARE asserted on untouched nodes (mass drift is the regression fingerprint); every responsePathways destination must have a matching edge with agreeing label; classification file must cover every diff and use only the six bucket names, with OPEN items listed separately and causing a distinct printed warning line but not automatic failure (the spec defines which two OPEN items are pre-approved).\n\nVERIFY before finishing: (1) python3 -m py_compile check_v91_graph.py passes; (2) running it with --draft pathway-v90.json (which is NOT a valid v91) and --classification stub-classification.json exits NONZERO and prints at least 5 distinct ' - ' failure lines including a node-count failure; (3) running with --draft pathway-v86.json also exits nonzero (missing the four deltas). Show both outputs in your final message.\n\nFinal message <=20 lines: assertion count implemented, the two red-proof outputs summarized, anything in spec section 4 you could not implement and why.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile check_v91_graph.py && OUT=$(PYTHONDONTWRITEBYTECODE=1 python3 check_v91_graph.py --base /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v86.json --draft /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v90.json --v88-ref /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v90.json --classification stub-classification.json 2>&1); RC=$?; N=$(printf '%s' \"$OUT\" | grep -c -- ' - '); if [ $RC -ne 0 ] && [ $N -ge 5 ]; then echo \"RED-PROOF OK: rc=$RC with $N printed reasons\"; else echo \"CHECK FAILED: rc=$RC reasons=$N\"; printf '%s\\n' \"$OUT\" | tail -15; exit 1; fi",
+      "verified": "A validator implementing every SPEC-v91 section-4 assertion, proven RED against v90-as-draft with at least five printed reasons; the green proof comes when the real v91 draft is built against it."
+    },
+    {
+      "key": "spec-review-builder",
+      "engine": "codex",
+      "task_type": "code-review",
+      "timeout_s": 1500,
+      "expect_files": ["report.md"],
+      "spec": "You are a read-only reviewer. No network, no git, no MCP, no skills; write only ./report.md.\n\nROLE: BUILDER-reviewer. Read /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/SPEC-v91.md in full. Cross-check its section-2 change set for COMPLETENESS against three independent sources in the same directory: DIFF-INVENTORY.md (150 classified diff rows), workG/provenance-fix-week/report.md (the fix-week rebuild checklist), and workG/gateway-contract/report.md (the /availability request contract). Question: if a builder executes SPEC-v91 exactly as written, does the result contain every pathway-side field the fix set and gateway contract require, and every deliberate v62/v88/greeting delta? List every REQUIRED item you can find in the three sources that SPEC-v91 fails to mention or gets wrong, with the source quote. If none, say so explicitly after showing your coverage method.\n\nOUTPUT ./report.md with sections: 'Coverage method', 'Gaps found' (or 'No gaps found'), 'recommendation' (one paragraph: build as-is / amend first), 'unique_catches', 'proof_slots', and a fenced ```json CITATIONS block with at least 6 {\"file\", \"quote\"} pairs, quotes verbatim from the source files. Final message: 5 lines.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_research_citations.py --file report.md --min-citations 6 --require 'Coverage method' --require 'recommendation' --require 'unique_catches' --require 'proof_slots'",
+      "verified": "An independent completeness cross-check of SPEC-v91's change set against the diff inventory, fix-week checklist, and gateway contract, with verbatim-verified citations."
+    },
+    {
+      "key": "spec-review-contrarian",
+      "engine": "codex",
+      "task_type": "code-review",
+      "timeout_s": 1500,
+      "expect_files": ["report.md"],
+      "spec": "You are a read-only reviewer. No network, no git, no MCP, no skills; write only ./report.md.\n\nROLE: CONTRARIAN. Read /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/SPEC-v91.md in full, plus pathway-v86.json and pathway-v90.json for ground truth. Attack the spec: where is it WRONG, ambiguous enough that two builders would produce different graphs, or silently risky? Specifically probe: (1) the rebase direction itself — any argument it underweights; (2) the D1 v62 re-application details against SPEC-v62.md's actual text (does SPEC-v91 mis-transcribe anything?); (3) whether asserting byte-identical positions on untouched nodes can false-fail an honest build; (4) the D4 n_offer_3 rewrite — does removing the claim break any routing the prompt's other sentences rely on; (5) interaction risks between restored v86 pieces (n_date_conflict, n_help globals, relaxed-band routes) and the v90 additions (n_appt_check gate, reconcile branch) — trace at least the two most dangerous edge/routing interactions in the actual JSON; (6) anything the harness plan in section 5 cannot catch.\n\nOUTPUT ./report.md with sections: 'Attacks', 'Confirmed problems' (each with evidence), 'False alarms I considered and dismissed', 'recommendation', 'unique_catches', 'proof_slots', and a fenced ```json CITATIONS block with at least 6 {\"file\", \"quote\"} verbatim pairs. Final message: 5 lines.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_research_citations.py --file report.md --min-citations 6 --require 'Attacks' --require 'Confirmed problems|No confirmed problems' --require 'recommendation' --require 'unique_catches'",
+      "verified": "An adversarial pass on SPEC-v91 probing transcription fidelity, ambiguity, position-assertion false-fails, D4 routing safety, and cross-delta interactions, with verbatim-verified citations."
+    },
+    {
+      "key": "spec-review-verifier",
+      "engine": "codex",
+      "task_type": "code-review",
+      "timeout_s": 1500,
+      "expect_files": ["report.md"],
+      "spec": "You are a read-only reviewer. No network, no git, no MCP, no skills; write only ./report.md.\n\nROLE: VERIFIER. Read /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/SPEC-v91.md sections 4 (validator), 5 (harness) and 6 (sharpest risk). Evaluate the PROOF PLAN, not the change set: (1) does the validator section catch every failure mode the spec's own section 6 and 7 name? (2) does the harness section prove the actual incident fix — a 'friday afternoon' then 'any later time?' conversation must surface genuinely later real slots and never deny existing availability — and does it include the two-run appointment-gate measurement from section 6? (3) rank the proof steps cheapest-first and mark any that can be cut without losing coverage, and any missing check that would catch a class of defect nothing else catches; (4) for each proof step state confirm/refute criteria in one line each.\n\nOUTPUT ./report.md with sections: 'Validator coverage', 'Harness coverage', 'Cheapest-first ordering', 'Missing checks' (or 'No missing checks'), 'recommendation', 'proof_slots', and a fenced ```json CITATIONS block with at least 6 {\"file\", \"quote\"} verbatim pairs from SPEC-v91.md. Final message: 5 lines.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_research_citations.py --file report.md --min-citations 6 --require 'Validator coverage' --require 'Harness coverage' --require 'Cheapest-first' --require 'recommendation'",
+      "verified": "An independent audit of SPEC-v91's proof plan: validator coverage vs named risks, harness coverage vs the actual incident, cheapest-first ordering, and any missing check classes."
+    }
+  ]
+}

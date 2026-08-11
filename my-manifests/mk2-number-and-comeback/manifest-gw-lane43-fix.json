@@ -1,0 +1,21 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW43",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-oob-refwindow-fix",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1800,
+      "expect_files": [
+        "fixed-bland_gateway.py",
+        "proof_ref.py",
+        "DEBUG-GW43.md"
+      ],
+      "spec": "ROLE: fix worker for the Mott booking gateway, lane 43 (out_of_hours reference-window bounds). Work entirely inside your CWD; never modify anything outside it; no network, no git, no MCP/Apps/skills, no deploys. CONTEXT - live gates on the just-deployed lane-42 proved: the partial-day fix works (from='today', after='03:00 PM' -> out_of_hours false with real 03:30 pm slots) BUT the satisfiability override broke the genuine case: after='03:00 am' now returns out_of_hours=false because 10:30 am is technically at-or-after 3am. The override rule was a spec mistake - remove it. THE CORRECT RULE, replacing both lane-41 and lane-42 bounds logic for the out_of_hours decision: compute the clock bounds (earliest and latest slot clocks) from a FIXED REFERENCE WINDOW of today through today+13 in the store timezone, INDEPENDENT of the request's own from/to window and before any after/before clock filtering; flag out_of_hours=true if and only if the requested clock (after, before, or anchor) falls outside those reference bounds. No satisfiability override of any kind. The reference-window slot fetch may reuse the same slot source the search already uses; if the request's own window already equals the reference window, reuse its unfiltered slots rather than fetching twice. BASE FILE: ./deployed-bland_gateway.py is byte-equal to production image mott-lane-42. Produce ./fixed-bland_gateway.py, minimal in-style diff. TESTS (frozen-today pattern): partial-day case (request window one afternoon day, reference window contains 10:30am-5:15pm clocks; after='03:00 PM' -> false); after='03:00 am' -> true even though later slots exist; before='11:00 pm' -> true; anchor '03:00 am' -> true; in-hours anchor '02:00 pm' -> false; full suite green in ./gwtest (copy of /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW39b/gw-datetime-tolerance/gw with fixed file installed). ./proof_ref.py: standalone offline proof printing 'CASE=partial-day-3pm OUT_OF_HOURS=false', 'CASE=3am-after OUT_OF_HOURS=true', 'CASE=2pm-anchor OUT_OF_HOURS=false' from synthetic slot data. DEBUG-GW43.md: evidence, change, output tails, deploy separately gated.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 ./proof_ref.py > proof.out 2>&1 || { echo 'FAIL: proof crashed'; tail -5 proof.out; exit 1; }; for c in 'CASE=partial-day-3pm OUT_OF_HOURS=false' 'CASE=3am-after OUT_OF_HOURS=true' 'CASE=2pm-anchor OUT_OF_HOURS=false'; do grep -q \"$c\" proof.out || { echo \"FAIL: missing $c\"; cat proof.out; exit 1; }; done; diffcount=$(python3 -c \"import difflib;a=open('deployed-bland_gateway.py').readlines();b=open('fixed-bland_gateway.py').readlines();print(sum(1 for l in difflib.unified_diff(a,b) if l.startswith(('+','-')) and not l.startswith(('+++','---'))))\"); [ \"$diffcount\" -lt 200 ] || { echo \"FAIL: diff too large ($diffcount)\"; exit 1; }; cd gwtest && PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q > ../pytest.out 2>&1; rc=$?; cd ..; summary=$(tail -1 pytest.out); [ $rc -eq 0 ] || { echo \"FAIL: suite red: $summary\"; tail -10 pytest.out; exit 1; }; echo \"$summary\" | grep -qE '^[0-9]+ passed' || { echo \"FAIL: summary not clean: $summary\"; exit 1; }; echo \"PASS: reference-window bounds proven - $summary\"",
+      "verified": "out_of_hours is decided purely by the requested clock versus a fixed 14-day reference window's slot bounds - the partial-day false-flag stays fixed, the genuine 3am case flags again, and no satisfiability loophole remains."
+    }
+  ]
+}

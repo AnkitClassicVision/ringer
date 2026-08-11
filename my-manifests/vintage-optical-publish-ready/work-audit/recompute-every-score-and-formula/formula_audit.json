@@ -1,0 +1,248 @@
+{
+  "allowed_base_bands": [
+    20,
+    35,
+    50,
+    65,
+    80
+  ],
+  "formula_checks": [
+    {
+      "name": "market_demand_supply",
+      "recorded": 57,
+      "recomputed": 57,
+      "formula": "0.25*demand_strength + 0.20*supply_balance + 0.15*payer_income_fit + 0.15*growth_future_demand + 0.15*specialty_demand_load + 0.10*market_data_confidence",
+      "inputs": {
+        "demand_strength": 65,
+        "supply_balance": 50,
+        "payer_income_fit": 65,
+        "growth_future_demand": 50,
+        "specialty_demand_load": 65,
+        "market_data_confidence": 35
+      },
+      "weights": {
+        "demand_strength": 0.25,
+        "supply_balance": 0.2,
+        "payer_income_fit": 0.15,
+        "growth_future_demand": 0.15,
+        "specialty_demand_load": 0.15,
+        "market_data_confidence": 0.1
+      },
+      "rounding": "nearest whole number, half up",
+      "calculation": "0.25*65 + 0.20*50 + 0.15*65 + 0.15*50 + 0.15*65 + 0.10*35 = 56.75; round to 57",
+      "input_type": "base_bands",
+      "status": "PASS"
+    },
+    {
+      "name": "competitive_pressure_internal",
+      "recorded": 57,
+      "recomputed": 57,
+      "formula": "0.40*supply_saturation + 0.25*patient_choice_pressure + 0.20*competitor_strength + 0.15*access_differentiation_pressure",
+      "inputs": {
+        "supply_saturation": 50,
+        "patient_choice_pressure": 65,
+        "competitor_strength": 65,
+        "access_differentiation_pressure": 50
+      },
+      "weights": {
+        "supply_saturation": 0.4,
+        "patient_choice_pressure": 0.25,
+        "competitor_strength": 0.2,
+        "access_differentiation_pressure": 0.15
+      },
+      "rounding": "nearest whole number, half up",
+      "calculation": "0.40*50 + 0.25*65 + 0.20*65 + 0.15*50 = 56.75; round to 57",
+      "input_type": "base_bands",
+      "status": "PASS"
+    },
+    {
+      "name": "room_to_win",
+      "recorded": 43,
+      "recomputed": 43,
+      "formula": "100 - competitive_pressure_internal",
+      "inputs": {
+        "competitive_pressure_internal": 57
+      },
+      "weights": {
+        "competitive_pressure_internal": 1.0
+      },
+      "rounding": "no additional rounding after inversion of the recorded nearest-whole internal pressure score",
+      "calculation": "100 - 57 = 43",
+      "input_type": "computed_inversion",
+      "status": "PASS"
+    },
+    {
+      "name": "practice_competitiveness",
+      "recorded": 58,
+      "recomputed": 58,
+      "formula": "0.20*visibility_vs_peers + 0.20*access_booking_vs_peers + 0.20*review_trust_vs_peers + 0.15*service_line_differentiation + 0.15*website_conversion_clarity + 0.10*location_convenience",
+      "inputs": {
+        "visibility_vs_peers": 50,
+        "access_booking_vs_peers": 65,
+        "review_trust_vs_peers": 50,
+        "service_line_differentiation": 65,
+        "website_conversion_clarity": 65,
+        "location_convenience": 50
+      },
+      "weights": {
+        "visibility_vs_peers": 0.2,
+        "access_booking_vs_peers": 0.2,
+        "review_trust_vs_peers": 0.2,
+        "service_line_differentiation": 0.15,
+        "website_conversion_clarity": 0.15,
+        "location_convenience": 0.1
+      },
+      "rounding": "nearest whole number, half up",
+      "calculation": "0.20*50 + 0.20*65 + 0.20*50 + 0.15*65 + 0.15*65 + 0.10*50 = 57.50; round to 58",
+      "input_type": "base_bands",
+      "status": "PASS"
+    },
+    {
+      "name": "client_opportunity",
+      "recorded": 54,
+      "recomputed": 54,
+      "formula": "0.20*computed_market_demand_supply + 0.20*competitive_pressure_opportunity + 0.20*practice_differentiation_upside + 0.15*access_fixability + 0.15*digital_visibility_fixability + 0.10*execution_simplicity",
+      "inputs": {
+        "computed_market_demand_supply": 57,
+        "competitive_pressure_opportunity": 50,
+        "practice_differentiation_upside": 50,
+        "access_fixability": 50,
+        "digital_visibility_fixability": 65,
+        "execution_simplicity": 50
+      },
+      "weights": {
+        "computed_market_demand_supply": 0.2,
+        "competitive_pressure_opportunity": 0.2,
+        "practice_differentiation_upside": 0.2,
+        "access_fixability": 0.15,
+        "digital_visibility_fixability": 0.15,
+        "execution_simplicity": 0.1
+      },
+      "rounding": "nearest whole number, half up",
+      "calculation": "0.20*57 + 0.20*50 + 0.20*50 + 0.15*50 + 0.15*65 + 0.10*50 = 53.65; round to 54",
+      "input_type": "computed_market_input_plus_base_bands",
+      "status": "PASS"
+    },
+    {
+      "name": "digital_presence",
+      "recorded": 57,
+      "recomputed": 57,
+      "formula": "0.25*findability + 0.20*reputation + 0.20*bookability + 0.15*site_quality + 0.10*content_specialty_signal + 0.10*social_local_proof",
+      "inputs": {
+        "findability": 50,
+        "reputation": 50,
+        "bookability": 65,
+        "site_quality": 65,
+        "content_specialty_signal": 65,
+        "social_local_proof": 50
+      },
+      "weights": {
+        "findability": 0.25,
+        "reputation": 0.2,
+        "bookability": 0.2,
+        "site_quality": 0.15,
+        "content_specialty_signal": 0.1,
+        "social_local_proof": 0.1
+      },
+      "rounding": "nearest whole number, half up",
+      "calculation": "0.25*50 + 0.20*50 + 0.20*65 + 0.15*65 + 0.10*65 + 0.10*50 = 56.75; round to 57",
+      "input_type": "base_bands",
+      "status": "PASS"
+    },
+    {
+      "name": "dry_eye_ocular_surface",
+      "recorded": 52,
+      "recomputed": 52,
+      "formula": "0.20*local_demand_fit + 0.15*competitive_gap + 0.15*current_capability + 0.15*access_capacity_fit + 0.15*revenue_reimbursement_potential + 0.10*referral_ecosystem_fit + 0.10*evidence_confidence",
+      "inputs": {
+        "local_demand_fit": 65,
+        "competitive_gap": 35,
+        "current_capability": 65,
+        "access_capacity_fit": 50,
+        "revenue_reimbursement_potential": 50,
+        "referral_ecosystem_fit": 50,
+        "evidence_confidence": 35
+      },
+      "weights": {
+        "local_demand_fit": 0.2,
+        "competitive_gap": 0.15,
+        "current_capability": 0.15,
+        "access_capacity_fit": 0.15,
+        "revenue_reimbursement_potential": 0.15,
+        "referral_ecosystem_fit": 0.1,
+        "evidence_confidence": 0.1
+      },
+      "rounding": "nearest whole number, half up",
+      "calculation": "0.20*65 + 0.15*35 + 0.15*65 + 0.15*50 + 0.15*50 + 0.10*50 + 0.10*35 = 51.50; round to 52",
+      "input_type": "base_bands",
+      "status": "PASS"
+    },
+    {
+      "name": "myopia_management",
+      "recorded": 52,
+      "recomputed": 52,
+      "formula": "0.20*local_demand_fit + 0.15*competitive_gap + 0.15*current_capability + 0.15*access_capacity_fit + 0.15*revenue_reimbursement_potential + 0.10*referral_ecosystem_fit + 0.10*evidence_confidence",
+      "inputs": {
+        "local_demand_fit": 65,
+        "competitive_gap": 35,
+        "current_capability": 65,
+        "access_capacity_fit": 50,
+        "revenue_reimbursement_potential": 50,
+        "referral_ecosystem_fit": 50,
+        "evidence_confidence": 35
+      },
+      "weights": {
+        "local_demand_fit": 0.2,
+        "competitive_gap": 0.15,
+        "current_capability": 0.15,
+        "access_capacity_fit": 0.15,
+        "revenue_reimbursement_potential": 0.15,
+        "referral_ecosystem_fit": 0.1,
+        "evidence_confidence": 0.1
+      },
+      "rounding": "nearest whole number, half up",
+      "calculation": "0.20*65 + 0.15*35 + 0.15*65 + 0.15*50 + 0.15*50 + 0.10*50 + 0.10*35 = 51.50; round to 52",
+      "input_type": "base_bands",
+      "status": "PASS"
+    },
+    {
+      "name": "specialty_contact_lenses",
+      "recorded": 51,
+      "recomputed": 51,
+      "formula": "0.20*local_demand_fit + 0.15*competitive_gap + 0.15*current_capability + 0.15*access_capacity_fit + 0.15*revenue_reimbursement_potential + 0.10*referral_ecosystem_fit + 0.10*evidence_confidence",
+      "inputs": {
+        "local_demand_fit": 50,
+        "competitive_gap": 50,
+        "current_capability": 65,
+        "access_capacity_fit": 50,
+        "revenue_reimbursement_potential": 50,
+        "referral_ecosystem_fit": 50,
+        "evidence_confidence": 35
+      },
+      "weights": {
+        "local_demand_fit": 0.2,
+        "competitive_gap": 0.15,
+        "current_capability": 0.15,
+        "access_capacity_fit": 0.15,
+        "revenue_reimbursement_potential": 0.15,
+        "referral_ecosystem_fit": 0.1,
+        "evidence_confidence": 0.1
+      },
+      "rounding": "nearest whole number, half up",
+      "calculation": "0.20*50 + 0.15*50 + 0.15*65 + 0.15*50 + 0.15*50 + 0.10*50 + 0.10*35 = 50.75; round to 51",
+      "input_type": "base_bands",
+      "status": "PASS"
+    }
+  ],
+  "cross_checks": {
+    "room_to_win_inversion": "PASS",
+    "visible_scores_high_good": "PASS",
+    "base_bands_valid": "PASS",
+    "weights_sum": "PASS",
+    "rounding_consistent": "PASS",
+    "page_matches_scores": "PASS",
+    "specialty_scores_recompute": "PASS"
+  },
+  "fatal_issues": [],
+  "material_issues": []
+}

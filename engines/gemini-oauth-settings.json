@@ -1,0 +1,51 @@
+{
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal",
+      "enforcedType": "oauth-personal"
+    },
+    "environmentVariableRedaction": {
+      "enabled": true,
+      "allowed": [],
+      "blocked": []
+    }
+  },
+  "admin": {
+    "secureModeEnabled": true,
+    "extensions": {
+      "enabled": false
+    },
+    "mcp": {
+      "enabled": false,
+      "config": {},
+      "requiredConfig": {}
+    },
+    "skills": {
+      "enabled": false
+    }
+  },
+  "context": {
+    "fileName": ".ringer-no-context.md",
+    "loadMemoryFromIncludeDirectories": false
+  },
+  "skills": {
+    "enabled": false
+  },
+  "hooksConfig": {
+    "enabled": false,
+    "notifications": false
+  },
+  "experimental": {
+    "enableAgents": false,
+    "adk": {
+      "agentSessionSubagentEnabled": false
+    },
+    "autoMemory": false,
+    "worktrees": false
+  },
+  "telemetry": {
+    "enabled": false,
+    "logPrompts": false
+  },
+  "mcpServers": {}
+}

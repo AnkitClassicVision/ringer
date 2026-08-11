@@ -1,0 +1,883 @@
+Reading additional input from stdin...
+OpenAI Codex v0.146.0
+--------
+workdir: /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+model: gpt-5.6-luna
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: xhigh
+reasoning summaries: none
+session id: 019fc836-5a7f-74d1-a908-9e67c6af2062
+--------
+user
+DO NOT modify any files. Analyze only. Role: VERIFIER. Read the evidence packet at /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md in full. Question: produce a remediation plan for the commit-despite-502 booking defect described there. As VERIFIER, do the job that role implies: BUILDER gives the best direct plan; CONTRARIAN attacks what is wrong, risky, brittle, or missing in the evidence and in the proposed fixes; VERIFIER says exactly what must be measured or proven and how, cheapest first, with what result confirms versus refutes; OPERATOR gives owner, outcome, date, risk, visibility, sequencing, and the single next action. Pay particular attention to the unresolved objection: read nodes at the same latency did not time out but the write did. Return a candidate packet with these keys: recommendation, confidence (0-1), evidence, assumptions, unique_catches, risks_or_failure_modes, proof_slots, needs_human_or_owner_gate. Be blunt and specific. No padding.
+2026-08-03T15:20:38.548296Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://gtdtkzjikmsaskyouyin.supabase.co/functions/v1/ob-graph?key=lOCVvO2nAyhULM8X9UMkUcnpQLbYmk6riCcxIJn9354)")))
+2026-08-03T15:20:38.548582Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://gtdtkzjikmsaskyouyin.supabase.co/functions/v1/open-brain-unified?key=2f00597aa5407164628928fceb6fce58903799e4ccdcc26125bf14f788b48a6a)")))
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+codex
+Ankit — VERIFIER pass. I’ll read the full evidence packet, check the unresolved latency objection against the recorded facts, then return only a bounded remediation/proof packet. No files will be changed.
+codex
+I’m loading the required Codex operating card and the relevant prior context before interpreting the packet. I’ll use them only for read-only induction and verification discipline.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: ob_mybcat/search_thoughts started
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '1,240p' /home/ankit114/.agents/skills/codex-operating-card/SKILL.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+---
+name: codex-operating-card
+description: "Operate Codex with Nate-style project induction, read-only-first task starts, one-thread-one-outcome discipline, UI/browser evidence, self-review gates, and durable-rule extraction. Use when working in Codex on a repo, starting a new Codex thread, doing project induction, implementing or reviewing code, doing frontend/UI QA, or deciding whether to promote a prompt pattern into AGENTS.md or a skill."
+---
+
+# Codex Operating Card
+
+Purpose: make Codex behave like a repo worker with a tight work contract, not a wandering owner. These prompts are operating defaults, not safety gates. For production writes, deploys, PHI/PII, secrets, CRM/EHR/finance writes, external sends, or autonomy changes, follow the relevant deterministic gate and human approval rules.
+
+## Default behavior
+
+Use this operating card unless the user explicitly overrides it:
+
+1. Read first. Do not edit until you can explain the current project shape.
+2. One thread = one outcome. If a new goal appears, propose a new thread.
+3. Prefer read-only or sandbox mode unless write access is explicitly intended.
+4. Before changes, state likely files, risk, test plan, and rollback path.
+5. Treat AGENTS.md and project docs as local law. If missing, infer lightly and flag gaps.
+6. For UI work, use browser or visual evidence rather than guessing.
+7. Verify with actual command output, visual check, or a named source before claiming done.
+8. End with: Changed, Verified by, Risks left, Next action.
+9. If the task reveals a reusable rule, propose AGENTS.md or skill capture, but do not write it without approval.
+
+## Prompt pack
+
+For exact copy/paste prompts, read `references/prompt-pack.md` and choose the smallest prompt that matches the work:
+
+- Project induction prompt: first pass on a repo.
+- Task starter prompt: normal implementation.
+- UI/browser evidence prompt: frontend or visual QA.
+- Review gate prompt: before accepting Codex output.
+- Durable-rule extraction prompt: after a repeated pattern appears.
+
+## Output contract
+
+For routine work, keep the final terse:
+
+- Changed: files/behavior changed.
+- Verified by: real command, screenshot/visual check, or source.
+- Risks left: only what matters.
+- Next action: one step.
+
+Do not call work complete if verification did not run. Say `Partial` or `Blocked` instead.
+
+hook: PostToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc 'rg -n -i "ringer|mk2-number-and-comeback|commit.?despite.?502|booking defect|502" /home/ankit114/.codex/memories/MEMORY.md' in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+483:- automation-discovery, ringer, corpus.db, BUILD_RECEIPT.md, evidence-bundle, allow-review, receipts, sources=21 events_checked=2120 candidates=14 offers=5 receipts=20
+497:- when the user says, "use $automation-discovery and $ringer To aceeaa all my data and connectiongs and fan out and tice me automations" -> treat it as a request to audit real traces and build proof from evidence, not brainstorm from memory [Task 1]
+504:- The reliable closure sequence for this stack was: corrected tests -> strict validator -> Ringer PASS -> two fresh ALLOW reviews -> receipt merge -> corpus validation -> backup/export -> continuity capture [Task 1]
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+mcp: ob_mybcat/search_thoughts (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "wc -l -c EVIDENCE-502.md && sed -n '1,260p' EVIDENCE-502.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+ 132 6993 EVIDENCE-502.md
+# Evidence packet: booking commits but the patient is told it failed
+
+All identifiers below are scrubbed. The test subject is a SYNTHETIC dummy record, not a real
+patient. No PHI appears in this file.
+
+## The defect
+
+An SMS AI agent (vendor: **Bland AI**) runs a conversational "pathway" that books eye-exam
+appointments into an EMR (Eye Cloud Pro) through a self-hosted booking gateway. On 2026-08-03 a
+test conversation confirmed a slot, the agent replied **"I couldn't confirm that booking. Please
+call the office so they can check it for you"**, and the appointment **was created in the EMR
+anyway**.
+
+This is live on a production phone line today.
+
+## Architecture
+
+- Pathway version **87**, 42 nodes, of which **12 are Webhook nodes**.
+- A dump of all 12 webhook nodes shows **no `timeout`, `retry`, or `retryCount` field set on any
+  of them**. They inherit the platform default, whose value is unmeasured.
+- The vendor catalog for these nodes specifies `default_node_settings: {"timeout_seconds": 10,
+  "retry_attempts": 0}`. So either the nodes drifted from catalog intent, or the export hides UI
+  defaults. Unreconciled.
+- Gateway: `https://<gw-host>`, edge is **nginx** (response headers: `Server: nginx`,
+  `Connection: close`, no CDN headers, so nginx is the edge directly, nothing in front).
+- Endpoints, all POST JSON with a bearer token: `/patient-search`, `/appt-list`, `/availability`,
+  `/conflict-check`, `/sign`.
+- `/sign` is the governed write path: `{"verb":"appt.book"|"appt.cancel","target":...,"store":...,
+  "reason":...,"params":{...}}`.
+- Booking node order: `n_verify_1` (POST /conflict-check) then `n_book_1` (POST /sign).
+- Pathway routes on `book_success` from `$.success`. Non-success routes to End node
+  `e_booking_failed`.
+- A July snapshot of the gateway source shows Python **`ThreadingHTTPServer` +
+  `BaseHTTPRequestHandler`** behind nginx (NOT gunicorn/uwsgi, so no worker-timeout reaper),
+  `ECP_CLI_TIMEOUT_S` default **90**, and **every internal timeout path returns 504**, never 502.
+  nginx's own read timeout also emits 504. The EMR is driven by shelling out to a CLI; the EMR
+  keeps ONE session per user, logins serialize behind an exclusive lock with a 30s re-login
+  cooldown and up to a 120s login budget. **Caveat: that snapshot predates `/sign` and may not
+  match the deployed build.**
+
+## Incident timeline (UTC, 2026-08-03)
+
+```
+14:47:22.797  USER   "1"      (picks offered slot 1)
+14:47:26.083  AGENT  "To confirm, your eye exam would be 08/04/2026 01:00 pm. Reply YES to book it"
+14:49:09.678  USER   "Yes"
+14:49:57.901  AGENT  "I couldn't confirm that booking. Please call the office..."
+```
+
+Gap from YES to failure message: **48.2 seconds**.
+
+End state: `current_node_id: e_booking_failed`, `ended_by_end_call_node: true`,
+`is_active: false`, **`BlandStatusCode: 502`**, `appt_count: 0`, `slot_conflict: false`,
+`slot_count: 25`, `ok: true`, `conflict_reason: ""`.
+
+## Proof the write committed
+
+`/appt-list` afterward returned exactly one upcoming appointment matching the confirmed slot.
+Cancelling it returned `pre_state` with `start "08/04/2026 01:00:00 pm"`, `status "created"` —
+byte-for-byte the slot the patient confirmed.
+
+## Measurement lane 1: direct reproduction (operator workstation)
+
+Posted the identical `/sign` appt.book body directly:
+
+- **HTTP 200, `success: true`, in 16.0s.** Rolled back cleanly.
+- A second independent direct book also returned 200.
+- **Two out of two direct books succeeded. Zero 502s reproduced.**
+
+## Measurement lane 2: latency, idle vs under load
+
+Idle gateway:
+```
+/appt-list        7.9s
+/sign appt.book   16.0s
+/sign appt.cancel 17.1s / 17.5s
+```
+
+Under load (while a 33-scenario live test harness hammered the SAME gateway), twice each:
+```
+/patient-search   22.0s / 21.9s      /appt-list        24.4s / 18.1s
+/availability     21.5s / 23.8s      /conflict-check   19.3s / 22.0s
+```
+
+**Latency roughly triples under load, uniformly across every endpoint, including 84-byte and
+121-byte responses.** That uniformity appears to rule out payload-size and buffering
+explanations.
+
+**Critical timeline overlap:** the harness run that saturated the gateway ran **14:39:06 to
+~14:54**. The patient's YES was at **14:49:09**. The live booking happened inside the load window
+created by our own test harness. The direct reproduction that returned 200 in 16.0s ran later,
+against an idle gateway.
+
+## Measurement lane 3: the analyst brief (a separate model lane already run)
+
+Its leading conclusion, ~60% confidence: a **client-side webhook timeout** on the book node,
+which the platform records as a synthetic 502. Its key argument is that the non-reproduction is a
+**prediction** of that theory, not a puzzle: a client that waits indefinitely is structurally
+incapable of reproducing a client-timeout 502, so n could be 200 and prove nothing.
+
+It also argues that with this stack, "caller sees error, write commits" is the DEFAULT outcome
+for any client less patient than the gateway: when the platform aborts, nginx logs 499 and may
+close the upstream connection, but the Python handler thread only notices at response-write time
+while the EMR subprocess runs to completion. Nothing has to "break."
+
+Its ranked alternatives: genuine nginx 502 from gateway process death mid-request (~20%);
+platform-internal egress blip (~10%); everything else under 5%.
+
+Its fix ranking, lowest risk first: (1) reword the failure message so it stops asserting a
+failure that did not happen; (2) set explicit timeouts of 45-60s on the book and verify nodes;
+(3) add a verify-on-failure branch that calls `/appt-list` and confirms whether the slot exists,
+converting commit-plus-timeout into a truthful confirmation **without retrying the write**;
+(4) keep the EMR session warm to cut p95 latency; (5) REFUSE automatic retry, because `/sign` has
+no idempotency key and no dedupe on (patient, slot), so retry in exactly this state double-books.
+
+## The strongest open objection, unresolved
+
+If a flat webhook timeout were the whole story, the earlier read nodes in the SAME conversation
+(`/patient-search`, `/appt-list`, and several `/availability` calls) were also running at ~20s
+under the same load and should have timed out too. **They did not.** The conversation negotiated
+normally through three rounds of availability and only the write failed. That argues against a
+simple flat timeout applied uniformly to all nodes, and it is not yet explained.
+
+## Constraints on any fix
+
+- `/sign` has **no idempotency key**; the gateway has no visible dedupe on (patient, slot).
+- The vendor catalog says "Never add allow_conflict and never retry automatically."
+- Changing pathway node config requires the vendor dashboard for some operations; the
+  `/v1/sms/update` API returns 500 for every payload including a no-op, so repointing a line is
+  dashboard-only.
+- The test harness and the live patient line **share one gateway**, so running the harness during
+  business hours degrades the live booking path.
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+The packet is 132 lines and has been read end to end. The key verifier finding is already clear: the evidence supports a write-path failure under shared load, but it does not prove a flat client timeout because `/sign` was never measured under that load and the 48.2 seconds is conversation-to-message time, not the webhook duration. I’m checking the proof-run guidance and exact line references now.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc 'git status --short --untracked-files=no' in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+ M ../../.claude/skills/ringer/SKILL.md
+ M ../../README.md
+ M ../../config.sample.toml
+ M ../../docs/MODEL-NOTES.md
+ M ../../registry/model-identity.toml
+ M ../../templates/README.md
+ M ../../templates/asset-swarm/README.md
+ M ../../tests/test_catalog.py
+ M ../../tests/test_model_db.py
+ M ../../tests/test_model_field.py
+ M ../../tests/test_model_log.py
+ M ../../tests/test_scoreboard_page.py
+
+hook: PostToolUse
+exec
+/bin/bash -lc "nl -ba EVIDENCE-502.md | sed -n '1,160p'" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+     1	# Evidence packet: booking commits but the patient is told it failed
+     2	
+     3	All identifiers below are scrubbed. The test subject is a SYNTHETIC dummy record, not a real
+     4	patient. No PHI appears in this file.
+     5	
+     6	## The defect
+     7	
+     8	An SMS AI agent (vendor: **Bland AI**) runs a conversational "pathway" that books eye-exam
+     9	appointments into an EMR (Eye Cloud Pro) through a self-hosted booking gateway. On 2026-08-03 a
+    10	test conversation confirmed a slot, the agent replied **"I couldn't confirm that booking. Please
+    11	call the office so they can check it for you"**, and the appointment **was created in the EMR
+    12	anyway**.
+    13	
+    14	This is live on a production phone line today.
+    15	
+    16	## Architecture
+    17	
+    18	- Pathway version **87**, 42 nodes, of which **12 are Webhook nodes**.
+    19	- A dump of all 12 webhook nodes shows **no `timeout`, `retry`, or `retryCount` field set on any
+    20	  of them**. They inherit the platform default, whose value is unmeasured.
+    21	- The vendor catalog for these nodes specifies `default_node_settings: {"timeout_seconds": 10,
+    22	  "retry_attempts": 0}`. So either the nodes drifted from catalog intent, or the export hides UI
+    23	  defaults. Unreconciled.
+    24	- Gateway: `https://<gw-host>`, edge is **nginx** (response headers: `Server: nginx`,
+    25	  `Connection: close`, no CDN headers, so nginx is the edge directly, nothing in front).
+    26	- Endpoints, all POST JSON with a bearer token: `/patient-search`, `/appt-list`, `/availability`,
+    27	  `/conflict-check`, `/sign`.
+    28	- `/sign` is the governed write path: `{"verb":"appt.book"|"appt.cancel","target":...,"store":...,
+    29	  "reason":...,"params":{...}}`.
+    30	- Booking node order: `n_verify_1` (POST /conflict-check) then `n_book_1` (POST /sign).
+    31	- Pathway routes on `book_success` from `$.success`. Non-success routes to End node
+    32	  `e_booking_failed`.
+    33	- A July snapshot of the gateway source shows Python **`ThreadingHTTPServer` +
+    34	  `BaseHTTPRequestHandler`** behind nginx (NOT gunicorn/uwsgi, so no worker-timeout reaper),
+    35	  `ECP_CLI_TIMEOUT_S` default **90**, and **every internal timeout path returns 504**, never 502.
+    36	  nginx's own read timeout also emits 504. The EMR is driven by shelling out to a CLI; the EMR
+    37	  keeps ONE session per user, logins serialize behind an exclusive lock with a 30s re-login
+    38	  cooldown and up to a 120s login budget. **Caveat: that snapshot predates `/sign` and may not
+    39	  match the deployed build.**
+    40	
+    41	## Incident timeline (UTC, 2026-08-03)
+    42	
+    43	```
+    44	14:47:22.797  USER   "1"      (picks offered slot 1)
+    45	14:47:26.083  AGENT  "To confirm, your eye exam would be 08/04/2026 01:00 pm. Reply YES to book it"
+    46	14:49:09.678  USER   "Yes"
+    47	14:49:57.901  AGENT  "I couldn't confirm that booking. Please call the office..."
+    48	```
+    49	
+    50	Gap from YES to failure message: **48.2 seconds**.
+    51	
+    52	End state: `current_node_id: e_booking_failed`, `ended_by_end_call_node: true`,
+    53	`is_active: false`, **`BlandStatusCode: 502`**, `appt_count: 0`, `slot_conflict: false`,
+    54	`slot_count: 25`, `ok: true`, `conflict_reason: ""`.
+    55	
+    56	## Proof the write committed
+    57	
+    58	`/appt-list` afterward returned exactly one upcoming appointment matching the confirmed slot.
+    59	Cancelling it returned `pre_state` with `start "08/04/2026 01:00:00 pm"`, `status "created"` —
+    60	byte-for-byte the slot the patient confirmed.
+    61	
+    62	## Measurement lane 1: direct reproduction (operator workstation)
+    63	
+    64	Posted the identical `/sign` appt.book body directly:
+    65	
+    66	- **HTTP 200, `success: true`, in 16.0s.** Rolled back cleanly.
+    67	- A second independent direct book also returned 200.
+    68	- **Two out of two direct books succeeded. Zero 502s reproduced.**
+    69	
+    70	## Measurement lane 2: latency, idle vs under load
+    71	
+    72	Idle gateway:
+    73	```
+    74	/appt-list        7.9s
+    75	/sign appt.book   16.0s
+    76	/sign appt.cancel 17.1s / 17.5s
+    77	```
+    78	
+    79	Under load (while a 33-scenario live test harness hammered the SAME gateway), twice each:
+    80	```
+    81	/patient-search   22.0s / 21.9s      /appt-list        24.4s / 18.1s
+    82	/availability     21.5s / 23.8s      /conflict-check   19.3s / 22.0s
+    83	```
+    84	
+    85	**Latency roughly triples under load, uniformly across every endpoint, including 84-byte and
+    86	121-byte responses.** That uniformity appears to rule out payload-size and buffering
+    87	explanations.
+    88	
+    89	**Critical timeline overlap:** the harness run that saturated the gateway ran **14:39:06 to
+    90	~14:54**. The patient's YES was at **14:49:09**. The live booking happened inside the load window
+    91	created by our own test harness. The direct reproduction that returned 200 in 16.0s ran later,
+    92	against an idle gateway.
+    93	
+    94	## Measurement lane 3: the analyst brief (a separate model lane already run)
+    95	
+    96	Its leading conclusion, ~60% confidence: a **client-side webhook timeout** on the book node,
+    97	which the platform records as a synthetic 502. Its key argument is that the non-reproduction is a
+    98	**prediction** of that theory, not a puzzle: a client that waits indefinitely is structurally
+    99	incapable of reproducing a client-timeout 502, so n could be 200 and prove nothing.
+   100	
+   101	It also argues that with this stack, "caller sees error, write commits" is the DEFAULT outcome
+   102	for any client less patient than the gateway: when the platform aborts, nginx logs 499 and may
+   103	close the upstream connection, but the Python handler thread only notices at response-write time
+   104	while the EMR subprocess runs to completion. Nothing has to "break."
+   105	
+   106	Its ranked alternatives: genuine nginx 502 from gateway process death mid-request (~20%);
+   107	platform-internal egress blip (~10%); everything else under 5%.
+   108	
+   109	Its fix ranking, lowest risk first: (1) reword the failure message so it stops asserting a
+   110	failure that did not happen; (2) set explicit timeouts of 45-60s on the book and verify nodes;
+   111	(3) add a verify-on-failure branch that calls `/appt-list` and confirms whether the slot exists,
+   112	converting commit-plus-timeout into a truthful confirmation **without retrying the write**;
+   113	(4) keep the EMR session warm to cut p95 latency; (5) REFUSE automatic retry, because `/sign` has
+   114	no idempotency key and no dedupe on (patient, slot), so retry in exactly this state double-books.
+   115	
+   116	## The strongest open objection, unresolved
+   117	
+   118	If a flat webhook timeout were the whole story, the earlier read nodes in the SAME conversation
+   119	(`/patient-search`, `/appt-list`, and several `/availability` calls) were also running at ~20s
+   120	under the same load and should have timed out too. **They did not.** The conversation negotiated
+   121	normally through three rounds of availability and only the write failed. That argues against a
+   122	simple flat timeout applied uniformly to all nodes, and it is not yet explained.
+   123	
+   124	## Constraints on any fix
+   125	
+   126	- `/sign` has **no idempotency key**; the gateway has no visible dedupe on (patient, slot).
+   127	- The vendor catalog says "Never add allow_conflict and never retry automatically."
+   128	- Changing pathway node config requires the vendor dashboard for some operations; the
+   129	  `/v1/sms/update` API returns 500 for every payload including a no-op, so repointing a line is
+   130	  dashboard-only.
+   131	- The test harness and the live patient line **share one gateway**, so running the harness during
+   132	  business hours degrades the live booking path.
+
+hook: PostToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "if [ -f .ai/fable-proof-run.md ]; then sed -n '1,260p' .ai/fable-proof-run.md; else echo 'NO_REPO_FABLE_RULE'; fi
+sed -n '1,280p' /home/ankit114/.agents/skills/fable-proof-run/SKILL.md 2>/dev/null || sed -n '1,280p' /home/ankit114/.claude/skills/fable-proof-run/SKILL.md 2>/dev/null || true" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+NO_REPO_FABLE_RULE
+---
+name: fable-proof-run
+description: Auto-load by default for Ankit’s non-trivial code/repo build, fix, debug, implementation, or verification tasks where real execution proof matters—not only when he explicitly says Fable. Use the Fable-lite empirical loop for “run the real thing,” “don’t stop at compile,” same-commit model comparison, visual/stateful UI bugs, integration failures, flaky tests, unclear root cause, or any task likely to fail if the agent guesses. Do not use for simple edits, copywriting, routine lookups, PHI/client-sensitive work, CRM/EHR/finance writes, external sends/publishes, deploys, commits, pushes, migrations, or browser/computer control unless explicitly scoped and approved.
+---
+
+# Fable Proof Run
+
+Run the useful part of Fable: empirical, tool-driven, runtime-verified work. Do **not** copy the unsafe part: unconstrained “find a way” autonomy.
+
+## Hermes less-work default
+
+For Ankit, treat this as an internal auto-routing pattern, not a command he needs to remember. If the request is a non-trivial code/repo build, fix, debug, implementation, or verification task where real execution proof matters, load/apply this skill automatically. Do not ask him to choose a Fable lane or say `/fable-proof-run` first.
+
+Use the structure mostly silently: baseline, reproduce/probe, smallest reversible change, verify, and report baseline → delta. Show the full opening packet only when the task is high-blast, ambiguous, or needs approval; otherwise keep the user-facing response short.
+
+## First decision: mode
+
+- **Actual Fable:** keep instructions minimal; constrain blast radius, require proof, and cap tools/cost.
+- **Fable-lite:** when running Opus/Sonnet/Codex/Hermes/other non-Fable models, imitate Fable’s empirical loop: reproduce, instrument, probe, observe, verify, and report deltas.
+
+If the task does not need this extra machinery, do the normal smaller workflow instead.
+
+## Mandatory opening packet
+
+Internally assemble this packet before non-trivial runs. Show it to Ankit only when it materially reduces risk or clarifies scope; otherwise keep it as your private operating checklist and proceed.
+
+```text
+Fable-proof mode: actual-fable | fable-lite
+Stakes: low | medium | high blast
+Scope:
+Non-goals:
+Allowed tools:
+Forbidden actions:
+Baseline gate:
+Stop condition:
+Repo hook: loaded .ai/fable-proof-run.md | none/fallback
+```
+
+If the repo contains `.ai/fable-proof-run.md`, read it before running. If absent, use conservative defaults.
+
+## Default forbidden actions
+
+Stop for explicit approval before any of these, even if tests are green:
+
+- PHI, patient data, client-sensitive raw data, secrets, tokens, credentials, or payment IDs
+- CRM/EHR/finance writes or updates
+- external sends, publishes, ads, posts, or messages
+- deploys, migrations, prod writes, protected-page edits, cron autonomy
+- `git commit`, `git push`, merge, release, or tag
+- destructive deletes/resets or package-patch/global-state writes
+- browser/computer-control automation unless the task explicitly needs it and the repo hook allows it
+
+This skill is not authorization. It only makes investigation more empirical.
+
+## Empirical loop
+
+1. **Frame the failure.** Restate the exact symptom and what would prove it fixed.
+2. **Capture baseline.** Record starting test/build/runtime state before changing anything. No “no regressions” without a baseline.
+3. **Reproduce or simulate minimally.** Prefer the real failing path; use a small scratch repro only when the real path is too slow or unsafe.
+4. **Rank hypotheses.** Keep 2–5 likely causes. Mark each as confirmed/inferred/unknown.
+5. **Probe one axis at a time.** Inspect source, logs, runtime state, browser output, or generated artifacts. Do not stack fixes on a broken base.
+6. **Change the smallest reversible thing.** If the change regresses behavior, revert to known-good before trying the next path.
+7. **Run the full gate again.** Report baseline → delta with exit codes/counts and what changed.
+8. **Close with proof state.** Confirmed / inferred / unverified, dirty/committed/pushed state, and the claim most likely to be wrong.
+
+## Fable-like tactics to use when safe
+
+- Run real commands instead of guessing from memory.
+- Inspect dependency/source code when the bug likely lives there.
+- For long-lived Python gateways/processes that fail after source updates, check process start time vs source mtime, prove fresh imports work, and distinguish session reset from process restart. Use `references/long-lived-python-gateway-import-drift.md` for the stale-module import-drift debug and hardening pattern.
+- Create throwaway local repros under `/tmp` or an approved scratch directory.
+- Add temporary instrumentation only if it is easy to remove and clearly marked.
+- Use browser/runtime screenshots or DOM inspection for visual/stateful issues when allowed.
+- Spawn subagents only for separable hypotheses; verify their claims yourself before acting.
+- Read generated/compiled artifacts when the build output matters.
+- Log discarded hypotheses so they are not re-litigated.
+
+## Fable-like tactics to avoid
+
+- Do not invent new ways around permission, accessibility, sandbox, or browser restrictions.
+- Do not turn one debug request into broad refactoring.
+- Do not preserve raw sensitive data in notes, captures, artifacts, or final replies.
+- Do not claim a root cause from one sample; rank causes until evidence proves one.
+- Do not treat subagent “done” as done.
+
+## Output shape
+
+```text
+Result: fixed | partially fixed | not fixed | blocked
+Baseline:
+Delta:
+What I changed:
+What I verified:
+Confirmed:
+Inferred:
+Unverified / user must check:
+Dirty/committed/pushed state:
+Risk notes:
+Next step:
+```
+
+## Optional audit script
+
+For analyzing Claude Code Fable sessions, run `scripts/analyze_claude_fable_sessions.py`. It scans local Claude JSONL metadata, rolls up subagents, and exports sanitized aggregate counts without raw prompts, raw tool outputs, secrets, or CRM/message bodies.
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+The unresolved objection is narrower than it first appears: it disproves only a single uniform timeout applied identically to every webhook. It does not disprove a write-specific deadline or a `/sign` queue/EMR path that is slower under contention. The plan will force that distinction with paired measurements and will not treat the analyst’s 60% estimate as proof.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '478,507p' /home/ankit114/.codex/memories/MEMORY.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+
+- rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md (cwd=/home/ankit114/projects/mybcat-fit-battery, rollout_path=/home/ankit114/.codex/sessions/2026/07/17/rollout-2026-07-17T15-55-34-019f71a6-0749-70d3-ae61-4c503a9fb0d5.jsonl, updated_at=2026-07-18T02:27:47+00:00, thread_id=019f71a6-0749-70d3-ae61-4c503a9fb0d5, local-only proof closure with strict receipts and corpus merge)
+
+### keywords
+
+- automation-discovery, ringer, corpus.db, BUILD_RECEIPT.md, evidence-bundle, allow-review, receipts, sources=21 events_checked=2120 candidates=14 offers=5 receipts=20
+
+## Task 2: Inspect and pause the full-stack hiring process group, success
+
+### rollout_summary_files
+
+- rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md (cwd=/home/ankit114/projects/mybcat-fit-battery, rollout_path=/home/ankit114/.codex/sessions/2026/07/17/rollout-2026-07-17T15-55-34-019f71a6-0749-70d3-ae61-4c503a9fb0d5.jsonl, updated_at=2026-07-18T02:27:47+00:00, thread_id=019f71a6-0749-70d3-ae61-4c503a9fb0d5, exact PGID pause with stopped-state verification)
+
+### keywords
+
+- process-group, SIGSTOP, background terminals, run_ph_hiring_loop.sh, kill -STOP -- -865948, state T, tee -a
+
+## User preferences
+
+- when the user says, "use $automation-discovery and $ringer To aceeaa all my data and connectiongs and fan out and tice me automations" -> treat it as a request to audit real traces and build proof from evidence, not brainstorm from memory [Task 1]
+- after the source plan/walls are shown, "confirm all" is enough approval to proceed [Task 1]
+- when the user asks "status" during long proof work -> provide concise progress plus blocked/unblocked updates without waiting to be asked repeatedly [Task 1]
+- when the user asks whether background terminals are doing anything or says "can we pause fullnsatck hiring eun" -> inspect live state directly, then stop the exact process group and verify it entered `T`/stopped state [Task 1][Task 2]
+
+## Reusable knowledge
+
+- The reliable closure sequence for this stack was: corrected tests -> strict validator -> Ringer PASS -> two fresh ALLOW reviews -> receipt merge -> corpus validation -> backup/export -> continuity capture [Task 1]
+- The first acceptable proof required per-contract observed CLI command/output/exit evidence, strict schema binding, evidence-bundle binding, input hardening, and transaction gates for receipt merging [Task 1]
+- Final validated local state was five built offers and 20 receipts, with corpus validation `sources=21 events_checked=2120 candidates=14 offers=5 receipts=20`; no external send/deploy/commit/schedule action happened [Task 1]
+- The key human-facing artifact is `/home/ankit114/workspaces/automation-discovery-2026-07-17/automation-stack/BUILD_RECEIPT.md` [Task 1]
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba /home/ankit114/.codex/memories/MEMORY.md | sed -n '500,506p'" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+   500	- when the user asks whether background terminals are doing anything or says "can we pause fullnsatck hiring eun" -> inspect live state directly, then stop the exact process group and verify it entered `T`/stopped state [Task 1][Task 2]
+   501	
+   502	## Reusable knowledge
+   503	
+   504	- The reliable closure sequence for this stack was: corrected tests -> strict validator -> Ringer PASS -> two fresh ALLOW reviews -> receipt merge -> corpus validation -> backup/export -> continuity capture [Task 1]
+   505	- The first acceptable proof required per-contract observed CLI command/output/exit evidence, strict schema binding, evidence-bundle binding, input hardening, and transaction gates for receipt merging [Task 1]
+   506	- Final validated local state was five built offers and 20 receipts, with corpus validation `sources=21 events_checked=2120 candidates=14 offers=5 receipts=20`; no external send/deploy/commit/schedule action happened [Task 1]
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+Ankit — 
+
+```json
+{
+  "recommendation": {
+    "verdict": "Treat this as a write-path truthfulness incident. Do not accept 'flat webhook timeout' as the root cause.",
+    "sequence": [
+      {
+        "date": "2026-08-03 now",
+        "owner": "Test-harness owner and gateway operator",
+        "action": "Stop the 33-scenario harness against the shared gateway. Do not run further business-hour load tests.",
+        "outcome": "Remove the known production-path degrader.",
+        "risk": "The gateway remains unproven under load, but live booking risk is reduced.",
+        "visibility": "Record harness stop time and monitor live booking outcomes."
+      },
+      {
+        "date": "2026-08-03 before the next live booking",
+        "owner": "Pathway owner",
+        "action": "Change the failure branch so it never claims booking failure without readback proof. On non-success from n_book_1, query /appt-list for the exact patient and slot. Exactly one newly created match means confirm; zero, multiple, or lookup failure means say status is uncertain and escalate. Never retry /sign.",
+        "outcome": "A committed booking cannot be reported as failed, and an unknown result cannot trigger a duplicate write.",
+        "risk": "Requires dashboard changes and a reliable read-after-write contract.",
+        "visibility": "Verify pathway version 87 and the production line mapping after the dashboard change."
+      },
+      {
+        "date": "2026-08-03 after existing-log review",
+        "owner": "Gateway owner plus pathway/vendor owner",
+        "action": "Prove the origin of the 502 and measure /sign under controlled load using the proof slots below.",
+        "outcome": "Separate synthetic client timeout, write-specific latency, real nginx 502, and vendor egress failure.",
+        "risk": "Do not use the production line as the load-test target.",
+        "visibility": "Use one correlation ID across vendor execution logs, nginx, gateway, EMR CLI, and appointment readback."
+      },
+      {
+        "date": "After proof, before production rollout",
+        "owner": "Gateway and pathway owners",
+        "action": "Reconcile actual deployed node timeouts. Set explicit n_verify_1 and n_book_1 budgets from measured write latency plus margin. Do not blindly apply 45-60 seconds.",
+        "outcome": "The configured deadline is known, intentional, and compatible with the deployed gateway.",
+        "risk": "A longer timeout can increase caller wait without fixing a real gateway 502.",
+        "visibility": "Capture the dashboard configuration and one isolated end-to-end receipt."
+      }
+    ],
+    "single_next_action": "Stop the shared harness now, then retrieve one correlated incident trace showing the vendor deadline, nginx status/timing, gateway completion, and EMR commit time."
+  },
+  "confidence": 0.86,
+  "evidence": [
+    "The write committed despite the failure message: /appt-list found exactly one matching appointment, and cancellation returned the matching created pre-state (EVIDENCE-502.md:56-60).",
+    "The live booking occurred while the shared gateway was under harness load; the only direct /sign tests were idle and succeeded 2/2 (EVIDENCE-502.md:62-92).",
+    "The 48.2 seconds is measured from user YES to agent failure message, not from n_book_1 request start to response deadline (EVIDENCE-502.md:41-54).",
+    "The actual webhook timeout is unknown. All exported nodes omit timeout fields, while the catalog says 10 seconds, creating an unreconciled configuration conflict (EVIDENCE-502.md:18-23).",
+    "The read-node objection is valid against a single uniform timeout, but /sign was never measured under the same load. /sign also has a distinct EMR write/session path (EVIDENCE-502.md:26-39, 79-92, 116-122).",
+    "BlandStatusCode 502 does not prove that nginx generated HTTP 502. The gateway snapshot is stale and documents internal 504 behavior, not the deployed /sign implementation (EVIDENCE-502.md:33-39, 52-54).",
+    "No idempotency key or dedupe exists, so automatic retry is unsafe (EVIDENCE-502.md:124-127).",
+    "This analysis was read-only; no files or production systems were modified."
+  ],
+  "assumptions": [
+    "Vendor execution logs or a new isolated synthetic trace can expose the actual node timeout and request timing.",
+    "The pathway owner can edit version 87 through the vendor dashboard.",
+    "A pre-write appointment snapshot can establish that an exact slot match is newly created rather than pre-existing.",
+    "The EMR readback is sufficiently fresh for a bounded verification decision. If not, the branch must return uncertain, never confirmed.",
+    "An isolated gateway or safe off-hours test window is available."
+  ],
+  "unique_catches": [
+    "The analyst's 60% client-timeout conclusion is a hypothesis, not proof.",
+    "The read nodes running around 20 seconds do not refute a write-specific timeout. They refute only an identical flat deadline applied identically to every node.",
+    "The under-load measurements omitted /sign. That is the exact missing measurement needed to support or reject the leading theory.",
+    "The catalog's 10-second default cannot be reconciled with the 48.2-second conversation gap. The gap includes agent and pathway time and cannot be used as the node timeout.",
+    "Matching patient and slot after failure can falsely confirm an older appointment unless pre-state is recorded.",
+    "Keeping the EMR session warm may reduce latency but can mask the real deadline or create stale-session failures. It is a performance mitigation, not root-cause proof.",
+    "The shared test harness is both a confounder and a live production risk."
+  ],
+  "risks_or_failure_modes": [
+    "Automatic /sign retry can double-book because no idempotency or dedupe exists.",
+    "A stale /appt-list response can produce a false negative. Use a bounded readback policy and return uncertain on lookup failure.",
+    "A longer webhook timeout can turn a fast false failure into a slow failure if the gateway or EMR path still exceeds the budget.",
+    "A real nginx 502 caused by process death, connection refusal, or malformed upstream response would require gateway repair, not pathway timeout tuning.",
+    "A vendor-generated synthetic 502 with a late EMR commit requires response-truth handling and deadline tuning, not write retry.",
+    "Dashboard-only edits can target the wrong pathway version or phone-line mapping unless the deployed version and line are verified."
+  ],
+  "proof_slots": [
+    {
+      "id": "P0",
+      "cost": "Lowest",
+      "owner": "Pathway/vendor owner",
+      "measure": "Read the deployed dashboard/runtime configuration for n_verify_1, n_book_1, and the preceding read nodes. Record actual timeout, retry, and response-mapping values.",
+      "confirms": "Different deadlines or write-specific response handling explain why reads survived while the write failed.",
+      "refutes": "All nodes demonstrably share the same deadline and same timeout behavior. The read objection remains unresolved and the hypothesis must move to write-specific server behavior or a real 502."
+    },
+    {
+      "id": "P1",
+      "cost": "Low if logs remain",
+      "owner": "Gateway operator",
+      "measure": "Correlate one incident or synthetic request across vendor logs, nginx access/error logs, gateway handler logs, EMR CLI timing, and appointment commit/readback. Capture request start, request end, HTTP status, $request_time, upstream timings, client disconnect, subprocess exit, and commit time.",
+      "confirms": "Vendor reports a deadline 502; nginx records client close/499 or equivalent; the gateway/EMR commits after disconnect. That proves client timeout plus late write.",
+      "refutes": "nginx records an actual 502 from connection refusal, process death, invalid upstream response, or the gateway returns 502 before commit. That is not a flat client timeout."
+    },
+    {
+      "id": "P2",
+      "cost": "Moderate",
+      "owner": "Test-harness owner and gateway owner",
+      "measure": "On an isolated gateway or approved off-hours window, run paired synthetic /sign book, /sign cancel, /conflict-check, /appt-list, and /availability requests at the same concurrency. Minimum 30 samples per cell; do not claim p99 without a larger sample. Record EMR commit status and every latency.",
+      "confirms": "Only /sign crosses the actual node deadline, or /sign shows extra session-lock/login/CLI time and commits after the caller deadline.",
+      "refutes": "Under equivalent load, /sign completes below the configured deadline and still returns 502, or all endpoints exceed the same deadline without corresponding failures."
+    },
+    {
+      "id": "P3",
+      "cost": "Moderate",
+      "owner": "Gateway owner",
+      "measure": "Break /sign latency into queue/session-lock wait, login cooldown, CLI execution, EMR commit, response serialization, and response write. Verify the deployed build, not the July snapshot.",
+      "confirms": "A write-specific phase exceeds the client deadline while the EMR continues and commits.",
+      "refutes": "All phases finish before the client deadline, or the process/transport fails before EMR commit."
+    },
+    {
+      "id": "P4",
+      "cost": "Moderate",
+      "owner": "Gateway and pathway owners",
+      "measure": "In an isolated synthetic test, vary the caller deadline in a staircase such as 10, 20, 30, 45, and 60 seconds. Use unique synthetic slots and rollback/readback after each test. Never retry the same booking blindly.",
+      "confirms": "At a specific deadline, the caller receives failure or disconnect while the gateway later records one committed appointment.",
+      "refutes": "The caller receives 502 before the deadline while gateway logs show a completed response or a real upstream 502."
+    },
+    {
+      "id": "P5",
+      "cost": "Required before rollout",
+      "owner": "Pathway owner",
+      "measure": "Test four branch cases: normal success; commit plus lost response; no commit; verification read failure. Assert message, final node, appointment count, and write-attempt count.",
+      "confirms": "Commit plus lost response produces confirmation; no commit or unreadable status produces uncertainty/manual escalation; no case retries /sign.",
+      "refutes": "Any committed booking is still called failed, any unknown state is called confirmed, or the branch issues a second write."
+    },
+    {
+      "id": "P6",
+      "cost": "Highest and gated",
+      "owner": "Operations owner",
+      "measure": "Run one approved synthetic canary on the verified production line with no concurrent harness load. Monitor vendor status, nginx/gateway logs, EMR readback, and customer-facing message.",
+      "confirms": "The live path produces truthful confirmation or explicit uncertainty with one appointment and no duplicate.",
+      "refutes": "Any false failure, duplicate, uncorrelated 502, or inability to verify state. Roll back the pathway change and keep automated retry disabled."
+    }
+  ],
+  "needs_human_or_owner_gate": [
+    "Pathway owner approval is required for dashboard edits to version 87 and production line mapping.",
+    "Gateway owner access is required for nginx, handler, EMR CLI, and deployed-build evidence.",
+    "Operations approval is required before any production-line synthetic canary.",
+    "No production-hour load test against the shared gateway.",
+    "Human handling is required when readback returns zero, multiple matches, stale/uncertain data, or an error.",
+    "No automatic retry until the gateway has an idempotency key or equivalent dedupe and that behavior has been separately proven."
+  ]
+}
+```
+
+
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Completed
+tokens used
+66,110
+Ankit — 
+
+```json
+{
+  "recommendation": {
+    "verdict": "Treat this as a write-path truthfulness incident. Do not accept 'flat webhook timeout' as the root cause.",
+    "sequence": [
+      {
+        "date": "2026-08-03 now",
+        "owner": "Test-harness owner and gateway operator",
+        "action": "Stop the 33-scenario harness against the shared gateway. Do not run further business-hour load tests.",
+        "outcome": "Remove the known production-path degrader.",
+        "risk": "The gateway remains unproven under load, but live booking risk is reduced.",
+        "visibility": "Record harness stop time and monitor live booking outcomes."
+      },
+      {
+        "date": "2026-08-03 before the next live booking",
+        "owner": "Pathway owner",
+        "action": "Change the failure branch so it never claims booking failure without readback proof. On non-success from n_book_1, query /appt-list for the exact patient and slot. Exactly one newly created match means confirm; zero, multiple, or lookup failure means say status is uncertain and escalate. Never retry /sign.",
+        "outcome": "A committed booking cannot be reported as failed, and an unknown result cannot trigger a duplicate write.",
+        "risk": "Requires dashboard changes and a reliable read-after-write contract.",
+        "visibility": "Verify pathway version 87 and the production line mapping after the dashboard change."
+      },
+      {
+        "date": "2026-08-03 after existing-log review",
+        "owner": "Gateway owner plus pathway/vendor owner",
+        "action": "Prove the origin of the 502 and measure /sign under controlled load using the proof slots below.",
+        "outcome": "Separate synthetic client timeout, write-specific latency, real nginx 502, and vendor egress failure.",
+        "risk": "Do not use the production line as the load-test target.",
+        "visibility": "Use one correlation ID across vendor execution logs, nginx, gateway, EMR CLI, and appointment readback."
+      },
+      {
+        "date": "After proof, before production rollout",
+        "owner": "Gateway and pathway owners",
+        "action": "Reconcile actual deployed node timeouts. Set explicit n_verify_1 and n_book_1 budgets from measured write latency plus margin. Do not blindly apply 45-60 seconds.",
+        "outcome": "The configured deadline is known, intentional, and compatible with the deployed gateway.",
+        "risk": "A longer timeout can increase caller wait without fixing a real gateway 502.",
+        "visibility": "Capture the dashboard configuration and one isolated end-to-end receipt."
+      }
+    ],
+    "single_next_action": "Stop the shared harness now, then retrieve one correlated incident trace showing the vendor deadline, nginx status/timing, gateway completion, and EMR commit time."
+  },
+  "confidence": 0.86,
+  "evidence": [
+    "The write committed despite the failure message: /appt-list found exactly one matching appointment, and cancellation returned the matching created pre-state (EVIDENCE-502.md:56-60).",
+    "The live booking occurred while the shared gateway was under harness load; the only direct /sign tests were idle and succeeded 2/2 (EVIDENCE-502.md:62-92).",
+    "The 48.2 seconds is measured from user YES to agent failure message, not from n_book_1 request start to response deadline (EVIDENCE-502.md:41-54).",
+    "The actual webhook timeout is unknown. All exported nodes omit timeout fields, while the catalog says 10 seconds, creating an unreconciled configuration conflict (EVIDENCE-502.md:18-23).",
+    "The read-node objection is valid against a single uniform timeout, but /sign was never measured under the same load. /sign also has a distinct EMR write/session path (EVIDENCE-502.md:26-39, 79-92, 116-122).",
+    "BlandStatusCode 502 does not prove that nginx generated HTTP 502. The gateway snapshot is stale and documents internal 504 behavior, not the deployed /sign implementation (EVIDENCE-502.md:33-39, 52-54).",
+    "No idempotency key or dedupe exists, so automatic retry is unsafe (EVIDENCE-502.md:124-127).",
+    "This analysis was read-only; no files or production systems were modified."
+  ],
+  "assumptions": [
+    "Vendor execution logs or a new isolated synthetic trace can expose the actual node timeout and request timing.",
+    "The pathway owner can edit version 87 through the vendor dashboard.",
+    "A pre-write appointment snapshot can establish that an exact slot match is newly created rather than pre-existing.",
+    "The EMR readback is sufficiently fresh for a bounded verification decision. If not, the branch must return uncertain, never confirmed.",
+    "An isolated gateway or safe off-hours test window is available."
+  ],
+  "unique_catches": [
+    "The analyst's 60% client-timeout conclusion is a hypothesis, not proof.",
+    "The read nodes running around 20 seconds do not refute a write-specific timeout. They refute only an identical flat deadline applied identically to every node.",
+    "The under-load measurements omitted /sign. That is the exact missing measurement needed to support or reject the leading theory.",
+    "The catalog's 10-second default cannot be reconciled with the 48.2-second conversation gap. The gap includes agent and pathway time and cannot be used as the node timeout.",
+    "Matching patient and slot after failure can falsely confirm an older appointment unless pre-state is recorded.",
+    "Keeping the EMR session warm may reduce latency but can mask the real deadline or create stale-session failures. It is a performance mitigation, not root-cause proof.",
+    "The shared test harness is both a confounder and a live production risk."
+  ],
+  "risks_or_failure_modes": [
+    "Automatic /sign retry can double-book because no idempotency or dedupe exists.",
+    "A stale /appt-list response can produce a false negative. Use a bounded readback policy and return uncertain on lookup failure.",
+    "A longer webhook timeout can turn a fast false failure into a slow failure if the gateway or EMR path still exceeds the budget.",
+    "A real nginx 502 caused by process death, connection refusal, or malformed upstream response would require gateway repair, not pathway timeout tuning.",
+    "A vendor-generated synthetic 502 with a late EMR commit requires response-truth handling and deadline tuning, not write retry.",
+    "Dashboard-only edits can target the wrong pathway version or phone-line mapping unless the deployed version and line are verified."
+  ],
+  "proof_slots": [
+    {
+      "id": "P0",
+      "cost": "Lowest",
+      "owner": "Pathway/vendor owner",
+      "measure": "Read the deployed dashboard/runtime configuration for n_verify_1, n_book_1, and the preceding read nodes. Record actual timeout, retry, and response-mapping values.",
+      "confirms": "Different deadlines or write-specific response handling explain why reads survived while the write failed.",
+      "refutes": "All nodes demonstrably share the same deadline and same timeout behavior. The read objection remains unresolved and the hypothesis must move to write-specific server behavior or a real 502."
+    },
+    {
+      "id": "P1",
+      "cost": "Low if logs remain",
+      "owner": "Gateway operator",
+      "measure": "Correlate one incident or synthetic request across vendor logs, nginx access/error logs, gateway handler logs, EMR CLI timing, and appointment commit/readback. Capture request start, request end, HTTP status, $request_time, upstream timings, client disconnect, subprocess exit, and commit time.",
+      "confirms": "Vendor reports a deadline 502; nginx records client close/499 or equivalent; the gateway/EMR commits after disconnect. That proves client timeout plus late write.",
+      "refutes": "nginx records an actual 502 from connection refusal, process death, invalid upstream response, or the gateway returns 502 before commit. That is not a flat client timeout."
+    },
+    {
+      "id": "P2",
+      "cost": "Moderate",
+      "owner": "Test-harness owner and gateway owner",
+      "measure": "On an isolated gateway or approved off-hours window, run paired synthetic /sign book, /sign cancel, /conflict-check, /appt-list, and /availability requests at the same concurrency. Minimum 30 samples per cell; do not claim p99 without a larger sample. Record EMR commit status and every latency.",
+      "confirms": "Only /sign crosses the actual node deadline, or /sign shows extra session-lock/login/CLI time and commits after the caller deadline.",
+      "refutes": "Under equivalent load, /sign completes below the configured deadline and still returns 502, or all endpoints exceed the same deadline without corresponding failures."
+    },
+    {
+      "id": "P3",
+      "cost": "Moderate",
+      "owner": "Gateway owner",
+      "measure": "Break /sign latency into queue/session-lock wait, login cooldown, CLI execution, EMR commit, response serialization, and response write. Verify the deployed build, not the July snapshot.",
+      "confirms": "A write-specific phase exceeds the client deadline while the EMR continues and commits.",
+      "refutes": "All phases finish before the client deadline, or the process/transport fails before EMR commit."
+    },
+    {
+      "id": "P4",
+      "cost": "Moderate",
+      "owner": "Gateway and pathway owners",
+      "measure": "In an isolated synthetic test, vary the caller deadline in a staircase such as 10, 20, 30, 45, and 60 seconds. Use unique synthetic slots and rollback/readback after each test. Never retry the same booking blindly.",
+      "confirms": "At a specific deadline, the caller receives failure or disconnect while the gateway later records one committed appointment.",
+      "refutes": "The caller receives 502 before the deadline while gateway logs show a completed response or a real upstream 502."
+    },
+    {
+      "id": "P5",
+      "cost": "Required before rollout",
+      "owner": "Pathway owner",
+      "measure": "Test four branch cases: normal success; commit plus lost response; no commit; verification read failure. Assert message, final node, appointment count, and write-attempt count.",
+      "confirms": "Commit plus lost response produces confirmation; no commit or unreadable status produces uncertainty/manual escalation; no case retries /sign.",
+      "refutes": "Any committed booking is still called failed, any unknown state is called confirmed, or the branch issues a second write."
+    },
+    {
+      "id": "P6",
+      "cost": "Highest and gated",
+      "owner": "Operations owner",
+      "measure": "Run one approved synthetic canary on the verified production line with no concurrent harness load. Monitor vendor status, nginx/gateway logs, EMR readback, and customer-facing message.",
+      "confirms": "The live path produces truthful confirmation or explicit uncertainty with one appointment and no duplicate.",
+      "refutes": "Any false failure, duplicate, uncorrelated 502, or inability to verify state. Roll back the pathway change and keep automated retry disabled."
+    }
+  ],
+  "needs_human_or_owner_gate": [
+    "Pathway owner approval is required for dashboard edits to version 87 and production line mapping.",
+    "Gateway owner access is required for nginx, handler, EMR CLI, and deployed-build evidence.",
+    "Operations approval is required before any production-line synthetic canary.",
+    "No production-hour load test against the shared gateway.",
+    "Human handling is required when readback returns zero, multiple matches, stale/uncertain data, or an error.",
+    "No automatic retry until the gateway has an idempotency key or equivalent dedupe and that behavior has been separately proven."
+  ]
+}
+```
+
+

@@ -1,0 +1,37 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workV95lad",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "v95-gate-booked",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workJ/harness-driver/v91_harness.py 95 gate_booked > transcript.txt 2>&1; rc=$?; tail -4 transcript.txt; exit $rc",
+      "check": "if PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_harness.py --file transcript.txt --mode gate_booked; then echo 'PASS: booked customer still defers on v95'; else echo 'VERDICT-RED: v95 fails the booked-customer deferral gate (evidence above) - this check run is still a successful measurement'; grep -E 'END_NODE|VERDICT|CLEANUP' transcript.txt | tail -3; exit 1; fi",
+      "verified": "Whether a customer WITH an appointment texting the v95 prototype still gets the safe call-the-office deferral - the highest-stakes invariant, measured with the dummy subject and cleaned up."
+    },
+    {
+      "key": "v95-incident-scripts",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1800,
+      "expect_files": ["measure.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nscripts = {\"conflict-converge\": [\"hi\", \"How about next Friday the 17th\", \"Friday the 14th\"], \"correction\": [\"hi\", \"thursday please\", \"No the following Thursday\"], \"failopen\": [\"hi\", \"How about next Friday the 17th\", \"hmm whatever you think\", \"just pick something\"]}\nrc_all = 0\nfor label, turns in scripts.items():\n    with open(\"script.json\", \"w\") as f:\n        json.dump({\"turns\": turns}, f)\n    print(\"=== SCRIPT %s\" % label)\n    rc = subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", \"95\", \"script.json\", label])\n    rc_all |= rc\nprint(\"ALL_SCRIPTS_DONE rc=%d\" % rc_all)\nPY\nrc=$?; grep -E '^=== |^TURN=|^RESULT' measure.txt | tail -20; exit $rc",
+      "check": "grep -q 'ALL_SCRIPTS_DONE' measure.txt || { echo 'FAIL: scripts did not finish:'; tail -5 measure.txt; exit 1; }; r=$(grep -cE '^RESULT label=' measure.txt); [ \"$r\" -eq 3 ] || { echo \"FAIL: only $r of 3 scripts produced RESULT lines\"; exit 1; }; echo 'PASS: three incident scripts executed on v95 - per-turn record:'; grep -E '^RESULT' measure.txt",
+      "verified": "Tonight's three proven incident sequences (conflict convergence, following-Thursday correction, fail-open) executed turn-by-turn against the v95 prototype, outcomes on the record for the keep-or-flip-back decision."
+    },
+    {
+      "key": "v95-regression",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 2400,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/phase_run.py 95 phase1 > transcript.txt 2>&1; rc=$?; tail -5 transcript.txt; exit $rc",
+      "check": "if PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_phase_transcript.py --file transcript.txt --phase phase1 --total 33; then echo 'PASS: v95 matches the suite'; else echo 'VERDICT-RED: v95 fails the 33-scenario suite (details above) - measurement successful, prototype not flip-worthy yet'; grep -cE '^\\[FAIL\\]' transcript.txt; exit 1; fi",
+      "verified": "The full 33-scenario suite against the v95 prototype - the quantified parity answer for whether Codex Test may keep the line or v94 must return before business hours."
+    }
+  ]
+}

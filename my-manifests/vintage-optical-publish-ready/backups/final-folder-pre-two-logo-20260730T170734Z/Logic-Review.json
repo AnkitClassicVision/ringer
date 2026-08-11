@@ -1,0 +1,188 @@
+{
+  "review_type": "logic",
+  "verdict": "PASS",
+  "external_actions_taken": "none",
+  "blocking_findings": [],
+  "reviewed_artifact_hashes": {
+    "onepager_pdf": "61cabbce74d5f60547260c98cc3ae37800167af3a4d32e16b4354853edf7e3e6",
+    "number_explainer_pdf": "45245d76fc48d1e2218544b98719650c832083c5b288ed93f0915a7ec85e5172",
+    "scores_json": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c"
+  },
+  "directionality_guard": "Room to Win = 100 - Competitive Pressure Index",
+  "room_to_win_check": "PASS",
+  "competitive_pressure_score": 57,
+  "room_to_win_score": 43,
+  "preserved_nulls": [
+    "canonical_full_vdu",
+    "canonical_office_count",
+    "rank_grid",
+    "complete_provider_entity_dedupe",
+    "cross_platform_review_total"
+  ],
+  "fix_card_count": 3,
+  "strongest_claim": {
+    "claim": "The five modeled catchment rows and the two observed growth series are directly bounded by geography, vintage, method, and explicit non-patient limitations.",
+    "basis": "The package labels the catchment values as area-weighted modeled estimates, keeps full VDU null, and labels village population and district enrollment as observed context rather than forecasts or realized demand."
+  },
+  "weakest_claim": {
+    "claim": "The 65 bands for Patient Choice Pressure and review-based trust or reputation are the least complete directional claims.",
+    "basis": "Routes establish proximity but not patient choice, while the review evidence is one dated same-page Google sample without a complete peer export, recency distribution, themes, or response analysis.",
+    "boundary_result": "The package keeps confidence at C, avoids severe or top-band claims, and states the missing evidence, so these claims remain nonblocking."
+  },
+  "score_band_review": [
+    {
+      "score": "Market Demand-Supply",
+      "display_change": "57 to 61",
+      "result": "PASS",
+      "reason": "Growth / Future Demand moves from 50 to 65 on two observed positive series, and Market Data Confidence moves from 35 to 50 after completion of the five fixed demographic windows. Supply Balance stays 50 because canonical full VDU and canonical office count remain null. The change follows the rubric components and does not reward candidate supply volume."
+    },
+    {
+      "score": "Practice Competitiveness",
+      "display_change": "58 to 61",
+      "result": "PASS",
+      "reason": "Only Review Trust vs Peers moves from 50 to 65, based on a bounded same-page Google comparison. The report identifies the small qualitative peer sample and retains public-only confidence rather than claiming a normalized or complete market comparison."
+    },
+    {
+      "score": "Digital Presence",
+      "display_change": "57 to 60",
+      "result": "PASS",
+      "reason": "Only Reputation moves from 50 to 65 on the source-specific direct Google comparison. Findability stays 50 because no rank grid ran, and the package does not combine direct Google and aggregator counts."
+    },
+    {
+      "score": "Dry eye / ocular surface",
+      "display_change": "52 to 53",
+      "result": "PASS",
+      "reason": "Only Evidence Confidence moves from 35 to 50 after exact catchment age and diabetes proxies replaced the prior city-only limitation. Demand, capacity, referrals, outcomes, conversion, and economics remain unproven."
+    },
+    {
+      "score": "Myopia management",
+      "display_change": "52 to 53",
+      "result": "PASS",
+      "reason": "Only Evidence Confidence moves from 35 to 50 after exact child counts and observed district enrollment evidence. The missing 2023-24 observation is not interpolated, and realized demand, capacity, referrals, outcomes, and economics remain unknown."
+    }
+  ],
+  "unchanged_score_review": [
+    {
+      "score": "Competitive Pressure Index",
+      "display_score": 57,
+      "result": "PASS",
+      "reason": "The corrected route remains in the same proximity state, candidate supply is not promoted to saturation, and one bounded review comparison does not justify a new competitor-strength band."
+    },
+    {
+      "score": "Room to Win",
+      "display_score": 43,
+      "result": "PASS",
+      "reason": "It is not independently banded and exactly equals 100 minus the Competitive Pressure Index display score."
+    },
+    {
+      "score": "Client Opportunity",
+      "display_score": 54,
+      "result": "PASS",
+      "reason": "The computed market input raises full precision to 54.45, which still rounds to 54. No evidence proves leakage, capacity, conversion, execution ownership, or a larger fixability change."
+    },
+    {
+      "score": "Specialty contact lenses",
+      "display_score": 51,
+      "result": "PASS",
+      "reason": "The new evidence does not establish lane-specific demand, competitive depth, referrals, fitting capacity, outcomes, or economics, so no component crosses a rubric band."
+    }
+  ],
+  "contradictions": [
+    {
+      "contradiction": "Birdeye Google components are 398 and 210, while the direct Google observation is 348 and 182.",
+      "resolution": "Both observations remain source-specific, the differences of 50 and 28 are explicit, and no cross-platform total or averaged rating is created.",
+      "status": "RESOLVED_NONBLOCKING"
+    },
+    {
+      "contradiction": "The direct Google observation uses the current address while Birdeye displays a legacy address.",
+      "resolution": "The current direct listing pin is used for routing, and the legacy citation conflict is preserved without asserting that the legacy location is operating.",
+      "status": "RESOLVED_NONBLOCKING"
+    },
+    {
+      "contradiction": "NPPES reported 40 query results but only 39 provider candidate records materialized.",
+      "resolution": "Both counts are preserved, the one-record deficit remains visible, and canonical provider and office totals stay null.",
+      "status": "RESOLVED_NONBLOCKING"
+    },
+    {
+      "contradiction": "The prior Focus route was 4.07 minutes, while the corrected direct-pin route is 3.89 minutes.",
+      "resolution": "The corrected route supersedes the old current claim, stale route values are absent, and the same nearby-peer score state is retained.",
+      "status": "RESOLVED_NONBLOCKING"
+    }
+  ],
+  "disconfirmers": [
+    {
+      "condition": "A complete active-office census or provider entity join materially differs from the candidate roster.",
+      "effect": "Supply Balance, Supply Saturation, Competitive Pressure, and Room to Win could move in either direction."
+    },
+    {
+      "condition": "A geographic rank grid or complete comparable peer-review export differs from the bounded sample.",
+      "effect": "Visibility, Review Trust, Practice Competitiveness, and Digital Presence could change."
+    },
+    {
+      "condition": "Patient-origin, trip-tolerance, or traffic-aware evidence changes which alternatives are realistically reachable.",
+      "effect": "Patient Choice Pressure and practical peer relevance could change."
+    },
+    {
+      "condition": "Complete six-term VDU inputs produce a materially different demand denominator.",
+      "effect": "Canonical VDU, VDU-per-office, and VDU-weighted choice conclusions would need recomputation."
+    },
+    {
+      "condition": "Authorized operating evidence shows different conversion, capacity, outcomes, referrals, payer mix, or economics.",
+      "effect": "Client Opportunity and specialty-lane scores could change."
+    }
+  ],
+  "remaining_risks": [
+    "The Patient Choice Pressure band remains directional because point routes and candidate coverage do not implement the rubric's complete population-weighted choice model.",
+    "The review-trust and reputation uplift rests on one dated same-page Google sample and lacks a complete peer export, recency distribution, themes, response analysis, and outcome evidence.",
+    "Canonical supply, full VDU, rank distribution, provider entity dedupe, live traffic, conversion, capacity, outcomes, and economics remain unresolved.",
+    "The package remains a public-only confidence C internal candidate and cannot support external use without human Project Room approval."
+  ],
+  "logic_checks": [
+    {
+      "check": "candidate_supply_not_canonicalized",
+      "result": "PASS",
+      "detail": "NPPES and geocoder figures are consistently labeled provider or location candidates, not a canonical active-office census. Canonical office count remains null."
+    },
+    {
+      "check": "review_sources_separated",
+      "result": "PASS",
+      "detail": "Direct Google and Birdeye observations remain separate, discrepancies are explicit, and no cross-platform sum or average is created."
+    },
+    {
+      "check": "growth_not_forecast",
+      "result": "PASS",
+      "detail": "Village population and district enrollment changes are labeled observed context and are not called catchment growth, forecast growth, patient growth, or realized demand."
+    },
+    {
+      "check": "routes_not_patient_choice",
+      "result": "PASS",
+      "detail": "OSRM results are limited to modeled route proximity with no live traffic, patient-origin, willingness-to-travel, capacity, draw, or patient-choice claim."
+    },
+    {
+      "check": "unknown_not_zero",
+      "result": "PASS",
+      "detail": "Unknown fields remain null or not calculable and are expressly distinguished from zero, average, normal, no demand, no competition, or no problem."
+    },
+    {
+      "check": "three_fix_cards_only",
+      "result": "PASS",
+      "detail": "Exactly Fix Card 1, Fix Card 2, and Fix Card 3 appear once each in the rendered one-pager, with no fourth card."
+    },
+    {
+      "check": "internal_only_boundary",
+      "result": "PASS",
+      "detail": "The one-pager and every explainer page retain internal-only labeling and require human Project Room approval before external use."
+    },
+    {
+      "check": "score_band_changes_evidence_supported",
+      "result": "PASS",
+      "detail": "Each changed band maps to a rubric component supported by new evidence. Unresolved fields retain neutral or prior bands, and no score rises merely because more candidate records were collected."
+    }
+  ],
+  "validator_results": {
+    "build_source_validator": "PASS",
+    "rendered_report_validator": "PASS",
+    "visual_qa": "PASS"
+  },
+  "internal_status": "RENDERED_QA_PASSED_HUMAN_PROJECT_ROOM_REQUIRED"
+}

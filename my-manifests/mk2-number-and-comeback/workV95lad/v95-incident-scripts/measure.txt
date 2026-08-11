@@ -1,0 +1,13 @@
+=== SCRIPT conflict-converge
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN_FAIL turn=1 reason=HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+=== SCRIPT correction
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN_FAIL turn=1 reason=HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+=== SCRIPT failopen
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN_FAIL turn=1 reason=HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+ALL_SCRIPTS_DONE rc=1

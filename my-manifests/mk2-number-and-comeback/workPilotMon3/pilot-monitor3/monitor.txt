@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "<stdin>", line 7, in <module>
+  File "<stdin>", line 5, in say
+  File "<stdin>", line 5, in say
+  File "<stdin>", line 5, in say
+  [Previous line repeated 996 more times]
+RecursionError: maximum recursion depth exceeded

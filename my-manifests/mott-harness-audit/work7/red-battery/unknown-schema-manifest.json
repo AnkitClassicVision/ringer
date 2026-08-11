@@ -1,0 +1,13 @@
+{
+  "schema_version": "synthetic-unknown-practice.v1",
+  "pathway_name": "Synthetic unknown practice",
+  "pathway_id": "synthetic-unknown-pathway",
+  "version": 1,
+  "voice_source_pathway_id": "",
+  "voice_source_version": 0,
+  "start_node_id": "n_synthetic",
+  "time_out_hours": 72,
+  "restart_after_end_call": false,
+  "structural_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "created_utc": "2026-07-26T00:00:00Z"
+}

@@ -1,0 +1,121 @@
+OPEN CONVERSATIONS on the line:
+  ...55e2f9 status=? node=n_miss_unread updated=2026-08-04T12:49:24 user=+***3629
+  ...39c0b3 status=? node=n_miss_unread updated=2026-08-04T12:49:24 user=+***3629
+  ...ead681 status=? node=n_identity updated=2026-08-04T10:47:08 user=+***3629
+  ...56e2d5 status=? node=n_identity updated=2026-08-04T03:46:42 user=+***3629
+  ...fef8b5 status=? node=n_identity updated=2026-08-04T03:40:47 user=+***3629
+  ...b43104 status=? node=n_miss_unread updated=2026-08-04T03:37:54 user=+***3629
+  ...5ec87d status=? node=n_date_conflict updated=2026-08-04T03:22:25 user=+***3629
+  ...2f6faa status=? node=n_ask updated=2026-08-04T01:18:02 user=+***2428
+  ...c240b7 status=? node=n_offer_3 updated=2026-08-04T01:29:47 user=+***3629
+  ...03617c status=? node=e_defer updated=2026-08-03T20:29:22 user=+***3629
+  ...eafb97 status=? node=n_offer_3 updated=2026-08-04T01:18:02 user=+***2428
+  ...b14824 status=? node=n_ask updated=2026-08-03T18:36:43 user=+***2428
+  ...3e8292 status=? node=e_defer updated=2026-08-03T17:54:42 user=+***3629
+  ...a1c0f1 status=? node=e_booking_failed updated=2026-08-03T14:33:05 user=+***2428
+  ...6a0854 status=? node=n_confirm updated=2026-08-03T14:33:05 user=+***2428
+  ...dd9158 status=? node=e_safe_identity updated=2026-07-30T21:47:36 user=+***2428
+  ...77a4ff status=? node=e_safe_identity updated=2026-07-30T21:46:40 user=+***2428
+  ...32343a status=? node=e_safe_identity updated=2026-07-30T21:45:03 user=+***2428
+  ...32ea99 status=? node=e_booked updated=2026-07-30T21:21:56 user=+***2428
+  ...e88389 status=? node=n_offer updated=2026-07-30T21:07:31 user=+***7065
+  ...067d38 status=? node=n_ask updated=2026-07-30T21:07:31 user=+***7065
+  ...6dc802 status=? node=n_confirm updated=2026-07-30T19:17:35 user=+***7065
+  ...e9f2cc status=? node=n_ask updated=2026-07-30T18:02:01 user=+***7065
+  ...eb8a7d status=? node=n_ask updated=2026-07-30T17:57:44 user=+***7065
+  ...66cfe0 status=? node=n_confirm updated=2026-07-30T17:56:18 user=+***7065
+  ...5e664b status=? node=n_confirm updated=2026-07-30T17:23:30 user=+***7065
+  ...a73f2a status=? node=n_confirm updated=2026-07-30T16:23:24 user=+***7065
+  ...f8a255 status=? node=e_booking_failed updated=2026-07-30T15:22:44 user=+***7065
+  ...8b3a0f status=? node=n_miss_unread updated=2026-07-30T15:22:44 user=+***7065
+  ...73d056 status=? node=n_date_conflict updated=2026-08-03T17:54:42 user=+***3629
+  ...e4c99e status=? node=n_offer_2 updated=2026-07-30T02:27:39 user=+***3629
+  ...0b5e94 status=? node=n_confirm updated=2026-07-29T21:18:29 user=+***8986
+  ...7b704b status=? node=n_offer_2 updated=2026-07-29T20:22:19 user=+***2641
+  ...7c5657 status=? node=n_offer_2 updated=2026-07-30T00:30:41 user=+***3629
+  ...5752a8 status=? node=n_ask updated=2026-07-29T20:22:18 user=+***3629
+  ...7b322c status=? node=n_offer updated=2026-07-29T20:22:19 user=+***2641
+  ...060643 status=? node=n_confirm updated=2026-07-29T20:20:47 user=+***3629
+  ...131ffd status=? node=n_offer_2 updated=2026-07-29T16:44:27 user=+***3629
+  ...c1beb2 status=? node=n_offer updated=2026-07-29T16:22:09 user=+***3629
+  ...16d31e status=? node=n_ask updated=2026-07-29T15:47:46 user=+***3629
+  ...b03156 status=? node=n_miss_unread updated=2026-07-29T15:43:30 user=+***3629
+  ...191c8f status=? node=n_miss_unread updated=2026-07-29T15:37:09 user=+***3629
+  ...9cc748 status=? node=n_ask updated=2026-07-29T15:26:45 user=+***3629
+  ...09094e status=? node=n_ask updated=2026-07-29T15:12:21 user=+***3629
+  ...72e9b4 status=? node=n_confirm updated=2026-07-29T14:04:42 user=+***3629
+  ...78091f status=? node=n_offer updated=2026-07-30T15:02:21 user=+***7065
+  ...876bde status=? node=n_gate_1 updated=2026-07-29T13:19:24 user=+***3629
+  ...afb755 status=? node=n_offer_3 updated=2026-07-27T17:33:09 user=+***3629
+  ...483fd1 status=? node=n_offer updated=2026-07-27T17:27:56 user=+***3629
+  ...b83a5f status=? node=e_safe_failure updated=2026-07-27T17:05:57 user=+***3629
+  ...770258 status=? node=e_safe_failure updated=2026-07-27T16:36:21 user=+***3629
+  ...e21d93 status=? node=e_safe_failure updated=2026-07-27T16:32:11 user=+***3629
+  ...28cba4 status=? node=e_safe_failure updated=2026-07-27T16:31:16 user=+***3629
+  ...e97ab5 status=? node=e_safe_failure updated=2026-07-27T16:31:01 user=+***3629
+  ...abf5bf status=? node=e_safe_failure updated=2026-07-27T16:27:00 user=+***3629
+  ...35cf5c status=? node=e_safe_failure updated=2026-07-27T16:26:35 user=+***3629
+  ...18f5ba status=? node=e_safe_failure updated=2026-07-27T16:26:30 user=+***3629
+  ...a9d4ff status=? node=e_stop updated=2026-07-27T15:18:19 user=+***3629
+  ...758546 status=? node=n_confirm updated=2026-07-27T15:18:19 user=+***3629
+  ...360fd6 status=? node=n_offer_2 updated=2026-07-26T20:42:27 user=+***3629
+  ...b6dfc2 status=? node=n_confirm updated=2026-07-26T14:27:35 user=+***3629
+  ...d9c6d4 status=? node=e_safe_failure updated=2026-07-26T11:52:41 user=+***3629
+  ...bb4a69 status=? node=n_offer updated=2026-07-26T11:52:40 user=+***3629
+  ...141d5f status=? node=n_offer updated=2026-07-26T11:16:14 user=+***3629
+  ...96bf8d status=? node=n_offer updated=2026-07-26T11:02:21 user=+***3629
+  ...2a79b5 status=? node=n_offer updated=2026-07-26T02:42:06 user=+***3629
+  ...65b818 status=? node=n_offer updated=2026-07-26T02:14:16 user=+***3629
+  ...34190d status=? node=n_offer updated=2026-07-27T18:59:36 user=+***7065
+  ...319d29 status=? node=e_safe_identity updated=2026-07-25T18:14:58 user=+***7065
+  ...a04f14 status=? node=e_safe_identity updated=2026-07-25T18:14:37 user=+***7065
+  ...44a912 status=? node=e_safe_failure updated=2026-07-25T18:12:19 user=+***7065
+  ...49816b status=? node=n_negotiate updated=2026-07-25T18:12:19 user=+***7065
+  ...8b03b0 status=? node=n_confirm updated=2026-07-25T21:09:08 user=+***3629
+  ...d19503 status=? node=n_confirm updated=2026-07-25T17:36:40 user=+***3629
+  ...564360 status=? node=n_confirm updated=2026-07-25T16:26:30 user=+***3629
+  ...87050e status=? node=n_offer updated=2026-07-25T16:14:16 user=+***3629
+  ...fc0274 status=? node=e_safe_failure updated=2026-07-25T15:51:59 user=+***3629
+  ...316f38 status=? node=e_safe_failure updated=2026-07-25T15:36:34 user=+***3629
+  ...3b7c9f status=? node=e_safe_failure updated=2026-07-25T15:34:51 user=+***3629
+  ...5918e0 status=? node=e_safe_failure updated=2026-07-25T15:22:03 user=+***3629
+  ...9a846d status=? node=n_negotiate updated=2026-07-25T15:22:02 user=+***3629
+  ...4a6e9f status=? node=n_confirm updated=2026-07-25T14:22:24 user=+***3629
+  ...08965a status=? node=e_safe_failure updated=2026-07-25T13:54:35 user=+***3629
+  ...8c2b7a status=? node=n_conflict_2 updated=2026-07-25T13:54:35 user=+***3629
+  ...52593f status=? node=n_bookfail updated=2026-07-25T03:33:44 user=+***3629
+  ...b35fdb status=? node=n_bookfail updated=2026-07-23T20:10:30 user=+***3629
+  ...41a668 status=? node=n_bookfail updated=2026-07-23T19:54:18 user=+***3629
+  ...ecd347 status=? node=n_noslots updated=2026-07-25T18:00:57 user=+***7065
+  ...0afe94 status=? node=n_done_2 updated=2026-07-23T19:20:16 user=+***3629
+  ...a1b8e9 status=? node=7fbffd73-f22c-4b51-9ada-38d17147bc0d updated=2026-07-23T16:44:36 user=+***3629
+  ...4a00dd status=? node=n_done updated=2026-07-23T16:44:36 user=+***3629
+  ...10417b status=? node=n_done_2 updated=2026-07-23T16:22:17 user=+***3629
+  ...1b4850 status=? node=n_slot_2_selection updated=2026-07-23T15:59:16 user=+***3629
+  ...236262 status=? node=n_slot_1_selection updated=2026-07-23T15:20:41 user=+***3629
+  ...82272c status=? node=n_booking_context_guard updated=2026-07-23T14:48:27 user=+***3629
+  ...e9f806 status=? node=n_done updated=2026-07-23T14:00:21 user=+***3629
+  ...d74d17 status=? node=n_outbound_greet_2 updated=2026-07-23T02:13:15 user=+***3629
+  ...50199b status=? node=7fbffd73-f22c-4b51-9ada-38d17147bc0d updated=2026-07-23T01:52:49 user=+***3629
+  ...c9d7f0 status=? node=n_offer updated=2026-07-23T01:52:49 user=+***3629
+STALE_CANDIDATES=97
+TRY POST end -> 404 <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<
+TRY PATCH 745e5382-855e-4ee1-b7d1-1d8655ead681 -> 400 {"data":null,"errors":[{"message":"is_active must be a boolean value","error":"INVALID_IS_ACTIVE_VAL
+TRY POST complete -> 404 <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<
+TRY DELETE 745e5382-855e-4ee1-b7d1-1d8655ead681 -> 200 {'data': {'message': 'Conversation and all associated messages deleted successfully'}, 'errors': Non
+ENDED=97/97 via DELETE
+CLEANUP_DONE

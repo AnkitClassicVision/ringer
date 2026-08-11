@@ -1,0 +1,27 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS17",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-validate-mint",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["mint.txt"],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD24/gl-round17-fix/check_goalloop_graph.py --draft /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD24/gl-round17-fix/pathway-goalloop-draft.json > mint.txt 2>&1 || { echo 'REFUSED: goal-loop validation failed - not minting' >> mint.txt; cat mint.txt; exit 2; }; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/mott-v21-snap/scripts/mint_graph_version.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD24/gl-round17-fix/pathway-goalloop-draft.json >> mint.txt 2>&1; rc=$?; tail -6 mint.txt; exit $rc",
+      "check": "grep -qi 'PASS' mint.txt || { echo 'FAIL: validation did not pass before mint'; head -5 mint.txt; exit 1; }; grep -q 'REFUSED' mint.txt && { echo 'FAIL: refusal recorded'; exit 1; }; grep -qE 'VERSION=[0-9]+' mint.txt || { echo 'FAIL: no minted version:'; tail -6 mint.txt; exit 1; }; echo \"PASS: validated then minted unattached - $(grep -m1 -E 'VERSION=[0-9]+' mint.txt)\"",
+      "verified": "The round-17 graph minted unattached strictly after its seventeen-assertion validator passed in the same task."
+    },
+    {
+      "key": "gl-typo-time-replay",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["capture.log", "turn5.json", "turns.json"],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS17/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || exit 1; echo REPLAY_VERSION=$V; python3 -c \"import json;json.dump(['hi','How about this Friday?','Friday the 28','Lets do 1040','I will take it'],open('turns.json','w'))\" && CAPTURE_TURNS=\"$(cat turns.json)\" HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py $V . > capture.log 2>&1; rc=$?; tail -6 capture.log; exit $rc",
+      "check": "grep -q 'CAPTURE_COMPLETE' capture.log || { echo 'FAIL: capture incomplete'; tail -5 capture.log; exit 1; }; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_spoken_vs_slots.py . > cmp.txt 2>&1; rc=$?; cat cmp.txt; [ $rc -eq 0 ] || exit 1; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_no_false_booking.py .",
+      "verified": "Ankit's typo sequence replayed on the new mint: an off-grid time like 10:40 is never spoken, and no turn claims a booking while the booking variables show none - the false-confirmation class proven dead."
+    }
+  ]
+}

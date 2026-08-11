@@ -1,0 +1,272 @@
+MONITOR_START 2026-08-06T20:58:22
+PILOT_LOADED n=10
+EVENT conv=...9b6b05 cell=***0935 node=e_stop msgs=3 last_from=AGENT
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT OPTOUT conv=...9b6b05 node=e_stop
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 1 20:58 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 2 21:00 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 3 21:02 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 4 21:04 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 5 21:06 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 6 21:08 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 7 21:10 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 8 21:12 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 9 21:14 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 10 21:16 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 11 21:18 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 12 21:20 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 13 21:22 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 14 21:24 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 15 21:27 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 16 21:29 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 17 21:31 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 18 21:33 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 19 21:35 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 20 21:37 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 21 21:39 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 22 21:41 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 23 21:43 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 24 21:45 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 25 21:47 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 26 21:49 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 27 21:51 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 28 21:53 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 29 21:55 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 30 21:57 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 31 21:59 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 32 22:01 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 33 22:03 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 34 22:05 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 35 22:07 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 36 22:09 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 37 22:11 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 38 22:13 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 39 22:15 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 40 22:17 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 41 22:20 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 42 22:22 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 43 22:24 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 44 22:26 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 45 22:28 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 46 22:30 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 47 22:32 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 48 22:34 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 49 22:36 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 50 22:38 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 51 22:40 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 52 22:42 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 53 22:44 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 54 22:46 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 55 22:48 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 56 22:50 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 57 22:52 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 58 22:54 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 59 22:56 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 60 22:58 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 61 23:00 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 62 23:02 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 63 23:04 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 64 23:06 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 65 23:08 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 66 23:11 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 67 23:13 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 68 23:15 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 69 23:17 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 70 23:19 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 71 23:21 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 72 23:23 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 73 23:25 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 74 23:27 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 75 23:29 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 76 23:31 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 77 23:33 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 78 23:35 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 79 23:37 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 80 23:39 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 81 23:41 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 82 23:43 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 83 23:45 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 84 23:47 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 85 23:49 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 86 23:51 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 87 23:53 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 88 23:55 active=10 replied=1 booked=0 stopped=1
+ALERT DELIVERY_FAIL conv=...9b6b05 n=1
+ALERT DELIVERY_FAIL conv=...9fb938 n=1
+CYCLE 89 23:57 active=10 replied=1 booked=0 stopped=1
+MONITOR_END cycles=89

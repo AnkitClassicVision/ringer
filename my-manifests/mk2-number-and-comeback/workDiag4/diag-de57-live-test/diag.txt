@@ -1,0 +1,25 @@
+NODE_NOW=n_miss_unread VERSION=96 MSGS=6
+MSG 2026-08-04T12:49:34.020Z | AGENT | Hi ANKIT, this is MK2 Optical.  We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is importa
+MSG 2026-08-04T12:51:47.903Z | USER | I'm out of town the next week how about the week after 
+MSG 2026-08-04T12:51:55.857Z | AGENT | Which specific date would you like? For example, August 17.
+MSG 2026-08-04T12:53:54.912Z | USER | Tuesday the 18th
+MSG 2026-08-04T12:54:00.257Z | AGENT | Checking availability for Tuesday the 18th.
+MSG 2026-08-04T12:54:00.661Z | AGENT | I want to make sure we get you scheduled. Please call our office at (212) 219-2219 and they will find the perfect time for you.
+VAR appt_count=0
+VAR from=+***3629
+VAR preference_from=tuesday next week
+VAR preference_to=tuesday next week
+VAR slot_1_doctor=***7632
+VAR slot_2_doctor=***7632
+VAR store=711
+VAR time_pref_relaxed=
+VAR to=+***1012
+VAR today=Tue, Aug 4, 2026
+GWLOG_LINES=6
+GW 2026-08-04 12:51:50,910 INFO raw_gate flag=True tenant=mott call_id_len=36 first_req=False
+GW 2026-08-04 12:51:51,211 INFO raw_fetch msgs=2
+GW 2026-08-04 12:51:51,215 INFO raw_resolve from=08/10/2026
+GW 2026-08-04 12:51:51,215 INFO date_source=raw
+GW 2026-08-04 12:51:53,515 INFO POST /availability -> 200 (2604 ms)
+GW 172.31.80.162 - - [04/Aug/2026:12:51:53 +0000] "POST /availability HTTP/1.1" 200 3983 "-" "Bland/1.0"
+DIAG_DONE

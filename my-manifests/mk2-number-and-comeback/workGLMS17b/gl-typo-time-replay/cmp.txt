@@ -1,0 +1,6 @@
+TURN=1 node=n_goal_ask spoken=[] slots=[] said="Hi RACHEL, this is MK2 Optical.\n\nWe noticed that it's been awhile since your last visit wi"
+TURN=2 node=n_goal_response spoken=['08/07/2026'] slots=['08/07/2026'] said='I have Friday 08/07/2026 11:00 am or Friday 08/07/2026 11:15 am at MK2 Optical. Reply 1 or'
+TURN=3 node=n_goal_response spoken=['08/28/2026'] slots=['08/28/2026'] said='I have Friday 08/28/2026 10:30 am or Friday 08/28/2026 10:45 am at MK2 Optical. Reply 1 or'
+TURN=4 node=n_goal_response spoken=['08/28/2026'] slots=['08/28/2026'] said='10:40 am is not available. I have Friday 08/28/2026 10:30 am or Friday 08/28/2026 10:45 am'
+TURN=5 node=n_goal_response spoken=[] slots=['08/28/2026'] said='Which time would you like, 10:30 am or 10:45 am?'
+PASS: every spoken date is backed by a live slot variable

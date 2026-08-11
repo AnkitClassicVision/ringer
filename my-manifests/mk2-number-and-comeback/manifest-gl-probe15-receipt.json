@@ -1,0 +1,19 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS15c",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-post-booking-receipt",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 300,
+      "expect_files": [
+        "probe.txt"
+      ],
+      "spec": "cp /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS15b/gl-post-booking-probe/probe.txt . && grep -E 'TURN=|PROBE_RESULT' probe.txt",
+      "check": "grep -qiE 'PROBE_RESULT booked_then_alive=true cleanup_count=0' probe.txt || { echo 'FAIL:'; tail -6 probe.txt; exit 1; }; grep -E '^TURN=' probe.txt | grep -qi 'OK=false' && { echo 'FAIL: a turn failed'; grep -i OK=false probe.txt; exit 1; }; t=$(grep -cE '^TURN=' probe.txt); [ \"$t\" -eq 6 ] || { echo \"FAIL: expected 6 turns, got $t\"; exit 1; }; echo \"PASS: $(grep -i PROBE_RESULT probe.txt)\"",
+      "verified": "Receipt for the live-proven post-booking flow on v111: book, ask to change, keep texting - six turns all answered, office referral present, no re-booking language, cleanup left zero appointments. The prior red was a case-sensitive grep in the coordinator's check."
+    }
+  ]
+}

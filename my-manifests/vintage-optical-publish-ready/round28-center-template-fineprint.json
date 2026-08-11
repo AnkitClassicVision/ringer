@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-source-refresh-report",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-template-fineprint-polish",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "center-template-methodology-in-safe-box",
+      "engine": "local-shell",
+      "task_type": "site-build",
+      "timeout_s": 300,
+      "expect_files": ["template-framed-onepager.html"],
+      "spec": "set -euo pipefail; src=/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-logo-template-polish/use-template-bottom-space-for-decision-message/template-framed-onepager.html; cp \"$src\" ./template-framed-onepager.html; python3 -c \"from pathlib import Path; p=Path('template-framed-onepager.html'); s=p.read_text(); old='font-size: 6.35px;\\n    line-height: 1.34;\\n  }\\n  .fineprint b'; new='font-size: 6.35px;\\n    line-height: 1.34;\\n    display: flex;\\n    align-items: center;\\n  }\\n  .fineprint b'; assert s.count(old)==1; p.write_text(s.replace(old,new))\"; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_logo_and_variant_sources.py --current /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-logo-template-polish/use-template-bottom-space-for-decision-message/current-onepager.html --variant ./template-framed-onepager.html --logo /mnt/d_drive/repos/optometry-competition-analyzer-rubric/client-onepager/assets/mybcat-logo.png",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_logo_and_variant_sources.py --current /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-logo-template-polish/use-template-bottom-space-for-decision-message/current-onepager.html --variant ./template-framed-onepager.html --logo /mnt/d_drive/repos/optometry-competition-analyzer-rubric/client-onepager/assets/mybcat-logo.png && python3 -c \"from pathlib import Path; s=Path('template-framed-onepager.html').read_text(); assert 'display: flex;\\n    align-items: center;\\n  }\\n  .fineprint b' in s; print('PASS: methodology centered inside unchanged safe box')\"",
+      "verified": "the template-framed source preserves all accepted content, logo, and 0.18in page gutter while vertically centering methodology within its existing safe footer box for a more deliberate sample-like finish"
+    }
+  ]
+}

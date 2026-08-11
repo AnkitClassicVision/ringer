@@ -1,0 +1,122 @@
+{
+  "packet": "Vintage Optical catchment and growth evidence",
+  "receipts": [
+    {
+      "source_id": "GOOGLE_MAPS_SAMPLE_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/google-maps-vintage-20260730.json",
+      "sha256": "ff0b01b4642535487a7d3fcf494b151b8490d564a517e4e5c58da007ec449616",
+      "official_url": "https://www.google.com/maps/place/Vintage+Optical/@40.6049094,-89.467024,17z/",
+      "source_vintage": "Public listing observed 2026-07-30",
+      "captured_at": "2026-07-30T12:54:08.602Z",
+      "limitation": "One dated public listing observation; not patient-origin evidence."
+    },
+    {
+      "source_id": "VALHALLA_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/valhalla-isochrones-05-20.geojson",
+      "sha256": "9d4389ba52c69364c1fcc20a86510a5b008d3330c0001aa9121995b06912f1cd",
+      "official_url": "https://valhalla.github.io/valhalla/api/isochrone/api-reference/",
+      "source_vintage": "Routing response captured 2026-07-30",
+      "captured_at": "2026-07-30",
+      "limitation": "Modeled auto drive times with no live traffic."
+    },
+    {
+      "source_id": "VALHALLA_20260730",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/valhalla-isochrone-30.geojson",
+      "sha256": "3920744be5dc09d15c81bf077a8b78bbc67096a7a7e6fdbf658ebf912294dbca",
+      "official_url": "https://valhalla.github.io/valhalla/api/isochrone/api-reference/",
+      "source_vintage": "Routing response captured 2026-07-30",
+      "captured_at": "2026-07-30",
+      "limitation": "Modeled auto drive times with no live traffic."
+    },
+    {
+      "source_id": "TIGER2024_BG",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/tiger2024-il-block-groups.zip",
+      "sha256": "38e970b3df85f4ce93375d46749cccd14e451d6ba0c894d641be238d02eea4ec",
+      "official_url": "https://www2.census.gov/geo/tiger/TIGER2024/BG/tl_2024_17_bg.zip",
+      "source_vintage": "2024 TIGER/Line block groups",
+      "captured_at": "2026-07-30",
+      "limitation": "Boundaries allocate aggregate estimates; they do not locate people."
+    },
+    {
+      "source_id": "ACS2024_BG",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/acsdt5y2024-b01001.dat",
+      "sha256": "1637b18a96881b81e050df1cd3d5ac38a33208b9b69b40e1dbeb3c4e13718f0e",
+      "official_url": "https://api.census.gov/data/2024/acs/acs5",
+      "source_vintage": "2024 ACS 5-year B01001",
+      "captured_at": "2026-07-30",
+      "limitation": "Survey estimates have sampling error; negative sentinels are null."
+    },
+    {
+      "source_id": "ACS2024_BG",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/acsdt5y2024-b11001.dat",
+      "sha256": "77200c3d9c0d99773bc7f78208bc96f25170e5d4d175a5de320620b478ceaff5",
+      "official_url": "https://api.census.gov/data/2024/acs/acs5",
+      "source_vintage": "2024 ACS 5-year B11001",
+      "captured_at": "2026-07-30",
+      "limitation": "Survey estimates have sampling error; negative sentinels are null."
+    },
+    {
+      "source_id": "ACS2024_BG",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/acsdt5y2024-b19013.dat",
+      "sha256": "b25a176b0e6c339b6f3a2a0d3d8446bf06f5f080b4395993ec9a8313efb1c229",
+      "official_url": "https://api.census.gov/data/2024/acs/acs5",
+      "source_vintage": "2024 ACS 5-year B19013",
+      "captured_at": "2026-07-30",
+      "limitation": "Block-group medians support only an approximate weighted context."
+    },
+    {
+      "source_id": "CDC_PLACES_2025",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/cdc-places-2025-five-counties-diabetes.json",
+      "sha256": "6261efb3665d058dfd250693b9071539a06fb6d10ed9c41d09de599be9dd0d6b",
+      "official_url": "https://www.cdc.gov/places/",
+      "source_vintage": "CDC PLACES 2025 release, 2023 data year",
+      "captured_at": "2026-07-30",
+      "limitation": "Modeled tract crude prevalence, not patient-level clinical data."
+    },
+    {
+      "source_id": "CENSUS_PEP_2025",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/sub-est2025.csv",
+      "sha256": "e3508f5201465913476d4ddf91740f191f7977c9f2614a2a7e30b5fd22027934",
+      "official_url": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/cities/totals/sub-est2025.csv",
+      "source_vintage": "Vintage 2025 population estimates",
+      "captured_at": "2026-07-30",
+      "limitation": "Annual estimates may be revised in later Census vintages."
+    },
+    {
+      "source_id": "MORTON709_FIRST_PARTY_ARCHIVE",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/morton709-enrollment-series.json",
+      "sha256": "62b2380a67352c20d2a3f544e06cad75e55388140065bbc3788816cc9b5694dd",
+      "official_url": "https://www.morton709.org/our-district/about-morton-709",
+      "source_vintage": "Parsed first-party enrollment observations",
+      "captured_at": "2026-07-30",
+      "limitation": "The district did not provide an observed 2023-24 value here."
+    },
+    {
+      "source_id": "MORTON709_FIRST_PARTY_ARCHIVE",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/morton709-archive-20240117.html",
+      "sha256": "3a2e38c98bbf1e993cc530cab7656da21333c0ec75c3a1163a45780f140d73eb",
+      "official_url": "https://www.morton709.org/our-district/about-morton-709",
+      "source_vintage": "2022-2023 enrollment page",
+      "captured_at": "2024-01-17",
+      "limitation": "Archived first-party page snapshot."
+    },
+    {
+      "source_id": "MORTON709_FIRST_PARTY_ARCHIVE",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/morton709-archive-20250912.html",
+      "sha256": "a88d1b7df912bb6811bd84ed7b721cc6366fa5b59b4755dce70329bb9e0a35f0",
+      "official_url": "https://www.morton709.org/our-district/about-morton-709",
+      "source_vintage": "2024-25 enrollment page",
+      "captured_at": "2025-09-12",
+      "limitation": "Archived first-party page snapshot."
+    },
+    {
+      "source_id": "MORTON709_FIRST_PARTY_ARCHIVE",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/morton709-live-20260730.html",
+      "sha256": "dc59e4c7ed1790348ca84d150d196b0e3a523070032f7b4d2f81e89e4ca5d9b7",
+      "official_url": "https://www.morton709.org/our-district/about-morton-709",
+      "source_vintage": "2025-26 enrollment page",
+      "captured_at": "2026-07-30",
+      "limitation": "Dated capture of a live first-party page."
+    }
+  ]
+}

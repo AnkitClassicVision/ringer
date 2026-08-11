@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWenv",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-env-probe",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 300,
+      "expect_files": ["gwenv.txt"],
+      "spec": "python3 -u - <<'PY' > gwenv.txt 2>&1\nimport json, subprocess\nout = subprocess.run([\"aws\", \"ecs\", \"list-task-definitions\", \"--family-prefix\", \"mott-booking-gateway\", \"--sort\", \"DESC\", \"--max-items\", \"1\", \"--output\", \"json\"], capture_output=True, text=True, timeout=60)\nif out.returncode != 0:\n    print(\"LIST_FAILED %s\" % out.stderr.strip()[:200]); raise SystemExit(1)\narns = json.loads(out.stdout).get(\"taskDefinitionArns\") or []\nif not arns:\n    print(\"NO_TASK_DEFINITIONS for family-prefix mott-booking-gateway\"); raise SystemExit(1)\narn = arns[0]\nprint(\"TASKDEF=%s\" % arn.split(\"/\")[-1])\nout = subprocess.run([\"aws\", \"ecs\", \"describe-task-definition\", \"--task-definition\", arn, \"--output\", \"json\"], capture_output=True, text=True, timeout=60)\nif out.returncode != 0:\n    print(\"DESCRIBE_FAILED %s\" % out.stderr.strip()[:200]); raise SystemExit(1)\ntd = json.loads(out.stdout)[\"taskDefinition\"]\nfor c in td.get(\"containerDefinitions\", []):\n    print(\"CONTAINER=%s IMAGE=%s\" % (c.get(\"name\"), c.get(\"image\")))\n    safe = (\"ECP_LLM_INTENT\", \"ECP_LLM_MODEL_ID\", \"ECP_RAW_TEXT_DATES\", \"ECP_TENANT_ID\", \"ECP_LLM_SHADOW_SAMPLE\")\n    for e in c.get(\"environment\", []) or []:\n        name = e.get(\"name\", \"\")\n        if name in safe:\n            print(\"ENV %s=%s\" % (name, e.get(\"value\")))\n        else:\n            print(\"ENV %s=<value-withheld>\" % name)\n    for s in c.get(\"secrets\", []) or []:\n        print(\"SECRET_REF %s\" % s.get(\"name\"))\nprint(\"PROBE_DONE\")\nPY\nrc=$?; cat gwenv.txt; exit $rc",
+      "check": "grep -q '^TASKDEF=' gwenv.txt || { echo 'FAIL: no task definition found'; head -4 gwenv.txt; exit 1; }; grep -q 'PROBE_DONE' gwenv.txt || { echo 'FAIL: probe did not finish'; exit 1; }; if grep -q 'ENV ECP_LLM_INTENT=' gwenv.txt; then echo \"PASS: $(grep -m1 '^TASKDEF=' gwenv.txt); $(grep -m1 'ENV ECP_LLM_INTENT=' gwenv.txt)\"; else echo \"PASS-WITH-FINDING: ECP_LLM_INTENT is NOT SET in the deployed task definition (LLM intent layer defaults to off in production); $(grep -m1 '^TASKDEF=' gwenv.txt)\"; fi",
+      "verified": "The deployed gateway task definition read-only: revision, image tag, and the ECP_LLM_INTENT / model / raw-text-dates settings actually live in production, with all other env values withheld."
+    }
+  ]
+}

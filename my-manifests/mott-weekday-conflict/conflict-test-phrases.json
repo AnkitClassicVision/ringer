@@ -1,0 +1,27 @@
+[
+  {
+    "patient_text": "tomorrow the 31st",
+    "category": "conflict: relative vs bare day",
+    "expected_behavior": "ask: did you mean tomorrow Wednesday the 30th, or Thursday the 31st?"
+  },
+  {
+    "patient_text": "monday august 5th",
+    "category": "conflict: weekday vs explicit date",
+    "expected_behavior": "ask: did you mean Monday August 4th, or Tuesday August 5th?"
+  },
+  {
+    "patient_text": "next tuesday august 3rd",
+    "category": "conflict: qualified weekday vs explicit date",
+    "expected_behavior": "ask: did you mean Tuesday August 5th, or Sunday August 3rd?"
+  },
+  {
+    "patient_text": "friday the 28th",
+    "category": "conflict: weekday vs bare day (depends on month)",
+    "expected_behavior": "ask for clarity since friday and the 28th don't align"
+  },
+  {
+    "patient_text": "thursday july 31st",
+    "category": "agree: thursday IS july 31",
+    "expected_behavior": "no conflict, resolve to 07/31/2026 and search normally"
+  }
+]

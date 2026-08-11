@@ -1,0 +1,29 @@
+{
+  "run_name": "gemini-cli-oauth-audition",
+  "workdir": "/tmp/ringer-gemini-podcast-audition",
+  "max_parallel": 2,
+  "tasks": [
+    {
+      "key": "flash",
+      "engine": "gemini",
+      "model": "gemini-3.5-flash",
+      "task_type": "copywriting",
+      "timeout_s": 1200,
+      "expect_files": ["podcast_writing.md"],
+      "verified": "The artifact is grounded in both the supplied transcript and visual frame, contains two substantively different podcast-writing takes, meets section and length contracts, and avoids stock copy patterns.",
+      "check": "python3 '/home/ankit114/repos/ringer/my-manifests/auditions/gemini-cli-oauth/checks/validate_podcast_writing.py'",
+      "spec": "You are auditioning as a podcast writer inside a disposable Ringer task directory. This is a local-only synthetic evaluation. Do not send, publish, schedule, upload, browse the web, call MCP/Apps, activate skills, invoke subagents, run shell commands, read credentials, read any parent/home/repository files, or modify anything except the one owned deliverable ./podcast_writing.md. Source material is limited to ./transcript.md and the local visual asset @episode_frame.png. Inspect both sources directly. Do not invent facts, outcomes, testimonials, links, statistics, contact details, or claims not present in those sources.\n\nCreate ./podcast_writing.md with exactly this useful structure: `# Podcast Writing Audition`; `## Visual Read` with 3 concise bullets grounded in visible words/layout/audience signals from the frame; `## Take A: Operator Pain First`; `## Take B: Founder Story First`; and `## Why the Takes Differ`. Under each Take heading include `### Title`, `### Hook`, `### Episode Description`, `### Social 1`, `### Social 2`, and `### Social 3`. Each title must be 70 characters or fewer. Each hook must be 35 to 70 words. Each episode description must be 120 to 240 words. Each social post must be 500 characters or fewer. Take A should lead with the lived operational pain and a concrete bottleneck. Take B should lead with the founder's contrarian idea and the deeper ownership philosophy. The takes must differ in thesis, sequencing, hook, and emotional center, not just wording. Use short, warm, direct prose. No em dashes, hashtags, stock AI phrases, inflated claims, or generic business inspiration. Ground the writing in at least three exact ideas from the transcript and at least two cues that can only be learned from the visual asset. Finish after writing the one file and reply DONE."
+    },
+    {
+      "key": "pro",
+      "engine": "gemini",
+      "model": "gemini-3.1-pro-preview",
+      "task_type": "copywriting",
+      "timeout_s": 1200,
+      "expect_files": ["podcast_writing.md"],
+      "verified": "The artifact is grounded in both the supplied transcript and visual frame, contains two substantively different podcast-writing takes, meets section and length contracts, and avoids stock copy patterns.",
+      "check": "python3 '/home/ankit114/repos/ringer/my-manifests/auditions/gemini-cli-oauth/checks/validate_podcast_writing.py'",
+      "spec": "You are auditioning as a podcast writer inside a disposable Ringer task directory. This is a local-only synthetic evaluation. Do not send, publish, schedule, upload, browse the web, call MCP/Apps, activate skills, invoke subagents, run shell commands, read credentials, read any parent/home/repository files, or modify anything except the one owned deliverable ./podcast_writing.md. Source material is limited to ./transcript.md and the local visual asset @episode_frame.png. Inspect both sources directly. Do not invent facts, outcomes, testimonials, links, statistics, contact details, or claims not present in those sources.\n\nCreate ./podcast_writing.md with exactly this useful structure: `# Podcast Writing Audition`; `## Visual Read` with 3 concise bullets grounded in visible words/layout/audience signals from the frame; `## Take A: Operator Pain First`; `## Take B: Founder Story First`; and `## Why the Takes Differ`. Under each Take heading include `### Title`, `### Hook`, `### Episode Description`, `### Social 1`, `### Social 2`, and `### Social 3`. Each title must be 70 characters or fewer. Each hook must be 35 to 70 words. Each episode description must be 120 to 240 words. Each social post must be 500 characters or fewer. Take A should lead with the lived operational pain and a concrete bottleneck. Take B should lead with the founder's contrarian idea and the deeper ownership philosophy. The takes must differ in thesis, sequencing, hook, and emotional center, not just wording. Use short, warm, direct prose. No em dashes, hashtags, stock AI phrases, inflated claims, or generic business inspiration. Ground the writing in at least three exact ideas from the transcript and at least two cues that can only be learned from the visual asset. Finish after writing the one file and reply DONE."
+    }
+  ]
+}

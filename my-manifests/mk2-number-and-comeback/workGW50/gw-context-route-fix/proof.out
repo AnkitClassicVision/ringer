@@ -1,0 +1,8 @@
+2026-08-05 10:40:52,072 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 10:40:52,076 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+CASE=anaphora-context FROM=2026-08-17
+CASE=bare-that-week FROM=2026-08-17 TO=2026-08-21
+CASE=route-exact ROUTE=exact
+CASE=route-closest ROUTE=closest
+CASE=route-none ROUTE=none
+CASE=route-error ROUTE=error

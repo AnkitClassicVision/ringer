@@ -1,0 +1,55 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWdeploy9",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "img-build-push-45",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": [
+        "push.txt"
+      ],
+      "spec": "AWS_PROFILE=deploy-admin python3 -u - <<'PY' > push.txt 2>&1\nimport gzip, hashlib, io, json, tarfile, urllib.request\nimport boto3\nREPO = \"eyecloud-fargate-runner\"\nBASE_TAG = \"mott-lane-44\"\nNEW_TAG = \"mott-lane-45\"\nFILE_PATH = \"opt/cvc-booking-gateway/bland_gateway.py\"\nFIXED = \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW44b/gw-week-vocab-live-fix/fixed-bland_gateway.py\"\necr = boto3.client(\"ecr\", region_name=\"us-east-1\")\nresp = ecr.batch_get_image(repositoryName=REPO, imageIds=[{\"imageTag\": BASE_TAG}])\nmanifest = json.loads(resp[\"images\"][0][\"imageManifest\"])\nif \"manifests\" in manifest:\n    entry = next(m for m in manifest[\"manifests\"] if m.get(\"platform\", {}).get(\"architecture\") in (\"amd64\", \"x86_64\"))\n    manifest = json.loads(ecr.batch_get_image(repositoryName=REPO, imageIds=[{\"imageDigest\": entry[\"digest\"]}])[\"images\"][0][\"imageManifest\"])\ncfg_url = ecr.get_download_url_for_layer(repositoryName=REPO, layerDigest=manifest[\"config\"][\"digest\"])[\"downloadUrl\"]\nconfig = json.loads(urllib.request.urlopen(cfg_url, timeout=120).read())\nbody = open(FIXED, \"rb\").read()\nbuf = io.BytesIO()\ntar = tarfile.open(fileobj=buf, mode=\"w\")\ninfo = tarfile.TarInfo(name=FILE_PATH)\ninfo.size = len(body)\ninfo.mode = 0o644\ninfo.mtime = 0\ntar.addfile(info, io.BytesIO(body))\ntar.close()\nraw_tar = buf.getvalue()\ndiff_id = \"sha256:\" + hashlib.sha256(raw_tar).hexdigest()\ngz = io.BytesIO()\nwith gzip.GzipFile(fileobj=gz, mode=\"wb\", mtime=0) as g:\n    g.write(raw_tar)\nblob = gz.getvalue()\nlayer_digest = \"sha256:\" + hashlib.sha256(blob).hexdigest()\nconfig[\"rootfs\"][\"diff_ids\"].append(diff_id)\nconfig.setdefault(\"history\", []).append({\"created\": \"2026-08-04T17:30:00Z\", \"created_by\": \"mott-lane-45 week vocabulary on the live resolution path (ringer fable-chief)\", \"comment\": \"single-file overlay of bland_gateway.py\"})\ncfg_bytes = json.dumps(config).encode()\ncfg_digest = \"sha256:\" + hashlib.sha256(cfg_bytes).hexdigest()\n\ndef upload(data, digest):\n    up = ecr.initiate_layer_upload(repositoryName=REPO)\n    ecr.upload_layer_part(repositoryName=REPO, uploadId=up[\"uploadId\"], partFirstByte=0, partLastByte=len(data) - 1, layerPartBlob=data)\n    ecr.complete_layer_upload(repositoryName=REPO, uploadId=up[\"uploadId\"], layerDigests=[digest])\n    print(\"UPLOADED %s bytes=%d\" % (digest[:19], len(data)))\n\nupload(blob, layer_digest)\nupload(cfg_bytes, cfg_digest)\nlayer_media = manifest[\"layers\"][-1][\"mediaType\"]\nmanifest[\"layers\"].append({\"mediaType\": layer_media, \"size\": len(blob), \"digest\": layer_digest})\nmanifest[\"config\"] = {\"mediaType\": manifest[\"config\"][\"mediaType\"], \"size\": len(cfg_bytes), \"digest\": cfg_digest}\nout = ecr.put_image(repositoryName=REPO, imageManifest=json.dumps(manifest), imageTag=NEW_TAG)\nprint(\"IMAGE_TAG=%s\" % NEW_TAG)\nprint(\"PUSHED_DIGEST=%s\" % out[\"image\"][\"imageId\"][\"imageDigest\"])\nprint(\"PUSH_DONE\")\nPY\nrc=$?; cat push.txt; exit $rc",
+      "check": "grep -q 'PUSH_DONE' push.txt || { echo 'FAIL: push incomplete:'; tail -6 push.txt; exit 1; }; AWS_PROFILE=deploy-admin aws ecr describe-images --repository-name eyecloud-fargate-runner --image-ids imageTag=mott-lane-45 --query 'imageDetails[0].imageDigest' --output text | grep -q sha256 || { echo 'FAIL: tag absent in ECR'; exit 1; }; echo \"PASS: $(grep -m1 'PUSHED_DIGEST=' push.txt)\"",
+      "verified": "mott-lane-45 assembled on top of mott-lane-44 via the ECR API with one overlay layer carrying the lane-41 gateway file, tag confirmed."
+    },
+    {
+      "key": "img-verify-45",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": [
+        "verify.txt"
+      ],
+      "spec": "AWS_PROFILE=deploy-admin python3 -u - <<'PY' > verify.txt 2>&1\nimport gzip, io, json, tarfile, urllib.request\nimport boto3\nREPO = \"eyecloud-fargate-runner\"\necr = boto3.client(\"ecr\", region_name=\"us-east-1\")\n\ndef load(tag):\n    m = json.loads(ecr.batch_get_image(repositoryName=REPO, imageIds=[{\"imageTag\": tag}])[\"images\"][0][\"imageManifest\"])\n    if \"manifests\" in m:\n        e = next(x for x in m[\"manifests\"] if x.get(\"platform\", {}).get(\"architecture\") in (\"amd64\", \"x86_64\"))\n        m = json.loads(ecr.batch_get_image(repositoryName=REPO, imageIds=[{\"imageDigest\": e[\"digest\"]}])[\"images\"][0][\"imageManifest\"])\n    return m\n\nbase, new = load(\"mott-lane-44\"), load(\"mott-lane-45\")\nassert [l[\"digest\"] for l in new[\"layers\"]][:len(base[\"layers\"])] == [l[\"digest\"] for l in base[\"layers\"]], \"base layers altered\"\nassert len(new[\"layers\"]) == len(base[\"layers\"]) + 1, \"expected one appended layer\"\nlast = new[\"layers\"][-1]\nurl = ecr.get_download_url_for_layer(repositoryName=REPO, layerDigest=last[\"digest\"])[\"downloadUrl\"]\nblob = urllib.request.urlopen(url, timeout=300).read()\ntf = tarfile.open(fileobj=io.BytesIO(gzip.decompress(blob)))\nnames = tf.getnames()\nassert names == [\"opt/cvc-booking-gateway/bland_gateway.py\"], \"unexpected members %r\" % names\ngot = tf.extractfile(names[0]).read()\nwant = open(\"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW44b/gw-week-vocab-live-fix/fixed-bland_gateway.py\", \"rb\").read()\nassert got == want, \"pushed file does not byte-match the proven artifact\"\nprint(\"VERIFY_IDENTICAL=1 bytes=%d\" % len(got))\nprint(\"VERIFY_DONE\")\nPY\nrc=$?; cat verify.txt; exit $rc",
+      "check": "grep -q 'VERIFY_IDENTICAL=1' verify.txt || { echo 'FAIL: byte-verification failed:'; tail -4 verify.txt; exit 1; }; echo \"PASS: $(grep -m1 'VERIFY_IDENTICAL' verify.txt)\"",
+      "verified": "The pushed mott-lane-45 re-downloaded and byte-verified against the proof-passing artifact before any deploy."
+    },
+    {
+      "key": "taskdef-deploy-62",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1500,
+      "expect_files": [
+        "deploy.txt"
+      ],
+      "spec": "AWS_PROFILE=deploy-admin python3 -u - <<'PY' > deploy.txt 2>&1\nimport boto3\necs = boto3.client(\"ecs\", region_name=\"us-east-1\")\ntd = ecs.describe_task_definition(taskDefinition=\"mott-booking-gateway:61\")[\"taskDefinition\"]\nfor k in (\"taskDefinitionArn\", \"revision\", \"status\", \"requiresAttributes\", \"compatibilities\", \"registeredAt\", \"registeredBy\", \"deregisteredAt\"):\n    td.pop(k, None)\nimg = td[\"containerDefinitions\"][0][\"image\"]\nassert img.endswith(\":mott-lane-44\"), \"rev 61 image unexpectedly %s\" % img\ntd[\"containerDefinitions\"][0][\"image\"] = img.replace(\":mott-lane-44\", \":mott-lane-45\")\nnew = ecs.register_task_definition(**td)[\"taskDefinition\"]\nrev = new[\"revision\"]\nprint(\"NEW_REVISION=%d\" % rev)\necs.update_service(cluster=\"stack2\", service=\"mott-booking-gateway\", taskDefinition=\"mott-booking-gateway:%d\" % rev)\nwaiter = ecs.get_waiter(\"services_stable\")\nwaiter.wait(cluster=\"stack2\", services=[\"mott-booking-gateway\"], WaiterConfig={\"Delay\": 15, \"MaxAttempts\": 60})\nsvc = ecs.describe_services(cluster=\"stack2\", services=[\"mott-booking-gateway\"])[\"services\"][0]\nprint(\"STABLE taskdef=%s running=%d desired=%d\" % (svc[\"taskDefinition\"].rsplit(\"/\", 1)[-1], svc[\"runningCount\"], svc[\"desiredCount\"]))\nprint(\"ROLLBACK_CMD=aws ecs update-service --cluster stack2 --service mott-booking-gateway --task-definition mott-booking-gateway:61\")\nprint(\"DEPLOY_DONE\")\nPY\nrc=$?; cat deploy.txt; exit $rc",
+      "check": "grep -q 'DEPLOY_DONE' deploy.txt || { echo 'FAIL: deploy did not stabilize:'; tail -6 deploy.txt; exit 1; }; grep -qE 'STABLE taskdef=mott-booking-gateway:[0-9]+ running=[1-9]' deploy.txt || { echo 'FAIL: not stable'; exit 1; }; echo \"PASS: $(grep -m1 'STABLE' deploy.txt)\"",
+      "verified": "Task definition cloned from rev 57 with only the image advanced to the byte-verified mott-lane-45, service stable, rollback on record."
+    },
+    {
+      "key": "gw-live-gates-45",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": [
+        "gates.txt"
+      ],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u - <<'PY2' > gates.txt 2>&1\nimport json, os, datetime, urllib.request, urllib.error\nauth=os.environ['GW_TOKEN'].strip()\nif auth.startswith('{'):\n    p=json.loads(auth); auth=next((p[k] for k in ('api_key','key','value') if p.get(k)),auth)\nif not auth.lower().startswith('bearer'): auth='Bearer '+auth\ndef post(frm):\n    b={'store':'711','from':frm,'to':frm,'after':'none','before':'none','time_pref':'none','slot_minutes':'15','callID':'lane45-gate','user_text':frm,'user_verbatim':frm}\n    req=urllib.request.Request('https://mott-booking-gw.mail.mybcat.com/availability',data=json.dumps(b).encode(),method='POST',headers={'Content-Type':'application/json','Authorization':auth})\n    try:\n        with urllib.request.urlopen(req,timeout=60) as r: body=json.loads(r.read().decode()); return r.status,(body.get('result') or {})\n    except urllib.error.HTTPError as e: return e.code,{'err':e.read().decode(errors='replace')[:120]}\nfor label,frm in (('monday-next-week','monday next week'),('monday-week-of-18th','monday the week of 08/18/2026'),('unresolved','xyzzy gibberish plugh'),('relative-reg','2 weeks from today')):\n    st,r=post(frm)\n    print(f\"GATE={label} STATUS={st} first={r.get('first_start')} count={r.get('count')} unresolved={r.get('from_unresolved')}\")\nPY2\nrc=$?; cat gates.txt; exit $rc",
+      "check": "grep -E '^GATE=monday-next-week' gates.txt | grep -q 'STATUS=200 first=08/10/2026' || { echo 'FAIL: monday-next-week gate:'; grep GATE=monday-next-week gates.txt; exit 1; }; grep -E '^GATE=monday-week-of-18th' gates.txt | grep -q 'STATUS=200 first=08/17/2026' || { echo 'FAIL: week-of gate:'; grep GATE=monday-week-of-18th gates.txt; exit 1; }; grep -E '^GATE=unresolved' gates.txt | grep -qE 'unresolved=True' || { echo 'FAIL: from_unresolved gate:'; grep GATE=unresolved gates.txt; exit 1; }; grep -E '^GATE=relative-reg' gates.txt | grep -q 'STATUS=200 first=08/18/2026' || { echo 'FAIL: relative regression:'; grep GATE=relative-reg gates.txt; exit 1; }; echo 'PASS: all lane-44 live gates green'",
+      "verified": "Post-deploy live gates: weekday-qualified week phrases resolve to the correct Monday-anchored dates on production, unparseable from-text is flagged from_unresolved, and relative-offset behavior is unregressed."
+    }
+  ]
+}

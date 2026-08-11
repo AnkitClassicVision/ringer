@@ -1,0 +1,10 @@
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN=1 WALL_MS=6140 N_MSGS=1 NODE=n_ask SAID=Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.
+
+Many vision insurance be
+TURN=2 WALL_MS=3234 N_MSGS=1 NODE=n_date_conflict SAID=I want to make sure I get the right day. Did you mean Friday 08/07 or Monday 08/17? You can also reply with a different date.
+TURN=3 WALL_MS=2808 N_MSGS=1 NODE=n_date_conflict SAID=I want to make sure I get the right day. Did you mean Friday 08/07 or Friday 08/14? You can also reply with a different date.
+RESULT label=s1-converge turns=3 total_wall_ms=12182 filler_hits=0 candidate=0

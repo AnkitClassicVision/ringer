@@ -1,0 +1,21 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW44b",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-week-vocab-live-fix",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1800,
+      "expect_files": [
+        "fixed-bland_gateway.py",
+        "proof_live_path.py",
+        "DEBUG-GW44B.md"
+      ],
+      "spec": "ROLE: fix worker for the Mott booking gateway, lane 44b (week vocabulary on the LIVE resolution path). Work entirely inside your CWD; never modify anything outside it; no network, no git, no MCP/Apps/skills, no deploys. CONTEXT - the lane-44 changes passed offline but two LIVE gates failed against the deployed image: (a) from='monday the week of 08/18/2026' resolved to 08/10 (bare next-monday) instead of 08/17 - the week-of branch is not reached on the path /availability actually uses to resolve 'from', or a bare-weekday branch matches first; (b) from='xyzzy gibberish plugh' still returns HTTP 409 from an inner CLI ('bad --from: unrecognized date') with NO from_unresolved field - the flag never engages because the raw text falls through to the subprocess parser which errors first. The lane-44 offline proof exercised a helper directly, which is why this slipped - your proof must go through the SAME code path the live handler uses. BASE FILE: ./deployed-bland_gateway.py is byte-equal to production image mott-lane-44. Produce ./fixed-bland_gateway.py, minimal in-style diff: (1) Trace the actual /availability from/to resolution flow (including any pre-normalization and the fallthrough to the inner CLI's --from) and document it with line references in DEBUG-GW44B.md. (2) Ensure '<weekday> (of )?the week of <date-phrase>' is resolved (to that weekday of the Monday-anchored week containing the resolved date) ON THAT PATH, before any bare-weekday or next-week branch can consume the leading weekday token. (3) Ensure unresolvable from/to text results in ok:true HTTP 200 with from_unresolved:true and the default two-week window's slots (never a 409 from the inner CLI for a from-text parse failure) - the pathway treats the flag as ask-again; parseable phrases keep from_unresolved false/absent. (4) Tests: extend the suite so these cases run through the same resolution entry the handler uses (refactor the test seam minimally if needed): week-of form -> 08/17 with frozen today 08/04; gibberish from -> resolved default window plus from_unresolved true, no exception; regressions: 'monday next week' -> 08/10, 'thursday', 'in 2 weeks', datetime from/to, none-default-window. Full suite green in ./gwtest (copy of /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW44/gw-week-vocab-fix/gwtest with fixed file installed). (5) ./proof_live_path.py: standalone offline; MUST invoke the handler-level resolution function (name it in DEBUG-GW44B.md) not a lower helper; prints 'CASE=week-of-18th FROM=2026-08-17' (frozen today 2026-08-04), 'CASE=gibberish UNRESOLVED=true' and 'CASE=monday-next-week FROM=2026-08-10'. (6) DEBUG-GW44B.md: the live-gate evidence, path trace, change, output tails, deploy separately gated.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 ./proof_live_path.py > proof.out 2>&1 || { echo 'FAIL: proof crashed'; tail -5 proof.out; exit 1; }; for c in 'CASE=week-of-18th FROM=2026-08-17' 'CASE=gibberish UNRESOLVED=true' 'CASE=monday-next-week FROM=2026-08-10'; do grep -q \"$c\" proof.out || { echo \"FAIL: missing $c\"; cat proof.out; exit 1; }; done; grep -qiE 'resolution (entry|function)|handler-level' DEBUG-GW44B.md || { echo 'FAIL: DEBUG lacks the entry-point trace'; exit 1; }; cd gwtest && PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q > ../pytest.out 2>&1; rc=$?; cd ..; summary=$(tail -1 pytest.out); [ $rc -eq 0 ] || { echo \"FAIL: suite red: $summary\"; tail -10 pytest.out; exit 1; }; echo \"$summary\" | grep -qE '^[0-9]+ passed' || { echo \"FAIL: summary not clean: $summary\"; exit 1; }; echo \"PASS: live-path week vocabulary proven - $summary\"",
+      "verified": "The week-of form and the from_unresolved honesty contract are proven on the same resolution path the live /availability handler executes - closing the helper-vs-handler gap that let lane-44 pass offline while failing live gates."
+    }
+  ]
+}
