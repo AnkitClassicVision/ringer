@@ -1,0 +1,43 @@
+{
+  "run_name": "ob-company-hook-health-fix",
+  "workdir": "/mnt/d_drive/ringer-work/ob-company-hook-health-fix",
+  "max_parallel": 2,
+  "tasks": [
+    {
+      "key": "watchdog-semantics-review",
+      "engine": "codex",
+      "engine_args": [
+        "-m",
+        "gpt-5.6-sol",
+        "-c",
+        "model_reasoning_effort=\"high\""
+      ],
+      "task_type": "code-review",
+      "spec": "You are a read-only reliability reviewer for the ob_company staff hook watchdog. Boundary first: the checkout at /home/ankit114/repos/ob_company_deploy is dirty source material only. Never modify, create, delete, format, stage, commit, reset, install, or write inside that repo. Do not load skills, call MCP/Apps, use network, read secure env files, inspect raw database rows, or perform external actions. You own exactly ./report.md in your current task directory. INPUTS: read /mnt/d_drive/repos/ringer/work/ob-company-hook-health-fix/evidence.md, /home/ankit114/repos/ob_company_deploy/config/ob_company_daily_watchdog_policy.json, /home/ankit114/repos/ob_company_deploy/scripts/ob_company_daily_watchdog.py, /home/ankit114/repos/ob_company_deploy/scripts/run_ob_company_daily_watchdog.sh, and /home/ankit114/repos/ob_company_deploy/tests/test_ob_company_daily_watchdog.py. TASK: determine whether the current alert accurately proves a broken hook, identify every ambiguity or false-positive path in the continuous-hook semantics, and propose the smallest durable state/query/policy change that distinguishes actual user lifecycle activity from independent hook-runtime health without fabricating activity. Consider dedupe, reminders, recovery, migration of existing opaque state fingerprints, bounded SQL, event allowlists, and backward compatibility. HOW TO RUN: use read-only file inspection commands with the absolute paths above; run only existing fixture-only tests if useful, with PYTHONDONTWRITEBYTECODE=1 and no pytest cache. OUTPUT CONTRACT: start ./report.md with '# Review Report'. Include '## Summary' with no more than 3 bullets, '## Findings', '## Clean', and '## Assumptions'. Each finding must use exactly '### Finding: <neutral summary>', then 'Evidence:', 'Impact:', 'Fix:', 'Priority: P0|P1|P2|P3', and 'Confidence: high|medium|low'. Evidence must cite file:line. End Assumptions with a bounded recommended patch surface listing exact files and tests, and explicitly separate what a central code fix can prove from what still requires a staff-machine receipt. Keep under 1200 words. Hard rules: no invented access, no raw identifiers or secrets, no claim that a synthetic event proves human activity, and no suggestion to silence the alert by deleting the monitored employee.",
+      "check": "python3 /mnt/d_drive/repos/ringer/templates/review-swarm/checks/review-swarm.py --report report.md --surface watchdog-semantics",
+      "expect_files": [
+        "report.md"
+      ],
+      "timeout_s": 1200,
+      "verified": "the structured report cites the live watchdog source and bounds a durable semantics repair without mutating the dirty repository"
+    },
+    {
+      "key": "staff-hook-deployment-review",
+      "engine": "codex",
+      "engine_args": [
+        "-m",
+        "gpt-5.6-sol",
+        "-c",
+        "model_reasoning_effort=\"high\""
+      ],
+      "task_type": "code-review",
+      "spec": "You are a read-only deployment and privacy reviewer for the ob_company Claude Code staff hook. Boundary first: /home/ankit114/repos/ob_company_deploy is dirty source material only. Never modify, create, delete, format, stage, commit, reset, install, or write inside that repo. Do not load skills, call MCP/Apps, use network, inspect secrets, contact staff, install remotely, or perform database/cron writes. You own exactly ./report.md in your current task directory. INPUTS: read /mnt/d_drive/repos/ringer/work/ob-company-hook-health-fix/evidence.md, /home/ankit114/repos/ob_company_deploy/vince/ob_company_ingest.py, /home/ankit114/repos/ob_company_deploy/vince/claude-settings-snippet.json, /home/ankit114/repos/ob_company_deploy/ziad/ob_company_ingest.py, /home/ankit114/repos/ob_company_deploy/ziad/claude-settings-snippet.json, /home/ankit114/repos/ob_company_deploy/staff/ob_company_agent_event.py, /home/ankit114/repos/ob_company_deploy/tests/test_ob_company_agent_event.py, and relevant staff README files. TASK: identify the concrete deployment failure modes consistent with a delivered package and historic 200 test ingest but no recent lifecycle events. Design the smallest cross-platform, privacy-safe health proof that can be installed with the hook and observed centrally without mislabeling a timer as a Claude session. Evaluate whether to add an explicit HookHeartbeat event, a separate health table/channel, or another bounded alternative. Cover Linux systemd-user, macOS launchd, and Windows Task Scheduler/WSL boundaries only to the level needed for a safe patch contract; do not claim a platform is installed. HOW TO RUN: use read-only file inspection with absolute paths; run existing fixture-only tests only if useful, with bytecode/cache writes disabled. OUTPUT CONTRACT: start ./report.md with '# Review Report'. Include '## Summary' with no more than 3 bullets, '## Findings', '## Clean', and '## Assumptions'. Each finding must use exactly '### Finding: <neutral summary>', then 'Evidence:', 'Impact:', 'Fix:', 'Priority: P0|P1|P2|P3', and 'Confidence: high|medium|low'. Evidence must cite file:line. End Assumptions with the exact central files/tests that can be implemented now and the exact machine-local proof still needed for Vince. Keep under 1200 words. Hard rules: no secret retrieval, no raw prompt/transcript data, no external send, no network write, no synthetic SessionStart, and no conclusion that a central package equals a live machine install.",
+      "check": "python3 /mnt/d_drive/repos/ringer/templates/review-swarm/checks/review-swarm.py --report report.md --surface staff-hook-deployment",
+      "expect_files": [
+        "report.md"
+      ],
+      "timeout_s": 1200,
+      "verified": "the structured report cites the staff-hook package and specifies a cross-platform privacy-safe health proof while preserving the machine-local verification boundary"
+    }
+  ]
+}

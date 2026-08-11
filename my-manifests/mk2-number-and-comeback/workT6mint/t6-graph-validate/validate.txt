@@ -1,0 +1,3 @@
+usage: check_v91_graph.py [-h] --base BASE --draft DRAFT --v88-ref V88_REF
+                          --classification CLASSIFICATION
+check_v91_graph.py: error: the following arguments are required: --base, --draft, --v88-ref, --classification

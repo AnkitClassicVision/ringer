@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-publish-ready",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-refresh-v3",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "freeze-current-public-number-receipts-v2",
+      "engine": "local-shell",
+      "task_type": "research",
+      "timeout_s": 300,
+      "expect_files": ["receipt_summary.json", "source_receipts/census-pep-sub-est2025.csv", "source_receipts/census-pep-sub-est2024.csv", "source_receipts/quickfacts-live-audit-extract.json", "source_receipts/osrm-r01-current.json"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/collect_refresh_receipts.py",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_refresh_receipts.py --dir .",
+      "verified": "official public Census PEP files freeze Morton's 2024 and 2025 population estimates, the successful current QuickFacts source audit freezes the displayed age shares with its limitation, and a live OSRM response is saved and compared to the displayed route"
+    }
+  ]
+}

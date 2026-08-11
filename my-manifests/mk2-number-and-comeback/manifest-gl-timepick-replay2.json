@@ -1,0 +1,21 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS18b",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-timepick-replay",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": [
+        "capture.log",
+        "turn5.json",
+        "turns.json"
+      ],
+      "spec": "V=114; echo REPLAY_VERSION=$V; python3 -c \"import json;json.dump(['hi','How about Friday at 1020','What about 1040?','Lets do 1110','1115'],open('turns.json','w'))\" && CAPTURE_TURNS=\"$(cat turns.json)\" HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py $V . > capture.log 2>&1; rc=$?; tail -6 capture.log; exit $rc",
+      "check": "grep -q 'CAPTURE_COMPLETE' capture.log || { echo 'FAIL: capture incomplete'; tail -5 capture.log; exit 1; }; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_no_false_booking.py . || exit 1; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_single_slot_pick.py turn5.json 11:15",
+      "verified": "Ankit's pick sequence on the anchor-restored stack: naming the bare time 1115 yields a SINGLE confirmable opening at 11:15 - no second option to mis-pick, no off-grid time, no booking claim."
+    }
+  ]
+}

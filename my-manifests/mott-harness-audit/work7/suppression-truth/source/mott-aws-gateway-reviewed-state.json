@@ -1,0 +1,185 @@
+{
+  "schema_version": "1.0.0",
+  "reviewed_at": "2026-07-24",
+  "artifact_verdict": "ACCEPT-INTERNAL",
+  "workflow_gate": "BLOCK",
+  "production_authorized": false,
+  "non_health_routes_live_probed": false,
+  "attachment_proves_business_correctness": false,
+  "reconciliation": {
+    "public_endpoints": 14,
+    "observed_bland_tools": 12,
+    "catalog_operations": 18,
+    "reconciled_node_contracts": 22,
+    "security_nodes": 17,
+    "security_edges": 21,
+    "security_controls": 20
+  },
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "current_status": "live-verified",
+      "effect": "none",
+      "third_party_use": true,
+      "effective_production_use": "health-only"
+    },
+    {
+      "method": "POST",
+      "path": "/patient-search",
+      "current_status": "attached-and-implemented-not-live-probed",
+      "effect": "read-phi",
+      "third_party_use": "conditional",
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/availability",
+      "current_status": "attached-and-implemented-not-live-probed",
+      "effect": "read-scheduler",
+      "third_party_use": "conditional",
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/conflict-check",
+      "current_status": "implemented-tool-listed-not-live-probed",
+      "effect": "read-scheduler",
+      "third_party_use": "conditional",
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/appt-list",
+      "current_status": "implemented-tool-listed-not-live-probed",
+      "effect": "read-phi",
+      "third_party_use": "conditional",
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/sign",
+      "current_status": "attached-and-implemented-not-live-probed",
+      "effect": "governed-write",
+      "third_party_use": "conditional",
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/message",
+      "current_status": "attached-and-implemented-catalog-blocked-not-live-probed",
+      "effect": "external-send",
+      "third_party_use": false,
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/hours-state",
+      "current_status": "implemented-tool-listed-catalog-blocked-not-live-probed",
+      "effect": "read-config",
+      "third_party_use": "conditional",
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/urgent-availability",
+      "current_status": "implemented-tool-listed-catalog-blocked-not-live-probed",
+      "effect": "read-scheduler-high-risk",
+      "third_party_use": false,
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/sms-suppression",
+      "current_status": "missing/unimplemented",
+      "effect": "none",
+      "third_party_use": false,
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/book-new-patient",
+      "current_status": "gateway-route-present-downstream-command-not-evidenced",
+      "effect": "intended-patient-and-appointment-write",
+      "third_party_use": false,
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/book",
+      "current_status": "legacy-exposed-not-live-probed",
+      "effect": "direct-appointment-write",
+      "third_party_use": false,
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/reschedule",
+      "current_status": "legacy-exposed-not-live-probed",
+      "effect": "direct-appointment-write",
+      "third_party_use": false,
+      "effective_production_use": "blocked"
+    },
+    {
+      "method": "POST",
+      "path": "/cancel",
+      "current_status": "legacy-exposed-not-live-probed",
+      "effect": "direct-appointment-write",
+      "third_party_use": false,
+      "effective_production_use": "blocked"
+    }
+  ],
+  "response_contract": {
+    "normal_reads": {
+      "success_flag": "$.ok",
+      "result_envelope": "$.result"
+    },
+    "hours_state": {
+      "envelope": "top-level",
+      "paths": [
+        "$.ok",
+        "$.state",
+        "$.closes_at",
+        "$.first_am_start"
+      ]
+    },
+    "sign": {
+      "success_paths": [
+        "$.success",
+        "$.new_appt_id",
+        "$.action",
+        "$.http_status"
+      ],
+      "error_paths": [
+        "$.error",
+        "$.status"
+      ],
+      "successful_ok_wrapper": false
+    },
+    "sms_suppression": {
+      "success_contract": null,
+      "status": "missing/unimplemented"
+    }
+  },
+  "release_blockers": [
+    "Remove or edge-deny direct external write routes.",
+    "Split, rotate, and least-privilege read and write credentials.",
+    "Disable self-signed TLS fallback for production.",
+    "Prove protected WAF logging, encryption at rest, rotation, recovery, and retention controls.",
+    "Implement and prove authenticated idempotent SMS suppression.",
+    "Prove booking idempotency and stale-slot conflict handling with synthetic non-PHI tests.",
+    "Verify executed business associate agreements and exact service scope.",
+    "Review and evidence Bland recording, transcript, retention, deletion, export, access, and subprocessor settings.",
+    "Approve incident response, contingency, retention, and deletion runbooks.",
+    "Obtain human test-mode exit and minimum-tool cutover approval.",
+    "Capture a fresh PHI-free receipt after remediation."
+  ],
+  "evidence": {
+    "source_packet_hash": "36b218a8bbe04a2621ff00161f1eb58be93afeccb9fc4f36e3fee2e2d37e3893",
+    "complete_map_sha256": "57a1ff3d23a045d73f6b01d23e924086dc5e28a04c1887cbfa82b0e9cd40342c",
+    "machine_contract_sha256": "39e2b0ee1afa32e6a3d04bd229d00859cb859772dbf2ddaa00eccf1143a6afc2",
+    "execution_receipt_sha256": "1464dc6cdc437415c1bee1aaef3e6e71fec5c784977f8679aef2dbd659dbb67c",
+    "final_review": "ACCEPT-INTERNAL with 10 of 10 checks passing",
+    "external_actions_taken": 0
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workFuzz120",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-fuzz-gauntlet",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 5400,
+      "expect_files": [
+        "fuzz.txt"
+      ],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS25/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || { echo 'FAIL: no minted version found'; exit 1; }; echo GAUNTLET_VERSION=$V; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/fuzz_runner.py $V /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workRedTeam/rt-paraphrase-fuzzer/fuzz-scenarios.json > fuzz.txt 2>&1; rc=$?; tail -8 fuzz.txt; exit $rc",
+      "check": "grep -qE '^SUMMARY passed=[0-9]+ failed=0 ' fuzz.txt || { echo 'FAIL: fuzz gauntlet not clean:'; grep -E 'status=(FAIL|ERROR)' fuzz.txt | head -20; grep SUMMARY fuzz.txt; exit 1; }; echo \"PASS: $(grep SUMMARY fuzz.txt)\"",
+      "verified": "All 65 recalibrated adversarial fuzz scenarios pass against the freshly minted pathway version on the lane-51 gateway: failed=0 with every per-turn safety invariant held."
+    }
+  ]
+}

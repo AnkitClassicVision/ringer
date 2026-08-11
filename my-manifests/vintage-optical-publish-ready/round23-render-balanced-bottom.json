@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-source-refresh-report",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-bottom-balanced-render",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "integrate-render-and-prove-balanced-bottom",
+      "engine": "local-shell",
+      "task_type": "site-build",
+      "timeout_s": 900,
+      "expect_files": ["integration_receipt.json", "render_receipt.json"],
+      "spec": "set -euo pipefail; target=/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents; candidate=/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-bottom-density-fix/rebalance-onepager-zone-height/onepager.html; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/integrate_gauge_onepager.py --candidate \"$candidate\" --report-dir \"$target\" --receipt \"$PWD/integration_receipt.json\"; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_gauge_onepager_source.py --path \"$target/onepager.html\"; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_report_build_sources.py --dir \"$target\"; PYTHONDONTWRITEBYTECODE=1 python3 \"$target/render_report.py\" --dir \"$target\"; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/set_report_qa_state.py --dir \"$target\" --render complete --visual pending; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_onepager_bottom_safe_area.py --pdf \"$target/onepager.pdf\" --png \"$target/page-images/onepager/page-1.png\"; cp \"$target/render_receipt.json\" \"$PWD/render_receipt.json\"",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_gauge_onepager_source.py --path /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents/onepager.html && PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_report_build_sources.py --dir /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents && PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_rendered_report.py --dir /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents --receipt ./render_receipt.json && PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_onepager_bottom_safe_area.py --pdf /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents/onepager.pdf --png /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents/page-images/onepager/page-1.png",
+      "verified": "the rebalanced gauge-template one-pager renders as one Letter page with complete opportunity/null, Fix Card, and footer text plus at least 20 PDF points and 18 raster pixels of bottom safety margin"
+    }
+  ]
+}

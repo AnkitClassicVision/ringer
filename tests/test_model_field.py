@@ -20,6 +20,7 @@ from ringer import (  # noqa: E402
     build_worker_command,
     load_engines,
     preflight_engine_bins,
+    resolve_effective_model,
     validate_manifest_engines,
 )
 
@@ -45,14 +46,15 @@ def harness_engine(model_default: str = "openrouter/z-ai/glm-5.2") -> EngineConf
     )
 
 
-def codex_like_engine() -> EngineConfig:
+def codex_like_engine(model_default: str = "") -> EngineConfig:
     return EngineConfig(
         name="codex",
         bin="/usr/local/bin/codex",
-        args_template=("exec", "-C", "{taskdir}", "{spec}"),
+        args_template=("exec", "{engine_args}", "-C", "{taskdir}", "{spec}"),
         full_access_args=(),
         sandbox_args=(),
         token_regex=None,
+        model_default=model_default,
     )
 
 
@@ -99,6 +101,86 @@ class ModelPlaceholderTests(unittest.TestCase):
             }
         )
         self.assertEqual("openrouter/z-ai/glm-5.2", engines["harness"].model_default)
+
+
+class EffectiveModelResolverTests(unittest.TestCase):
+    def task(self, *, model: str = "", engine_args: tuple[str, ...] = ()) -> TaskSpec:
+        return TaskSpec(
+            key="a",
+            spec=LONG_SPEC,
+            check=GOOD_CHECK,
+            engine="codex",
+            model=model,
+            engine_args=engine_args,
+        )
+
+    def test_recognizes_all_supported_engine_arg_selector_forms(self) -> None:
+        selectors = (
+            (("-m", "gpt-short"), "gpt-short"),
+            (("--model", "gpt-long"), "gpt-long"),
+            (("--model=gpt-equals",), "gpt-equals"),
+            (("-c", "model=gpt-config"), "gpt-config"),
+            (("--config", "model=gpt-config-long"), "gpt-config-long"),
+            (("--config=model=gpt-config-equals",), "gpt-config-equals"),
+        )
+        for engine_args, expected in selectors:
+            with self.subTest(engine_args=engine_args):
+                resolved = resolve_effective_model(
+                    self.task(engine_args=engine_args), codex_like_engine()
+                )
+                self.assertEqual((expected, "engine-args"), (resolved.model, resolved.source))
+
+    def test_malformed_selectors_never_fall_through_to_a_default(self) -> None:
+        malformed_cases = (
+            ("-m",),
+            ("--model",),
+            ("--model=",),
+            ("-c", "model"),
+            ("-c", "model="),
+            ("--config", "model"),
+            ("--config", "model="),
+            ("--config=model",),
+            ("--config=model=",),
+            ("-m", "--other-option"),
+            ("-m", "first", "--model="),
+        )
+        engine = codex_like_engine(model_default="engine-default")
+        for engine_args in malformed_cases:
+            with self.subTest(engine_args=engine_args):
+                resolved = resolve_effective_model(
+                    self.task(engine_args=engine_args), engine
+                )
+                self.assertEqual(
+                    ("", "malformed-engine-args"),
+                    (resolved.model, resolved.source),
+                )
+
+    def test_precedence_and_source_are_explicit(self) -> None:
+        engine = codex_like_engine(model_default="engine-default")
+
+        explicit = resolve_effective_model(
+            self.task(model="task-model", engine_args=("--model=engine-arg",)), engine
+        )
+        last_selector = resolve_effective_model(
+            self.task(engine_args=("-m", "first", "-c", "model=last")), engine
+        )
+        defaulted = resolve_effective_model(self.task(), engine)
+        unpinned = resolve_effective_model(self.task(), codex_like_engine())
+
+        self.assertEqual(("task-model", "task-model"), (explicit.model, explicit.source))
+        self.assertEqual(("last", "engine-args"), (last_selector.model, last_selector.source))
+        self.assertEqual(("engine-default", "engine-default"), (defaulted.model, defaulted.source))
+        self.assertEqual(("", "unpinned"), (unpinned.model, unpinned.source))
+
+    def test_codex_selector_is_sent_without_rewriting_model_slug(self) -> None:
+        cmd = build_worker_command(
+            codex_like_engine(),
+            taskdir=Path("/tmp/t"),
+            spec="do it",
+            full_access=False,
+            engine_args=("-c", "model=gpt-5.5"),
+        )
+        self.assertEqual(["-c", "model=gpt-5.5"], cmd[2:4])
 
 
 class ModelValidationTests(unittest.TestCase):
@@ -159,14 +241,105 @@ class ModelValidationTests(unittest.TestCase):
             validate_manifest_engines(manifest, config)
 
     def test_harness_with_default_or_task_model_is_accepted(self) -> None:
-        config = self.config({"opencode": harness_engine()})
+        config = self.config({"opencode": harness_engine("provider/model")})
         validate_manifest_engines(self.manifest(self.base_task(engine="opencode")), config)
 
         config = self.config({"opencode": harness_engine(model_default="")})
         validate_manifest_engines(
-            self.manifest(self.base_task(engine="opencode", model="openrouter/x")),
+            self.manifest(self.base_task(engine="opencode", model="provider/model")),
             config,
         )
+
+    def test_model_placeholder_engine_rejects_engine_arg_model_selectors(self) -> None:
+        config = self.config({"opencode": harness_engine()})
+        selectors = (
+            ["-m", "openrouter/x"],
+            ["--model", "openrouter/x"],
+            ["--model=openrouter/x"],
+            ["-c", "model=openrouter/x"],
+            ["--config", "model=openrouter/x"],
+            ["--config=model=openrouter/x"],
+        )
+        for engine_args in selectors:
+            with self.subTest(engine_args=engine_args):
+                manifest = self.manifest(
+                    self.base_task(engine="opencode", engine_args=engine_args)
+                )
+                with self.assertRaisesRegex(ValueError, r"\{model\} placeholder.*engine_args"):
+                    validate_manifest_engines(manifest, config)
+
+    def test_non_model_config_engine_arg_is_not_treated_as_a_model_selector(self) -> None:
+        config = self.config({"codex": codex_like_engine(model_default="engine-default")})
+        valid_cases = (
+            ["-c", "model_reasoning_effort=high"],
+            ["--config", "model_reasoning_effort=high"],
+            ["--config=model_reasoning_effort=high"],
+        )
+        for engine_args in valid_cases:
+            with self.subTest(engine_args=engine_args):
+                manifest = self.manifest(
+                    self.base_task(engine="codex", engine_args=engine_args)
+                )
+                validate_manifest_engines(manifest, config)
+
+    def test_malformed_codex_config_overrides_are_rejected_without_affecting_other_engines(self) -> None:
+        config = self.config({"codex": codex_like_engine(model_default="engine-default")})
+        malformed_cases = (
+            ["-c"],
+            ["--config"],
+            ["--config="],
+            ["-c", ""],
+            ["-c", "--other-option"],
+            ["-c", "model"],
+            ["--config", "model_reasoning_effort"],
+            ["--config=model_reasoning_effort"],
+            ["-c", "=high"],
+            ["--config==high"],
+        )
+        for engine_args in malformed_cases:
+            with self.subTest(engine_args=engine_args):
+                manifest = self.manifest(
+                    self.base_task(engine="codex", engine_args=engine_args)
+                )
+                with self.assertRaisesRegex(ValueError, "malformed -c/--config"):
+                    validate_manifest_engines(manifest, config)
+
+        opencode_config = self.config({"opencode": harness_engine("provider/model")})
+        opencode_manifest = self.manifest(
+            self.base_task(engine="opencode", engine_args=["-c"])
+        )
+        validate_manifest_engines(opencode_manifest, opencode_config)
+
+    def test_malformed_model_selectors_are_rejected_for_every_engine_shape(self) -> None:
+        engine_shapes = (
+            ("codex", codex_like_engine(model_default="engine-default")),
+            ("opencode", harness_engine()),
+        )
+        malformed_cases = (
+            ["-m"],
+            ["--model"],
+            ["--model="],
+            ["-c", "model"],
+            ["-c", "model="],
+            ["--config", "model"],
+            ["--config", "model="],
+            ["--config=model"],
+            ["--config=model="],
+            ["-m", "--other-option"],
+            ["-m", "first", "--model="],
+        )
+        for engine_name, engine in engine_shapes:
+            config = self.config({engine_name: engine})
+            for engine_args in malformed_cases:
+                with self.subTest(engine=engine_name, engine_args=engine_args):
+                    manifest = self.manifest(
+                        self.base_task(engine=engine_name, engine_args=engine_args)
+                    )
+                    with self.assertRaisesRegex(
+                        ValueError,
+                        r"malformed (?:model selector|-c/--config)",
+                    ):
+                        validate_manifest_engines(manifest, config)
 
     def test_preflight_catches_missing_engine_binary(self) -> None:
         broken = EngineConfig(

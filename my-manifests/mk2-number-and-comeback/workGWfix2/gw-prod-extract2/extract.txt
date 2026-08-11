@@ -1,0 +1,12 @@
+LAYERS=52
+HIT layer=11 path=opt/cvc-booking-gateway/bland_gateway.py file=bland_gateway.py bytes=54419
+HIT layer=24 path=opt/cvc-booking-gateway/bland_gateway.py file=bland_gateway.py bytes=88976
+HIT layer=25 path=opt/cvc-booking-gateway/capability_registry.py file=capability_registry.py bytes=12364
+HIT layer=39 path=opt/cvc-booking-gateway/bland_gateway.py file=bland_gateway.py bytes=137011
+HIT layer=40 path=opt/cvc-booking-gateway/capability_registry.py file=capability_registry.py bytes=12364
+WROTE bland_gateway_prod.py from layer=39 PATH_IN_IMAGE=/opt/cvc-booking-gateway/bland_gateway.py
+WROTE capability_registry_prod.py from layer=40 PATH_IN_IMAGE=/opt/cvc-booking-gateway/capability_registry.py
+LINES=3169
+SHA=a16cb4ad83a761b2
+EXTRACT_DONE
+DIFF_VS_SNAPSHOT_LINES=907

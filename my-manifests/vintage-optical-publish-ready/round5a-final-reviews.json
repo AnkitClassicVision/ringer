@@ -1,0 +1,40 @@
+{
+  "run_name": "vintage-optical-publish-ready",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-final-reviews-v3",
+  "max_parallel": 3,
+  "tasks": [
+    {
+      "key": "fresh-numeric-lineage-release-review",
+      "engine": "codex",
+      "engine_args": ["-c", "model_reasoning_effort=high"],
+      "task_type": "review",
+      "timeout_s": 1800,
+      "expect_files": ["review.json", "review.md"],
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_final_review.py --dir . --checks all_visible_numbers_accounted,scores_recomputed,source_registry_resolves,refresh_values_current,cross_document_values_match,fix_card_math_safe",
+      "verified": "a fresh independent reviewer recomputes every score and page number from final artifacts and receipts, finds no lineage or logic issue, and assigns only READY_FOR_PROJECT_ROOM_REVIEW",
+      "spec": "You are a fresh-context final numeric and lineage release reviewer. Write only ./review.json and ./review.md. Do not modify the report or any source. Do not call MCP/Apps, capture memory, contact anyone, publish, send, commit, push, or deploy.\n\nAudit the final packet at /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30. Read the canonical CALCULATIONS.md/RUBRIC.md/OUTPUT_SCHEMA.md/FIX_IT_PLAYBOOK.md, the final scores and data, the one-page HTML/PDF text, the 11-page explainer, frozen receipts, runlog, and Project Room JSON at /home/ankit114/.mybcat/project_rooms/rooms/vintage-optical-competitive-analysis.json. Ignore prior review verdicts and recompute independently.\n\nConfirm every visible substantive number is explained; all six core and three specialty scores recompute from allowed 20/35/50/65/80 base bands and canonical weights; S17 2025 population is 17,565 while historical 2024 is 17,557; age shares are 25.9% and 23.1%; R01 is 244.3 seconds / 60 = 4.07; all source IDs resolve across final scores, page, and explainer; one-page and explainer values match; repeated 57/52/30 values are not conflated; and every Fix Card denominator has null/not-calculable zero handling. Actively search for unsupported, stale, duplicated, contradictory, or misleading values.\n\nreview.json must contain verdict PASS or FAIL, readiness exactly READY_FOR_PROJECT_ROOM_REVIEW only if no issues, external_use_authorized false, project_room_status inventory_review_required, fatal_issues/material_issues/minor_issues arrays, and checks with all_visible_numbers_accounted, scores_recomputed, source_registry_resolves, refresh_values_current, cross_document_values_match, and fix_card_math_safe. review.md must explain the recomputation and lineage, use Verdict: PASS only if all checks pass, include `No fatal, material, or minor issues`, `Highest true state: READY_FOR_PROJECT_ROOM_REVIEW`, and `External use authorized: no`. Use no em dashes."
+    },
+    {
+      "key": "fresh-logic-owner-read-release-review",
+      "engine": "codex",
+      "engine_args": ["-c", "model_reasoning_effort=high"],
+      "task_type": "review",
+      "timeout_s": 1800,
+      "expect_files": ["review.json", "review.md"],
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_final_review.py --dir . --checks plain_language_explanations,logic_reconciled,unknowns_neutral,no_overclaim,score_direction,limitations_visible,owner_actionability,source_dictionary_complete",
+      "verified": "a fresh independent practice-owner reader finds the one-page and explainer understandable, logically reconciled, non-overclaiming, source-complete, and ready only for Project Room review",
+      "spec": "You are a fresh-context skeptical practice-owner and logic reviewer. Write only ./review.json and ./review.md. Do not modify any artifact. Do not call MCP/Apps, capture memory, contact anyone, publish, send, commit, push, or deploy.\n\nRead the final one-page summary, number explainer, scores, source registry, evidence, runlog, and canonical website-positioning/Fix Card rules. Judge whether a smart practice owner can understand what every number means, where it comes from, why the bands are logical, how the scores coexist, and what remains unknown. Actively try to find overclaim, direction confusion, city/catchment substitution, peer-set completeness claims, neutral-50 misdescription, operating/clinical inference from public pages, specialty forecasts, hidden revenue claims, unusable Fix Card formulas, or source dictionary gaps. Confirm 17,565 current vs 17,557 historical is explained and explicitly score-neutral.\n\nreview.json must contain verdict PASS or FAIL, readiness exactly READY_FOR_PROJECT_ROOM_REVIEW only if issue-free, external_use_authorized false, project_room_status inventory_review_required, empty fatal/material/minor issue arrays only if true, and checks plain_language_explanations, logic_reconciled, unknowns_neutral, no_overclaim, score_direction, limitations_visible, owner_actionability, and source_dictionary_complete. review.md must include concise evidence for each check, Verdict: PASS only if warranted, `No fatal, material, or minor issues`, `Highest true state: READY_FOR_PROJECT_ROOM_REVIEW`, and `External use authorized: no`. Use no em dashes."
+    },
+    {
+      "key": "fresh-render-boundary-release-review",
+      "engine": "codex",
+      "engine_args": ["-c", "model_reasoning_effort=high"],
+      "task_type": "review",
+      "timeout_s": 1800,
+      "expect_files": ["review.json", "review.md"],
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_final_review.py --dir . --checks onepager_one_letter,explainer_letter_pages,links_valid,visual_qa,no_internal_paths,no_clipping,room_boundary,hashes_match,external_actions_none",
+      "verified": "a fresh technical release reviewer proves final PDF geometry, links, text bounds, images, hashes, no internal path leaks, no visual defects, and the still-blocked external boundary",
+      "spec": "You are a fresh-context technical render and boundary release reviewer. Write only ./review.json and ./review.md. Do not modify any artifact. Do not call MCP/Apps, capture memory, contact anyone, publish, send, commit, push, or deploy.\n\nAudit the final packet and Project Room state. Independently inspect PDF geometry and extracted text with PyMuPDF or equivalent, HTML links and print CSS, final QA images/contact sheet using deterministic pixel/text-layout checks, package-relative receipt paths, hashes in runlog, and all boundary labels. Confirm the one-pager is exactly one 612x792-point Letter page; the explainer is 4-15 Letter pages; links are preserved; no text span exceeds page bounds; no page is empty or anomalously sparse; no absolute /home or /mnt path is visible in the explainer; Room to Win is not orphaned; structural table headers repeat; the source/receipt ending is purposeful; visual QA is recorded PASS; Project Room is inventory_review_required; and external actions are none.\n\nreview.json must contain verdict PASS or FAIL, readiness exactly READY_FOR_PROJECT_ROOM_REVIEW only if issue-free, external_use_authorized false, project_room_status inventory_review_required, issue arrays, and checks onepager_one_letter, explainer_letter_pages, links_valid, visual_qa, no_internal_paths, no_clipping, room_boundary, hashes_match, external_actions_none. review.md must show command-derived proof, Verdict: PASS only if warranted, `No fatal, material, or minor issues`, `Highest true state: READY_FOR_PROJECT_ROOM_REVIEW`, and `External use authorized: no`. Use no em dashes."
+    }
+  ]
+}

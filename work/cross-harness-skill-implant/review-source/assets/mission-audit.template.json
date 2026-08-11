@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-06T00:00:00Z",
+  "surface": {
+    "name": "codex",
+    "model": "INACCESSIBLE",
+    "evidence_status": "INACCESSIBLE"
+  },
+  "coverage": {
+    "target": "current project",
+    "sources": [],
+    "excluded": [],
+    "inaccessible": []
+  },
+  "cleaner_install": {
+    "status": "INACCESSIBLE",
+    "edition": "unknown",
+    "evidence_status": "INACCESSIBLE"
+  },
+  "missions": [],
+  "recommendations": [],
+  "overall_status": "NEEDS_INPUT",
+  "limits": []
+}

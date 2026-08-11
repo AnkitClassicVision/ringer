@@ -1,0 +1,19 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workFinalSlice",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-midnight-slice",
+      "engine": "local-shell",
+      "timeout_s": 600,
+      "task_type": "research",
+      "verified": "The recalibrated out-of-hours-midnight scenario passes against v123, completing the 65-scenario English gauntlet at failed=0 (64 passed in the full run + this slice receipt).",
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/fuzz_runner.py 123 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workRedTeam/rt-paraphrase-fuzzer/fuzz-scenarios.json 60 61 > slice.txt 2>&1; rc=$?; cat slice.txt; exit $rc",
+      "check": "grep -q 'SUMMARY passed=1 failed=0 total=1' slice.txt || { echo 'FAIL: slice not clean:'; cat slice.txt; exit 1; }; echo \"PASS: $(grep RESULT slice.txt | head -1 | cut -c1-140)\"",
+      "expect_files": [
+        "slice.txt"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW46v3/gw-lane46-fullsuite-verify/./proof_defer.py", line 29, in <module>
+    spec.loader.exec_module(gateway)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "<frozen importlib._bootstrap_external>", line 755, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 892, in get_code
+  File "<frozen importlib._bootstrap_external>", line 950, in get_data
+FileNotFoundError: [Errno 2] No such file or directory: '/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW46v3/gw-lane46-fullsuite-verify/fixed-bland_gateway.py'

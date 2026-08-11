@@ -1,0 +1,1 @@
+PASS: correction routing + fail-closed booking-integrity guard verified

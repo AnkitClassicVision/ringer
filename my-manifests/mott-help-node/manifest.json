@@ -1,0 +1,17 @@
+{
+  "run_name": "mott-help-node",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mott-help-node/work",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "help-node",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1800,
+      "expect_files": ["build_v62.py", "v62_graph.json", "report.md"],
+      "verified": "Confirms a HELP-triggered global node exists carrying the office number (855) 750-6688, the change is additive versus v61 (only the HELP node added, nothing else changed), and the write-path and suppression invariants still hold.",
+      "check": "python3 /mnt/d_drive/repos/mott/gw-temporal-check/check_help_node.py --graph v62_graph.json --baseline source/v61_graph.json",
+      "spec": "You are adding ONE small node to an SMS booking pathway. BOUNDARY: write only inside your task directory; never call an API, never mint, never git commit. You own exactly three output files: build_v62.py, v62_graph.json, report.md. Copy source/build_v61.py to build_v62.py and edit; run it to produce v62_graph.json (adjust its output filename constant).\n\nTHE ADDITION. The owner wants a HELP response: when a patient texts HELP or INFO or asks for help, reply with a short message that identifies the practice and gives the office number, then return to the conversation. The office number is (855) 750-6688.\n\nBuild it exactly like the existing global auto-return nodes in this file (look at n_faq and n_office: isGlobal true, a globalLabel describing the trigger, enableGlobalAutoReturn true, a Background/Goal/Task/Never framed prompt). Add a new global node, id n_help. Its globalLabel triggers on: the patient texts HELP, INFO, or a bare request for help or more information. Its message: one short line identifying this as Mott Optical's appointment scheduling assistant, giving the office number (855) 750-6688 for help, and noting they can reply STOP to opt out. Then it auto-returns to booking. Keep the same bilingual reply rule the other nodes use (reply in the patient's language). It must never claim a booking exists and never send a price.\n\nHARD SCOPE. This is purely additive. Every existing node stays byte-identical in routing, prompt, and text. Only n_help is new. Do not touch the STOP node, the suppression nodes, the offer nodes, or the temporal extraction. The write-path invariants (confirmation reachable only from the two book nodes, opt-out exits only through their suppression nodes) must hold. Give n_help a layout position in the LANES dict so its edges get ids.\n\nDo not collide with Twilio's own automatic HELP reply conceptually; this is the pathway-level helpful response the owner asked for, with the office number.\n\nOUTPUT CONTRACT for report.md: '# HELP Node' then '## Summary' (max 3 bullets), '## The Node' quoting n_help's globalLabel and message once, '## Additive Proof' stating how you confirmed only n_help changed, '## Assumptions'. Under 400 words."
+    }
+  ]
+}

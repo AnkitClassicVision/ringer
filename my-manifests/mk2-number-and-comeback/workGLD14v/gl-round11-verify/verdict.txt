@@ -1,0 +1,1 @@
+PASS: round-11 fix verified (offered-date searches, clock-time gates, per-branch verbatim confirms)

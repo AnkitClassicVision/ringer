@@ -1,0 +1,54 @@
+NODE_NOW=n_date_conflict VERSION=92 MSGS=11
+MSG 2026-08-04T01:29:50.195Z | USER |  Nothing later that day?
+MSG 2026-08-04T01:29:54.960Z | AGENT | Hi ANKIT, this is MK2 Optical.  We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is importa
+MSG 2026-08-04T01:29:57.942Z | AGENT | Hi ANKIT, this is MK2 Optical.  We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is importa
+MSG 2026-08-04T01:30:32.220Z | USER | How about next Friday the 17th
+MSG 2026-08-04T01:30:35.962Z | AGENT | I want to make sure I get the right day. Did you mean next friday Friday the 7th or the 17th Monday the 17th?
+MSG 2026-08-04T01:31:06.530Z | USER | This Friday is the 7th next week
+MSG 2026-08-04T01:31:09.304Z | AGENT | I want to make sure I get the right day. Did you mean next friday Friday the 7th or the 17th Monday the 17th?
+MSG 2026-08-04T01:31:27.190Z | USER | No next Friday the 14
+MSG 2026-08-04T01:31:29.929Z | AGENT | I want to make sure I get the right day. Did you mean next friday Friday the 7th or the 17th Monday the 17th?
+MSG 2026-08-04T01:31:42.166Z | USER | Friday the 14th
+MSG 2026-08-04T01:31:45.201Z | AGENT | I want to make sure I get the right day. Did you mean next friday Friday the 7th or the 17th Monday the 17th?
+VAR appt_count=0
+VAR from=+***3629
+VAR preference_from=friday the 14th
+VAR preference_to=friday the 14th
+VAR slot_1_doctor=
+VAR slot_2_doctor=
+VAR store=711
+VAR time_pref_relaxed=
+VAR to=+***1012
+VAR today=Mon, Aug 3, 2026
+GWLOG_LINES=30
+GW 2026-08-04 01:28:57,647 INFO raw_gate flag=True tenant=mott call_id_len=36 first_req=False
+GW 2026-08-04 01:28:57,875 INFO raw_fetch msgs=17
+GW 2026-08-04 01:28:57,879 INFO raw_resolve from=None
+GW 2026-08-04 01:28:57,879 INFO date_source=fallback
+GW 2026-08-04 01:28:59,749 INFO POST /availability -> 200 (2102 ms)
+GW 172.31.80.162 - - [04/Aug/2026:01:28:59 +0000] "POST /availability HTTP/1.1" 200 4433 "-" "Bland/1.0"
+GW 2026-08-04 01:29:00,238 INFO raw_gate flag=True tenant=mott call_id_len=36 first_req=False
+GW 2026-08-04 01:29:00,513 INFO raw_fetch msgs=17
+GW 2026-08-04 01:29:01,267 INFO raw_resolve from=None
+GW 2026-08-04 01:29:01,267 INFO date_source=fallback
+GW 2026-08-04 01:29:03,137 INFO POST /availability -> 200 (2899 ms)
+GW 172.31.10.19 - - [04/Aug/2026:01:29:03 +0000] "POST /availability HTTP/1.1" 200 1943 "-" "Bland/1.0"
+GW 2026-08-04 01:29:28,611 INFO raw_gate flag=True tenant=mott call_id_len=36 first_req=False
+GW 2026-08-04 01:29:28,848 INFO raw_fetch msgs=20
+GW 2026-08-04 01:29:30,472 INFO raw_resolve from=None
+GW 2026-08-04 01:29:30,472 INFO date_source=fallback
+GW 2026-08-04 01:29:32,341 INFO POST /availability -> 200 (3730 ms)
+GW 172.31.80.162 - - [04/Aug/2026:01:29:32 +0000] "POST /availability HTTP/1.1" 200 4433 "-" "Bland/1.0"
+GW 2026-08-04 01:29:32,523 INFO raw_gate flag=True tenant=mott call_id_len=36 first_req=False
+GW 2026-08-04 01:29:32,736 INFO raw_fetch msgs=20
+GW 2026-08-04 01:29:34,217 INFO raw_resolve from=None
+GW 2026-08-04 01:29:34,217 INFO date_source=fallback
+GW 2026-08-04 01:29:36,085 INFO POST /availability -> 200 (3562 ms)
+GW 172.31.10.19 - - [04/Aug/2026:01:29:36 +0000] "POST /availability HTTP/1.1" 200 1943 "-" "Bland/1.0"
+GW 2026-08-04 01:30:34,471 INFO raw_gate flag=True tenant=mott call_id_len=36 first_req=False
+GW 2026-08-04 01:30:34,709 INFO raw_fetch msgs=4
+GW 2026-08-04 01:30:34,710 INFO raw_resolve from=('conflict', '08/07/2026', '08/17/2026', 'next friday Friday the 7th', 'the 17th Monday the 17th')
+GW 2026-08-04 01:30:34,710 INFO date_source=conflict
+GW 2026-08-04 01:30:34,710 INFO POST /availability -> 200 (239 ms)
+GW 172.31.43.138 - - [04/Aug/2026:01:30:34 +0000] "POST /availability HTTP/1.1" 200 475 "-" "Bland/1.0"
+DIAG_DONE

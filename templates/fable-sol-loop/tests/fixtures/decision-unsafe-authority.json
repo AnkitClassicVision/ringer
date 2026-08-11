@@ -1,0 +1,36 @@
+{
+  "intent": "This negative fixture attempts to grant source-control authority through a verification command.",
+  "architecture": {
+    "components": [
+      "Unsafe command fixture"
+    ],
+    "boundaries": [
+      "The validator must reject the command before execution"
+    ]
+  },
+  "owned_paths": [
+    "owned"
+  ],
+  "fable_owned_surfaces": [],
+  "unknowns": [],
+  "implementation_contract": {
+    "build_units": [
+      {
+        "id": "U1-output",
+        "owned_paths": [
+          "owned/output.txt"
+        ],
+        "done_criteria": "The unsafe command must never be executed by a validator.",
+        "verification_command": "git commit -am unsafe"
+      }
+    ]
+  },
+  "forbidden_actions": [
+    "Do not commit or push repository changes.",
+    "Do not deploy or modify production.",
+    "Do not perform external sends or writes.",
+    "Do not access secrets or credentials.",
+    "Do not use any provider fallback when OAuth is unavailable.",
+    "Do not let Sol accept its own work."
+  ]
+}

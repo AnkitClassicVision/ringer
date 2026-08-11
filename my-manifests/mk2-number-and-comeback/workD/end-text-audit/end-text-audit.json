@@ -1,0 +1,121 @@
+{"end_nodes":[
+  {
+    "id":"e_safe_identity",
+    "outcome":"identity_failed",
+    "text":"I couldn't safely continue this scheduling request. Please call MK2 Optical at (212) 219-2219.",
+    "claims":[
+      {"claim_text":"I couldn't safely continue this scheduling request.","classification":"definite_negative"},
+      {"claim_text":"Please call MK2 Optical at (212) 219-2219.","classification":"neutral"}
+    ],
+    "ambiguous_reachability":{"reachable_from_ambiguous_gateway_response":false,"paths":[],"explanation":"Its five direct webhook routes are missing required request inputs or explicit patient-search counts of zero or at least two. The ambiguous patient-search condition ok != true routes to e_safe_failure instead, not this End node."},
+    "defect":{"severity":"none","explanation":"The inability to continue safely is supported by the explicit missing-input or non-unique-identity condition on every inbound route; no ambiguous gateway-failure route reaches this text."}
+  },
+  {
+    "id":"e_safe_failure",
+    "outcome":"gateway_failed",
+    "text":"I couldn't access scheduling right now and no appointment was booked. Please call MK2 Optical at (212) 219-2219.",
+    "claims":[
+      {"claim_text":"I couldn't access scheduling right now","classification":"definite_negative"},
+      {"claim_text":"no appointment was booked.","classification":"definite_negative"},
+      {"claim_text":"Please call MK2 Optical at (212) 219-2219.","classification":"neutral"}
+    ],
+    "ambiguous_reachability":{"reachable_from_ambiguous_gateway_response":true,"paths":["n_identity -> e_safe_failure on ok != true","n_verify_1 -> e_safe_failure on ok != true","n_verify_2 -> e_safe_failure on ok != true"],"explanation":"Each inbound webhook condition is negative-form routing on an extracted success flag. A non-2xx response, timeout, malformed body, or missing $.ok can satisfy ok != true, so the pathway knows only that the lookup or conflict check did not report success."},
+    "defect":{"severity":"major","explanation":"The text makes two definite negative claims after an ambiguous response. Although these inbound calls are read operations and the pathway has not invoked /sign on these routes, the unqualified claim that no appointment was booked exceeds what the failed response itself proves."}
+  },
+  {
+    "id":"e_booking_failed",
+    "outcome":"booking_failed",
+    "text":"I couldn't confirm that booking. Please call MK2 Optical at (212) 219-2219 so they can check it for you.",
+    "claims":[
+      {"claim_text":"I couldn't confirm that booking.","classification":"definite_negative"},
+      {"claim_text":"Please call MK2 Optical at (212) 219-2219 so they can check it for you.","classification":"neutral"}
+    ],
+    "ambiguous_reachability":{"reachable_from_ambiguous_gateway_response":true,"paths":["n_book_1 -> e_booking_failed on book_success != true","n_book_2 -> e_booking_failed on book_success != true"],"explanation":"Both /sign write nodes use a negative-form condition on $.success. A non-2xx response, timeout, malformed body, or missing success key can satisfy book_success != true even when the EMR write commits, so the booking outcome is unknown."},
+    "defect":{"severity":"critical","explanation":"This is the incident-producing defect: it gives the patient a definite negative result after an ambiguous write response. The measured 502 route reached this node even though the appointment existed in the EMR."}
+  },
+  {
+    "id":"e_booked",
+    "outcome":"booked",
+    "text":"Thank you. We look forward to seeing you.",
+    "claims":[
+      {"claim_text":"Thank you.","classification":"neutral"},
+      {"claim_text":"We look forward to seeing you.","classification":"definite_positive"}
+    ],
+    "ambiguous_reachability":{"reachable_from_ambiguous_gateway_response":false,"paths":[],"explanation":"This End node is reached only from n_confirm, and n_confirm is entered from the /sign webhook nodes only on book_success == true. Its other inbound edge is a 72-hour silence after that same confirmed-success state."},
+    "defect":{"severity":"none","explanation":"The implied positive appointment outcome is supported by the explicit book_success == true route before n_confirm. No negative-form or missing-field webhook condition routes to this End text."}
+  },
+  {
+    "id":"e_defer",
+    "outcome":"deferred_after_booking",
+    "text":"For that you'll have to contact the MK2 Optical office at (212) 219-2219",
+    "claims":[
+      {"claim_text":"For that you'll have to contact the MK2 Optical office at (212) 219-2219","classification":"neutral"}
+    ],
+    "ambiguous_reachability":{"reachable_from_ambiguous_gateway_response":false,"paths":[],"explanation":"Its webhook-sourced inbound route is n_appt_check -> e_defer on appt_count >= 1, an explicit positive extracted count. Its remaining routes come from n_confirm after a reported booking success, not from an ambiguous condition."},
+    "defect":{"severity":"none","explanation":"The text directs the patient to the office and does not assert that a gateway action succeeded or failed. Its direct webhook route requires an explicit appointment count of at least one."}
+  },
+  {
+    "id":"e_office",
+    "outcome":"office",
+    "text":"Please call MK2 Optical at (212) 219-2219.",
+    "claims":[
+      {"claim_text":"Please call MK2 Optical at (212) 219-2219.","classification":"neutral"}
+    ],
+    "ambiguous_reachability":{"reachable_from_ambiguous_gateway_response":false,"paths":[],"explanation":"The only explicit inbound edge is n_office -> e_office on office direction delivered. No Webhook node responsePathway targets e_office, and the exported graph provides no ambiguous gateway condition leading directly to it."},
+    "defect":{"severity":"none","explanation":"This is a neutral office-contact instruction with no assertion about scheduling, booking, suppression, or any other gateway outcome. The static graph exposes no ambiguous webhook route to it."}
+  },
+  {
+    "id":"e_declined",
+    "outcome":"declined",
+    "text":"Ok, thank you for letting us know. If you need anything, call the office at (212) 219-2219.",
+    "claims":[
+      {"claim_text":"Ok, thank you for letting us know.","classification":"definite_positive"},
+      {"claim_text":"If you need anything, call the office at (212) 219-2219.","classification":"neutral"}
+    ],
+    "ambiguous_reachability":{"reachable_from_ambiguous_gateway_response":false,"paths":[],"explanation":"All explicit inbound edges are conversational LLM routes labeled as a decline or giving up on booking. No Webhook node responsePathway targets e_declined, so no concrete ambiguous gateway-to-End path exists in the export."},
+    "defect":{"severity":"none","explanation":"The positive claim only acknowledges that the patient communicated something; it does not claim a gateway or booking outcome. The End node is selected by conversational decline routes, not webhook ambiguity."}
+  },
+  {
+    "id":"e_stop",
+    "outcome":"stopped",
+    "text":"Understood. If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.",
+    "claims":[
+      {"claim_text":"Understood.","classification":"neutral"},
+      {"claim_text":"If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.","classification":"neutral"}
+    ],
+    "ambiguous_reachability":{"reachable_from_ambiguous_gateway_response":true,"paths":["n_suppress_stop -> e_stop on suppression_ok != true"],"explanation":"One of the two ordered /sms-suppression routes is the negative-form condition suppression_ok != true. A non-2xx response, timeout, malformed body, or missing $.ok can take that edge, making the suppression write outcome unknown."},
+    "defect":{"severity":"none","explanation":"Despite ambiguous suppression reachability, the patient-facing text does not say the suppression succeeded or failed. It gives a conditional office-contact fallback, so it makes no definite system-outcome assertion."}
+  },
+  {
+    "id":"e_not_me",
+    "outcome":"wrong_person",
+    "text":"Sorry about that. If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.",
+    "claims":[
+      {"claim_text":"Sorry about that.","classification":"neutral"},
+      {"claim_text":"If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.","classification":"neutral"}
+    ],
+    "ambiguous_reachability":{"reachable_from_ambiguous_gateway_response":true,"paths":["n_suppress_not_me -> e_not_me on suppression_ok != true"],"explanation":"One of the two ordered /sms-suppression routes is the negative-form condition suppression_ok != true. A non-2xx response, timeout, malformed body, or missing $.ok can take that edge, making the suppression write outcome unknown."},
+    "defect":{"severity":"none","explanation":"The text neither confirms nor denies that suppression was recorded. Its apology and conditional instruction remain accurate when the webhook outcome is unknown, so ambiguous reachability does not create a text defect."}
+  },
+  {
+    "id":"e_existing",
+    "outcome":"existing_appointment",
+    "text":"Please call MK2 Optical at (212) 219-2219 and the office can help with that appointment.",
+    "claims":[
+      {"claim_text":"Please call MK2 Optical at (212) 219-2219","classification":"neutral"},
+      {"claim_text":"the office can help with that appointment.","classification":"definite_positive"}
+    ],
+    "ambiguous_reachability":{"reachable_from_ambiguous_gateway_response":false,"paths":[],"explanation":"This is a global End node triggered by the patient's statement that an appointment made outside this conversation needs cancellation or movement. No explicit edge or Webhook responsePathway targets it in the exported graph."},
+    "defect":{"severity":"none","explanation":"The appointment reference follows a patient-intent global route rather than an ambiguous gateway response. Within this audit's gateway-ambiguity defect definition, the text has no defective reachable path."}
+  },
+  {
+    "id":"e_timeout",
+    "outcome":"no_reply",
+    "text":"Closing this conversation.",
+    "claims":[
+      {"claim_text":"Closing this conversation.","classification":"neutral"}
+    ],
+    "ambiguous_reachability":{"reachable_from_ambiguous_gateway_response":false,"paths":[],"explanation":"Its explicit inbound edges are 72-hour timeout routes from conversational Default nodes. No Webhook node responsePathway targets e_timeout, and the text is not selected directly by a gateway status or extracted response field."},
+    "defect":{"severity":"none","explanation":"The text states only the pathway's present conversational action and makes no assertion about an appointment or gateway operation. The exported routes to it are silence timeouts, not webhook ambiguity."}
+  }
+]}

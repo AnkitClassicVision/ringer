@@ -1,0 +1,21 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workSuiteRecon2",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-suite-reconcile-2",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1800,
+      "expect_files": [
+        "goalloop_scenarios.py",
+        "phase_run_goalloop.py",
+        "RECON2-NOTES.md"
+      ],
+      "spec": "ROLE: proof-suite reconciliation worker, round 2 (stage-split node expectations). Work entirely inside your CWD; never modify anything outside it; no network, no git, no MCP/Apps/skills, no model calls. CONTEXT: After the round-12 architecture change, the pathway has TWO user-wait stages: n_goal_ask (pre-offer resting node: opening, misses, out-of-hours answers, detour answers before any offer) and n_goal_response (post-offer resting node), plus n_mixed_intent (the one-question clarify after a mixed reply). The reconciled suite still expects n_goal_response everywhere. The v108 ladder run at /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workLadder108/gl-ladder-v108/ladder.txt shows 14 failures, ALL of them either 'ended on n_goal_ask expected n_goal_response' or 'ended on n_mixed_intent expected n_goal_response' (with visibly correct behavior in the said-lines), except 'named weekday' which is a date-convention mismatch. SOURCES (copy into CWD, then edit): /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workSuiteRecon/gl-suite-reconcile/goalloop_scenarios.py and phase_run_goalloop.py (the round-1 reconciled suite - build on it). THE EDITS, exactly: (1) For every scenario whose conversation ends BEFORE any offer has been made (opening, pre-offer detours like insurance/order/cost questions, bare-number, affirms-never-asked, out-of-hours answers, dead-end-search denial, new-office-number, fishes-for-fields, premature-booked check, pre-booking detour): expected end node becomes n_goal_ask. (2) Scenarios that end while an offer stands keep n_goal_response. (3) 'picks a slot but also asks for a different one': expected end node n_mixed_intent, and keep/strengthen the existing requirement that the response asks a clarify question naming the offered slot or the alternative - it must still reject any silently-sent new offer. (4) 'named weekday': align the expected date to the deployed following-weekday convention - a bare weekday name resolves to the NEXT occurrence strictly after today (if today is Tuesday, 'tuesday' means today+7); recompute the expected window accordingly in the runner/scenario. (5) Nothing else changes: behavioral bans, copy assertions, scoped-response evaluation, scenario count 37, names, RESULT line format all stay identical. (6) RECON2-NOTES.md: per-scenario one-liner, and the exact ladder command. Do not run the ladder.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 -c \"import sys,json,re;sys.path.insert(0,'.');import goalloop_scenarios as gs;S=gs.SCENARIOS;errs=[];errs+=([] if len(S)==37 else ['count %d'%len(S)]);blob=json.dumps(S);dead=[w for w in ('n_goal_update','n_service_guard','e_close','n_select','goal_from','goal_to') if w in blob];errs+=(['dead internals: %s'%dead] if dead else []);errs+=([] if 'n_goal_ask' in blob else ['no scenario expects n_goal_ask - stage split not applied']);errs+=([] if 'n_mixed_intent' in blob else ['mixed-intent scenario does not expect n_mixed_intent']);runner=open('phase_run_goalloop.py').read();errs+=([] if 'PROMISE_COPY' in runner and 'GOAL_FIELD_LEAK' in runner and 'RESULT goalloop:' in runner else ['runner lost a ban/format']);import py_compile;py_compile.compile('phase_run_goalloop.py',doraise=True);print('FAIL: '+'; '.join(errs) if errs else 'PASS: stage-split expectations applied, bans intact');sys.exit(1 if errs else 0)\"",
+      "verified": "The suite's resting-node expectations match the as-built two-stage architecture (pre-offer scenarios expect n_goal_ask, the mixed reply expects the clarify node), the weekday convention matches the deployed gateway, and every ban and format stays intact."
+    }
+  ]
+}

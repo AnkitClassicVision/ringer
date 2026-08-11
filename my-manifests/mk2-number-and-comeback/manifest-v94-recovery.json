@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workV94rec",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "v94-recovery-gate",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workJ/harness-driver/v91_harness.py 94 gate_clean > transcript.txt 2>&1; rc=$?; tail -4 transcript.txt; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_harness.py --file transcript.txt --mode gate_clean",
+      "verified": "Post-restore health proof: a clean subject saying hi on v94 reaches n_ask with appt_count 0 and no server errors - the line converses again after the v95 outage window."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWgates50",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-live-gates-50",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": [
+        "gates.txt"
+      ],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates.py > gates.txt 2>&1; rc=$?; cat gates.txt; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_gw_gates.py gates.txt",
+      "verified": "All eleven live gates green on the lane-50 gateway via the file-based checker."
+    }
+  ]
+}

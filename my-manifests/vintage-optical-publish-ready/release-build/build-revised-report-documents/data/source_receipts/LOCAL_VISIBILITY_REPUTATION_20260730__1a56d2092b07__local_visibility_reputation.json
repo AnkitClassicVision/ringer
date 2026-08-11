@@ -1,0 +1,135 @@
+{
+  "citation_consistency": {
+    "birdeye_legacy_address": "417 W Jefferson St, Morton, IL, 61550, United States",
+    "current_google_address": "605 S Main St, Morton, IL 61550",
+    "observed_dates": {
+      "birdeye": "2026-07-30",
+      "google_maps": "2026-07-30T12:54:08.602Z"
+    },
+    "operational_status_conclusion": null,
+    "source_ids": [
+      "GOOGLE_MAPS_SAMPLE_20260730",
+      "BIRDEYE_AGGREGATOR_20260730"
+    ],
+    "status": "conflict_detected",
+    "upgrade_evidence_needed": [
+      "Direct first-party confirmation of the current business address",
+      "A current direct observation of the legacy address listing",
+      "Documented listing update or closure evidence for the legacy address"
+    ]
+  },
+  "cross_platform_review_total": null,
+  "dataforseo_preflight": {
+    "cost_incurred": 0,
+    "fallback_equivalence_to_rank_grid": false,
+    "named_fallbacks": [
+      {
+        "name": "direct Google Search and Maps observation",
+        "role": "dated direct sample only"
+      },
+      {
+        "name": "Exa",
+        "role": "domain-restricted discovery and page capture"
+      },
+      {
+        "name": "Perplexity",
+        "role": "contradiction research with direct-source resolution"
+      }
+    ],
+    "request_sent": false,
+    "source_id": "DATAFORSEO_PREFLIGHT_20260730",
+    "status": "unavailable_missing_credentials"
+  },
+  "google_maps_sample": {
+    "address": "605 S Main St, Morton, IL 61550",
+    "booking_domain": "scheduleyourexam.com",
+    "booking_link_visible": true,
+    "captured_at": "2026-07-30T12:54:08.602Z",
+    "category": "Optometrist",
+    "limitation": "Limited public view. This direct dated observation is not a rank grid, and Google displayed no review count.",
+    "name": "Vintage Optical",
+    "owner_post_date_visible": "2026-04-09",
+    "pin_coordinates": {
+      "latitude": 40.6049094,
+      "longitude": -89.467024
+    },
+    "rating": 4.9,
+    "review_count": null,
+    "sample_type": "dated_direct_observation_not_rank_grid",
+    "source_id": "GOOGLE_MAPS_SAMPLE_20260730",
+    "website": "https://vintageopt.com/"
+  },
+  "packet_date": "2026-07-30",
+  "platform_observations": [
+    {
+      "address": "417 W Jefferson St, Morton, IL, 61550, United States",
+      "aggregate_rating": 4.9,
+      "aggregate_total_review_count": 413,
+      "comparison_limitation": "Do not compare this total to another entity as if platform recency and collection methods were identical.",
+      "displayed_platform_composition": [
+        {
+          "count": 398,
+          "platform": "Google"
+        },
+        {
+          "count": 15,
+          "platform": "Facebook"
+        },
+        {
+          "count": 0,
+          "platform": "Birdeye"
+        }
+      ],
+      "entity_name": "Vintage Optical",
+      "observation_type": "third_party_aggregator_observation",
+      "observed_date": "2026-07-30",
+      "platform": "Birdeye",
+      "promoted_as_google_count": false,
+      "source_id": "BIRDEYE_AGGREGATOR_20260730",
+      "source_url": "https://reviews.birdeye.com/vintage-optical-155768435564188",
+      "status": "observed_aggregator_display"
+    },
+    {
+      "address": "829 West Jackson Street, Morton, IL, 61550, United States",
+      "aggregate_rating": 4.8,
+      "aggregate_total_review_count": 217,
+      "comparison_limitation": "Do not compare this total to another entity as if platform recency and collection methods were identical.",
+      "displayed_platform_composition": [
+        {
+          "count": 210,
+          "platform": "Google"
+        },
+        {
+          "count": 6,
+          "platform": "Facebook"
+        },
+        {
+          "count": 1,
+          "platform": "Yahoo! Local"
+        },
+        {
+          "count": 0,
+          "platform": "Birdeye"
+        }
+      ],
+      "entity_name": "Focus On Eyes, P.C.",
+      "observation_type": "third_party_aggregator_observation",
+      "observed_date": "2026-07-30",
+      "platform": "Birdeye",
+      "promoted_as_google_count": false,
+      "source_id": "BIRDEYE_AGGREGATOR_20260730",
+      "source_url": "https://reviews.birdeye.com/focus-on-eyes-pc-155729242849867",
+      "status": "observed_aggregator_display"
+    }
+  ],
+  "rank_grid": {
+    "canonical_value": null,
+    "limitation": "No paid DataForSEO request ran. Named fallbacks are not equivalent to a rank grid.",
+    "status": "not_run"
+  },
+  "review_aggregation_rules": {
+    "average_ratings_across_sources": false,
+    "direct_google_review_count": null,
+    "sum_counts_across_sources_or_platforms": false
+  }
+}

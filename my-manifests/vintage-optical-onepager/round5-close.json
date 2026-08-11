@@ -1,0 +1,19 @@
+{
+  "run_name": "vintage-optical-onepager",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/work-close",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "close-local-runlog",
+      "engine": "local-shell",
+      "task_type": "docs",
+      "timeout_s": 120,
+      "expect_files": [
+        "runlog.md"
+      ],
+      "spec": "set -euo pipefail; DEST=/mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/checks/finalize_runlog.py --runlog \"$DEST/runlog.md\"; cp \"$DEST/runlog.md\" ./runlog.md",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport sys\np=Path('/mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29/runlog.md')\nt=p.read_text()\nneed=['Render status: PASS via final deterministic Ringer local-shell render','FINAL-QA-RECEIPT:START','vintage-optical-onepager-20260730T004028Z-p686488','vintage-optical-onepager-20260730T004139Z-p695483','Human delivery gate: pending','External delivery: none']\nmiss=[x for x in need if x not in t]\nif miss:\n print('WHY: runlog missing '+', '.join(miss)); sys.exit(1)\nprint('PASS: runlog contains final render, review, human-gate, and no-delivery receipts')\nPY\ncmp runlog.md /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29/runlog.md && echo 'PASS: Ringer artifact matches canonical runlog'",
+      "verified": "the canonical runlog records the final render, visual QA, fresh READY review, pending human gate, and no external delivery"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+RESULT name=out-of-hours-midnight status=PASS said='I have Monday 08/10/2026 11:15 am or Monday 08/10/2026 11:45 am at MK2 Optical. Reply 1 or'
+SUMMARY passed=1 failed=0 total=1

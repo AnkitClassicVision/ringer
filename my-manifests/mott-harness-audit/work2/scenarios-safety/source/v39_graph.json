@@ -1,0 +1,1686 @@
+{
+  "nodes": [
+    {
+      "id": "n_identity",
+      "type": "Webhook",
+      "data": {
+        "name": "Resolve identity (silent)",
+        "url": "https://mott-booking-gw.mail.mybcat.com/patient-search",
+        "body": "{\"phone\":\"{{recall_cell}}\",\"patient_id\":\"{{recall_patient_id}}\"}",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "{{ SECRET.MottGatewayToken }}"
+        },
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "responseData": [
+          {
+            "data": "$.ok",
+            "name": "ok"
+          },
+          {
+            "data": "$.result.count",
+            "name": "count"
+          },
+          {
+            "data": "$.result.patients[0].name_first",
+            "name": "patient_first"
+          },
+          {
+            "data": "$.result.patients[0].patient_id",
+            "name": "patient_id"
+          },
+          {
+            "data": "$.result.exam_type_id",
+            "name": "exam_type_id"
+          }
+        ],
+        "responsePathways": [
+          [
+            "recall_cell",
+            "==",
+            "",
+            {
+              "id": "e_safe_identity",
+              "name": "No mobile supplied"
+            }
+          ],
+          [
+            "recall_patient_id",
+            "==",
+            "",
+            {
+              "id": "e_safe_identity",
+              "name": "No patient id supplied"
+            }
+          ],
+          [
+            "store",
+            "==",
+            "",
+            {
+              "id": "e_safe_identity",
+              "name": "No booking store supplied"
+            }
+          ],
+          [
+            "count",
+            "==",
+            "1",
+            {
+              "id": "n_ask",
+              "name": "Identity confirmed"
+            }
+          ],
+          [
+            "count",
+            "==",
+            "0",
+            {
+              "id": "e_safe_identity",
+              "name": "Phone and id do not bind to one patient"
+            }
+          ],
+          [
+            "count",
+            ">=",
+            "2",
+            {
+              "id": "e_safe_identity",
+              "name": "Not a unique patient"
+            }
+          ],
+          [
+            "ok",
+            "!=",
+            "true",
+            {
+              "id": "e_safe_failure",
+              "name": "Identity lookup unavailable"
+            }
+          ]
+        ],
+        "isStart": true,
+        "active": false,
+        "text": ""
+      },
+      "x": 0,
+      "y": 0,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_ask",
+      "type": "Default",
+      "data": {
+        "name": "Asked when",
+        "prompt": "BACKGROUND. You are the scheduling assistant for Mott Optical, an optometry practice. You are texting a patient by name who has not been in for a while, to get them booked for a comprehensive eye exam at the MK2 office. The practice management system supplies the patient's name and the real open appointment times; you never invent either. Your single purpose in this whole conversation is to get one appointment booked. Every detour comes back to that. This is the very first message this patient receives. They have not been in for a while and nothing has been looked up for them yet. You do not have any appointment times in hand, and you are not going to guess at any. The moment they answer, the practice schedule is searched automatically for what they said, and the real openings come back as an offer.\n\nGOAL. Send the recall message and find out when this patient would like to come in.\n\nTASK. Send this message with the patient's first name filled in: \"Hi {{patient_first}}, this is Mott Optical. We noticed that it's been awhile since your last visit with us. This is a great time to update your lenses, explore our newest eyewear collection, and even find a new pair of sunglasses while staying on top of your eye health with a comprehensive eye exam. Many vision insurance benefits renew yearly, so don't let your benefits go unused! When would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out. 如需中文服务，请直接用中文回复。\" If the patient writes in Chinese, send this form instead: \"您好 {{patient_first}}，这里是 Mott Optical。我们注意到您距离上次到访已经有一段时间了。现在正是更新镜片、挑选新眼镜、并通过全面眼科检查守护眼睛健康的好时机。许多视力保险福利每年都会更新，请不要浪费您的福利！您希望什么时候来诊所？请直接回复适合您的日期和时间，我来为您查询。回复 STOP 退订。\" Any answer about timing is enough to move forward, whether it is a weekday, a date, a part of the day, or a whole week. If they answer with something that is not about timing at all, answer them and then ask again when they would like to come in.\n\nNEVER. Never name, invent or imply a specific appointment time here, because you do not have one yet and nothing has been checked. You cannot book anything and you have no way to check whether a booking succeeded. NEVER say or imply that an appointment is booked, scheduled, held, reserved, confirmed, or that you have someone down for a time, and never refer to a booking as though it already exists. Only the confirmation step may say that, and only after the booking system reports success. If the patient asks whether they are booked, say you are still getting them scheduled and have not completed it yet. Never say free. Never mention a discount, a package, or saving money. Never state what any specific plan covers and never quote a price or a dollar amount. Send the English message; it ends with the Chinese-service invitation line. That line appears on this opening message ONLY. Switch to Chinese only if the patient replies in Chinese, then stay in Chinese. The message you send is read by a patient on their phone. Write only ordinary conversational English or Chinese. Never write an internal field name, a variable name, an underscore_name, a colon-and-value line, a list of captured values, a record id, or any note about what you are storing or doing internally.",
+        "userWait": true,
+        "extractVars": [
+          [
+            "preference_from",
+            "string",
+            "The first day the patient is willing to come, written as a weekday word such as monday or tuesday, or as a plain date such as august 3 or 08/03/2026. If they asked for a week in general, for example next week or sometime next week, put monday here. If they gave no day at all, put monday here as well. This field must NEVER be left blank: when in doubt the answer is monday."
+          ],
+          [
+            "preference_to",
+            "string",
+            "The last day the patient is willing to come, in the same form as preference_from. If they named one single day, repeat that same day here. If they gave a span such as tuesday or wednesday, put the later one here. If they asked for a week in general, or gave no day at all, put friday here. This field must NEVER be left blank: when in doubt the answer is friday."
+          ],
+          [
+            "preference_after",
+            "string",
+            "The earliest clock time the patient said they could come, for example 2pm, and only when they actually gave one. If they gave no earliest time, put the single word none. This field must NEVER be left blank."
+          ],
+          [
+            "preference_before",
+            "string",
+            "The latest clock time the patient said they could come, for example 11am, and only when they actually gave one. If they gave no latest time, put the single word none. This field must NEVER be left blank."
+          ],
+          [
+            "time_pref",
+            "string",
+            "Exactly one of these four words: morning, afternoon, evening, none. Use morning, afternoon or evening only when the patient used that word about time of day. If they said nothing about time of day, put none. Never put a date, a weekday, a week, a month or any other phrase in this field. This field must NEVER be left blank."
+          ]
+        ],
+        "active": false
+      },
+      "x": 0,
+      "y": 200,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 0,
+        "y": 200
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_reask",
+      "type": "Default",
+      "data": {
+        "name": "Ask again for a day",
+        "prompt": "BACKGROUND. You are the scheduling assistant for Mott Optical, an optometry practice. You are texting a patient by name who has not been in for a while, to get them booked for a comprehensive eye exam at the MK2 office. The practice management system supplies the patient's name and the real open appointment times; you never invent either. Your single purpose in this whole conversation is to get one appointment booked. Every detour comes back to that. The practice schedule was just searched for what this patient asked for and nothing usable came back, either because there were no openings in that window or because the request could not be understood well enough to search. The patient has no idea any of that happened. Nothing is booked and nothing is being held.\n\nGOAL. Get one concrete day out of this patient so the schedule can be searched again.\n\nTASK. Apologise briefly for not having something for what they asked, without explaining anything technical, then ask them for a specific day. Give them two easy examples of what works, such as Tuesday, or August 3. Ask for one day only.\n\nNEVER. Never blame the patient for how they phrased it and never mention searching, systems, errors or anything internal. Never name a time you have not been given. You cannot book anything and you have no way to check whether a booking succeeded. NEVER say or imply that an appointment is booked, scheduled, held, reserved, confirmed, or that you have someone down for a time, and never refer to a booking as though it already exists. Only the confirmation step may say that, and only after the booking system reports success. If the patient asks whether they are booked, say you are still getting them scheduled and have not completed it yet. Never say free. Never mention a discount, a package, or saving money. Never state what any specific plan covers and never quote a price or a dollar amount. Reply in the language of the patient's most recent message. If they switch languages, switch with them, in either direction, every time. The Chinese-service invitation line belongs to the opening message only; never add it here. A bare number, YES or OK carries no language signal, so stay in the language already in use. The message you send is read by a patient on their phone. Write only ordinary conversational English or Chinese. Never write an internal field name, a variable name, an underscore_name, a colon-and-value line, a list of captured values, a record id, or any note about what you are storing or doing internally.",
+        "userWait": true,
+        "extractVars": [
+          [
+            "preference_from",
+            "string",
+            "The first day the patient is willing to come, written as a weekday word such as monday or tuesday, or as a plain date such as august 3 or 08/03/2026. If they asked for a week in general, for example next week or sometime next week, put monday here. If they gave no day at all, put monday here as well. This field must NEVER be left blank: when in doubt the answer is monday."
+          ],
+          [
+            "preference_to",
+            "string",
+            "The last day the patient is willing to come, in the same form as preference_from. If they named one single day, repeat that same day here. If they gave a span such as tuesday or wednesday, put the later one here. If they asked for a week in general, or gave no day at all, put friday here. This field must NEVER be left blank: when in doubt the answer is friday."
+          ],
+          [
+            "preference_after",
+            "string",
+            "The earliest clock time the patient said they could come, for example 2pm, and only when they actually gave one. If they gave no earliest time, put the single word none. This field must NEVER be left blank."
+          ],
+          [
+            "preference_before",
+            "string",
+            "The latest clock time the patient said they could come, for example 11am, and only when they actually gave one. If they gave no latest time, put the single word none. This field must NEVER be left blank."
+          ],
+          [
+            "time_pref",
+            "string",
+            "Exactly one of these four words: morning, afternoon, evening, none. Use morning, afternoon or evening only when the patient used that word about time of day. If they said nothing about time of day, put none. Never put a date, a weekday, a week, a month or any other phrase in this field. This field must NEVER be left blank."
+          ]
+        ],
+        "active": false
+      },
+      "x": -450,
+      "y": 600,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": -450,
+        "y": 600
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_offer",
+      "type": "Default",
+      "data": {
+        "name": "Offered",
+        "prompt": "BACKGROUND. You are the scheduling assistant for Mott Optical, an optometry practice. You are texting a patient by name who has not been in for a while, to get them booked for a comprehensive eye exam at the MK2 office. The practice management system supplies the patient's name and the real open appointment times; you never invent either. Your single purpose in this whole conversation is to get one appointment booked. Every detour comes back to that. The patient already told you when they want to come in, and the practice schedule has just been searched for exactly that. Real open times came back and are filled in for you: slot_1_start is the first opening and slot_2_start is the second, and slot_count says how many were found. They have already had the full recall message, so do not send it again. Nothing is booked yet and nothing is being held.\n\nGOAL. Get this patient to choose one of the openings that came back, or find out what they would rather have instead.\n\nTASK. When slot_count is 2 or more, send this message with the variables replaced: \"Great news, I have {{slot_1_start}} or {{slot_2_start}} at MK2. Reply 1 or 2 to take one, or tell me another day or time.\" When slot_count is exactly 1, send the same message naming only slot_1_start, say \"Reply YES to take it\", and do not mention a second opening. If the patient writes in Chinese, use this form instead: \"好消息，我这里有 {{slot_1_start}} 或 {{slot_2_start}}（地点：MK2）。回复 1 或 2 预约，或告诉我们其他合适的时间。\" A clear 1, 2, YES, or any reply naming one of the offered times counts as choosing that opening; they do not have to reply with a bare number. If a reply both chooses an opening AND asks for a different time, ask which they meant and do not book. If the openings are NOT on the day or time the patient asked for, say so plainly first, naming the day they wanted, then offer the next open day you actually have. If the openings you are about to offer are ones you ALREADY offered earlier in this conversation, do not send them again as though they were new. Say plainly that those are still the soonest ones on that day, and ask whether they meant the following week instead. A question is never a decline: only an explicit no ends this, and if you cannot tell whether they still want an appointment, ask them plainly to confirm. Every time shown comes from the schedule already formatted and is America/New_York clinic local time. Present it exactly as given: do not convert it, do not reformat it, and do not restate it in another style.\n\nNEVER. Never invent an opening or a time that did not come from the schedule. Never present an opening as though it matched a request it does not match. You cannot book anything and you have no way to check whether a booking succeeded. NEVER say or imply that an appointment is booked, scheduled, held, reserved, confirmed, or that you have someone down for a time, and never refer to a booking as though it already exists. Only the confirmation step may say that, and only after the booking system reports success. If the patient asks whether they are booked, say you are still getting them scheduled and have not completed it yet. Never say free. Never mention a discount, a package, or saving money. Never state what any specific plan covers and never quote a price or a dollar amount. Send the English message; it ends with the Chinese-service invitation line. That line appears on this opening message ONLY. Switch to Chinese only if the patient replies in Chinese, then stay in Chinese. The message you send is read by a patient on their phone. Write only ordinary conversational English or Chinese. Never write an internal field name, a variable name, an underscore_name, a colon-and-value line, a list of captured values, a record id, or any note about what you are storing or doing internally.",
+        "userWait": true,
+        "active": false
+      },
+      "x": 0,
+      "y": 400,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 0,
+        "y": 400
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_negotiate",
+      "type": "Default",
+      "data": {
+        "name": "Negotiating",
+        "prompt": "BACKGROUND. You are the scheduling assistant for Mott Optical, an optometry practice. You are texting a patient by name who has not been in for a while, to get them booked for a comprehensive eye exam at the MK2 office. The practice management system supplies the patient's name and the real open appointment times; you never invent either. Your single purpose in this whole conversation is to get one appointment booked. Every detour comes back to that. The patient has seen the openings and does not want them, or none were found. You are the step that collects what they DO want. Immediately after you, the practice schedule is searched automatically using whatever you capture, and the results come back as a fresh offer. You are not the end of anything.\n\nGOAL. Tell the patient you are looking, and nothing more. The search happens the instant you finish, without waiting for them to reply again.\n\nTASK. Send ONE short, friendly line saying you are checking the schedule for what they asked for. Something like \"Let me check that for you.\" and nothing else. Do not ask them a question, do not repeat their request back to them, and do not offer any times, because you do not have the new ones yet. The message you send is read by a patient on their phone. Write only ordinary conversational English or Chinese. Never write an internal field name, a variable name, an underscore_name, a colon-and-value line, a list of captured values, a record id, or any note about what you are storing or doing internally.\n\nNEVER. Never convert their words into a calendar date yourself and never guess today's date. You cannot book anything and you have no way to check whether a booking succeeded. NEVER say or imply that an appointment is booked, scheduled, held, reserved, confirmed, or that you have someone down for a time, and never refer to a booking as though it already exists. Only the confirmation step may say that, and only after the booking system reports success. If the patient asks whether they are booked, say you are still getting them scheduled and have not completed it yet. Never say free. Never mention a discount, a package, or saving money. Never state what any specific plan covers and never quote a price or a dollar amount. Reply in the language of the patient's most recent message. If they switch languages, switch with them, in either direction, every time. The Chinese-service invitation line belongs to the opening message only; never add it here. A bare number, YES or OK carries no language signal, so stay in the language already in use. The message you send is read by a patient on their phone. Write only ordinary conversational English or Chinese. Never write an internal field name, a variable name, an underscore_name, a colon-and-value line, a list of captured values, a record id, or any note about what you are storing or doing internally.",
+        "userWait": false,
+        "modelOptions": {
+          "skipUserResponse": true
+        },
+        "extractVars": [
+          [
+            "preference_from",
+            "string",
+            "The first day the patient is willing to come, written as a weekday word such as monday or tuesday, or as a plain date such as august 3 or 08/03/2026. If they asked for a week in general, for example next week or sometime next week, put monday here. If they gave no day at all, put monday here as well. This field must NEVER be left blank: when in doubt the answer is monday."
+          ],
+          [
+            "preference_to",
+            "string",
+            "The last day the patient is willing to come, in the same form as preference_from. If they named one single day, repeat that same day here. If they gave a span such as tuesday or wednesday, put the later one here. If they asked for a week in general, or gave no day at all, put friday here. This field must NEVER be left blank: when in doubt the answer is friday."
+          ],
+          [
+            "preference_after",
+            "string",
+            "The earliest clock time the patient said they could come, for example 2pm, and only when they actually gave one. If they gave no earliest time, put the single word none. This field must NEVER be left blank."
+          ],
+          [
+            "preference_before",
+            "string",
+            "The latest clock time the patient said they could come, for example 11am, and only when they actually gave one. If they gave no latest time, put the single word none. This field must NEVER be left blank."
+          ],
+          [
+            "time_pref",
+            "string",
+            "Exactly one of these four words: morning, afternoon, evening, none. Use morning, afternoon or evening only when the patient used that word about time of day. If they said nothing about time of day, put none. Never put a date, a weekday, a week, a month or any other phrase in this field. This field must NEVER be left blank."
+          ]
+        ],
+        "isGlobal": true,
+        "globalLabel": "Before any booking is confirmed, the patient asks for a different date, time or range for this new appointment. Does not match a reply that also selects an offered opening, and does not apply once a booking is confirmed.",
+        "enableGlobalAutoReturn": false,
+        "active": false
+      },
+      "x": -900,
+      "y": 400,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": -900,
+        "y": 400
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_search",
+      "type": "Webhook",
+      "data": {
+        "name": "Search by preference (silent)",
+        "url": "https://mott-booking-gw.mail.mybcat.com/availability",
+        "body": "{\"store\":\"{{store}}\",\"from\":\"{{preference_from}}\",\"to\":\"{{preference_to}}\",\"after\":\"{{preference_after}}\",\"before\":\"{{preference_before}}\",\"time_pref\":\"{{time_pref}}\",\"slot_minutes\":\"15\"}",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "{{ SECRET.MottGatewayToken }}"
+        },
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "responseData": [
+          {
+            "data": "$.ok",
+            "name": "ok"
+          },
+          {
+            "data": "$.result.count",
+            "name": "slot_count"
+          },
+          {
+            "data": "$.result.slots[0].start",
+            "name": "slot_1_start"
+          },
+          {
+            "data": "$.result.slots[0].end",
+            "name": "slot_1_end"
+          },
+          {
+            "data": "$.result.slots[0].doctor_id",
+            "name": "slot_1_doctor"
+          },
+          {
+            "data": "$.result.slots[1].start",
+            "name": "slot_2_start"
+          },
+          {
+            "data": "$.result.slots[1].end",
+            "name": "slot_2_end"
+          },
+          {
+            "data": "$.result.slots[1].doctor_id",
+            "name": "slot_2_doctor"
+          },
+          {
+            "data": "$.result.time_pref_relaxed",
+            "name": "time_pref_relaxed"
+          }
+        ],
+        "responsePathways": [
+          [
+            "slot_count",
+            "==",
+            "1",
+            {
+              "id": "n_offer",
+              "name": "One opening found"
+            }
+          ],
+          [
+            "slot_count",
+            ">=",
+            "2",
+            {
+              "id": "n_offer",
+              "name": "Two or more found"
+            }
+          ],
+          [
+            "slot_count",
+            "==",
+            "0",
+            {
+              "id": "n_reask",
+              "name": "Nothing found, ask for another day"
+            }
+          ],
+          [
+            "ok",
+            "!=",
+            "true",
+            {
+              "id": "n_reask",
+              "name": "Search rejected or unavailable"
+            }
+          ]
+        ],
+        "active": false,
+        "text": ""
+      },
+      "x": -900,
+      "y": 600,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": -900,
+        "y": 600
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_verify_1",
+      "type": "Webhook",
+      "data": {
+        "name": "Verify opening 1 (silent)",
+        "url": "https://mott-booking-gw.mail.mybcat.com/conflict-check",
+        "body": "{\"store\":\"{{store}}\",\"doctor\":\"{{slot_1_doctor}}\",\"start\":\"{{slot_1_start}}\",\"end\":\"{{slot_1_end}}\"}",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "{{ SECRET.MottGatewayToken }}"
+        },
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "responseData": [
+          {
+            "data": "$.ok",
+            "name": "ok"
+          },
+          {
+            "data": "$.result.overlapping_appt_id",
+            "name": "overlap_id"
+          },
+          {
+            "data": "$.result.reason",
+            "name": "conflict_reason"
+          }
+        ],
+        "responsePathways": [
+          [
+            "overlap_id",
+            "!=",
+            "",
+            {
+              "id": "n_negotiate",
+              "name": "Overlapping appointment, or no clear answer"
+            }
+          ],
+          [
+            "overlap_id",
+            "==",
+            "",
+            {
+              "id": "n_book_1",
+              "name": "Explicitly clear"
+            }
+          ],
+          [
+            "ok",
+            "!=",
+            "true",
+            {
+              "id": "e_safe_failure",
+              "name": "Verify unavailable"
+            }
+          ]
+        ],
+        "active": false,
+        "text": ""
+      },
+      "x": -420,
+      "y": 620,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": -420,
+        "y": 620
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_verify_2",
+      "type": "Webhook",
+      "data": {
+        "name": "Verify opening 2 (silent)",
+        "url": "https://mott-booking-gw.mail.mybcat.com/conflict-check",
+        "body": "{\"store\":\"{{store}}\",\"doctor\":\"{{slot_2_doctor}}\",\"start\":\"{{slot_2_start}}\",\"end\":\"{{slot_2_end}}\"}",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "{{ SECRET.MottGatewayToken }}"
+        },
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "responseData": [
+          {
+            "data": "$.ok",
+            "name": "ok"
+          },
+          {
+            "data": "$.result.overlapping_appt_id",
+            "name": "overlap_id"
+          },
+          {
+            "data": "$.result.reason",
+            "name": "conflict_reason"
+          }
+        ],
+        "responsePathways": [
+          [
+            "overlap_id",
+            "!=",
+            "",
+            {
+              "id": "n_negotiate",
+              "name": "Overlapping appointment, or no clear answer"
+            }
+          ],
+          [
+            "overlap_id",
+            "==",
+            "",
+            {
+              "id": "n_book_2",
+              "name": "Explicitly clear"
+            }
+          ],
+          [
+            "ok",
+            "!=",
+            "true",
+            {
+              "id": "e_safe_failure",
+              "name": "Verify unavailable"
+            }
+          ]
+        ],
+        "active": false,
+        "text": ""
+      },
+      "x": 420,
+      "y": 620,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 420,
+        "y": 620
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_book_1",
+      "type": "Webhook",
+      "data": {
+        "name": "Book opening 1 (silent)",
+        "url": "https://mott-booking-gw.mail.mybcat.com/sign",
+        "body": "{\"verb\":\"appt.book\",\"target\":\"{{patient_id}}\",\"store\":\"{{store}}\",\"reason\":\"new-booking\",\"params\":{\"doctor\":\"{{slot_1_doctor}}\",\"start\":\"{{slot_1_start}}\",\"end\":\"{{slot_1_end}}\",\"type\":\"{{exam_type_id}}\"}}",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "{{ SECRET.MottGatewayToken }}"
+        },
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "responseData": [
+          {
+            "data": "$.http_status",
+            "name": "book_http_status"
+          },
+          {
+            "data": "$.error",
+            "name": "book_error"
+          },
+          {
+            "data": "$.new_appt_id",
+            "name": "new_appt_id"
+          },
+          {
+            "data": "$.status",
+            "name": "error_status"
+          }
+        ],
+        "responsePathways": [
+          [
+            "book_error",
+            "==",
+            "slot_conflict",
+            {
+              "id": "n_negotiate",
+              "name": "Signer found a conflict"
+            }
+          ],
+          [
+            "book_http_status",
+            "==",
+            "200",
+            {
+              "id": "n_confirm",
+              "name": "Signer wrote the appointment"
+            }
+          ],
+          [
+            "book_http_status",
+            "==",
+            "201",
+            {
+              "id": "n_confirm",
+              "name": "Signer created the appointment"
+            }
+          ],
+          [
+            "book_http_status",
+            "!=",
+            "200",
+            {
+              "id": "e_booking_failed",
+              "name": "Booking did not succeed"
+            }
+          ]
+        ],
+        "active": false,
+        "text": ""
+      },
+      "x": -420,
+      "y": 820,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": -420,
+        "y": 820
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_book_2",
+      "type": "Webhook",
+      "data": {
+        "name": "Book opening 2 (silent)",
+        "url": "https://mott-booking-gw.mail.mybcat.com/sign",
+        "body": "{\"verb\":\"appt.book\",\"target\":\"{{patient_id}}\",\"store\":\"{{store}}\",\"reason\":\"new-booking\",\"params\":{\"doctor\":\"{{slot_2_doctor}}\",\"start\":\"{{slot_2_start}}\",\"end\":\"{{slot_2_end}}\",\"type\":\"{{exam_type_id}}\"}}",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "{{ SECRET.MottGatewayToken }}"
+        },
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "responseData": [
+          {
+            "data": "$.http_status",
+            "name": "book_http_status"
+          },
+          {
+            "data": "$.error",
+            "name": "book_error"
+          },
+          {
+            "data": "$.new_appt_id",
+            "name": "new_appt_id"
+          },
+          {
+            "data": "$.status",
+            "name": "error_status"
+          }
+        ],
+        "responsePathways": [
+          [
+            "book_error",
+            "==",
+            "slot_conflict",
+            {
+              "id": "n_negotiate",
+              "name": "Signer found a conflict"
+            }
+          ],
+          [
+            "book_http_status",
+            "==",
+            "200",
+            {
+              "id": "n_confirm",
+              "name": "Signer wrote the appointment"
+            }
+          ],
+          [
+            "book_http_status",
+            "==",
+            "201",
+            {
+              "id": "n_confirm",
+              "name": "Signer created the appointment"
+            }
+          ],
+          [
+            "book_http_status",
+            "!=",
+            "200",
+            {
+              "id": "e_booking_failed",
+              "name": "Booking did not succeed"
+            }
+          ]
+        ],
+        "active": false,
+        "text": ""
+      },
+      "x": 420,
+      "y": 820,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 420,
+        "y": 820
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_confirm",
+      "type": "Default",
+      "data": {
+        "name": "Booked",
+        "prompt": "BACKGROUND. You are the scheduling assistant for Mott Optical, an optometry practice. You are texting a patient by name who has not been in for a while, to get them booked for a comprehensive eye exam at the MK2 office. The practice management system supplies the patient's name and the real open appointment times; you never invent either. Your single purpose in this whole conversation is to get one appointment booked. Every detour comes back to that. The booking system has just written a real appointment into the practice schedule for this patient and reported success. The appointment genuinely exists. This is the only point in the whole conversation where that is true.\n\nGOAL. Tell the patient their appointment is booked, and make sure they do not end up with a second one.\n\nTASK. Confirm the appointment that was booked, in plain language. If the patient then asks to change, cancel or move it, give them the office number (855) 750-6688 and explain the office will take care of it.\n\nNEVER. Never go back to searching, verifying or booking after this point, because that would give this patient two appointments. Never show internal identifiers. Reply in the language of the patient's most recent message. If they switch languages, switch with them, in either direction, every time. The Chinese-service invitation line belongs to the opening message only; never add it here. A bare number, YES or OK carries no language signal, so stay in the language already in use. The message you send is read by a patient on their phone. Write only ordinary conversational English or Chinese. Never write an internal field name, a variable name, an underscore_name, a colon-and-value line, a list of captured values, a record id, or any note about what you are storing or doing internally.",
+        "userWait": true,
+        "active": false
+      },
+      "x": 0,
+      "y": 1020,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 0,
+        "y": 1020
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_office",
+      "type": "Default",
+      "data": {
+        "name": "Office handoff",
+        "prompt": "BACKGROUND. You are the scheduling assistant for Mott Optical, an optometry practice. You are texting a patient by name who has not been in for a while, to get them booked for a comprehensive eye exam at the MK2 office. The practice management system supplies the patient's name and the real open appointment times; you never invent either. Your single purpose in this whole conversation is to get one appointment booked. Every detour comes back to that. The patient asked about something this conversation cannot handle, such as an order, the status of their glasses, or a medical question. You are in the middle of trying to book them an eye exam and that is still the point of the conversation.\n\nGOAL. Give them the office number for the thing you cannot help with, then get back to booking the appointment.\n\nTASK. Give the office number (855) 750-6688 for what they asked about. Then ALWAYS return to the goal with a direct question: ask whether they would like you to get them scheduled now, naming the openings still on offer. A question from the patient is never a decline. Only an explicit no ends this; if it is unclear whether they still want an appointment, ask them plainly to confirm.\n\nNEVER. Never treat their question as a decline and never end the conversation here. You cannot book anything and you have no way to check whether a booking succeeded. NEVER say or imply that an appointment is booked, scheduled, held, reserved, confirmed, or that you have someone down for a time, and never refer to a booking as though it already exists. Only the confirmation step may say that, and only after the booking system reports success. If the patient asks whether they are booked, say you are still getting them scheduled and have not completed it yet. Reply in the language of the patient's most recent message. If they switch languages, switch with them, in either direction, every time. The Chinese-service invitation line belongs to the opening message only; never add it here. A bare number, YES or OK carries no language signal, so stay in the language already in use. The message you send is read by a patient on their phone. Write only ordinary conversational English or Chinese. Never write an internal field name, a variable name, an underscore_name, a colon-and-value line, a list of captured values, a record id, or any note about what you are storing or doing internally.",
+        "userWait": true,
+        "isGlobal": true,
+        "globalLabel": "The patient asks for something outside booking this new appointment and outside insurance or cost, such as orders, glasses status or a medical question.",
+        "enableGlobalAutoReturn": true,
+        "active": false
+      },
+      "x": 900,
+      "y": 400,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 900,
+        "y": 400
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "n_faq",
+      "type": "Default",
+      "data": {
+        "name": "Insurance question deferral",
+        "prompt": "BACKGROUND. You are the scheduling assistant for Mott Optical, an optometry practice. You are texting a patient by name who has not been in for a while, to get them booked for a comprehensive eye exam at the MK2 office. The practice management system supplies the patient's name and the real open appointment times; you never invent either. Your single purpose in this whole conversation is to get one appointment booked. Every detour comes back to that. The patient asked about insurance, coverage, cost, contact lenses, frames or sunglasses. You do not have this patient's benefits and you have no way to look them up. The office staff can. You are in the middle of trying to book them an eye exam.\n\nGOAL. Answer honestly that this needs the office, then get back to booking the appointment.\n\nTASK. If they asked whether insurance COVERS something, say that vision benefits are usually separate coverage with their own copays, and our staff will be able to help them with this. If they asked what something COSTS or what they would pay, say it depends on their benefits and someone at the office can help with that. If they say they want to speak to someone, give them the office number (855) 750-6688. Then ALWAYS return to the goal with a direct question: ask whether they would like you to get them scheduled now, naming the openings still on offer. A question from the patient is never a decline. Only an explicit no ends this; if it is unclear whether they still want an appointment, ask them plainly to confirm.\n\nNEVER. Never invent, guess or generate any other answer. Never treat their question as a decline and never end the conversation here. You cannot book anything and you have no way to check whether a booking succeeded. NEVER say or imply that an appointment is booked, scheduled, held, reserved, confirmed, or that you have someone down for a time, and never refer to a booking as though it already exists. Only the confirmation step may say that, and only after the booking system reports success. If the patient asks whether they are booked, say you are still getting them scheduled and have not completed it yet. Never say free. Never mention a discount, a package, or saving money. Never state what any specific plan covers and never quote a price or a dollar amount. Reply in the language of the patient's most recent message. If they switch languages, switch with them, in either direction, every time. The Chinese-service invitation line belongs to the opening message only; never add it here. A bare number, YES or OK carries no language signal, so stay in the language already in use. The message you send is read by a patient on their phone. Write only ordinary conversational English or Chinese. Never write an internal field name, a variable name, an underscore_name, a colon-and-value line, a list of captured values, a record id, or any note about what you are storing or doing internally.",
+        "userWait": true,
+        "isGlobal": true,
+        "globalLabel": "The patient asks anything about insurance, coverage, cost, contact lenses, frames or sunglasses. Answering is deferred to the office staff.",
+        "enableGlobalAutoReturn": true,
+        "active": false
+      },
+      "x": 900,
+      "y": 200,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 900,
+        "y": 200
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "e_safe_identity",
+      "type": "End Call",
+      "data": {
+        "name": "identity_failed",
+        "text": "I couldn't safely continue this scheduling request. Please call Mott Optical at (855) 750-6688.",
+        "outcome": "identity_failed",
+        "active": false,
+        "tag": {
+          "name": "outcome:identity_failed",
+          "color": "#455A64"
+        }
+      },
+      "x": -1350,
+      "y": 0,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": -1350,
+        "y": 0
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "e_safe_failure",
+      "type": "End Call",
+      "data": {
+        "name": "gateway_failed",
+        "text": "I couldn't access scheduling right now and no appointment was booked. Please call Mott Optical at (855) 750-6688.",
+        "outcome": "gateway_failed",
+        "active": false,
+        "tag": {
+          "name": "outcome:gateway_failed",
+          "color": "#455A64"
+        }
+      },
+      "x": -1350,
+      "y": 200,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": -1350,
+        "y": 200
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "e_booking_failed",
+      "type": "End Call",
+      "data": {
+        "name": "booking_failed",
+        "text": "No appointment was booked. Please call Mott Optical at (855) 750-6688.",
+        "outcome": "booking_failed",
+        "active": false,
+        "tag": {
+          "name": "outcome:booking_failed",
+          "color": "#455A64"
+        }
+      },
+      "x": -1350,
+      "y": 820,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": -1350,
+        "y": 820
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "e_booked",
+      "type": "End Call",
+      "data": {
+        "name": "booked",
+        "text": "You're all set. We look forward to seeing you.",
+        "outcome": "booked",
+        "active": false,
+        "tag": {
+          "name": "outcome:booked",
+          "color": "#455A64"
+        }
+      },
+      "x": 0,
+      "y": 1220,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 0,
+        "y": 1220
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "e_office",
+      "type": "End Call",
+      "data": {
+        "name": "office",
+        "text": "Please call Mott Optical at (855) 750-6688.",
+        "outcome": "office",
+        "active": false,
+        "tag": {
+          "name": "outcome:office",
+          "color": "#455A64"
+        }
+      },
+      "x": 1350,
+      "y": 400,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 1350,
+        "y": 400
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "e_declined",
+      "type": "End Call",
+      "data": {
+        "name": "declined",
+        "text": "Ok, thank you for letting us know. If you need anything, call the office at (855) 750-6688.",
+        "outcome": "declined",
+        "isGlobal": true,
+        "globalLabel": "The patient is not interested or declines this offer without revoking consent.",
+        "enableGlobalAutoReturn": false,
+        "active": false,
+        "tag": {
+          "name": "outcome:declined",
+          "color": "#455A64"
+        }
+      },
+      "x": 1350,
+      "y": 200,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 1350,
+        "y": 200
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "e_stop",
+      "type": "End Call",
+      "data": {
+        "name": "stopped",
+        "text": "Understood. If you would like to be taken off our list, please call Mott Optical at (855) 750-6688 and the office can take care of it.",
+        "outcome": "stopped",
+        "isGlobal": true,
+        "globalLabel": "The patient wants the texts to stop. This includes a message that is just the word STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT or REMOVE on its own in any casing, and any message asking to be taken off the list, to stop texting, or to not be contacted again. Match this even when the message is a single word with no other context.",
+        "enableGlobalAutoReturn": false,
+        "active": false,
+        "tag": {
+          "name": "outcome:stopped",
+          "color": "#455A64"
+        }
+      },
+      "x": 1350,
+      "y": 0,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 1350,
+        "y": 0
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "e_not_me",
+      "type": "End Call",
+      "data": {
+        "name": "wrong_person",
+        "text": "Sorry about that. If you would like to be taken off our list, please call Mott Optical at (855) 750-6688 and the office can take care of it.",
+        "outcome": "wrong_person",
+        "isGlobal": true,
+        "globalLabel": "The person holding this phone is not the patient. This includes a message that is just NOT ME or WRONG NUMBER, and any message saying they are not that person, they do not know that person, this is the wrong number, or asking who this is because they were not expecting to hear from an eye doctor.",
+        "enableGlobalAutoReturn": false,
+        "active": false,
+        "tag": {
+          "name": "outcome:wrong_person",
+          "color": "#455A64"
+        }
+      },
+      "x": 1350,
+      "y": -200,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 1350,
+        "y": -200
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "e_existing",
+      "type": "End Call",
+      "data": {
+        "name": "existing_appointment",
+        "text": "Please call Mott Optical at (855) 750-6688 and the office can help with that appointment.",
+        "outcome": "existing_appointment",
+        "isGlobal": true,
+        "globalLabel": "The patient already has a different appointment they want to cancel or move.",
+        "enableGlobalAutoReturn": false,
+        "active": false,
+        "tag": {
+          "name": "outcome:existing_appointment",
+          "color": "#455A64"
+        }
+      },
+      "x": 900,
+      "y": 0,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": 900,
+        "y": 0
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    },
+    {
+      "id": "e_timeout",
+      "type": "End Call",
+      "data": {
+        "name": "no_reply",
+        "text": "Closing this conversation.",
+        "outcome": "no_reply",
+        "active": false,
+        "tag": {
+          "name": "outcome:no_reply",
+          "color": "#455A64"
+        }
+      },
+      "x": -900,
+      "y": 1020,
+      "width": 320,
+      "height": 115,
+      "position": {
+        "x": -900,
+        "y": 1020
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top"
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge-n_ask-n_search-says-when-they-want-to-come-in",
+      "data": {
+        "label": "says when they want to come in",
+        "description": "Route from n_ask to n_search when: says when they want to come in.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_ask",
+      "target": "n_search",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_reask-n_search-names-a-specific-day",
+      "data": {
+        "label": "names a specific day",
+        "description": "Route from n_reask to n_search when: names a specific day.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_reask",
+      "target": "n_search",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_reask-e_declined-gives-up-on-booking",
+      "data": {
+        "label": "gives up on booking",
+        "description": "Route from n_reask to e_declined when: gives up on booking.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_reask",
+      "target": "e_declined",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_reask-e_timeout-72-hour-timeout",
+      "data": {
+        "label": "72-hour timeout",
+        "description": "Route from n_reask to e_timeout when: 72-hour timeout.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_reask",
+      "target": "e_timeout",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_ask-e_declined-declines-at-the-opening",
+      "data": {
+        "label": "declines at the opening",
+        "description": "Route from n_ask to e_declined when: declines at the opening.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_ask",
+      "target": "e_declined",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_ask-e_timeout-72-hour-timeout",
+      "data": {
+        "label": "72-hour timeout",
+        "description": "Route from n_ask to e_timeout when: 72-hour timeout.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_ask",
+      "target": "e_timeout",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_offer-n_verify_1-selects-opening-1",
+      "data": {
+        "label": "selects opening 1",
+        "description": "Route from n_offer to n_verify_1 when: selects opening 1.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_offer",
+      "target": "n_verify_1",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_offer-n_verify_2-selects-opening-2",
+      "data": {
+        "label": "selects opening 2",
+        "description": "Route from n_offer to n_verify_2 when: selects opening 2.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_offer",
+      "target": "n_verify_2",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_offer-n_negotiate-wants-a-different-day-or-time",
+      "data": {
+        "label": "wants a different day or time",
+        "description": "Route from n_offer to n_negotiate when: wants a different day or time.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_offer",
+      "target": "n_negotiate",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_offer-e_declined-declines-this-offer",
+      "data": {
+        "label": "declines this offer",
+        "description": "Route from n_offer to e_declined when: declines this offer.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_offer",
+      "target": "e_declined",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_offer-e_timeout-72-hour-timeout",
+      "data": {
+        "label": "72-hour timeout",
+        "description": "Route from n_offer to e_timeout when: 72-hour timeout.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_offer",
+      "target": "e_timeout",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_negotiate-n_search-preference-collected",
+      "data": {
+        "label": "preference collected",
+        "description": "Route from n_negotiate to n_search when: preference collected.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_negotiate",
+      "target": "n_search",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_negotiate-e_declined-declines-after-negotiating",
+      "data": {
+        "label": "declines after negotiating",
+        "description": "Route from n_negotiate to e_declined when: declines after negotiating.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_negotiate",
+      "target": "e_declined",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_negotiate-e_timeout-72-hour-timeout",
+      "data": {
+        "label": "72-hour timeout",
+        "description": "Route from n_negotiate to e_timeout when: 72-hour timeout.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_negotiate",
+      "target": "e_timeout",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_confirm-e_booked-confirmation-delivered",
+      "data": {
+        "label": "confirmation delivered",
+        "description": "Route from n_confirm to e_booked when: confirmation delivered.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_confirm",
+      "target": "e_booked",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_confirm-n_office-change-requested-after-confirmation",
+      "data": {
+        "label": "change requested after confirmation",
+        "description": "Route from n_confirm to n_office when: change requested after confirmation.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_confirm",
+      "target": "n_office",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_confirm-e_booked-72-hour-silence-after-booking",
+      "data": {
+        "label": "72-hour silence after booking",
+        "description": "Route from n_confirm to e_booked when: 72-hour silence after booking.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_confirm",
+      "target": "e_booked",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_office-e_office-office-direction-delivered",
+      "data": {
+        "label": "office direction delivered",
+        "description": "Route from n_office to e_office when: office direction delivered.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_office",
+      "target": "e_office",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_faq-n_office-patient-asks-to-speak-to-someone",
+      "data": {
+        "label": "patient asks to speak to someone",
+        "description": "Route from n_faq to n_office when: patient asks to speak to someone.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_faq",
+      "target": "n_office",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_identity-e_safe_identity-recall-cell",
+      "data": {
+        "label": "recall_cell == ",
+        "description": "Route from n_identity to e_safe_identity when: recall_cell == .",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_identity",
+      "target": "e_safe_identity",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_identity-e_safe_identity-recall-patient-id",
+      "data": {
+        "label": "recall_patient_id == ",
+        "description": "Route from n_identity to e_safe_identity when: recall_patient_id == .",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_identity",
+      "target": "e_safe_identity",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_identity-e_safe_identity-store",
+      "data": {
+        "label": "store == ",
+        "description": "Route from n_identity to e_safe_identity when: store == .",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_identity",
+      "target": "e_safe_identity",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_identity-n_ask-count-1",
+      "data": {
+        "label": "count == 1",
+        "description": "Route from n_identity to n_ask when: count == 1.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_identity",
+      "target": "n_ask",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_identity-e_safe_identity-count-0",
+      "data": {
+        "label": "count == 0",
+        "description": "Route from n_identity to e_safe_identity when: count == 0.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_identity",
+      "target": "e_safe_identity",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_identity-e_safe_identity-count-2",
+      "data": {
+        "label": "count >= 2",
+        "description": "Route from n_identity to e_safe_identity when: count >= 2.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_identity",
+      "target": "e_safe_identity",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_identity-e_safe_failure-ok-true",
+      "data": {
+        "label": "ok != true",
+        "description": "Route from n_identity to e_safe_failure when: ok != true.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_identity",
+      "target": "e_safe_failure",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_search-n_offer-slot-count-1",
+      "data": {
+        "label": "slot_count == 1",
+        "description": "Route from n_search to n_offer when: slot_count == 1.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_search",
+      "target": "n_offer",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_search-n_offer-slot-count-2",
+      "data": {
+        "label": "slot_count >= 2",
+        "description": "Route from n_search to n_offer when: slot_count >= 2.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_search",
+      "target": "n_offer",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_search-n_reask-slot-count-0",
+      "data": {
+        "label": "slot_count == 0",
+        "description": "Route from n_search to n_reask when: slot_count == 0.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_search",
+      "target": "n_reask",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_search-n_reask-ok-true",
+      "data": {
+        "label": "ok != true",
+        "description": "Route from n_search to n_reask when: ok != true.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_search",
+      "target": "n_reask",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_verify_1-n_negotiate-overlap-id",
+      "data": {
+        "label": "overlap_id != ",
+        "description": "Route from n_verify_1 to n_negotiate when: overlap_id != .",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_verify_1",
+      "target": "n_negotiate",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_verify_1-n_book_1-overlap-id",
+      "data": {
+        "label": "overlap_id == ",
+        "description": "Route from n_verify_1 to n_book_1 when: overlap_id == .",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_verify_1",
+      "target": "n_book_1",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_verify_1-e_safe_failure-ok-true",
+      "data": {
+        "label": "ok != true",
+        "description": "Route from n_verify_1 to e_safe_failure when: ok != true.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_verify_1",
+      "target": "e_safe_failure",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_verify_2-n_negotiate-overlap-id",
+      "data": {
+        "label": "overlap_id != ",
+        "description": "Route from n_verify_2 to n_negotiate when: overlap_id != .",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_verify_2",
+      "target": "n_negotiate",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_verify_2-n_book_2-overlap-id",
+      "data": {
+        "label": "overlap_id == ",
+        "description": "Route from n_verify_2 to n_book_2 when: overlap_id == .",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_verify_2",
+      "target": "n_book_2",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_verify_2-e_safe_failure-ok-true",
+      "data": {
+        "label": "ok != true",
+        "description": "Route from n_verify_2 to e_safe_failure when: ok != true.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_verify_2",
+      "target": "e_safe_failure",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_book_1-n_negotiate-book-error-slot-conflict",
+      "data": {
+        "label": "book_error == slot_conflict",
+        "description": "Route from n_book_1 to n_negotiate when: book_error == slot_conflict.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_book_1",
+      "target": "n_negotiate",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_book_1-n_confirm-book-http-status-200",
+      "data": {
+        "label": "book_http_status == 200",
+        "description": "Route from n_book_1 to n_confirm when: book_http_status == 200.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_book_1",
+      "target": "n_confirm",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_book_1-n_confirm-book-http-status-201",
+      "data": {
+        "label": "book_http_status == 201",
+        "description": "Route from n_book_1 to n_confirm when: book_http_status == 201.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_book_1",
+      "target": "n_confirm",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_book_1-e_booking_failed-book-http-status-200",
+      "data": {
+        "label": "book_http_status != 200",
+        "description": "Route from n_book_1 to e_booking_failed when: book_http_status != 200.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_book_1",
+      "target": "e_booking_failed",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_book_2-n_negotiate-book-error-slot-conflict",
+      "data": {
+        "label": "book_error == slot_conflict",
+        "description": "Route from n_book_2 to n_negotiate when: book_error == slot_conflict.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_book_2",
+      "target": "n_negotiate",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_book_2-n_confirm-book-http-status-200",
+      "data": {
+        "label": "book_http_status == 200",
+        "description": "Route from n_book_2 to n_confirm when: book_http_status == 200.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_book_2",
+      "target": "n_confirm",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_book_2-n_confirm-book-http-status-201",
+      "data": {
+        "label": "book_http_status == 201",
+        "description": "Route from n_book_2 to n_confirm when: book_http_status == 201.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_book_2",
+      "target": "n_confirm",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    },
+    {
+      "id": "edge-n_book_2-e_booking_failed-book-http-status-200",
+      "data": {
+        "label": "book_http_status != 200",
+        "description": "Route from n_book_2 to e_booking_failed when: book_http_status != 200.",
+        "isHighlighted": false
+      },
+      "type": "custom",
+      "source": "n_book_2",
+      "target": "e_booking_failed",
+      "animated": true,
+      "sourceHandle": null,
+      "targetHandle": null
+    }
+  ],
+  "analysis_options": {
+    "fields": [
+      {
+        "name": "outcome",
+        "type": "enum",
+        "values": [
+          "booked",
+          "declined",
+          "no_reply",
+          "office",
+          "wrong_person",
+          "stopped",
+          "identity_failed",
+          "gateway_failed",
+          "booking_failed"
+        ]
+      },
+      {
+        "name": "slot_chosen",
+        "type": "enum",
+        "values": [
+          "slot_1",
+          "slot_2",
+          "negotiated",
+          "none"
+        ]
+      },
+      {
+        "name": "negotiation_loop_ran",
+        "type": "boolean"
+      },
+      {
+        "name": "faq_answered",
+        "type": "boolean"
+      }
+    ]
+  }
+}

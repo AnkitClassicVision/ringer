@@ -1,0 +1,4 @@
+GATE=monday-next-week STATUS=200 first=08/10/2026 11:15 am count=23 unresolved=None
+GATE=monday-week-of-18th STATUS=200 first=08/10/2026 11:15 am count=23 unresolved=None
+GATE=unresolved STATUS=409 first=None count=None unresolved=None
+GATE=relative-reg STATUS=200 first=08/18/2026 10:30 am count=28 unresolved=None

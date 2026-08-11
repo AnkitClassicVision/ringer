@@ -1,0 +1,57 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT6mint",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "t6-strip-builder",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1800,
+      "expect_files": ["strip_filler.py"],
+      "spec": "You are a build worker writing a deterministic graph transform. OFFLINE: no network, no git, no MCP, no skills; write only in your working directory.\n\nCONTEXT: the Mott Bland pathway graph embeds the filler sentence 'One moment while I check the schedule for you.' in about 20 node prompts. Measured tonight on the live line: that filler lands 10.5-11.8s after the patient's message, a mere 0.33s before the real answer - it reassures nobody and costs an extra SMS per turn. Ankit's ruling: kill the filler, one answer per turn.\n\nWRITE ./strip_filler.py, usage: strip_filler.py <in.json> <out.json>. Behavior: load the pathway graph JSON; in every string field anywhere in the structure, remove every occurrence of the exact sentence 'One moment while I check the schedule for you.' and tidy the residue (collapse doubled spaces, strip a space left hanging before a newline or at line start/end where the sentence was removed - never touch any other text); count total occurrences removed and print REMOVED=<n>; if n is 0 print REMOVED=0 and exit 1 (refusal - wrong input); assert the node count and edge count are identical before and after and print NODES=<n> EDGES=<n>; write the transformed JSON to <out.json>; any assertion failure prints why and exits 1.\n\nVERIFY before finishing: PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile strip_filler.py passes; no-args run exits nonzero printing usage; running it on a tiny self-made test JSON containing the sentence twice prints REMOVED=2 and produces parseable output. Final message <=15 lines.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile strip_filler.py || exit 1; if python3 strip_filler.py >/dev/null 2>&1; then echo 'CHECK FAILED: no-args must exit nonzero'; exit 1; fi; PYTHONDONTWRITEBYTECODE=1 python3 strip_filler.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v92.json ./v92_nofiller.json > strip_run.txt 2>&1 || { echo 'CHECK FAILED: real transform failed:'; cat strip_run.txt; exit 1; }; grep -q '^REMOVED=20$' strip_run.txt || { echo \"CHECK FAILED: expected REMOVED=20 on the real v92 graph, got: $(grep '^REMOVED=' strip_run.txt)\"; exit 1; }; python3 -c \"import json; d=json.load(open('v92_nofiller.json')); import sys; body=open('v92_nofiller.json').read(); assert 'One moment while I check the schedule for you' not in body, 'filler sentence still present'; print('output parses; filler fully gone')\" || exit 1; echo 'PASS: 20 fillers stripped from real v92 graph; structure counts asserted by the tool'",
+      "verified": "The exact filler sentence stripped from all 20 node prompts of the real v92 graph by an executed deterministic transform, with node/edge counts asserted unchanged and the output proven clean."
+    },
+    {
+      "key": "t6-graph-validate",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["validate.txt"],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_graph.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT6mint/t6-strip-builder/v92_nofiller.json > validate.txt 2>&1; rc=$?; tail -12 validate.txt; exit $rc",
+      "check": "if grep -qiE 'usage:|error:|traceback' validate.txt && ! grep -qiE 'pass|ok|assert' validate.txt; then echo 'FAIL: validator did not run cleanly (interface or crash):'; head -8 validate.txt; exit 1; fi; grep -qiE '(pass|ok|35)' validate.txt || { echo 'FAIL: no pass indication in validator output:'; tail -8 validate.txt; exit 1; }; echo \"PASS: validator accepted the stripped graph - $(tail -1 validate.txt)\"",
+      "verified": "The 35-assertion canonical graph validator executed against the filler-stripped v92 graph and accepted it, so the strip changed copy only, not structure or routing."
+    },
+    {
+      "key": "t6-mint-nofiller",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["minted.txt"],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/mott-v21-snap/scripts/mint_graph_version.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT6mint/t6-strip-builder/v92_nofiller.json > minted.txt 2>&1; rc=$?; tail -8 minted.txt; exit $rc",
+      "check": "grep -qiE 'version' minted.txt || { echo 'FAIL: mint output names no version:'; tail -8 minted.txt; exit 1; }; if grep -qiE 'attached' minted.txt && ! grep -qiE 'no numbers attached|not attached|unattached' minted.txt; then echo 'FAIL: mint output suggests a number attachment - inspect immediately:'; grep -i attached minted.txt; exit 1; fi; echo \"PASS: unattached mint recorded - $(grep -iE 'version' minted.txt | head -2 | tr '\\n' ' ')\"",
+      "verified": "The filler-stripped graph minted as a new UNATTACHED Bland pathway version (live 509 line untouched), version number on the record for the A/B measurement."
+    },
+    {
+      "key": "t6-measure-control",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "printf '{\"turns\":[\"hi\",\"do you have anything on friday afternoon?\",\"is there anything later that day?\"]}' > script.json; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT46prep/turn-timer-builder/turn_timer.py 92 script.json control > measure.txt 2>&1; rc=$?; tail -6 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 TURN lines, got $t\"; tail -5 measure.txt; exit 1; }; grep -qE '^RESULT label=control turns=3 total_wall_ms=[0-9]+ filler_hits=[0-9]+' measure.txt || { echo 'FAIL: no well-formed RESULT line'; tail -3 measure.txt; exit 1; }; echo \"PASS: $(grep -m1 '^RESULT' measure.txt)\"",
+      "verified": "Three scripted non-booking turns timed against current v92: per-turn wall time, message count, node id, and filler count on the record as the control side of the A/B."
+    },
+    {
+      "key": "t6-measure-nofiller",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "V=$(grep -oE '[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT6mint/t6-mint-nofiller/minted.txt | tail -1); [ -n \"$V\" ] || { echo 'no minted version number found'; exit 1; }; echo \"MEASURING_VERSION=$V\"; printf '{\"turns\":[\"hi\",\"do you have anything on friday afternoon?\",\"is there anything later that day?\"]}' > script.json; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT46prep/turn-timer-builder/turn_timer.py \"$V\" script.json nofiller > measure.txt 2>&1; rc=$?; tail -6 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 TURN lines, got $t\"; tail -5 measure.txt; exit 1; }; grep -qE '^RESULT label=nofiller turns=3 total_wall_ms=[0-9]+ filler_hits=0$' measure.txt || { echo \"FAIL: RESULT must show filler_hits=0 on the stripped version, got: $(grep -m1 '^RESULT' measure.txt)\"; exit 1; }; echo \"PASS: $(grep -m1 '^RESULT' measure.txt)\"",
+      "verified": "The same three scripted turns timed against the filler-stripped unattached mint: zero filler messages proven, per-turn wall time and message counts on the record as the treatment side of the A/B."
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+MONITOR_START 2026-08-07T12:44:58
+PILOT_LOADED n=9
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 1 12:45 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 2 12:47 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 3 12:49 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 4 12:51 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 5 12:53 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 6 12:55 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 7 12:57 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 8 12:59 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 9 13:01 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 10 13:03 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 11 13:05 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 12 13:07 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 13 13:09 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 14 13:11 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 15 13:13 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 16 13:15 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 17 13:17 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 18 13:19 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 19 13:21 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 20 13:23 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 21 13:25 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 22 13:27 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 23 13:29 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 24 13:31 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 25 13:33 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 26 13:35 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 27 13:37 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 28 13:39 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 29 13:42 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 30 13:44 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 31 13:46 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 32 13:48 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 33 13:50 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 34 13:52 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 35 13:54 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 36 13:56 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 37 13:58 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 38 14:00 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 39 14:02 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 40 14:04 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 41 14:06 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 42 14:08 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 43 14:10 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 44 14:12 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 45 14:14 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 46 14:16 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 47 14:18 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 48 14:20 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 49 14:22 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 50 14:24 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 51 14:26 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 52 14:28 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 53 14:30 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 54 14:32 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 55 14:34 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 56 14:37 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 57 14:39 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 58 14:41 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 59 14:43 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 60 14:45 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 61 14:47 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 62 14:49 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 63 14:51 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 64 14:53 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 65 14:55 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 66 14:57 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 67 14:59 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 68 15:01 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 69 15:03 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 70 15:05 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 71 15:07 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 72 15:09 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 73 15:11 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 74 15:13 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 75 15:15 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 76 15:17 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 77 15:19 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 78 15:21 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 79 15:23 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 80 15:25 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 81 15:27 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 82 15:30 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 83 15:32 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 84 15:34 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 85 15:36 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 86 15:38 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 87 15:40 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 88 15:42 active=9 replied=0 booked=0 stopped=0
+ALERT DELIVERY_FAIL conv=...7b2aef n=1
+CYCLE 89 15:44 active=9 replied=0 booked=0 stopped=0

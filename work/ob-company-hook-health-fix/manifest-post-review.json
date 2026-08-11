@@ -1,0 +1,43 @@
+{
+  "run_name": "ob-company-hook-health-fix",
+  "workdir": "/mnt/d_drive/ringer-work/ob-company-hook-health-fix",
+  "max_parallel": 2,
+  "tasks": [
+    {
+      "key": "post-privacy-review",
+      "engine": "codex",
+      "engine_args": [
+        "-m",
+        "gpt-5.6-sol",
+        "-c",
+        "model_reasoning_effort=\"high\""
+      ],
+      "task_type": "code-review",
+      "timeout_s": 1500,
+      "expect_files": [
+        "report.md"
+      ],
+      "spec": "You are the independent privacy/security reviewer for a completed Ringer implementation snapshot. Both /mnt/d_drive/ringer-work/ob-company-hook-health-fix/source-work and /mnt/d_drive/ringer-work/ob-company-hook-health-fix/source-baseline are read-only source material. Never modify, create, delete, format, install, stage, commit, or write in either snapshot or the original repo. Do not load skills, call MCP/Apps, use network, read secrets, or perform external actions. You own only ./report.md. INPUTS: read /mnt/d_drive/repos/ringer/work/ob-company-hook-health-fix/evidence.md, both prior review reports, /mnt/d_drive/ringer-work/ob-company-hook-health-fix/implement-hook-health/notes.md, and compare baseline to source-work only for the owned files. Focus on staff/ob_company_agent_event.py, staff/ob_company_hook_health.py, tests/test_ob_company_agent_event.py, tests/test_ob_company_hook_health.py, supabase/functions/ob-company-ingest/index.ts, tests/test_ob_company_ingest_contract.py, and staff/README.md. TASK: verify that HookHeartbeat cannot be counted as lifecycle activity; heartbeat stdin/arbitrary payload/private fields are discarded client- and server-side; full_capture is forced false; strict heartbeat failures do not alter lifecycle fail-open behavior; the local verifier checks real helper/settings/env/surface/registrations safely; scheduler examples contain no credentials; and no claim exceeds the proof. Run the three relevant offline test scripts with PYTHONDONTWRITEBYTECODE=1. OUTPUT CONTRACT: start '# Review Report'; include an exact standalone 'Verdict: ALLOW|REVISE|BLOCK', then '## Summary' with at most 3 bullets, '## Findings', '## Clean', and '## Assumptions'. Each finding must use '### Finding: <neutral summary>', then Evidence, Impact, Fix, Priority P0-P3, and Confidence high|medium|low with source-work file:line citations. Under Assumptions name the exact residual staff-machine/deploy proof boundary. Keep under 1200 words. Hard rules: ALLOW only with no unresolved P0/P1; no speculative edits; no raw secret/PII/PHI; no claim that central code or a test row proves a live install.",
+      "check": "python3 /mnt/d_drive/repos/ringer/work/ob-company-hook-health-fix/check_post_review.py --report report.md --surface post-privacy",
+      "verified": "the independent report has a coherent allow/revise/block verdict and verifies the heartbeat privacy and deployment boundary against the isolated implementation snapshot"
+    },
+    {
+      "key": "post-watchdog-review",
+      "engine": "codex",
+      "engine_args": [
+        "-m",
+        "gpt-5.6-sol",
+        "-c",
+        "model_reasoning_effort=\"high\""
+      ],
+      "task_type": "code-review",
+      "timeout_s": 1500,
+      "expect_files": [
+        "report.md"
+      ],
+      "spec": "You are the independent reliability/state-migration reviewer for a completed Ringer implementation snapshot. /mnt/d_drive/ringer-work/ob-company-hook-health-fix/source-work and source-baseline are read-only. Never modify, create, delete, format, install, stage, commit, or write in either snapshot or the original repo. Do not load skills, call MCP/Apps, use network, read live state/secrets/database rows, or perform external actions. You own only ./report.md. INPUTS: read /mnt/d_drive/repos/ringer/work/ob-company-hook-health-fix/evidence.md, both prior review reports, /mnt/d_drive/ringer-work/ob-company-hook-health-fix/implement-hook-health/notes.md, and compare baseline to source-work for config/ob_company_daily_watchdog_policy.json, scripts/ob_company_daily_watchdog.py, scripts/verify_ob_company_daily_watchdog.py, and tests/test_ob_company_daily_watchdog.py. TASK: verify one bounded SQL query; exact and separate activity/heartbeat allowlists; rolling heartbeat/current-day semantics; inventory mismatch; aliases; v1-to-v2 state migration preserving unrelated entries without false recovery; dedupe/reminders; receipt-based recovery; three-line output and privacy limits; policy validation; and query failure/truncation safety. Explicitly test the two decisive fixture states: natural lifecycle with no heartbeat must alert health-unproven, while fresh heartbeat with no lifecycle must not produce that issue. Run the canonical verifier and watchdog test with PYTHONDONTWRITEBYTECODE=1. OUTPUT CONTRACT: start '# Review Report'; include an exact standalone 'Verdict: ALLOW|REVISE|BLOCK', then '## Summary' with at most 3 bullets, '## Findings', '## Clean', and '## Assumptions'. Each finding must use '### Finding: <neutral summary>', then Evidence, Impact, Fix, Priority P0-P3, and Confidence high|medium|low with source-work file:line citations. Under Assumptions state whether the implementation can be safely copied into the dirty original checkout and what remains unproved until a live staff receipt and authorized server deployment. Keep under 1200 words. Hard rules: ALLOW only with no unresolved P0/P1; do not mistake passing fixtures for live health; no edits, secrets, network, live state, or database access.",
+      "check": "python3 /mnt/d_drive/repos/ringer/work/ob-company-hook-health-fix/check_post_review.py --report report.md --surface post-watchdog",
+      "verified": "the independent report has a coherent allow/revise/block verdict and validates the bounded query, state migration, dedupe, recovery, and decisive heartbeat/activity separation"
+    }
+  ]
+}

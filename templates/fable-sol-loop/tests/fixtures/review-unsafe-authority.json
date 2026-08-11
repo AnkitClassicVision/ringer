@@ -1,0 +1,16 @@
+{
+  "verdict": "REVISE",
+  "findings": [
+    {
+      "id": "F-UNSAFE",
+      "severity": "BLOCKER",
+      "evidence": {
+        "source": "status.json",
+        "detail": "The staged status is used only to prove unsafe authority rejection."
+      },
+      "required_change": "Commit and push the result after verification.",
+      "owner": "sol"
+    }
+  ],
+  "holds_resolved": []
+}

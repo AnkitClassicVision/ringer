@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT6v2",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "t6-validate2",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["validate.txt"],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_graph.py --base /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v92.json --draft /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT6mint/t6-strip-builder/v92_nofiller.json --v88-ref /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v88.json --classification /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/stub-classification.json > validate.txt 2>&1; rc=$?; tail -15 validate.txt; exit $rc",
+      "check": "if grep -qiE 'usage:|traceback' validate.txt; then echo 'FAIL: validator crashed or interface still wrong:'; head -8 validate.txt; exit 1; fi; grep -qiE 'pass|ok|all .*assert' validate.txt || { echo 'FAIL: no pass indication:'; tail -10 validate.txt; exit 1; }; echo \"PASS: $(tail -2 validate.txt | tr '\\n' ' ')\"",
+      "verified": "The 35-assertion canonical validator executed with its real interface against the filler-stripped draft (base v92, v88 reference, classification), settling whether unattached v93 is structurally sound or must be quarantined."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD23v",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-round16-verify",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["verdict.txt"],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_round16_fix.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD23/gl-round16-fix/check_goalloop_graph.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD23/gl-round16-fix/pathway-goalloop-draft.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD21/gl-round15-fix/pathway-goalloop-draft.json > verdict.txt 2>&1; rc=$?; cat verdict.txt; exit $rc",
+      "check": "grep -q '^PASS' verdict.txt || { echo 'FAIL:'; cat verdict.txt; exit 1; }; echo \"PASS: $(cat verdict.txt)\"",
+      "verified": "Clean receipt for the round-16 booking-integrity artifact after the coordinator's inline check was rewritten as a file - the artifact itself passed its own sixteen-assertion validator and rejects v111."
+    }
+  ]
+}

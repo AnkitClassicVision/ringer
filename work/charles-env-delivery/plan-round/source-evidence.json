@@ -1,0 +1,19 @@
+{
+  "evidence_version": "current-sanitized",
+  "aws_secret_exists": true,
+  "aws_region_us_east_1": true,
+  "package_v5_present": true,
+  "passbolt_route_failed": true,
+  "passbolt_sent_receipt": false,
+  "google_chat_route_failed": true,
+  "google_chat_sent_receipt": false,
+  "gmail_selected_route": true,
+  "gmail_send_mode": "one-time-dedupe-then-send",
+  "iam_changes_allowed": false,
+  "machine_install_pending": true,
+  "downstream_acceptance_pending": true,
+  "privacy_safe_events_verified": false,
+  "approved_ob_company_access_verified": false,
+  "open_skills_access_verified": false,
+  "full_onboarding_complete": false
+}

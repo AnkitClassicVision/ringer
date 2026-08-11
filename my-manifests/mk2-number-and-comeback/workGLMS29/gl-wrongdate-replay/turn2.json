@@ -1,0 +1,48 @@
+{
+  "data": {
+    "assistant_responses": [
+      "Please call MK2 Optical at (212) 219-2219 and the office can help with that appointment."
+    ],
+    "chat_history": [
+      {
+        "content": "hi",
+        "role": "user"
+      },
+      {
+        "content": "Hi Rachel! I'm just calling to confirm that your appointment is all set. Is there anything else I can help you with today?",
+        "role": "assistant"
+      },
+      {
+        "content": "cant this week how about in 3 weeks",
+        "role": "user"
+      },
+      {
+        "content": "Please call MK2 Optical at (212) 219-2219 and the office can help with that appointment.",
+        "role": "assistant"
+      }
+    ],
+    "chat_id": "f41404af-d276-4a34-9e2a-e97875e03f06",
+    "completed": true,
+    "current_node_id": "e_existing",
+    "current_node_name": "existing_appointment",
+    "pathway_id": "94abad8b-fbe2-4e67-9c64-d9b586dd2653",
+    "pathway_version": 124,
+    "use_candidate_model": false,
+    "variables": {
+      "BlandStatusCode": 200,
+      "appt_count": 1,
+      "callID": "f41404af-d276-4a34-9e2a-e97875e03f06",
+      "campaign": "harness",
+      "channel": "voice",
+      "count": 1,
+      "exam_type_id": "***7395",
+      "ok": true,
+      "patient_first": "RACHEL",
+      "patient_id": "***2466",
+      "recall_cell": "***2428",
+      "recall_patient_id": "***2466",
+      "store": "711"
+    }
+  },
+  "errors": null
+}

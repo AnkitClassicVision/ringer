@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD6",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-body-repro",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["gw-repro.txt"],
+      "spec": "HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_body_repro.py > repro.log 2>&1; rc=$?; cat repro.log; exit $rc",
+      "check": "grep -q 'CASE=retain STATUS=400' gw-repro.txt || { echo 'FAIL: retain body did not reproduce the 400:'; cat gw-repro.txt; exit 1; }; grep -q 'CASE=v96none STATUS=200' gw-repro.txt || { echo 'FAIL: v96 control body not accepted:'; cat gw-repro.txt; exit 1; }; grep -q 'CASE=latest STATUS=200' gw-repro.txt || { echo 'FAIL: lane-38 latest body not accepted:'; cat gw-repro.txt; exit 1; }; echo 'PASS: 400 reproduced on retain body; v96/none and latest accepted'; cat gw-repro.txt",
+      "verified": "The gateway 400 is reproduced offline with the exact retain-laden body the v102 runtime sent, while the v96 body and the lane-38 time_pref=latest body both return 200 - the accepted contract is pinned with the rejection reason on record."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-publish-ready",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-integrate-s18",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "integrate-s18-lineage-and-rerender",
+      "engine": "local-shell",
+      "task_type": "site-build",
+      "timeout_s": 600,
+      "expect_files": ["integration_receipt.json"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/integrate_s18_fix.py --report /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30 --stage /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-s18-fix/fix-historical-source-lineage-with-sol --backup /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/backups/pre-s18-integration-20260730T044734Z --receipt integration_receipt.json --fix-run vintage-optical-publish-ready-20260730T043947Z-p796529",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_integrated_s18.py --report /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30 --receipt integration_receipt.json",
+      "verified": "the distinct S18 historical lineage and reconciled Project Room status are integrated, the explainer is rerendered with exact page-image cleanup, all score/explainer gates pass, and new visual QA remains explicitly pending"
+    }
+  ]
+}

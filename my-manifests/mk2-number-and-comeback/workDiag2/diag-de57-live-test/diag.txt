@@ -1,0 +1,56 @@
+NODE_NOW=n_miss_unread VERSION=94 MSGS=12
+MSG 2026-08-04T03:22:33.949Z | AGENT | Hi ANKIT, this is MK2 Optical.  We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is importa
+MSG 2026-08-04T03:24:08.495Z | USER | How about Sunday?
+MSG 2026-08-04T03:24:14.818Z | AGENT | I don't have anything open on Sunday. Could you try a different day, like a Tuesday or August 5?
+MSG 2026-08-04T03:24:27.438Z | USER | What about Saturday?
+MSG 2026-08-04T03:24:33.259Z | AGENT | I don't have anything open on Saturday either. Could you try a different day, like a Wednesday or August 5?
+MSG 2026-08-04T03:24:52.645Z | USER | How about Friday the 15th?
+MSG 2026-08-04T03:24:56.541Z | AGENT | I want to make sure I get the right day. Did you mean Friday 08/07 or Saturday 08/15? You can also reply with a different date.
+MSG 2026-08-04T03:25:11.381Z | USER | No Friday the 14th I guess
+MSG 2026-08-04T03:25:19.334Z | AGENT | I have Friday 08/14/2026 10:30 am or Friday 08/14/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+MSG 2026-08-04T03:25:32.482Z | USER | What about the last time a lot of the day?
+MSG 2026-08-04T03:25:39.093Z | AGENT | Let me check that for you.
+MSG 2026-08-04T03:25:39.471Z | AGENT | I want to make sure we get you scheduled. Please call our office at (212) 219-2219 and they will find the perfect time for you.
+VAR appt_count=0
+VAR from=+***3629
+VAR preference_from=Friday 08/14/2026
+VAR preference_to=Friday 08/14/2026
+VAR slot_1_doctor=***1951
+VAR slot_2_doctor=***1951
+VAR store=711
+VAR time_pref_relaxed=
+VAR to=+***1012
+VAR today=Mon, Aug 3, 2026
+GWLOG_LINES=31
+GW 2026-08-04 03:24:11,055 INFO raw_gate flag=True tenant=mott call_id_len=36 first_req=False
+GW 2026-08-04 03:24:11,283 INFO raw_fetch msgs=2
+GW 2026-08-04 03:24:11,284 INFO raw_resolve from=08/09/2026
+GW 2026-08-04 03:24:11,284 INFO date_source=raw
+GW 2026-08-04 03:24:13,400 INFO POST /availability -> 200 (2345 ms)
+GW 172.31.10.19 - - [04/Aug/2026:03:24:13 +0000] "POST /availability HTTP/1.1" 200 414 "-" "Bland/1.0"
+GW 2026-08-04 03:24:29,517 INFO raw_gate flag=True tenant=mott call_id_len=36 first_req=False
+GW 2026-08-04 03:24:29,808 INFO raw_fetch msgs=4
+GW 2026-08-04 03:24:29,809 INFO raw_resolve from=08/08/2026
+GW 2026-08-04 03:24:29,809 INFO date_source=raw
+GW 2026-08-04 03:24:31,897 INFO POST /availability -> 200 (2380 ms)
+GW 172.31.80.162 - - [04/Aug/2026:03:24:31 +0000] "POST /availability HTTP/1.1" 200 414 "-" "Bland/1.0"
+GW 2026-08-04 03:24:54,981 INFO raw_gate flag=True tenant=mott call_id_len=36 first_req=False
+GW 2026-08-04 03:24:55,210 INFO raw_fetch msgs=6
+GW 2026-08-04 03:24:55,211 INFO raw_resolve from=('conflict', '08/07/2026', '08/15/2026', 'friday Friday the 7th', 'the 15th Saturday the 15th')
+GW 2026-08-04 03:24:55,211 INFO date_source=conflict
+GW 2026-08-04 03:24:55,211 INFO POST /availability -> 200 (230 ms)
+GW 172.31.43.138 - - [04/Aug/2026:03:24:55 +0000] "POST /availability HTTP/1.1" 200 472 "-" "Bland/1.0"
+GW 2026-08-04 03:25:13,768 INFO raw_gate flag=True tenant=mott call_id_len=36 first_req=False
+GW 2026-08-04 03:25:14,018 INFO raw_fetch msgs=8
+GW 2026-08-04 03:25:15,714 INFO date_source=llm
+GW 2026-08-04 03:25:15,714 INFO raw_resolve from=None
+GW 2026-08-04 03:25:15,714 INFO date_source=fallback
+GW 2026-08-04 03:25:17,805 INFO POST /availability -> 200 (4037 ms)
+GW 172.31.80.162 - - [04/Aug/2026:03:25:17 +0000] "POST /availability HTTP/1.1" 200 4817 "-" "Bland/1.0"
+GW 2026-08-04 03:25:35,402 INFO raw_gate flag=True tenant=mott call_id_len=36 first_req=False
+GW 2026-08-04 03:25:35,637 INFO raw_fetch msgs=10
+GW 2026-08-04 03:25:36,970 INFO raw_resolve from=None
+GW 2026-08-04 03:25:36,970 INFO date_source=fallback
+GW 2026-08-04 03:25:36,978 INFO POST /availability -> 409 (1576 ms)
+GW 172.31.43.138 - - [04/Aug/2026:03:25:36 +0000] "POST /availability HTTP/1.1" 409 141 "-" "Bland/1.0"
+DIAG_DONE

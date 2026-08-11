@@ -1,0 +1,357 @@
+{
+  "nodes": [
+    {
+      "id": "n_identity",
+      "type": "Webhook",
+      "data": {
+        "prompt": "safe",
+        "url": "/x",
+        "renders_result": true,
+        "isStart": true,
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "responsePathways": [
+          [
+            "count",
+            "==",
+            "1",
+            {
+              "id": "n_appt_check"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "n_appt_check",
+      "type": "Webhook",
+      "data": {
+        "prompt": "safe",
+        "url": "/x",
+        "renders_result": true,
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "responsePathways": [
+          [
+            "appt_count",
+            "==",
+            "0",
+            {
+              "id": "n_goal_update"
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "n_goal_update",
+      "type": "Default",
+      "data": {
+        "prompt": "safe",
+        "extraction": "EXTRACT_GOAL_UPDATE_V94 user_verbatim intent_update from_update to_update time_from_update time_to_update anchor_update relation_update selection_update"
+      }
+    },
+    {
+      "id": "n_availability",
+      "type": "Webhook",
+      "data": {
+        "prompt": "safe",
+        "url": "/x",
+        "renders_result": true,
+        "body": "goal_from goal_to time_from time_to anchor relation prior_goal patch raw_text goal_echo decision_source disagreement pathway_read gateway_read slot_minutes distance directional top two one inventory query"
+      }
+    },
+    {
+      "id": "n_goal_response",
+      "type": "Default",
+      "data": {
+        "prompt": "safe"
+      }
+    },
+    {
+      "id": "n_select",
+      "type": "Webhook",
+      "data": {
+        "prompt": "safe",
+        "url": "/x",
+        "renders_result": true
+      }
+    },
+    {
+      "id": "n_consent",
+      "type": "Default",
+      "data": {
+        "prompt": "safe",
+        "extraction": "EXTRACT_GOAL_UPDATE_V94"
+      }
+    },
+    {
+      "id": "n_atomic_book",
+      "type": "Webhook",
+      "data": {
+        "prompt": "safe",
+        "url": "/x",
+        "renders_result": true
+      }
+    },
+    {
+      "id": "n_reconcile",
+      "type": "Webhook",
+      "data": {
+        "prompt": "safe",
+        "url": "/x",
+        "renders_result": true
+      }
+    },
+    {
+      "id": "n_confirm",
+      "type": "Default",
+      "data": {
+        "prompt": "You're all set. If you have further questions, please call MK2 Optical at (212) 219-2219\n您都安排好了。如有其他问题，请致电 MK2 Optical，电话：(212) 219-2219"
+      }
+    },
+    {
+      "id": "n_service_guard",
+      "type": "Default",
+      "data": {
+        "prompt": "safe"
+      }
+    },
+    {
+      "id": "n_suppress",
+      "type": "Webhook",
+      "data": {
+        "prompt": "safe",
+        "url": "/x",
+        "renders_result": true
+      }
+    },
+    {
+      "id": "e_close",
+      "type": "Default",
+      "data": {
+        "prompt": "safe",
+        "text": "For that you'll have to contact the MK2 Optical office at (212) 219-2219\nI’m sorry I couldn’t finish scheduling here. Please call MK2 Optical at (212) 219-2219 for help."
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e0-n_identity-n_appt_check",
+      "source": "n_identity",
+      "target": "n_appt_check",
+      "data": {
+        "label": "count == 1",
+        "description": "Route from n_identity to n_appt_check when: count == 1."
+      }
+    },
+    {
+      "id": "e1-n_appt_check-n_goal_update",
+      "source": "n_appt_check",
+      "target": "n_goal_update",
+      "data": {
+        "label": "appt_count == 0",
+        "description": "Route from n_appt_check to n_goal_update when: appt_count == 0."
+      }
+    },
+    {
+      "id": "e2-n_goal_update-n_availability",
+      "source": "n_goal_update",
+      "target": "n_availability"
+    },
+    {
+      "id": "e3-n_availability-n_goal_response",
+      "source": "n_availability",
+      "target": "n_goal_response"
+    },
+    {
+      "id": "e4-n_goal_response-n_goal_update",
+      "source": "n_goal_response",
+      "target": "n_goal_update"
+    },
+    {
+      "id": "e5-n_goal_response-n_select",
+      "source": "n_goal_response",
+      "target": "n_select"
+    },
+    {
+      "id": "e6-n_select-n_consent",
+      "source": "n_select",
+      "target": "n_consent"
+    },
+    {
+      "id": "e7-n_select-n_goal_update",
+      "source": "n_select",
+      "target": "n_goal_update"
+    },
+    {
+      "id": "e8-n_consent-n_atomic_book",
+      "source": "n_consent",
+      "target": "n_atomic_book"
+    },
+    {
+      "id": "e9-n_atomic_book-n_confirm",
+      "source": "n_atomic_book",
+      "target": "n_confirm"
+    },
+    {
+      "id": "e10-n_atomic_book-n_reconcile",
+      "source": "n_atomic_book",
+      "target": "n_reconcile"
+    },
+    {
+      "id": "e11-n_atomic_book-n_goal_update",
+      "source": "n_atomic_book",
+      "target": "n_goal_update"
+    },
+    {
+      "id": "e12-n_reconcile-n_confirm",
+      "source": "n_reconcile",
+      "target": "n_confirm"
+    },
+    {
+      "id": "e13-n_reconcile-e_close",
+      "source": "n_reconcile",
+      "target": "e_close"
+    },
+    {
+      "id": "e14-n_confirm-e_close",
+      "source": "n_confirm",
+      "target": "e_close"
+    },
+    {
+      "id": "e15-n_service_guard-n_goal_update",
+      "source": "n_service_guard",
+      "target": "n_goal_update"
+    },
+    {
+      "id": "e16-n_service_guard-e_close",
+      "source": "n_service_guard",
+      "target": "e_close"
+    },
+    {
+      "id": "e17-n_suppress-e_close",
+      "source": "n_suppress",
+      "target": "e_close"
+    },
+    {
+      "id": "e18-n_appt_check-e_close",
+      "source": "n_appt_check",
+      "target": "e_close"
+    },
+    {
+      "id": "e19-n_identity-e_close",
+      "source": "n_identity",
+      "target": "e_close"
+    },
+    {
+      "id": "e20-n_goal_update-e_close",
+      "source": "n_goal_update",
+      "target": "e_close"
+    }
+  ],
+  "source_id_map": {
+    "n_identity": "mapped",
+    "n_ask": "mapped",
+    "n_date_conflict": "mapped",
+    "n_miss_empty": "mapped",
+    "n_miss_thin": "mapped",
+    "n_miss_unbookable": "mapped",
+    "n_clarify": "mapped",
+    "n_miss_time": "mapped",
+    "n_offer": "mapped",
+    "n_offer_2": "mapped",
+    "n_offer_3": "mapped",
+    "n_offer_near": "mapped",
+    "n_recheck": "mapped",
+    "n_miss_unread": "mapped",
+    "n_which_intent": "mapped",
+    "n_gate_1": "mapped",
+    "n_gate_2": "mapped",
+    "n_negotiate": "mapped",
+    "n_search": "mapped",
+    "n_page_2": "mapped",
+    "n_page_3": "mapped",
+    "n_page_near": "mapped",
+    "n_verify_1": "mapped",
+    "n_verify_2": "mapped",
+    "n_book_1": "mapped",
+    "n_book_2": "mapped",
+    "n_confirm": "mapped",
+    "n_help": "mapped",
+    "n_office": "mapped",
+    "n_faq": "mapped",
+    "e_safe_identity": "mapped",
+    "e_safe_failure": "mapped",
+    "e_booking_failed": "mapped",
+    "e_book_unknown": "mapped",
+    "e_booked": "mapped",
+    "e_office": "mapped",
+    "e_declined": "mapped",
+    "e_stop": "mapped",
+    "e_not_me": "mapped",
+    "e_existing": "mapped",
+    "e_timeout": "mapped",
+    "e_defer": "mapped",
+    "n_suppress_stop": "mapped",
+    "n_suppress_not_me": "mapped",
+    "n_appt_check": "mapped",
+    "n_reconcile_1": "mapped",
+    "n_reconcile_2": "mapped",
+    "e_booked_recovered": "mapped"
+  },
+  "contract": {
+    "goal_object": {
+      "name": "scheduling_goal_v94",
+      "fields": {
+        "goal_intent": "typed",
+        "goal_from": "typed",
+        "goal_to": "typed",
+        "time_from": "typed",
+        "time_to": "typed",
+        "anchor": "typed",
+        "relation": "typed",
+        "goal_status": "typed",
+        "goal_revision": "typed",
+        "goal_clarify_count": "typed",
+        "goal_ambiguity_key": "typed",
+        "last_offered_dates": "typed",
+        "offer_id": "typed",
+        "offer_expires_at": "typed",
+        "selected_slot": "typed"
+      },
+      "semantics": "retain replace clear unsatisfied offered confirmed abandoned",
+      "persistent_objects": 1,
+      "authoritative_writer": "n_availability"
+    },
+    "loop_cap": 8,
+    "ninth_update_target": "e_close",
+    "offer": {
+      "terms": "offer_id offer_issued_at offer_expires_at inventory_token exactly two normalized invalidates goal change silent stale refresh nearest real",
+      "ttl_minutes": 10
+    },
+    "safety": {
+      "clarify_max_questions": 2,
+      "appt_check_fail_target": "e_close",
+      "blank_conflict_target": "e_close"
+    },
+    "atomic_booking": {
+      "terms": "check_and_book /sign offer_id slot_id conversation_id + ':' + offer_id identical idempotency",
+      "max_retries": 2
+    },
+    "reconciliation": {
+      "terms": "one read offer_id slot_id store patient date start unique exact match"
+    },
+    "affirmative_claim_owner": "n_confirm",
+    "latency": {
+      "max_visible_answer_seconds": 15.0,
+      "measurement_owner": "harness",
+      "p95_required": true
+    },
+    "availability": "distance directional top two one inventory query"
+  }
+}

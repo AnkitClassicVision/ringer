@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workVerify58",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "img-verify-58-clean",
+      "engine": "local-shell",
+      "timeout_s": 600,
+      "task_type": "code-feature",
+      "verified": "The pushed mott-lane-58 image is byte-for-byte mott-lane-57 plus one layer whose only member equals the proven lane-58 artifact.",
+      "spec": "AWS_PROFILE=deploy-admin python3 -u - <<'PY' > verify.txt 2>&1\nimport gzip, io, json, tarfile, urllib.request\nimport boto3\nREPO = \"eyecloud-fargate-runner\"\nBASE_TAG = \"mott-lane-57\"\nNEW_TAG = \"mott-lane-58\"\nFIXED = \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workR26/gw-later-floor-zh/fixed-bland_gateway.py\"\necr = boto3.client(\"ecr\", region_name=\"us-east-1\")\n\ndef load(tag):\n    m = json.loads(ecr.batch_get_image(repositoryName=REPO, imageIds=[{\"imageTag\": tag}])[\"images\"][0][\"imageManifest\"])\n    if \"manifests\" in m:\n        e = next(x for x in m[\"manifests\"] if x.get(\"platform\", {}).get(\"architecture\") in (\"amd64\", \"x86_64\"))\n        m = json.loads(ecr.batch_get_image(repositoryName=REPO, imageIds=[{\"imageDigest\": e[\"digest\"]}])[\"images\"][0][\"imageManifest\"])\n    return m\n\nbase, new = load(BASE_TAG), load(NEW_TAG)\nassert [l[\"digest\"] for l in new[\"layers\"]][:len(base[\"layers\"])] == [l[\"digest\"] for l in base[\"layers\"]], \"base layers altered\"\nassert len(new[\"layers\"]) == len(base[\"layers\"]) + 1, \"expected exactly one appended layer\"\nurl = ecr.get_download_url_for_layer(repositoryName=REPO, layerDigest=new[\"layers\"][-1][\"digest\"])[\"downloadUrl\"]\nblob = urllib.request.urlopen(url, timeout=300).read()\ntf = tarfile.open(fileobj=io.BytesIO(gzip.decompress(blob)))\nnames = tf.getnames()\nassert names == [\"opt/cvc-booking-gateway/bland_gateway.py\"], \"unexpected members %r\" % names\ngot = tf.extractfile(names[0]).read()\nassert got == open(FIXED, \"rb\").read(), \"pushed file does not byte-match the lane-58 artifact\"\nprint(\"VERIFY_IDENTICAL=1 bytes=%d base=%s new=%s\" % (len(got), BASE_TAG, NEW_TAG))\nprint(\"VERIFY_DONE\")\nPY\nrc=$?; cat verify.txt; exit $rc",
+      "check": "grep -q 'VERIFY_IDENTICAL=1' verify.txt || { echo 'FAIL: byte-verification failed:'; tail -4 verify.txt; exit 1; }; echo \"PASS: $(grep -m1 'VERIFY_IDENTICAL' verify.txt)\"",
+      "expect_files": ["verify.txt"]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+FAIL: assertion 1: n_goal_search_offered_time responseData differs beyond the required gateway mappings
+FAIL: assertion 1: n_goal_search_latest responseData differs beyond the required gateway mappings
+FAIL: assertion 1: n_goal_search responseData differs beyond the required gateway mappings
+FAIL: assertion 1: n_goal_search_offered_latest responseData differs beyond the required gateway mappings
+FAIL: assertion 1: n_goal_search_offered_anchor responseData differs beyond the required gateway mappings
+FAIL: assertion 1: n_goal_search_anchor responseData differs beyond the required gateway mappings
+FAIL: assertion 25: n_goal_search maps out_of_hours but does not map closed_day
+FAIL: assertion 25: n_goal_search_latest maps out_of_hours but does not map closed_day
+FAIL: assertion 25: n_goal_search_anchor maps out_of_hours but does not map closed_day
+FAIL: assertion 25: n_goal_search_offered_anchor maps out_of_hours but does not map closed_day
+FAIL: assertion 25: n_goal_search_offered_latest maps out_of_hours but does not map closed_day
+FAIL: assertion 25: n_goal_search_offered_time maps out_of_hours but does not map closed_day
+FAIL: assertion 25: n_goal_response prompt lacks CLOSED-DAY: marker
+FAIL: 13 of 550 assertions failed

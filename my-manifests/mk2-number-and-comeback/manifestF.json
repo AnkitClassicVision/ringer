@@ -1,0 +1,37 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workF",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "fm-unknown",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1500,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/failure_mode_run.py 89 unknown > transcript.txt 2>&1; rc=$?; tail -4 transcript.txt; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_failure_mode.py --file transcript.txt --mode unknown",
+      "verified": "Live chat on test variant v89 (bogus book URL): the write 404s, reconciliation reads the EMR, finds nothing, and the patient hears the uncertainty copy at e_book_unknown - never a false failure or false success. No appointment created."
+    },
+    {
+      "key": "fm-recovered",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1500,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/failure_mode_run.py 89 recovered > transcript.txt 2>&1; rc=$?; tail -4 transcript.txt; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_failure_mode.py --file transcript.txt --mode recovered",
+      "verified": "Incident-shape replay on v89: a committed EMR write plus a wire error on the book call now ends at e_booked_recovered with the mandated close - the patient is told the truth instead of 'it failed'. Dummy appointment cancelled afterward, account left clean."
+    },
+    {
+      "key": "fm-happy",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1500,
+      "expect_files": ["transcript.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/failure_mode_run.py 88 happy > transcript.txt 2>&1; rc=$?; tail -4 transcript.txt; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_failure_mode.py --file transcript.txt --mode happy",
+      "verified": "Mainline regression on the real v88: a full live booking still lands at e_booked with the mandated close and one committed appointment, proving the reconcile rewiring broke nothing. Appointment cancelled afterward, account left clean."
+    }
+  ]
+}

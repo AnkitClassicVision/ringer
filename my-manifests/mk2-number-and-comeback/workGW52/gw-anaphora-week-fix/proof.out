@@ -1,0 +1,7 @@
+CASE=anaphora-next-week-wording FROM=2026-08-17
+CASE=anaphora-week-of-wording FROM=2026-08-17
+CASE=anaphora-wrong-week-of FROM=2026-08-17
+CASE=no-anaphor-next-week FROM=2026-08-10
+CASE=anaphora-tuesday FROM=2026-08-18
+CASE=anaphora-no-context FROM=2026-08-10
+CASE=anaphora-no-weekday WINDOW=2026-08-17..2026-08-23

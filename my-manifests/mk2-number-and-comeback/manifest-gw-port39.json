@@ -1,0 +1,20 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW39c",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-port39-onto-deployed",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 2400,
+      "expect_files": [
+        "ported-bland_gateway.py",
+        "PORT-NOTES.md"
+      ],
+      "spec": "ROLE: port worker for the Mott booking gateway. Work entirely inside your current working directory; never modify anything outside CWD; no network, no git commits, no MCP/Apps/skills, no deploys. CONTEXT: The gateway deploys as a single-file image overlay of bland_gateway.py. A byte comparison just proved the DEPLOYED lane-38 file (in CWD as deployed-lane-38-bland_gateway.py, 142598 bytes) contains ~32 lines of uncommitted work (reference-point search, availability_envelope time_pref handling) that the repo clone base (/home/ankit114/repos/gw-diag-snap/container/bland_gateway.py, 140978 bytes) lacks. The approved lane-39 changes (relative-offset date parsing plus datetime time-suffix stripping in resolve_relative_date) were built against the CLONE at /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW39b/gw-datetime-tolerance/gw/container/bland_gateway.py, with the exact diff in CWD as lane39-combined.diff (63 lines, confined to resolve_relative_date). Deploying that clone-based file would silently roll back lane-38. TASK: (1) Produce ./ported-bland_gateway.py = the DEPLOYED lane-38 file with the lane-39 diff applied faithfully - every deployed line preserved, only the resolve_relative_date changes from lane39-combined.diff added (the time-suffix strip, the number_words relocation, and the relative-offset block, exactly as the diff has them, adjusted only for context offsets). Do not reformat, reorder, or 'improve' anything else in the deployed file. (2) Prove it yourself before finishing: copy the lane-39b test tree (/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW39b/gw-datetime-tolerance/gw) to a scratch dir inside CWD, install ported-bland_gateway.py as container/bland_gateway.py there, run the FULL pytest suite and the proof script (/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW39b/gw-datetime-tolerance/proof_parse.py placed next to the tree). If any clone-era test contradicts deployed lane-38 behavior, update that test copy inside your scratch tree to assert the DEPLOYED behavior and document exactly why in PORT-NOTES.md - deployed truth wins over clone expectations. If tests needed such updates, also copy your updated test files to ./updated-tests/ preserving relative paths. (3) PORT-NOTES.md: list the lane-38-only regions you preserved (function/feature names), the hunks you applied, any test reconciliations, and the exact commands you ran with their output tails. The external check will independently re-install ported-bland_gateway.py into a fresh copy of the lane-39b tree and re-run everything, and will fail if even one deployed-only line went missing.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_port39.py ./ported-bland_gateway.py ./deployed-lane-38-bland_gateway.py /home/ankit114/repos/gw-diag-snap/container/bland_gateway.py ./updated-tests",
+      "verified": "The lane-39 parser changes are ported onto the byte-true deployed lane-38 file with every deployed-only line preserved (line-set assertion), the full suite green, and the proof script passing against the ported module - safe to overlay-deploy without rolling back uncommitted production truth."
+    }
+  ]
+}

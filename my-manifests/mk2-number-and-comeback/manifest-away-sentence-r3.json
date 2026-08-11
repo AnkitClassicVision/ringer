@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS30b",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-smoke-away-sentence",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["measure.txt"],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workMint124/build-validate-mint-124/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || exit 1; echo \"SMOKING_VERSION=$V\"; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_V=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"I'm leaving town today and won't be back for 2 weeks about then?\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_V\"], \"script.json\", \"gl16-away-sentence\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 2 ] || { echo \"FAIL: expected 2 turns, got $t\"; tail -4 measure.txt; exit 1; }; last=$(grep -E '^TURN=2' measure.txt); today=$(date +%m/%d/%Y); echo \"$last\" | grep -q \"$today\" && { echo \"FAIL: offered TODAY ($today) to a patient who said they are leaving town today: $last\"; exit 1; }; ok=0; hits=''; for i in $(seq 13 21); do d=$(date -d \"+$i days\" +%m/%d/%Y); echo \"$last\" | grep -q \"$d\" && { ok=1; hits=\"$hits $d\"; }; done; [ \"$ok\" -eq 1 ] || { echo \"FAIL: no offer in the dynamic ~2-weeks-out window ($(date -d '+13 days' +%m/%d)..$(date -d '+21 days' +%m/%d)): $last\"; exit 1; }; echo \"$last\" | grep -q '{{' && { echo \"FAIL: unrendered template: $last\"; exit 1; }; slow=$(grep -oE 'WALL_MS=[0-9]+' measure.txt | cut -d= -f2 | awk '$1>15000'); [ -z \"$slow\" ] || { echo \"FAIL: turn exceeded 15s ruling: $slow ms\"; exit 1; }; echo \"PASS: whole-sentence comprehension, offer in window:$hits\"",
+      "verified": "RECALIBRATION (2026-08-06, justification): the smoke28-era check hardcoded the 2-weeks-out window as 08/16-08/19 relative to its authoring date 08/04; run on 08/06 it rejected the bot's CORRECT 08/20 offer. The window is now computed from the current date (+13..+21 days) and the offered-today assertion uses the live date, per hard-won rule 7 on date-dependent assertions. Same scenario, same harness, same assertions otherwise."
+    }
+  ]
+}

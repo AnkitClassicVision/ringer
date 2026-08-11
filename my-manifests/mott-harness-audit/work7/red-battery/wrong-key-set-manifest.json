@@ -1,0 +1,14 @@
+{
+  "schema_version": "mott-outbound-recall-manifest.v1",
+  "pathway_name": "Synthetic Mott wrong key set",
+  "pathway_id": "synthetic-key-set-pathway",
+  "version": 1,
+  "voice_source_pathway_id": "",
+  "voice_source_version": 0,
+  "start_node_id": "n_identity",
+  "time_out_hours": 72,
+  "restart_after_end_call": false,
+  "structural_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "created_utc": "2026-07-26T00:00:00Z",
+  "unexpected_key": "synthetic"
+}

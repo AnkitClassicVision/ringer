@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWfix3",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-final-strip-reprove",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["bland_gateway_fixed.py", "PROOF.txt", "fix_delta.diff"],
+      "spec": "D=/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWfix2/gw-fix-rebase; python3 - <<'PY'\nimport re, sys\nD = \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWfix2/gw-fix-rebase\"\nsrc = open(D + \"/bland_gateway_fixed.py\").read()\nblock = re.compile(r\"[ \\t]*if is_correction and _eastern_today\\(\\)\\.date\\(\\)\\.weekday\\(\\) >= 5:\\n[ \\t]*result = resolve_relative_date\\(\\n[ \\t]*f\\\"\\{match\\.group\\(0\\)\\.split\\(\\)\\[-1\\]\\} after next\\\"\\n[ \\t]*\\)\\n\")\nhits = block.findall(src)\nif len(hits) != 1:\n    sys.exit(\"ABORT: expected exactly 1 weekend special-case block, found %d - inspect manually\" % len(hits))\nopen(\"bland_gateway_fixed.py\", \"w\").write(block.sub(\"\", src))\nprint(\"STRIPPED=1 invented weekend special-case removed\")\nPY\nrc=$?; [ $rc -eq 0 ] || exit $rc; sed \"s#$D#.#g\" $D/run_proof.py > run_proof.py; PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile bland_gateway_fixed.py || exit 1; PYTHONDONTWRITEBYTECODE=1 python3 run_proof.py > PROOF.txt 2>&1; rc=$?; diff -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWfix2/gw-prod-extract2/bland_gateway_prod.py bland_gateway_fixed.py > fix_delta.diff; grep -E 'ORIGINAL_PATH=|P1_EXT=|P2_UNINTENDED=|P3_INCIDENT=' PROOF.txt; exit $rc",
+      "check": "n=$(grep -c 'weekday() >= 5' bland_gateway_fixed.py); [ \"$n\" -eq 0 ] || { echo 'FAIL: invented weekend special-case still present'; exit 1; }; grep -q 'ORIGINAL_PATH=.*gw-prod-extract2/bland_gateway_prod.py' PROOF.txt || { echo 'FAIL: proof not pinned to production base'; exit 1; }; grep -q 'P1_EXT=12/12' PROOF.txt || { echo \"FAIL: $(grep -m1 'P1_EXT=' PROOF.txt)\"; exit 1; }; grep -qE 'P2_UNINTENDED=0' PROOF.txt || { echo \"FAIL: $(grep -m1 'P2_UNINTENDED=' PROOF.txt)\"; exit 1; }; grep -q 'P3_INCIDENT=08/13/2026' PROOF.txt || { echo \"FAIL: $(grep -m1 'P3_INCIDENT=' PROOF.txt)\"; exit 1; }; d=$(grep -c '^[+-]' fix_delta.diff); echo \"PASS: weekend invention stripped; proofs green on production base; final delta $d diff lines\"",
+      "verified": "The final ship candidate: production base plus exactly the three ruled fixes, the worker's invented weekend semantics removed, all three proofs re-executed green, delta on the record."
+    }
+  ]
+}

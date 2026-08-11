@@ -1,0 +1,17 @@
+{
+  "source_id": "DATAFORSEO_PREFLIGHT_20260730",
+  "captured_at": "2026-07-30T11:54:00Z",
+  "requested_capability": "structured Google Maps and local SERP rank-grid and review facts",
+  "preflight_endpoint": "https://api.dataforseo.com/v3/appendix/user_data",
+  "request_sent": false,
+  "status": "unavailable_missing_credentials",
+  "credential_values_exposed": false,
+  "cost_incurred": 0,
+  "result": "DataForSEO credentials were not configured in the active environment, so no paid API request or rank grid ran.",
+  "named_fallbacks": [
+    "direct dated Google Search/Maps observation",
+    "Exa domain-restricted discovery and page capture",
+    "Perplexity contradiction research with direct-source resolution"
+  ],
+  "publication_rule": "A dated SERP or Maps sample is not a rank grid. No DataForSEO fact may be claimed from this preflight."
+}

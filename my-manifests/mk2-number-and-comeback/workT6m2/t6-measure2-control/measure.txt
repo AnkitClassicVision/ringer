@@ -1,0 +1,2 @@
+chat create failed: HTTP 400 {"data":null,"errors":[{"error":"CREATE_PATHWAY_CHAT_BAD_REQUEST","message":"pathway_version must be a number"}]}
+CANDIDATE=0

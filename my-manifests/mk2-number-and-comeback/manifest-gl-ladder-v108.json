@@ -1,0 +1,19 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workLadder108",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-ladder-v108",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 7200,
+      "expect_files": [
+        "ladder.txt"
+      ],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workSuiteRecon/gl-suite-reconcile/phase_run_goalloop.py 108 > ladder.txt 2>&1; rc=$?; tail -10 ladder.txt; exit $rc",
+      "check": "grep -qE '^RESULT goalloop: passed=[0-9]+ failed=0 waived=0 total=37' ladder.txt || { echo 'FAIL: ladder not clean:'; grep -E '^\\[FAIL\\]|^ABORT|RESULT' ladder.txt | head -25; exit 1; }; echo \"PASS: $(grep -E '^RESULT' ladder.txt | tail -1)\"",
+      "verified": "The reconciled 37-scenario proof ladder runs clean against unattached v108 with the booking guard active - as-built assertions, full-strength behavioral bans, zero failures."
+    }
+  ]
+}

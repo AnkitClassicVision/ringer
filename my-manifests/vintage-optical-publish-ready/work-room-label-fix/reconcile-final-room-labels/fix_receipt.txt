@@ -1,0 +1,1 @@
+PASS: stale room labels reconciled

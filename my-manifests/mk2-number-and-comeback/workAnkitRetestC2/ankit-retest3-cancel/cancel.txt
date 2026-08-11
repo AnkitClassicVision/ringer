@@ -1,0 +1,6 @@
+PRE-LIST HTTP 200 count=1
+  appt id=...3571 start=2026-08-11T14:00:00Z status=created
+PRECONDITION_OK id=...3571 start=2026-08-11T14:00:00Z
+CANCEL HTTP 200 {"action": "cancel", "appt_id": "4391523571", "http_status": 200, "pre_state": {"end": "08/11/2026 02:15:00 pm", "start": "08/11/2026 02:00:00 pm", "status": "created"}, "response_bytes": 36, "success
+POST-LIST HTTP 200 FINAL_COUNT=0
+CANCEL_VERIFIED

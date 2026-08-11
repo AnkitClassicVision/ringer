@@ -1,0 +1,31 @@
+{
+  "outcome": "DONE",
+  "findings_closed": [
+    {
+      "id": "SKIP_NOTICE",
+      "source": "skip-notice",
+      "evidence": "The deterministic round-two gate recorded that all four review rules were false."
+    }
+  ],
+  "verification_reruns": [
+    {
+      "command": "python3 -c \"from pathlib import Path; assert Path('owned/output.txt').read_text(encoding='utf-8') == 'ready'\"",
+      "result": {
+        "passed": true,
+        "exit_code": 0,
+        "summary": "The closure round independently reran the owned output verification."
+      }
+    }
+  ],
+  "review_ran": false,
+  "skip_reasons": [
+    "No deterministic review rule triggered; a generated skip notice is required."
+  ],
+  "open_items": [],
+  "boundary_attestation": {
+    "forbidden_actions_taken": [],
+    "external_actions_taken": [],
+    "sol_accepted_own_work": false,
+    "statement": "Sol recorded a mechanical review skip and did not treat that skip as self-acceptance."
+  }
+}

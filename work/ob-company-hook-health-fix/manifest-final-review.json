@@ -1,0 +1,29 @@
+{
+  "run_name": "ob-company-hook-health-fix",
+  "workdir": "/mnt/d_drive/ringer-work/ob-company-hook-health-fix",
+  "max_parallel": 2,
+  "tasks": [
+    {
+      "key": "final-privacy-review",
+      "engine": "codex",
+      "engine_args": ["-m", "gpt-5.6-sol", "-c", "model_reasoning_effort=\"high\""],
+      "task_type": "code-review",
+      "timeout_s": 1500,
+      "expect_files": ["report.md"],
+      "spec": "You are the final independent privacy/integrity reviewer after a correction round. The source material is /mnt/d_drive/ringer-work/ob-company-hook-health-fix/source-work and source-baseline; both and the original repo are read-only. Own only ./report.md. Never modify source, use network, read secrets/live state, call MCP/Apps, install, stage, commit, deploy, or perform external actions. READ: the two earlier post-review reports, /mnt/d_drive/ringer-work/ob-company-hook-health-fix/fix-review-findings/notes.md, and the corrected source/tests. VERIFY: (1) generic ob_company_agent_event CLI cannot deliver HookHeartbeat directly; (2) the local verifier validates the release-manifest SHA-256 against the exact helper bytes before delivery; (3) server approved digest, release manifest, and helper bytes agree; (4) server rejects wrong digest/schema/scheduler/booleans before writes and stores only fixed privacy-minimal heartbeat metadata; (5) exact command grammar rejects inert helper, wrong interpreter, duplicate/conflicting flags, missing quiet, and extras; (6) README claim is narrowed to authenticated schema-valid approved-digest claim and does not call it remote attestation or Claude activity; (7) lifecycle fail-open and heartbeat strict failure remain separate. Run the three relevant offline test scripts. OUTPUT: '# Review Report'; exact standalone 'Verdict: ALLOW|REVISE|BLOCK'; '## Summary' max 3 bullets; '## Findings'; '## Clean'; '## Assumptions'. Findings use neutral heading plus Evidence, Impact, Fix, Priority P0-P3, Confidence high|medium|low, with source-work file:line citations. ALLOW only with no P0/P1. Under assumptions state the residual spoofing/attestation and live-deploy boundary honestly. Under 1200 words. No edits, secrets, or overclaims.",
+      "check": "python3 /mnt/d_drive/repos/ringer/work/ob-company-hook-health-fix/check_post_review.py --report report.md --surface final-privacy",
+      "verified": "the corrected helper-integrity, exact command, privacy, and proof-boundary implementation receives a coherent independent verdict"
+    },
+    {
+      "key": "final-watchdog-review",
+      "engine": "codex",
+      "engine_args": ["-m", "gpt-5.6-sol", "-c", "model_reasoning_effort=\"high\""],
+      "task_type": "code-review",
+      "timeout_s": 1500,
+      "expect_files": ["report.md"],
+      "spec": "You are the final independent watchdog/state reviewer after a correction round. The source material is /mnt/d_drive/ringer-work/ob-company-hook-health-fix/source-work and source-baseline; both and the original repo are read-only. Own only ./report.md. Never modify source, use network, read secrets/live state/database rows, call MCP/Apps, install, stage, commit, deploy, or perform external actions. READ: the earlier watchdog post-review, /mnt/d_drive/ringer-work/ob-company-hook-health-fix/fix-review-findings/notes.md, and corrected watchdog/policy/tests. VERIFY: (1) state persists privacy-safe issue kind/subject sufficiently; (2) alert then policy removal with no heartbeat yields no false recovery; (3) alert then inventory mismatch yields no health recovery; (4) only a current configured active pair with a fresh heartbeat yields the specific receipt recovery; (5) v1 migration preserves unrelated state and removes legacy continuous gaps; (6) one bounded read-only query, exact separated allowlists, aliases, reminders/dedupe, truncation/query-failure safety, three-line privacy limits all remain intact. Run canonical verifier, watchdog suite, and the three decisive recovery fixture tests explicitly. OUTPUT: '# Review Report'; exact standalone 'Verdict: ALLOW|REVISE|BLOCK'; '## Summary' max 3 bullets; '## Findings'; '## Clean'; '## Assumptions'. Findings use neutral heading plus Evidence, Impact, Fix, Priority P0-P3, Confidence high|medium|low with source-work file:line citations. ALLOW only with no P0/P1. Under assumptions state copy safety and the undeployed/live-receipt boundary. Under 1200 words. Do not confuse fixtures with live recovery.",
+      "check": "python3 /mnt/d_drive/repos/ringer/work/ob-company-hook-health-fix/check_post_review.py --report report.md --surface final-watchdog",
+      "verified": "the corrected receipt-evidenced recovery and state migration receive a coherent independent verdict with decisive fixtures executed"
+    }
+  ]
+}

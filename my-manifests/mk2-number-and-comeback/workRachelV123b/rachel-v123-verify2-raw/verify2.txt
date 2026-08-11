@@ -1,0 +1,15 @@
+=== RACHEL CONV RAW DETAIL ===
+LIST HTTP 200 rachel_convs=1
+DETAIL HTTP 200 for ...145b16
+RAW_DETAIL: {"data": {"id": "7f2f8002-5dda-4850-87f0-***3145b16", "created_at": "2026-08-05T22:19:22.600Z", "updated_at": "2026-08-05T22:19:22.600Z", "user_id": "8c8f5ad9-ff6c-48a2-b2fe-1ba0840e8083", "user_number": "+***2428", "agent_number": "+***1012", "inbound_id": ***5302, "variables": {"ok": true, "to": "+***2428", "now": "8/5/2026, 3:19:23 PM", "from": "+***1012", "count": 1, "store": "711", "today": "Wed, Aug 5, 2026", "callID": "7f2f8002-5dda-4850-87f0-***3145b16", "channel": "sms", "now_utc": "2026-08-05T22:19:23.121Z", "timezone": "America/Los_Angeles", "appt_count": 0, "patient_id": "***2466", "recall_cell": "***2428", "exam_type_id": "***7395", "patient_first": "RACHEL", "BlandStatusCode": 200, "recall_patient_id": "***2466"}, "current_node_id": "n_goal_ask", "last_message_at": "2026-08-05T22:19:22.600Z", "curr_pathway_id": "94abad8b-fbe2-4e67-9c64-d9b586dd2653", "curr_pathway_version": "123", "curr_pathway_version_id": ***8181, "is_active": true, "ended_by_end_call_node": false, "pathway_tags": null, "channel": "SMS", "timed_out_at": null, "webhook": null, "use_candidate_model": false, "contact_id": null, "metadata": null, "linq_chat_id": null, "verified_user_id": null, "verified_at": null, "time_out": null, "timeout_message": null, "warning_time": null, "warning_message": null, "effective_channel": null, "citation_variables": null, "disposition_tag": null, "summary": null, "messages": [{"created_at": "2026-08-05T22:19:34.934Z", "message": "Hi RACHEL, this is MK2 Optical.\n\nWe noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.\n\nMany vision insurance benefits renew yearly, so don't let your benefits go unused!\n\nWhen would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.\n\n\u5982\u9700\u4e2d\u6587\u670d\u52a1\uff0c\u8bf7\u76f4\u63a5\u7528\u4e2d\u6587\u56de\u590d\u3002", "from": "+***1012", "to": "+***2428", "sender": "AGENT", "status": "delivered", "error_code": null, "attachments": null, "id": "c***5895-c712-4f2b-ae3f-d0fac5d***7762", "app_card": null}], "disposition_logs": []}, "errors": null}
+MSGS HTTP 404
+RAW_MSGS: "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>Cannot GET /v1/sms/conversations/7f2f8002-5dda-4850-87f0-***3145b16/messages</pre>\n<script typ"
+RAW_DONE
+=== RACHEL APPTS include-past (patient 4376662466 store 711) ===
+HTTP 200
+ok: True count: 0
+RACHEL_APPTS_DONE
+=== ANKIT APPTS include-past (patient 4362694474 store 711) ===
+HTTP 200
+ok: True count: 0
+ANKIT_APPTS_DONE

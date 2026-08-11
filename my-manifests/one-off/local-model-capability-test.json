@@ -1,0 +1,79 @@
+{
+  "run_name": "local-model-capability-test",
+  "workdir": "/tmp/ringer-local-cap-test",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "test-gpt-oss-20b",
+      "engine": "local",
+      "model": "ollama/gpt-oss:20b",
+      "task_type": "probe",
+      "timeout_s": 180,
+      "spec": "Use your file-writing tool to create a file at this absolute path: /tmp/ringer-local-cap-test/test-gpt-oss-20b/probe_gpt_oss.py. The exact file content must be: print('GPT_OSS_OK'). You MUST actually write the file to disk using the write tool. Do not just print the code in chat.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np=Path('probe_gpt_oss.py')\nif not p.exists(): print('FAIL: file not created'); sys.exit(1)\nimport ast\ntry: ast.parse(p.read_text())\nexcept Exception as e: print('FAIL: not valid python:', e); sys.exit(1)\nout=subprocess.run([sys.executable,str(p)],capture_output=True,text=True,timeout=10)\nprint('PASS' if out.stdout.strip()=='GPT_OSS_OK' else f'FAIL: got {out.stdout.strip()!r}')\nsysys.exit(0 if out.stdout.strip()=='GPT_OSS_OK' else 1)\nPY",
+      "expect_files": [
+        "probe_gpt_oss.py"
+      ]
+    },
+    {
+      "key": "test-glm-flash",
+      "engine": "local",
+      "model": "ollama/glm-4.7-flash",
+      "task_type": "probe",
+      "timeout_s": 180,
+      "spec": "Use your file-writing tool to create a file at this absolute path: /tmp/ringer-local-cap-test/test-glm-flash/probe_glm.py. The exact file content must be: print('GLM_OK'). You MUST actually write the file to disk using the write tool. Do not just print the code in chat.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np=Path('probe_glm.py')\nif not p.exists(): print('FAIL: file not created'); sys.exit(1)\nimport ast\ntry: ast.parse(p.read_text())\nexcept Exception as e: print('FAIL: not valid python:', e); sys.exit(1)\nout=subprocess.run([sys.executable,str(p)],capture_output=True,text=True,timeout=10)\nprint('PASS' if out.stdout.strip()=='GLM_OK' else f'FAIL: got {out.stdout.strip()!r}')\nsysys.exit(0 if out.stdout.strip()=='GLM_OK' else 1)\nPY",
+      "expect_files": [
+        "probe_glm.py"
+      ]
+    },
+    {
+      "key": "test-gemma31b",
+      "engine": "local",
+      "model": "ollama/gemma4:31b",
+      "task_type": "probe",
+      "timeout_s": 180,
+      "spec": "Use your file-writing tool to create a file at this absolute path: /tmp/ringer-local-cap-test/test-gemma31b/probe_gemma.py. The exact file content must be: print('GEMMA_OK'). You MUST actually write the file to disk using the write tool. Do not just print the code in chat.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np=Path('probe_gemma.py')\nif not p.exists(): print('FAIL: file not created'); sys.exit(1)\nimport ast\ntry: ast.parse(p.read_text())\nexcept Exception as e: print('FAIL: not valid python:', e); sys.exit(1)\nout=subprocess.run([sys.executable,str(p)],capture_output=True,text=True,timeout=10)\nprint('PASS' if out.stdout.strip()=='GEMMA_OK' else f'FAIL: got {out.stdout.strip()!r}')\nsys.exit(0 if out.stdout.strip()=='GEMMA_OK' else 1)\nPY",
+      "expect_files": [
+        "probe_gemma.py"
+      ]
+    },
+    {
+      "key": "test-qwen36-latest",
+      "engine": "local",
+      "model": "ollama/qwen3.6:latest",
+      "task_type": "probe",
+      "timeout_s": 180,
+      "spec": "Use your file-writing tool to create a file at this absolute path: /tmp/ringer-local-cap-test/test-qwen36-latest/probe_qwen36.py. The exact file content must be: print('QWEN36_OK'). You MUST actually write the file to disk using the write tool. Do not just print the code in chat.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np=Path('probe_qwen36.py')\nif not p.exists(): print('FAIL: file not created'); sys.exit(1)\nimport ast\ntry: ast.parse(p.read_text())\nexcept Exception as e: print('FAIL: not valid python:', e); sys.exit(1)\nout=subprocess.run([sys.executable,str(p)],capture_output=True,text=True,timeout=10)\nprint('PASS' if out.stdout.strip()=='QWEN36_OK' else f'FAIL: got {out.stdout.strip()!r}')\nsysys.exit(0 if out.stdout.strip()=='QWEN36_OK' else 1)\nPY",
+      "expect_files": [
+        "probe_qwen36.py"
+      ]
+    },
+    {
+      "key": "test-qwen36-27b",
+      "engine": "local",
+      "model": "ollama/qwen3.6:27b",
+      "task_type": "probe",
+      "timeout_s": 180,
+      "spec": "Use your file-writing tool to create a file at this absolute path: /tmp/ringer-local-cap-test/test-qwen36-27b/probe_qwen27.py. The exact file content must be: print('QWEN27_OK'). You MUST actually write the file to disk using the write tool. Do not just print the code in chat.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np=Path('probe_qwen27.py')\nif not p.exists(): print('FAIL: file not created'); sys.exit(1)\nimport ast\ntry: ast.parse(p.read_text())\nexcept Exception as e: print('FAIL: not valid python:', e); sys.exit(1)\nout=subprocess.run([sys.executable,str(p)],capture_output=True,text=True,timeout=10)\nprint('PASS' if out.stdout.strip()=='QWEN27_OK' else f'FAIL: got {out.stdout.strip()!r}')\nsysys.exit(0 if out.stdout.strip()=='QWEN27_OK' else 1)\nPY",
+      "expect_files": [
+        "probe_qwen27.py"
+      ]
+    },
+    {
+      "key": "test-qwen3-32b",
+      "engine": "local",
+      "model": "ollama/qwen3:32b",
+      "task_type": "probe",
+      "timeout_s": 180,
+      "spec": "Use your file-writing tool to create a file at this absolute path: /tmp/ringer-local-cap-test/test-qwen3-32b/probe_qwen3.py. The exact file content must be: print('QWEN3_OK'). You MUST actually write the file to disk using the write tool. Do not just print the code in chat.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np=Path('probe_qwen3.py')\nif not p.exists(): print('FAIL: file not created'); sys.exit(1)\nimport ast\ntry: ast.parse(p.read_text())\nexcept Exception as e: print('FAIL: not valid python:', e); sys.exit(1)\nout=subprocess.run([sys.executable,str(p)],capture_output=True,text=True,timeout=10)\nprint('PASS' if out.stdout.strip()=='QWEN3_OK' else f'FAIL: got {out.stdout.strip()!r}')\nsysys.exit(0 if out.stdout.strip()=='QWEN3_OK' else 1)\nPY",
+      "expect_files": [
+        "probe_qwen3.py"
+      ]
+    }
+  ]
+}

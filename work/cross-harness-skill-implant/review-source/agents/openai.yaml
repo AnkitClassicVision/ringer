@@ -1,0 +1,4 @@
+interface:
+  display_name: "Clean My AI Harness: Mission Fit"
+  short_description: "Audit whether your agent can finish your real jobs"
+  default_prompt: "Use $clean-my-ai-harness-mission-fit to check my Cleaner install and audit my recent agent missions."

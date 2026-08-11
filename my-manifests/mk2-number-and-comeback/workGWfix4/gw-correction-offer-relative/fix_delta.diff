@@ -1,0 +1,93 @@
+--- /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWfix3/gw-final-strip-reprove/bland_gateway_fixed.py	2026-08-03 19:57:58.931946131 -0400
++++ bland_gateway_fixed.py	2026-08-03 20:01:05.503301232 -0400
+@@ -894,7 +894,7 @@
+             label(resolved[0]), label(resolved[1]))
+ 
+ 
+-def extract_date_from_text(text) -> str | tuple | None:
++def extract_date_from_text(text, offered_date=None) -> str | tuple | None:
+     normalized = re.sub(
+         r"[^A-Za-z0-9\s/\-:,;.?!\u3400-\u4dbf\u4e00-\u9fff]",
+         " ",
+@@ -1027,6 +1027,11 @@
+                     correction_following
+                     and match.group(0) == correction_following.group("phrase")
+                 )
++                if is_correction and offered_date:
++                    result = (
++                        datetime.strptime(offered_date, "%m/%d/%Y")
++                        + timedelta(days=7)
++                    ).strftime("%m/%d/%Y")
+                 if result:
+                     date_seen = True
+                 if result and not killed(match.start(), is_correction):
+@@ -1231,7 +1236,7 @@
+     return None
+ 
+ 
+-def _latest_user_text(messages) -> str:
++def _latest_user_message(messages):
+     user_messages = []
+     for message in messages or []:
+         if not isinstance(message, dict):
+@@ -1240,11 +1245,16 @@
+         if str(role or "").upper() == "USER":
+             user_messages.append(message)
+     if not user_messages:
+-        return ""
++        return None
+     if all(message.get("created_at") for message in user_messages):
+-        chosen = max(user_messages, key=lambda message: str(message["created_at"]))
+-    else:
+-        chosen = user_messages[-1]
++        return max(user_messages, key=lambda message: str(message["created_at"]))
++    return user_messages[-1]
++
++
++def _latest_user_text(messages) -> str:
++    chosen = _latest_user_message(messages)
++    if not chosen:
++        return ""
+     return str(chosen.get("message", chosen.get("content", "")) or "")[:2000]
+ 
+ 
+@@ -1252,7 +1262,38 @@
+     latest = _latest_user_text(messages)
+     if not latest:
+         return None, None
+-    resolved = extract_date_from_text(latest)
++    offered_date = None
++    correction = re.match(
++        r"^no[,!. ]+(?:the )?following "
++        r"(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b",
++        latest.strip(),
++        re.IGNORECASE,
++    )
++    latest_message = _latest_user_message(messages)
++    if correction and latest_message is not None:
++        weekday = _WEEKDAYS[correction.group(1).lower()]
++        latest_index = next(
++            index for index, message in enumerate(messages or [])
++            if message is latest_message
++        )
++        for message in reversed((messages or [])[:latest_index]):
++            if not isinstance(message, dict):
++                continue
++            role = message.get("sender", message.get("role", ""))
++            if str(role or "").upper() not in {"ASSISTANT", "AGENT"}:
++                continue
++            text = str(message.get("message", message.get("content", "")) or "")
++            for candidate in reversed(re.findall(r"\b\d{2}/\d{2}/\d{4}\b", text)):
++                try:
++                    offered = datetime.strptime(candidate, "%m/%d/%Y")
++                except ValueError:
++                    continue
++                if offered.weekday() == weekday:
++                    offered_date = candidate
++                    break
++            if offered_date:
++                break
++    resolved = extract_date_from_text(latest, offered_date)
+     if isinstance(resolved, tuple) and resolved and resolved[0] == "range":
+         return resolved[1], resolved[2]
+     return (resolved, resolved) if resolved else (None, None)

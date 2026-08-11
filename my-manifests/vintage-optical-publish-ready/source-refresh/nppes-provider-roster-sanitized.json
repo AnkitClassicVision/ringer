@@ -1,0 +1,694 @@
+{
+  "captured_at": "2026-07-30",
+  "queries": [
+    {
+      "city": "Morton",
+      "query_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Morton&state=IL&taxonomy_description=Optometrist&limit=200",
+      "result_count": 6,
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city": "Morton",
+      "query_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Morton&state=IL&taxonomy_description=Ophthalmology&limit=200",
+      "result_count": 0,
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "city": "Washington",
+      "query_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Washington&state=IL&taxonomy_description=Optometrist&limit=200",
+      "result_count": 10,
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city": "Washington",
+      "query_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Washington&state=IL&taxonomy_description=Ophthalmology&limit=200",
+      "result_count": 1,
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "city": "East Peoria",
+      "query_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=East+Peoria&state=IL&taxonomy_description=Optometrist&limit=200",
+      "result_count": 7,
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city": "East Peoria",
+      "query_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=East+Peoria&state=IL&taxonomy_description=Ophthalmology&limit=200",
+      "result_count": 0,
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "city": "Pekin",
+      "query_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Pekin&state=IL&taxonomy_description=Optometrist&limit=200",
+      "result_count": 11,
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city": "Pekin",
+      "query_url": "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Pekin&state=IL&taxonomy_description=Ophthalmology&limit=200",
+      "result_count": 5,
+      "taxonomy_query": "Ophthalmology"
+    }
+  ],
+  "records": [
+    {
+      "city_query": "Morton",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "155 E COURTLAND ST",
+      "practice_address_2": null,
+      "practice_city": "MORTON",
+      "practice_postal_prefix": "61550",
+      "practice_state": "IL",
+      "provider_or_org_name": "ROBERT MATHEW BECKER od",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Morton",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "829 W JACKSON ST",
+      "practice_address_2": null,
+      "practice_city": "MORTON",
+      "practice_postal_prefix": "61550",
+      "practice_state": "IL",
+      "provider_or_org_name": "SUE A FEATHER O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Morton",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "829 W JACKSON ST",
+      "practice_address_2": null,
+      "practice_city": "MORTON",
+      "practice_postal_prefix": "61550",
+      "practice_state": "IL",
+      "provider_or_org_name": "FOCUS ON EYES, P.C.",
+      "status": "A",
+      "taxonomies": [
+        "Eyewear Supplier (Equipment, not the service)",
+        "Optometrist",
+        "Optometrist, Corneal and Contact Management",
+        "Optometrist, Low Vision Rehabilitation",
+        "Optometrist, Occupational Vision",
+        "Optometrist, Pediatrics",
+        "Optometrist, Sports Vision",
+        "Optometrist, Vision Therapy"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Morton",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "417 W JEFFERSON ST",
+      "practice_address_2": null,
+      "practice_city": "MORTON",
+      "practice_postal_prefix": "61550",
+      "practice_state": "IL",
+      "provider_or_org_name": "BRIAN C SOMMER O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Morton",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "417 W JEFFERSON ST",
+      "practice_address_2": null,
+      "practice_city": "MORTON",
+      "practice_postal_prefix": "61550",
+      "practice_state": "IL",
+      "provider_or_org_name": "PAUL O VELTING O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist, Corneal and Contact Management"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Morton",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "605 S MAIN ST",
+      "practice_address_2": null,
+      "practice_city": "MORTON",
+      "practice_postal_prefix": "61550",
+      "practice_state": "IL",
+      "provider_or_org_name": "VINTAGE OPTICAL BRIAN C SOMMER OD LTD",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Washington",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "93 EASTGATE DR",
+      "practice_address_2": null,
+      "practice_city": "WASHINGTON",
+      "practice_postal_prefix": "61571",
+      "practice_state": "IL",
+      "provider_or_org_name": "EYECARE FOCUS PC",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "100 HILLCREST DR STE B",
+      "practice_address_2": null,
+      "practice_city": "WASHINGTON",
+      "practice_postal_prefix": "61571",
+      "practice_state": "IL",
+      "provider_or_org_name": "TODD E FUNK O.D., F.A.A.O.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "8921 N WOOD SAGE RD",
+      "practice_address_2": null,
+      "practice_city": "PEORIA",
+      "practice_postal_prefix": "61615",
+      "practice_state": "IL",
+      "provider_or_org_name": "EMIL ABRAHAM GEORGE OD",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "8 CHERRY TREE CENTER",
+      "practice_address_2": null,
+      "practice_city": "WASHINGTON",
+      "practice_postal_prefix": "61571",
+      "practice_state": "IL",
+      "provider_or_org_name": "MARK D HAHN O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Washington",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "8 CHERRY TREE SHOPPING CTR",
+      "practice_address_2": null,
+      "practice_city": "WASHINGTON",
+      "practice_postal_prefix": "61571",
+      "practice_state": "IL",
+      "provider_or_org_name": "J A K ENTERPRISES INC",
+      "status": "A",
+      "taxonomies": [
+        "Durable Medical Equipment & Medical Supplies",
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "4727 N SHERIDAN RD",
+      "practice_address_2": null,
+      "practice_city": "PEORIA",
+      "practice_postal_prefix": "61614",
+      "practice_state": "IL",
+      "provider_or_org_name": "ANDREW JOSEPH MILDER O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "93 EASTGATE DR",
+      "practice_address_2": null,
+      "practice_city": "WASHINGTON",
+      "practice_postal_prefix": "61571",
+      "practice_state": "IL",
+      "provider_or_org_name": "J. ALLEN POTTER O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Washington",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "1009 N CUMMINGS LN",
+      "practice_address_2": null,
+      "practice_city": "WASHINGTON",
+      "practice_postal_prefix": "61571",
+      "practice_state": "IL",
+      "provider_or_org_name": "TINA R THOMAS OD LTD",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Washington",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "100 HILLCREST DR",
+      "practice_address_2": null,
+      "practice_city": "WASHINGTON",
+      "practice_postal_prefix": "61571",
+      "practice_state": "IL",
+      "provider_or_org_name": "TRI-COUNTY EYE CENTER",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "1009 N CUMMINGS LN",
+      "practice_address_2": null,
+      "practice_city": "WASHINGTON",
+      "practice_postal_prefix": "61571",
+      "practice_state": "IL",
+      "provider_or_org_name": "JENNIFER M WILSON OD",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Washington",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "8921 N WOOD SAGE RD",
+      "practice_address_2": null,
+      "practice_city": "PEORIA",
+      "practice_postal_prefix": "61615",
+      "practice_state": "IL",
+      "provider_or_org_name": "STEPHEN J EYLER MD",
+      "status": "A",
+      "taxonomies": [
+        "Ophthalmology"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "301 W WASHINGTON",
+      "practice_address_2": "20/20 EYECARE SOLUTIONS, INC.",
+      "practice_city": "EAST PEORIA",
+      "practice_postal_prefix": "61611",
+      "practice_state": "IL",
+      "provider_or_org_name": "KAREN LYNNE CRAMER OD",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "412 RIVERSIDE DR",
+      "practice_address_2": null,
+      "practice_city": "EAST PEORIA",
+      "practice_postal_prefix": "61611",
+      "practice_state": "IL",
+      "provider_or_org_name": "J A K ENTERPRISES INC",
+      "status": "A",
+      "taxonomies": [
+        "Durable Medical Equipment & Medical Supplies",
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "1201 S DIRKSEN PKWY",
+      "practice_address_2": null,
+      "practice_city": "SPRINGFIELD",
+      "practice_postal_prefix": "62703",
+      "practice_state": "IL",
+      "provider_or_org_name": "ROMAN V. KLODNYCKY O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "2650 RIDGE AVE.",
+      "practice_address_2": null,
+      "practice_city": "SKOKIE",
+      "practice_postal_prefix": "60077",
+      "practice_state": "IL",
+      "provider_or_org_name": "KATHERINE KWAN O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "401 RIVER RD",
+      "practice_address_2": null,
+      "practice_city": "EAST PEORIA",
+      "practice_postal_prefix": "61611",
+      "practice_state": "IL",
+      "provider_or_org_name": "MARK E BREWER O D P C",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "412 RIVERSIDE DR",
+      "practice_address_2": null,
+      "practice_city": "EAST PEORIA",
+      "practice_postal_prefix": "61611",
+      "practice_state": "IL",
+      "provider_or_org_name": "BEN RASAMIMARI OD",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "East Peoria",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "111 W WASHINGTON ST",
+      "practice_address_2": "SUITE 410",
+      "practice_city": "EAST PEORIA",
+      "practice_postal_prefix": "61611",
+      "practice_state": "IL",
+      "provider_or_org_name": "TAZEWELL COUNTY RESOURCE CENTERS INC",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist, Low Vision Rehabilitation"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "725 S 14TH ST",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "BOND EYE ASSOCIATES, SC",
+      "status": "A",
+      "taxonomies": [
+        "Ophthalmology",
+        "Optometrist",
+        "Technician/Technologist, Optician"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "2611 BROADWAY ST",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "BRENDON J JOHNSON, OD, PC",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "725 S 14TH ST",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "IVETTA S DACCACHE O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "3320 VETERANS DR",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "JAWAD HAIDER O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "6800 N KNOXVILLE AVE",
+      "practice_address_2": null,
+      "practice_city": "PEORIA",
+      "practice_postal_prefix": "61614",
+      "practice_state": "IL",
+      "provider_or_org_name": "NICOLE TONY HANNA OD",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "3287 COURT ST",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "SHWETA R HARVI OD",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "3287 COURT ST",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "J A K ENTERPRISES INC",
+      "status": "A",
+      "taxonomies": [
+        "Durable Medical Equipment & Medical Supplies",
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "3320 VETERANS DR",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "JAWAD HAIDER OD LTD",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "2611 BROADWAY ST",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "BRENDON J JOHNSON O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "3287 COURT ST",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "TIMOTHY DANE SHELLEY O.D.",
+      "status": "A",
+      "taxonomies": [
+        "Optometrist"
+      ],
+      "taxonomy_query": "Optometrist"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "725 S 14TH ST",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "ROGER TODD ADLER MD",
+      "status": "A",
+      "taxonomies": [
+        "Ophthalmology"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "725 S 14TH ST",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "BOND EYE ASSOCIATES, SC",
+      "status": "A",
+      "taxonomies": [
+        "Ophthalmology",
+        "Optometrist",
+        "Technician/Technologist, Optician"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "725 S 14TH ST",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "WILLIAM IRVING BOND M.D.",
+      "status": "A",
+      "taxonomies": [
+        "Ophthalmology"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-1",
+      "last_updated_epoch": null,
+      "practice_address_1": "101 N PARKWAY DR",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "JAMES WILLIAM FARRELL M.D.",
+      "status": "A",
+      "taxonomies": [
+        "Ophthalmology"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    },
+    {
+      "city_query": "Pekin",
+      "enumeration_type": "NPI-2",
+      "last_updated_epoch": null,
+      "practice_address_1": "101 N PARKWAY DR",
+      "practice_address_2": null,
+      "practice_city": "PEKIN",
+      "practice_postal_prefix": "61554",
+      "practice_state": "IL",
+      "provider_or_org_name": "MIDWEST EYE CARE P.C.",
+      "status": "A",
+      "taxonomies": [
+        "Ophthalmology"
+      ],
+      "taxonomy_query": "Ophthalmology"
+    }
+  ],
+  "scope_note": "Public NPPES queries by named city and taxonomy. NPPES is a provider registry, not proof of active office capacity, patient draw, or a complete drive-time catchment supply census. Raw NPI and phone identifiers are intentionally omitted from this sanitized receipt."
+}

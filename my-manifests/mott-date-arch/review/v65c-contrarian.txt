@@ -1,0 +1,2105 @@
+Reading additional input from stdin...
+OpenAI Codex v0.145.0
+--------
+workdir: /home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: medium
+reasoning summaries: none
+session id: 019fae87-82d1-73c0-a20b-7d6b64857573
+--------
+user
+DO NOT modify any files. Role: CONTRARIAN. Read ./build_v65.py. Your job is to find ways the pathway STILL fabricates or gives wrong answers despite the guards.
+
+Specifically attack:
+1. The n_ask prompt says 'never guess what day of the week a date falls on'. But what if the model DOES guess anyway? What downstream guard catches it? Is there a node that validates the weekday the model said matches the actual date? If not, how does the patient know the weekday is wrong?
+
+2. The n_date_conflict node prompt says 'Did you mean {{conflict_option_1}} or {{conflict_option_2}}'. But these template variables are only populated when the GATEWAY detects a conflict. The gateway only fires AFTER the search webhook. If extraction fails (blank preference_from), the gateway never fires, so conflict_option_1/2 are empty. Trace what happens when the model on n_ask can't extract and the search fires with blank from/to — does it ever reach n_date_conflict? If not, where does conflict clarification actually happen?
+
+3. The offer template now includes {{slot_1_day_name}} and {{slot_2_day_name}}. These come from the gateway. If the gateway computes the weekday wrong (the earlier 'Saturday July 31st' bug was the MODEL fabricating, but could the GATEWAY also compute a wrong weekday?), how would anyone know?
+
+4. For 'this weekend' as a range — the preference_to instructions say 'If they asked for next week in general with no day, put friday next week.' Is there an equivalent rule for weekend? If not, what does the model put in preference_to for 'this weekend'?
+
+Return: failure_modes (concrete list), each with severity HIGH/MEDIUM/LOW and whether the current pathway catches it or not.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+codex
+Ankit — I’ll read the repo guidance and `build_v65.py` only, then trace these four paths without modifying files. CANARY: blue paperclip.
+codex
+I’m using the Codex operating-card, code-review, and Ringer instructions because this is a read-only review of a Ringer manifest. They will constrain the review to evidence from the actual generated pathway and its runtime transitions.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "pwd && rg --files -g 'AGENTS.md' -g 'MODULE_MAP.md' -g 'build_v65.py' -g '.ai/fable-proof-run.md' | sort && rg -n \"ringer|manifest|pathway|contrarian|weekday|date conflict\" /home/ankit114/.codex/memories/MEMORY.md | head -80 && wc -l /home/ankit114/.claude/skills/codex-operating-card/SKILL.md /home/ankit114/.claude/skills/code-reviewer/SKILL.md /home/ankit114/.claude/skills/ringer/SKILL.md && sed -n '1,240p' /home/ankit114/.claude/skills/codex-operating-card/SKILL.md && sed -n '1,260p' /home/ankit114/.claude/skills/code-reviewer/SKILL.md && sed -n '1,280p' /home/ankit114/.claude/skills/ringer/SKILL.md" in /home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65
+ succeeded in 0ms:
+/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65
+build_v65.py
+309:- automation-discovery, ringer, corpus.db, BUILD_RECEIPT.md, evidence-bundle, allow-review, receipts, sources=21 events_checked=2120 candidates=14 offers=5 receipts=20
+323:- when the user says, "use $automation-discovery and $ringer To aceeaa all my data and connectiongs and fan out and tice me automations" -> treat it as a request to audit real traces and build proof from evidence, not brainstorm from memory [Task 1]
+429:- Steam, ARC Raiders, ntfs3, kernel BUG, iomap_write_end, ntfs_file_write_iter, /mnt/d_drive, journalctl -k, appmanifest_1808500.acf
+   43 /home/ankit114/.claude/skills/codex-operating-card/SKILL.md
+  142 /home/ankit114/.claude/skills/code-reviewer/SKILL.md
+  430 /home/ankit114/.claude/skills/ringer/SKILL.md
+  615 total
+---
+name: codex-operating-card
+description: "Operate Codex with Nate-style project induction, read-only-first task starts, one-thread-one-outcome discipline, UI/browser evidence, self-review gates, and durable-rule extraction. Use when working in Codex on a repo, starting a new Codex thread, doing project induction, implementing or reviewing code, doing frontend/UI QA, or deciding whether to promote a prompt pattern into AGENTS.md or a skill."
+---
+
+# Codex Operating Card
+
+Purpose: make Codex behave like a repo worker with a tight work contract, not a wandering owner. These prompts are operating defaults, not safety gates. For production writes, deploys, PHI/PII, secrets, CRM/EHR/finance writes, external sends, or autonomy changes, follow the relevant deterministic gate and human approval rules.
+
+## Default behavior
+
+Use this operating card unless the user explicitly overrides it:
+
+1. Read first. Do not edit until you can explain the current project shape.
+2. One thread = one outcome. If a new goal appears, propose a new thread.
+3. Prefer read-only or sandbox mode unless write access is explicitly intended.
+4. Before changes, state likely files, risk, test plan, and rollback path.
+5. Treat AGENTS.md and project docs as local law. If missing, infer lightly and flag gaps.
+6. For UI work, use browser or visual evidence rather than guessing.
+7. Verify with actual command output, visual check, or a named source before claiming done.
+8. End with: Changed, Verified by, Risks left, Next action.
+9. If the task reveals a reusable rule, propose AGENTS.md or skill capture, but do not write it without approval.
+
+## Prompt pack
+
+For exact copy/paste prompts, read `references/prompt-pack.md` and choose the smallest prompt that matches the work:
+
+- Project induction prompt: first pass on a repo.
+- Task starter prompt: normal implementation.
+- UI/browser evidence prompt: frontend or visual QA.
+- Review gate prompt: before accepting Codex output.
+- Durable-rule extraction prompt: after a repeated pattern appears.
+
+## Output contract
+
+For routine work, keep the final terse:
+
+- Changed: files/behavior changed.
+- Verified by: real command, screenshot/visual check, or source.
+- Risks left: only what matters.
+- Next action: one step.
+
+Do not call work complete if verification did not run. Say `Partial` or `Blocked` instead.
+---
+name: code-reviewer
+description: >
+  Review code changes for bugs, security issues, design patterns, and MyBCAT conventions.
+  Use when: PR is ready for review, code has been modified, or user asks for code review or feedback.
+  For PR reviews, milestone reviews, pre-merge gates, or serious agent-built work, also load `cross-review-qa` and run the mandatory fresh QA loop before claiming pass/completion; if Claude Code is used as a reviewer, invoke it through `tmux-model-workers`.
+  Do NOT use for: architecture decisions (use agent_spec_writer), deployment (use github-operations).
+  Approved roles: founder, tech-team.
+---
+
+
+> ⚠️ Codex compatibility: This skill is exposed through `$HOME/.agents/skills`. Treat Claude Code slash commands/hooks/tool names as surface-specific examples, not literal Codex requirements. See `references/codex-compat.md`.
+
+# Code Reviewer Skill
+
+You are a senior code reviewer. When invoked, you will:
+
+## Mandatory cross-review overlay
+
+For PR reviews, milestone reviews, pre-merge gates, or serious agent-built work, first load `cross-review-qa` and apply its fresh QA loop:
+- Preserve the original plan/spec/acceptance criteria and relevant ATLAS SPINE as the yardstick.
+- Spawn a brand-new read-only QA context; when the reviewer is Claude Code, call it through `tmux-model-workers`, not `claude -p` or blind background execution.
+- Require issue-only findings labeled `BLOCK`/`HIGH`/`MEDIUM`/`LOW`, with file/section evidence and suggested fix direction.
+- Send enumerated `BLOCK`/`HIGH` findings back to the main agent/builder to fix, rerun verification, then re-review.
+- Keep looping until no `BLOCK`/`HIGH` findings remain before reporting pass/completion.
+
+## Primary Tasks
+1. Analyze code for potential bugs and edge cases
+2. Check for adherence to best practices and design patterns
+3. Evaluate code readability and maintainability
+4. Identify security vulnerabilities
+5. Suggest performance optimizations
+6. Verify proper error handling
+
+## Review Checklist
+- [ ] Code follows project conventions
+- [ ] Functions have single responsibility
+- [ ] Proper error handling implemented
+- [ ] No security vulnerabilities
+- [ ] Tests cover critical paths
+- [ ] Documentation is clear and complete
+- [ ] Performance is acceptable
+- [ ] No code duplication
+
+### Safety-gate / readiness-lane reviews
+
+When reviewing code that controls go-live, readiness, approvals, external actions, CRM writes, email/SMS/LinkedIn sends, or deploy/merge authority, add an explicit fail-closed pass:
+- [ ] Permission booleans fail closed: malformed truthy values like `"false"`, `"true"`, `1`, non-empty lists, or missing keys do not accidentally authorize action or display readiness.
+- [ ] Readiness labels are precise: distinguish **artifact ready**, **executor-queue/gate ready**, and **side-effect permission granted**. A Level 4/executor-ready verdict may be valid without opening sends/writes; verify `send_allowed` and `write_allowed` separately.
+- [ ] Human-review policy is explicit and tested. If the product rule is threshold-based (for example: human review only after more than 3 QA failures), verify pass/retry/escalate branches and do not preserve stale “QA pass → human approval” assumptions in tests or labels.
+- [ ] A ready verdict depends on the actual gate/request/artifact status and current policy, not only on an upstream draft status string.
+- [ ] Leak and side-effect scans check both regex payload leaks and explicit safety flags/counters/aliases.
+- [ ] Important findings that could change a readiness verdict are treated as pre-finalization fixes, not optional follow-up.
+
+### Live-vs-mock integration readiness
+
+When reviewing integration-heavy work, especially contractor/vendor deliverables, do not treat a passing test suite as proof of production readiness:
+- [ ] Inspect adapter selectors and environment gates, not just service code. Look for `*_MOCK`, `validateOnly`, `mock-first`, `developer token pending`, `not configured`, and live-mode branches that intentionally throw.
+- [ ] Classify each integration as **live verified**, **live scaffolded**, **mock/stub only**, or **blocked**. A live client class is only “live scaffolded” until a dated external acceptance/read-back artifact exists.
+- [ ] Require proof artifacts for business-loop completion: e.g. click → call → confirmation → accepted external conversion, with each step labeled live/synthetic/mock.
+- [ ] Call out PR/CI absence separately from code quality; local green checks are useful but do not replace protected branch review and repeatable CI.
+- [ ] Treat stale task/spec checkboxes as a governance gap: implemented files may exist, but project status is ambiguous until task docs or release notes match the repo state.
+
+## Output Format
+Provide feedback in this structure:
+1. **Critical Issues** (must fix)
+2. **Important Suggestions** (should fix)
+3. **Minor Improvements** (nice to have)
+4. **Positive Observations** (what was done well)
+
+Always explain WHY something should be changed and provide specific examples.
+
+---
+
+## When to Invoke
+
+**Use this skill when:**
+- A PR is ready for review and user asks for code review
+- User has modified code and wants feedback before committing
+- User asks to "review this", "check this code", or "find bugs"
+- User wants to verify code follows MyBCAT conventions (type hints, f-strings, logging, parameterized SQL, no PHI logging)
+- User asks about security vulnerabilities in specific code
+
+**Do NOT use this skill when:**
+- User wants architecture or design decisions (use agent_spec_writer)
+- User wants a second opinion from a different AI (use codex)
+- User wants to deploy code (use github-operations)
+- User wants to run tests (use command-runner)
+- User wants to create or update a skill (use skill-creator)
+
+## Input Contract
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| code | string or file_path | Yes | The code to review. Can be inline code, a file path, a git diff, or a PR number (e.g., `#123`). |
+| scope | string | No | Review focus: `full` (default), `security`, `performance`, `conventions`, `bugs-only`. |
+| context | string | No | Additional context about what the code does or why it was changed. Helps the reviewer prioritize findings. |
+
+## Output Contract
+
+**On success:** Returns a structured review with 4 sections: (1) Critical Issues (must fix), (2) Important Suggestions (should fix), (3) Minor Improvements (nice to have), (4) Positive Observations (what was done well). Each finding includes the WHY and a specific code example or fix.
+
+**On partial success:** If only part of the code could be reviewed (e.g., file too large, binary content), returns findings for the reviewable portion with a note about what was skipped.
+
+**On failure:** Returns an error explaining why the review could not be completed (e.g., "File not found at specified path", "PR #123 does not exist in this repo") with suggested next steps.
+
+## Guardrails
+
+- **PHI:** This skill may encounter PHI in code being reviewed. If patient names, SSNs, DOBs, phone numbers, or insurance IDs are found hardcoded in code, flag as a CRITICAL security issue. Do NOT reproduce the PHI values in the review output — reference them by line number only.
+- **Rate limits:** No external API calls. Local code analysis only.
+- **Blast radius:** Review output is advisory only — no code is modified. Zero blast radius.
+- **Cost:** Zero. No external API costs.
+- **Permissions:** Requires read access to the files or repo being reviewed. No write access needed.
+
+## Self-Verification
+
+Before delivering output, the skill MUST verify:
+- [ ] All 4 output sections are present (Critical, Important, Minor, Positive)
+- [ ] Each finding includes a WHY explanation and specific code reference
+- [ ] No PHI values are reproduced in the review output (line numbers only)
+- [ ] MyBCAT conventions were checked: type hints, f-strings, logging (not print), parameterized SQL, proper error handling, no PHI logging
+- [ ] Security review was performed: no hardcoded credentials, no SQL injection, no open security groups
+- [ ] Review is actionable — vague feedback like "could be better" is replaced with specific suggestions
+
+If any check fails, do NOT deliver output. Follow the Failure Path instead.
+
+## Failure Path
+
+| Failure Mode | Detection | Action | Escalation |
+|-------------|-----------|--------|------------|
+| File not found | FileNotFoundError on read | Ask user to confirm file path | None — user self-service |
+| Binary or non-text file | Content detection shows binary data | Skip file, inform user | None — expected case |
+| Code too large for context | File exceeds 15K tokens | Use cosa skill to chunk, review in parts | None — expected for large files |
+| PHI found in code | Regex match for SSN, DOB, phone patterns | Flag as CRITICAL finding, do NOT reproduce values | Alert ankit — potential HIPAA violation |
+| Credentials found in code | Regex match for API key, token, password patterns | Flag as CRITICAL finding, recommend moving to Secrets Manager | Alert ankit(primary) or vince(backup) — security incident |
+| PR number invalid | GitHub API returns 404 | Ask user to verify PR number and repo | None — user self-service |
+
+## Escalation Owner
+
+**Primary:** ankit
+**Backup:** vince
+**Contact method:** Claude Code conversation or Monday.com task
+---
+name: ringer
+description: >-
+  Load before model-calling scripts, harness probes, edit-test loops, Ringer
+  manifests or runs, model selection, and failed-worker diagnosis. Also load
+  when a supposedly tiny task becomes a second edit pass. Skip only for
+  reading/searching, git operations, pure conversation, direct prose, or one
+  genuinely one-shot few-line edit.
+---
+
+# Ringer orchestrator playbook
+
+## Read this first — the four rules that actually get broken
+
+1. **You review; workers type.** Your lane: specs, checks, pattern choice,
+   reading results. If you are typing implementation, running probes, or
+   babysitting a retry loop yourself, you have left your lane.
+2. **A single task is a one-task manifest.** Same verification, zero
+   ceremony. "Too small for Ringer" is how drift starts — the smoke test,
+   the probe script, the three-edit fix are all one-task manifests.
+3. **Beware the tiny-edit death spiral.** The named anti-pattern: each step
+   is individually small enough to justify inline, and two hours later the
+   exception has become the workflow and nothing was verified or visible.
+   The one-shot exception is ONE file, a few lines, ONCE. The second pass on
+   the same problem is a loop, and loops are manifests.
+4. **Runs are watched, not hidden — and the screen comes up FIRST.** The
+   moment this skill loads for real work, before you write a single spec,
+   put Ringside on the human's screen: `./ringer.py hud` (idempotent — if
+   one is already up it says so and opens the page; runs also auto-start
+   it). Ringside is the PAGE at http://127.0.0.1:8700 — NEVER launch the
+   Ringside.app application (`open -a Ringside`); it is a parked prototype
+   with a stale frontend. And never go dark: if your prep (research,
+   check-writing, manifest drafting) will take more than ~30 seconds,
+   tell the human in one sentence what you're doing and roughly how long
+   before you start — they should be watching the empty arena and reading
+   your one-liner, not wondering if anything is happening. Never pass
+   `--no-dashboard` except in automated tests or when the user explicitly
+   asks.
+
+Ringer runs manifest tasks in parallel across cheap CLI workers (Codex,
+OpenCode/GLM, others via config) and verifies every task by **executing a
+check command** — exit 0 is the only PASS. Failed tasks are retried once
+with the check's actual failure output injected into the retry prompt. You —
+the orchestrating model — pay tokens only for specs, orchestration, and
+review.
+
+```bash
+./ringer.py lint manifest.json            # always lint before running
+./ringer.py run manifest.json --identity <who-you-are>
+./ringer.py demo                          # 3-worker smoke test
+./ringer.py run manifest.json --dry-run   # print the plan, spawn nothing
+```
+
+Runs land in `~/.ringer/runs/`. Raw worker logs land in `<workdir>/logs/`.
+Full reference: `README.md`. Ready-made manifest skeletons: `templates/`.
+Lint catches unverifiable checks, silent checks, worktree deliverable/commit
+loss, serial fan-out, write collisions, and underspecified specs; `run`
+prints the same findings as non-blocking warnings.
+
+## One job, one artifact
+
+A job the human asked for — however many rounds it takes — is ONE artifact.
+Use the SAME `run_name` for every round (`sd-crate-launch`, not
+`sd-crate-r1` / `sd-crate-r2`): the library accumulates each round as a
+version under one entry, and the human watches one page evolve instead of
+hunting across three "live" tabs. Name it after the JOB in the human's
+words, not after your batch structure.
+
+And the artifact page is where results are REVIEWED. When a round finishes,
+read the deliverables from the artifact store and direct the human to the
+page — never `cat` result files into the terminal as the reveal. If a result
+matters, it belongs in the artifact; if it isn't there, that's a harvest gap
+to fix (declare it in `expect_files`), not a reason to bypass the page.
+
+### Recovery when a large Codex task reads but never writes
+
+If a Codex child repeatedly consumes the staged packet and exits before its first artifact:
+
+1. Preserve and validate any partial repository outputs before retrying.
+2. Split the monolith into bounded manifests, such as evidence, scores, page/runlog, mechanical render, and status receipt.
+3. Give each unit a focused fail-closed gate. A stage wrapper must fail when the canonical validator crashes or exits nonzero without structured WHY output.
+4. Use a prior valid artifact only as a reversible schema or layout scaffold. Mark it unaccepted, run the focused gate to obtain exact WHY failures, and let the worker revise those failures.
+5. Route only deterministic renderer or copier work through `local-shell`; model-authored analysis and client copy still require the declared AI engine.
+6. If the Ringer wrapper remains but has no child, inspect expected artifacts directly. Validate and keep a real artifact; otherwise kill the stale wrapper and restart the smaller unit.
+7. Finish with the complete canonical validator and a fresh report-only review. Never promote a stage PASS into final acceptance.
+
+## Spec-writing craft
+
+Workers are stateless and cannot ask questions. Every spec must be
+self-contained:
+
+- **Open with the role and the boundary.** "You are a read-only scout…",
+  "Your current working directory IS a git worktree of <repo> — edit files
+  here directly." State what the worker must NEVER touch before what it
+  should do.
+- **Name every file the worker owns.** In multi-worker runs over one repo,
+  file ownership must be disjoint — and disjoint across *all* concurrent
+  lanes/branches, not just within one batch. Every file a spec mentions must
+  be in that worker's ownership list.
+- **Embed the HOW TO RUN.** If the task drives a harness or script, put the
+  exact command lines (with real absolute paths) in the spec. Workers should
+  never have to discover an interface.
+- **Define the output contract.** Say exactly which files to produce, where,
+  and what each must contain. Graded/eval tasks should enumerate the grading
+  criteria in the spec so the worker's output is checkable.
+- **Hard rules travel in the spec, not in your head.** "Do NOT git commit",
+  "never modify the repo, only write ./report.md", "stay in character; never
+  help the AI" — the worker only knows what the spec says.
+- **A no-external-write spec needs tool-level containment, not prose alone.**
+  Codex global hooks may still attempt an ATLAS or Work Ledger capture to
+  OB_mybcat at the end of a substantial run even when the task says not to.
+  Prefer a Codex engine template containing `--ignore-user-config`: auth remains
+  available, while most user-level MCP/runtime configuration is excluded from the
+  worker. **Do not treat this flag as complete MCP/App containment.** On Codex
+  v0.144.3 (2026-07-13), a Ringer worker launched with `--ignore-user-config`
+  still loaded skills and attempted a `codex_apps/ob_mybcat.search_thoughts` call.
+  For a strict no-MCP task, also use a disposable task directory outside ancestor
+  repo/home instruction files when possible, state `do not load skills or call
+  MCP/Apps` in the spec, and monitor the raw log. If any MCP/App call starts,
+  cancel it, stop the run, verify no write landed, and do not count the lane as a
+  policy-clean PASS. Current Ringer/Codex templates may inject the flag
+  automatically, so inspect the dry-run command and do not repeat
+  `--ignore-user-config` in task `engine_args`; Codex rejects duplicate instances
+  before the worker starts. When that flag is active, do **not** also pass a disable override such
+  as `["-c", "mcp_servers.ob_mybcat.enabled=false"]` for a server that is no
+  longer defined; current Codex versions can reject the synthetic entry with
+  `invalid transport`. Use explicit MCP-disable overrides only on an engine that
+  intentionally inherits user config, and say no MCP/capture in the spec. For
+  bounded mechanical fixes, OpenCode/GLM avoids Codex's OB capture hook, but
+  **it is not filesystem containment** when the engine template uses
+  `--dangerously-skip-permissions` with empty `sandbox_args`. Never point a
+  supposedly read-only OpenCode/GLM reviewer at a live dirty repo; use Codex's
+  workspace sandbox or give the worker a disposable snapshot, then verify the
+  live repo diff before and after. Assume the worker may still create scratch
+  files outside its task directory and clean/verify any residue. Also honor the
+  auth-policy wrapper: protected GLM selectors may require
+  `zai-coding-plan/glm-*` and reject `openrouter/z-ai/*`; do not bypass that
+  guard silently when a fallback route is requested. If a forbidden capture or
+  repo write starts, stop the run, inspect whether a write landed, report it,
+  and do not count the run as policy-clean merely because its artifact passed.
+- **The spec is on camera.** Whoever is watching Ringside reads the spec as
+  "what this agent was asked to do" — so write it as a self-contained,
+  human-readable brief. Never write a pointer spec ("read /path/to/file and
+  do what it says"): the watcher sees no brief, and the retry prompt loses
+  the context it needs. Point at files for source MATERIAL; the instructions
+  themselves live in the spec. Lint flags pointer specs.
+
+## Check-writing rules
+
+The check is the product. The retry prompt and the eval log both depend on
+the check's failure output.
+
+- **Checks must print WHY they fail.** `diff` beats `diff -q`; a validator
+  script that prints which assertion broke beats `test -f`. A bare
+  `test -f report.md` proves existence, not correctness.
+- **Classify a red check before spending the retry.** Re-run the declared check
+  manually against the preserved task directory and decide whether the failure
+  is in the product, the worker package, or the checker itself. Common checker
+  defects include rejecting a valid `./project/` tar prefix, requiring prose in
+  quiet test output despite exit 0, or assuming a fixture is structurally valid.
+  Fix a checker defect before launching another model pass. When a valid artifact
+  already exists, use a small `local-shell` verification manifest to copy it into
+  a fresh task directory and execute the corrected gate, preserving a real green
+  Ringer receipt without asking a model to rewrite working code.
+- **Verify content, not existence.** Grep the artifact for required sections,
+  run the code it produced, run the build, run the validator — execute
+  something that would catch a lazy or hallucinated result.
+- **Do not fail on Ringer's own `worker.log`.** Ringer creates `worker.log` in
+  every task directory before the worker runs. If a validator enforces an
+  allowed-file set, explicitly allow `worker.log`; otherwise every honest task
+  falsely fails and the retry prompt asks the model to remove a harness-owned
+  file it should not touch.
+- **`expect_files` is a floor, not the check.** List deliverables there for
+  fast triage, but the check must still validate them.
+- **Read-only review checks must be write-free.** Python proof commands can
+  silently write `__pycache__` or `.pytest_cache` into the protected source
+  checkout. Use `PYTHONDONTWRITEBYTECODE=1`, disable pytest's cache provider
+  when applicable, and redirect `PYTHONPYCACHEPREFIX` to a temporary directory
+  for `py_compile`. Derive every fixture labeled valid from the actual writer
+  or schema code; an invented valid payload can create repeated false negatives
+  that no worker should be taught to repair around.
+- **Never `true`, `exit 0`, or `echo done`.** A check that cannot fail is a
+  task that cannot be verified — that's just trusting the worker with extra
+  steps.
+- **Strict on substance, tolerant on format.** Checks that count exact
+  headings, demand exact casing, or grep rigid phrasings fail honest work
+  over formatting — and a wall of red format-failures reads as a broken
+  system, not a careful one (demo-night lesson). Verify what must be TRUE
+  (the file proves X, the code runs, the quote exists in the source), use
+  case-insensitive and flexible matching for structure, and reserve hard
+  failure for substance: missing evidence, fabricated content, code that
+  doesn't run.
+- **Schema-only sources do not justify concrete example values.** If the source
+  packet defines output fields but not the semantics that determine their
+  values, either add a frozen fixture with the expected values or make the
+  validator reject unsupported concrete claims. A shape check can otherwise
+  pass a polished artifact that invents plausible behavior. Human spot-checks
+  must still override a green validator when this slips through.
+
+## Pattern playbook
+
+Reach for a named pattern before inventing one. Skeletons in `templates/`:
+
+| Kit | Use when |
+|---|---|
+| [review-swarm](../../../templates/review-swarm/) | You need broad read-only review coverage before deciding what to fix. |
+| [fix-swarm](../../../templates/fix-swarm/) | You have confirmed independent fixes that can be split across isolated worktrees. |
+| [focus-group](../../../templates/focus-group/) | You need isolated persona feedback on a product, pitch, prompt, or workflow. |
+| [bakeoff](../../../templates/bakeoff/) | You need evidence for choosing a model, prompt, or configuration across shared scenarios. |
+| [research-with-proof](../../../templates/research-with-proof/) | You need research backed by a proof task whose check executes the claim. |
+| [launch-kit](../../../templates/launch-kit/) | You need a go-to-market package built across research, persona review, and final assembly rounds. |
+| [asset-swarm](../../../templates/asset-swarm/) | You need media assets produced in parallel with executable checks for renders, batches, diagrams, or captures. |
+| [adversarial-review](../../../templates/adversarial-review/) | You want several models to review the same artifact before the orchestrator synthesizes findings. |
+| [repo-feature](../../../templates/repo-feature/) | You know what to build and need sandboxed workers to edit a real repo with build and git checks. |
+| [migration-swarm](../../../templates/migration-swarm/) | You have mechanical codebase transforms that can be partitioned across worktrees. |
+| [doc-swarm](../../../templates/doc-swarm/) | You need module docs with executed examples and checks against invented APIs. |
+| [test-hardening](../../../templates/test-hardening/) | You need stronger tests by module while keeping production source edits off-limits. |
+| [competitive-teardown](../../../templates/competitive-teardown/) | You need competitor research with citation allowlists and a synthesis phase. |
+| [data-pipeline](../../../templates/data-pipeline/) | You need fetch, transform, and validate stages with executed validators and honesty rules. |
+| [probe](../../../templates/probe/) | You need a one-task manifest for a smoke, probe, or post-mortem. |
+
+**Probe model-mode validator pitfall:** `templates/probe/checks/probe_check.py` extracts the response only after the literal marker `MODEL RESPONSE:` (or `ASSISTANT:` / `RESPONSE:`), including the colon. A Markdown heading such as `## Model Response` does not satisfy the current parser and will remain red even if the artifact is substantive. Put `MODEL RESPONSE:` on its own line, then the response body, and execute the exact validator before scaling the lane.
+
+Pattern-selection judgment:
+
+- **Browse the catalog first.** Before writing any manifest, browse
+  `templates/README.md`: choose a kit, mix pieces from several, or write
+  your own having seen the prior art.
+- **Review before fix.** Run a read-only review swarm, read the reports
+  yourself, then compile the confirmed findings into a fix-swarm manifest.
+  Don't let the same worker find and fix.
+- **Personas must be separate workers.** Parallel personas in one context
+  bleed into each other. One persona per task, one session dir per task.
+- **Iterating on a prompt/product? Re-run the same panel.** A fixed persona
+  panel across rounds tells you whether a change fixed what the panel
+  actually complained about.
+- **Probes, smokes, and diagnosis loops are manifests too.** A model-calling
+  smoke test is a one-task manifest with the transcript as `expect_files`
+  and a validator as the check. Diagnosing a failed worker's output is a
+  read-only scout task. If it calls a model, it runs under Ringer — that is
+  what makes it visible, verified, and logged.
+
+## Model bakeoff gate: accepted-result economics
+
+Use this gate when deciding whether a new model or provider lane deserves recurring work.
+The decision is never "is this model good?" It is: **should this exact model, through
+this exact harness and access path, own this bounded job shape?**
+
+1. Reuse `templates/bakeoff` or Nate's `templates/bakeoff-kit`; do not build a second
+   evaluation platform. Update the Ringer source once, freeze and record the exact commit,
+   use a fresh work directory, set `max_parallel: 1` for the first controlled run, prove the
+   checker with known-good and known-bad fixtures, run `--baseline`, then inspect `--dry-run`.
+2. Label the comparison honestly. A model-only bakeoff keeps harness, provider, reasoning,
+   prompt, tools, and limits fixed. An operational-lane bakeoff may compare the real stacks
+   you would deploy, but the verdict applies to the whole lane, not model intelligence alone.
+3. Pin and verify identity from receipts: requested model, resolved model, harness, provider
+   or plan, reasoning setting, attempt count, duration, tokens, and first-try versus retry.
+   Treat a setup, auth, provider, harness, checker, or model failure as different failure types.
+4. Technical PASS is necessary but insufficient. Copy outputs to anonymous labels and review
+   judgment, evidence quality, correct stopping, and repair required before revealing identity.
+   Record human repair minutes and all-in cost. If provider charge or repair time was not
+   measured, write `unknown`, never a convenient zero.
+5. Promote narrowly: keep out, challenger only, specialist lane, or default for this exact job
+   shape. Preserve a named rollback lane. One plumbing sample cannot justify a default; default
+   promotion requires a saved replay pack with ordinary, hard, ugly, changed-constraint, and
+   correct-stop cases where applicable.
+6. Re-run when the model version, provider route, harness, prompt template, tools, or task shape
+   changes materially. The artifact and local scoreboard are the evidence; reputation is not.
+
+## Engine selection
+
+**The engine choice belongs to the human — but the recommendation comes
+from THEIR evidence.** Before the FIRST run of a job: read what's wired up
+(`[engines.<name>]` blocks in `~/.config/ringer/config.toml`), run
+`./ringer.py models --task-type <this job's type>` for the local scoreboard,
+and glance at `./ringer.py catalog --changes` for anything newly free or
+newly cheap. Then ask the user which model should do the typing — top 2–3
+options with the NUMBERS in the pitch and a recommendation, e.g.: *"GLM is
+6/6 first-try on persona work here at ~2¢/task — recommended. Codex is also
+100% but ~8x the tokens. And kimi went free on OpenRouter yesterday — want
+
+hook: PostToolUse
+hook: PostToolUse Failed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '281,520p' /home/ankit114/.claude/skills/ringer/SKILL.md && wc -l build_v65.py /home/ankit114/.agents/references/ai-writing-tropes.md && nl -ba build_v65.py | sed -n '1,260p' && sed -n '1,260p' /home/ankit114/.agents/references/ai-writing-tropes.md" in /home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65
+ succeeded in 0ms:
+it auditioning one of the small tasks?"* Honor their pick via the per-task
+`engine`/`model` fields; don't re-ask every round of the same job unless
+the mix isn't working. This is per-user by design: the scoreboard learns
+THIS user's workload — never import another machine's conclusions or
+recommend from a different user's numbers.
+
+**Explore or the scoreboard fossilizes.** Always recommending the proven
+pick means never learning a new one. In any run of 3+ tasks that has a
+low-stakes lane (docs sweeps, mechanical edits, persona reviews — strong
+executed check, retry to absorb failure), assign roughly ONE task to an
+exploration candidate from `./ringer.py models --explore --task-type <type>`
+(untested + cheap or free, text-capable, decent context). Free promos from
+`catalog --changes` jump the queue — a temporarily-free model is a zero-cost
+experiment. Never explore on time-critical work, never with more than a
+small slice of a batch, and name the experiment when presenting the engine
+ask so the human can veto it. Promotion ladder (computed by --explore):
+untested → probation (some evidence) → proven for a task_type (3+ tasks,
+first-try ≥ 0.67). Proven models earn bigger lanes in that type and an
+audition one rung up in adjacent types; repeated first-attempt failures end
+the audition — record the demotion in MODEL-NOTES so the next orchestrator
+doesn't re-run the experiment.
+
+**OpenCode is the harness; the model is a manifest field.** Unless a model
+ships its own first-class harness (Codex does), it runs through the
+`opencode` engine with the task's `"model"` field set to the OpenRouter
+slug — e.g. `"engine": "opencode", "model": "openrouter/moonshotai/kimi-k2.7-code"`.
+This holds even when someone — including the user, in the heat of a run —
+says to "call kimi directly" or reach for the model's own CLI: the harness
+is what provides the sandbox, raw logs, token counts, and executed
+verification, so routing around it silently drops all four. Never clone an
+engine block or splice `-m` through `engine_args` to change models; that's
+what the `model` field is for, and a bakeoff is only real when the MANIFEST
+names each competitor (2026-07-06 lesson: an engine block with a hard-coded
+model ran one model under three competitors' names).
+
+Engines are config blocks (`[engines.<name>]` in config.toml), selectable
+per task via the manifest `engine` field. Defaults are deliberate:
+
+- **codex** (default): strongest general worker. The current Codex engine
+  template has no `{model}` placeholder, so temporary model pins belong in
+  per-task `engine_args`, for example `["-m", "gpt-5.6-terra", "-c",
+  "model_reasoning_effort=high"]`; do not also set the task `model` field and
+  do not use a global Codex pin for a one-off task. Ringer attributes
+  recognized Codex selectors from `engine_args` in run state and the model
+  log. Spend reasoning effort on hard tasks, not boilerplate.
+- **opencode**: the universal lane — any OpenRouter model via the `model`
+  field (engine `model_default` is GLM-5.2, the cheap-intelligence pick).
+  Validate a model new to you with a trivial one-task manifest before
+  trusting it with a batch.
+- **xai**: direct xAI API through the AWS-backed OpenCode wrapper. Default to
+  `xai/grok-4.5`; select other Grok variants with the task `model` field rather
+  than cloning engine blocks. On 2026-07-12, `grok-4.5`, both 4.20 reasoning
+  variants, `grok-4.3`, and `grok-build-0.1` passed corrected checked file/tool
+  probes. Treat the non-defaults as bounded auditions until task-specific
+  evidence accumulates. Do not route `grok-4.20-multi-agent-0309` to client-tool
+  work until xAI beta access exists, and do not route image/video models through
+  the text worker lane.
+- **Tool-incompatible model auditions need a no-tool lane, not a false model FAIL.** Some OpenRouter endpoints accept plain text completions but reject OpenCode's `bash`/tool schema with `No endpoints found that support tool use`. Treat that as harness incompatibility, not model quality. Re-run the SAME `run_name` through a trusted no-tool OpenRouter text engine that passes `{model}`, `{taskdir}`, and `{spec}`, captures the raw response as an artifact, and uses a local executable validator on the response. Preserve target-model attribution in the manifest; never relabel the probe as `local-shell`. Free endpoints may return provider `429` responses with `retry_after_seconds`; the adapter should honor that delay before retrying and should sanitize error bodies so user/account identifiers do not enter logs.
+- Small/flash-class models are the first to choke on long conversational or
+  multi-turn harness tasks — watch their retry counts before scaling them.
+- Match `timeout_s` to the task: conversational harness tasks and
+  build-and-test checks need far more than file edits.
+- **Check the evidence before assigning models to tasks.** Run
+  `./ringer.py models` (optionally `--task-type <type>`) — the local
+  scoreboard aggregating every executed-check outcome per (model,
+  task_type): first_try_pass_rate is the routing signal; pass_rate includes
+  retry rescues. Then read `docs/MODEL-NOTES.md` (in the ringer repo) for
+  the judgment the numbers can't carry. Routing is grounded in performance,
+  not vibes (Jon directive 2026-07-06).
+- **Hermes profile HOME pitfall.** Hermes worker profiles can run with
+  `HOME` pointed at the profile-local home (for example
+  `~/.hermes/profiles/coder/home`), which makes Ringer miss Ankit's real
+  config/state under `/home/ankit114` and can surface as `unknown worker
+  engine(s)` or `codex-oauth.sh: blocked ambiguous provider...`. For normal
+  Ankit Ringer runs from Hermes, prefix the command with `HOME=/home/ankit114`
+  or pass the intended `--config` and state paths explicitly, then verify the
+  run JSON lands under `/home/ankit114/.ringer/runs/` before trusting the
+  result.
+- **"Show me the scoreboard" is one command.** When the human asks to see
+  the model scoreboard, rankings, model costs, or "which models work best,"
+  run `./ringer.py models --open` — it renders the full scoreboard (tiers,
+  first-try rates, est. $/task, usage, MODEL-NOTES excerpts, free-promo
+  watchlist) as a zero-LLM HTML page in the artifact library and opens it
+  in their browser. Costs no tokens; never hand-summarize the numbers when
+  the page can show them.
+- **Give every task a `task_type`** (canonical vocabulary in the README —
+  code-feature, code-fix, code-review, research, persona-review, site-build,
+  image-gen, docs, probe, bakeoff, ...). Untyped tasks bucket as (untyped)
+  and teach the scoreboard nothing; lint nudges you when it's missing.
+
+## Worktrees-mode footguns (learned the hard way)
+
+Run-level `"worktrees": true` gives each task an isolated git worktree of
+`repo`, detached at HEAD. Three consequences:
+
+1. **Passing tasks get their worktree DELETED.** Deliverables must land
+   outside the task worktree, or the check must export them first.
+2. **Worker commits die with the worktree.** Pattern that works: the worker
+   leaves changes uncommitted; the check stages only the task-owned paths,
+   exports `git diff --cached` to a path outside the worktree, and validates
+   the patch. Make that check retry-idempotent: compute the allowed change set
+   from the union of staged and unstaged paths, because attempt 1 may stage
+   files before a later assertion fails. You apply and commit on your branch
+   after review.
+3. **Logs survive** (they go to `<workdir>/logs/`), so post-mortems work
+   even on deleted worktrees.
+4. **Gitignored outputs silently vanish from patch exports.** `git add -A`
+   cannot stage ignored files (build dirs like `dist/`), so a worker's edits
+   there pass its checks, export an incomplete patch, and die with the
+   worktree. If a task touches any gitignored path, the check must `cp`
+   those files to a path outside the worktree explicitly — verify the patch
+   AND the copies before trusting the run.
+
+And on your own side of the fence: when integrating patches into the real
+repo, stage specific paths — never `git add -A` in a checkout that may hold
+someone's untracked scratch files.
+
+## Post-run review ritual
+
+**Review-swarm validator pitfall:** the bundled check enforces its own contract, including a 1,200-word ceiling and plain `Evidence:`, `Impact:`, `Fix:`, `Priority:`, and `Confidence:` labels. A larger word limit in the task spec or bold labels do not override the check. Run the exact check against a representative draft before launching a large swarm.
+
+**Hung bounded-run recovery:** if task artifacts exist but the tracked Ringer process remains alive past the manifest timeout, inspect the run JSON and raw worker logs, execute each declared check manually, preserve the highest verified state, then kill the tracked process. Never report the ring as completed when the wrapper was killed or a lane check failed.
+
+**Fable-to-Sol template caveats:** Codex `workspace-write` writable roots must be directories. The current `new_run.py` generator may render owned file paths directly into `sandbox_workspace_write.writable_roots`, which can panic before the worker reads or writes anything. Replace only the sandbox mount roots with the smallest parent directories, while leaving the prompt ownership contract and validators locked to the exact files. Verify a clean repo before retrying.
+
+The packet validators are stricter than some generated prompts. On a red packet, run the exact validator directly and fix the round contract rather than hand-authoring the artifact. Important exact shapes: Fable `architecture.components[]` and `boundaries[]` are strings; `fable_owned_surfaces[]` must sit under `owned_paths[]`; prohibition-first `forbidden_actions[]` must cover the required markers; Sol `build_units[]` use `id/state/verification_command/verification_result`; Sol `probes[]` use only `unknown_id/finding/evidence`.
+
+If Fable returns APPROVE but its narrative discloses a residual case that violates the user’s locked invariant, execute that case as a deterministic probe. Stage the proof and rerun Fable review as REVISE before Sol closure. A schema-valid approval is not stronger than contradictory executed behavior.
+
+1. Read the run JSON in `~/.ringer/runs/` — statuses, retries, durations.
+2. For any retried or failed task, read the raw worker log in
+   `<workdir>/logs/` before deciding anything. Retries that passed on
+   attempt 2 often reveal a spec ambiguity worth fixing in your next
+   manifest.
+3. Spot-check at least one PASSING task's artifact per run. The check
+   catches most laziness; you catch the rest.
+4. Failures with useless error messages mean your CHECK needs work, not
+   (only) the worker.
+5. **Update `docs/MODEL-NOTES.md`** (in the ringer repo) when a run taught
+   you something about a model: one dated line under the model — task type,
+   what happened (attempts, tokens, failure mode), what you'd do
+   differently. Only what the executed checks and raw logs support. The raw
+   numbers took care of themselves — every attempt already landed in the
+   local model log (`./ringer.py models` to see the updated scoreboard).
+
+## Baked-in invariants (preserve in any change to ringer.py)
+
+Stdin closed (`< /dev/null`); sandbox mode explicit; verification executes
+the artifact; logs carry raw worker output only. These are load-bearing —
+engine and invocation changes must keep all four.
+ 1002 build_v65.py
+  326 /home/ankit114/.agents/references/ai-writing-tropes.md
+ 1328 total
+     1	#!/usr/bin/env python3
+     2	"""Mott recall pathway v57 — ambiguity and unsatisfied-time safety routing.
+     3	
+     4	Changes from v23:
+     5	  * identity resolves by PHONE with the patient id as a filter, because the
+     6	    gateway's id lookup returns zero while the phone index works. A mismatched
+     7	    pair returns count 0, so the binding check is preserved.
+     8	  * store is sourced from request_data and guarded, since the identity call can
+     9	    no longer return it.
+    10	  * owner copy rules: no "free", no discount language, FAQ defers to the
+    11	    opticians, Chinese invite line on the opener only, never offer a day that was
+    12	    not asked for without saying so.
+    13	"""
+    14	import json
+    15	import os
+    16	
+    17	GW = "https://mott-booking-gw.mail.mybcat.com"
+    18	SR = "{{ SECRET.MottGatewayToken }}"
+    19	ZH_INVITE = "如需中文服务，请直接用中文回复。"
+    20	
+    21	LANG_OPENER = (" Send the English message; it ends with the Chinese-service invitation line. That "
+    22	               "line appears on this opening message ONLY. Switch to Chinese only if the patient "
+    23	               "replies in Chinese, then stay in Chinese.")
+    24	LANG_REPLY = (" Reply in the language of the patient's most recent message. If they switch "
+    25	              "languages, switch with them, in either direction, every time. The Chinese-service "
+    26	              "invitation line belongs to the opening message only; never add it here. A bare "
+    27	              "number, YES or OK carries no language signal, so stay in the language already in use.")
+    28	
+    29	TIMES = (" Every time shown comes from the schedule already formatted and is America/New_York "
+    30	         "clinic local time. Present it exactly as given: do not convert it, do not reformat it, "
+    31	         "and do not restate it in another style.")
+    32	
+    33	# R12: the defect that told a live patient they were booked when nothing was written.
+    34	# Structural gating stops the WRITE; only an explicit prohibition stops the CLAIM.
+    35	NO_CLAIM = (" You cannot book anything and you have no way to check whether a booking succeeded. "
+    36	            "NEVER say or imply that an appointment is booked, scheduled, held, reserved, "
+    37	            "confirmed, or that you have someone down for a time, and never refer to a booking as "
+    38	            "though it already exists. Only the confirmation step may say that, and only after the "
+    39	            "booking system reports success. If the patient asks whether they are booked, say you "
+    40	            "are still getting them scheduled and have not completed it yet.")
+    41	
+    42	# Loop 2 (answer other requests) always returns to Loop 1 (find and book).
+    43	BACK = (" Then ALWAYS return to the goal with a direct question: ask whether they would like you to "
+    44	        "get them scheduled now, naming the openings still on offer. A question from the patient is "
+    45	        "never a decline. Only an explicit no ends this; if it is unclear whether they still want an "
+    46	        "appointment, ask them plainly to confirm.")
+    47	
+    48	NO_PRICE = (" Never say free. Never mention a discount, a package, or saving money. Never state "
+    49	            "what any specific plan covers and never quote a price or a dollar amount.")
+    50	
+    51	# A live patient was shown "preference_from: monday / preference_to: monday" because the
+    52	# node's task described what to CAPTURE. Capture is the extraction config's job and happens
+    53	# automatically; the prompt must only ever describe what to SAY.
+    54	NO_LEAK = (" The message you send is read by a patient on their phone. Write only ordinary "
+    55	           "conversational English or Chinese. Never write an internal field name, a variable "
+    56	           "name, an underscore_name, a colon-and-value line, a list of captured values, a "
+    57	           "record id, or any note about what you are storing or doing internally.")
+    58	
+    59	# Measured against the live gateway on 2026-07-25, not assumed:
+    60	#   accepted -> monday, next monday, mon, tuesday, tomorrow, august 3, 08/03/2026, 2026-08-03
+    61	#   REJECTED -> next week, this week, in 2 weeks, next month
+    62	# A weekday word resolves to the next occurrence of that weekday server-side, and a range of
+    63	# two weekday words works (monday..friday returned 126 openings across Mon-Fri). So a vague
+    64	# next-week request becomes next week..friday next week and the SERVER does the date
+    65	# arithmetic. The model is never asked to work out a calendar date, which is the failure mode
+    66	# this design avoids.
+    67	# EVERY field must always receive a value. An unfilled variable is substituted as a real
+    68	# JSON null, which drops the quotes out of the body template and makes the gateway answer
+    69	# 400 "field 'after' must be a string". Measured: the literal word none is accepted and
+    70	# ignored, so it is the sentinel for "the patient did not say". Never leave one blank.
+    71	# Two closed-vocabulary tokens, nothing more. Every field the model used to carry beyond
+    72	# these fed a gateway parameter measured to be ignored, so they added failure modes and no
+    73	# capability. Clock times and parts of the day are deliberately NOT captured: the gateway
+    74	# cannot filter on them, so capturing them only invited values into the wrong fields.
+    75	PREFERENCE_VARS = [
+    76	    ("preference_from",
+    77	     "The first day the patient wants, written in one of these forms and nothing else. A "
+    78	     "weekday on its own, such as monday or wednesday, means the next one coming up. If they "
+    79	     "used a week qualifier, ALWAYS PRESERVE it by writing the weekday followed by its full "
+    80	     "qualifier. For example, wednesday next week stays wednesday next week. If they name "
+    81	     "a weekday in texting shorthand, expand it to the full accepted weekday: mon becomes "
+    82	     "monday, tue or tues becomes tuesday, wed becomes wednesday, thu or thurs becomes "
+    83	     "thursday, and fri becomes friday. Expand clipped week qualifiers too: `tues nxt wk` and "
+    84	     "every clipped variant become tuesday next week, never a bare weekday and never shorthand. "
+    85	     "If they asked for next week without naming a day, write next week. Bare weekdays "
+    86	     "with no week qualifier stay bare. If they name "
+    87	     "a month and a day, write the month and the number, such as august 5 or aug 12, or write "
+    88	     "08/05/2026. Never write a month on its own. Never write phrases like the week after that "
+    89	     "or in two weeks, because the schedule cannot read them. Never work out a calendar date "
+    90	     "yourself: pass the patient's own wording through in one of the forms above. Never put a "
+    91	     "clock time or a part of the day here. Write the single word unclear ONLY when the "
+    92	     "patient NAMED a timeframe you cannot write in one of the forms above: the week after "
+    93	     "that, in two weeks, in about a month, a bare month name, or any week you would have to "
+    94	     "work out for yourself. If the patient named NO day and NO week at all, whether they said "
+    95	     "nothing about timing or spoke only about a part of the day such as the latest you have, "
+    96	     "put monday: they have not asked for a week, so searching the soonest one contradicts "
+    97	     "nothing they said, and the offer they get back carries its own date. This field must "
+    98	     "NEVER be left blank. The distinction that matters: unclear means they told you a "
+    99	     "timeframe you cannot render, never that they told you nothing."),
+   100	    ("day_part",
+   101	     "Exactly one of these five words: morning, afternoon, late, outside, none. Use morning if the "
+   102	     "patient said morning. Morning clock times within opening hours map to morning. Use afternoon "
+   103	     "if they said afternoon, midday, or lunchtime. Noon to 2:59pm maps to afternoon. Use late if "
+   104	     "they said after 3, after 4, 3pm or later, late afternoon, late in the day, the latest, or end "
+   105	     "of day. All of those phrases map to late, and the 3pm boundary is exact. Use outside if they "
+   106	     "asked for an exact clock time outside normal clinic hours, such as 3am or 11pm. "
+   107	     "This is a routing token only and is never sent to the scheduler. Use none "
+   108	     "if they said nothing about what part of the day suits them. Never put a "
+   109	     "date, a weekday or a clock time in this field. This field must NEVER be left blank."),
+   110	    ("preference_to",
+   111	     "The last day the patient will accept, in exactly the same forms as preference_from. If "
+   112	     "they named one day, repeat it here unchanged, INCLUDING any next week qualifier. If they "
+   113	     "used texting shorthand, expand it to the same full accepted weekday written in "
+   114	     "preference_from; never pass abbreviations such as tues, nxt or wk through verbatim. If they "
+   115	     "gave a span, put the later day. If they asked for next week in general with no day, put "
+   116	     "friday next week. When the patient names a week qualifier but no weekday, preference_from "
+   117	     "is the week phrase alone and preference_to is friday followed by that same full week "
+   118	     "qualifier, giving the pair next week through friday next week. A part of day such as "
+   119	     "morning or afternoon is NOT a weekday and does not change this week-only range. If they "
+   120	     "named no day and no week at all, put friday. Bare weekdays with "
+   121	     "no week qualifier stay bare. Never put a clock time here. This field must NEVER be "
+   122	     "left blank: whenever preference_from is unclear, write unclear here too."),
+   123	]
+   124	
+   125	# The clarify node asks ONLY which date the patient means, so a reply there is a bare date
+   126	# and re-extracting day_part from it would come back none. A patient who said "the latest
+   127	# you have" and was then asked for a date would be shown morning slots. A variable that is
+   128	# not in a node's extractVars keeps the value it already had, so leaving day_part out here
+   129	# is the platform's own carry-forward and needs no memory the platform does not have.
+   130	WINDOW_VARS = [v for v in PREFERENCE_VARS if v[0] != "day_part"]
+   131	
+   132	OPENER_EN = (
+   133	    "Hi {{patient_first}}, this is Mott Optical. We noticed that it's been awhile since your last "
+   134	    "visit with us. This is a great time to update your lenses, explore our newest eyewear "
+   135	    "collection, and even find a new pair of sunglasses while staying on top of your eye health "
+   136	    "with a comprehensive eye exam. Many vision insurance benefits renew yearly, so don't let your "
+   137	    "benefits go unused! When would you like to come in? Just reply with a day and a time that "
+   138	    "works for you and I will check what we have. Reply STOP to opt out. " + ZH_INVITE)
+   139	
+   140	# Offering happens AFTER the patient says when they want to come, so the offer message is
+   141	# short and carries only the openings found for the day they actually asked for.
+   142	# Owner decision 2026-07-26: an offer states what is available and asks them to book.
+   143	# It does not celebrate. "Great news" front-loads enthusiasm onto a time the patient has
+   144	# not agreed to yet, and it reads worst in exactly the case where the time is a near miss
+   145	# rather than a match. Warmth belongs at the confirmation, once there is something real
+   146	# to be pleased about.
+   147	OFFER_EN = ("I have {{slot_1_day_name}} {{slot_1_start}} or {{slot_2_day_name}} "
+   148	            "{{slot_2_start}} at MK2. Reply 1 or 2 to take one, or tell me another day or time.")
+   149	OFFER_ZH = ("我这里有 {{slot_1_day_name}} {{slot_1_start}} 或 {{slot_2_day_name}} "
+   150	            "{{slot_2_start}}（地点：MK2）。回复1或2选择，或告诉我其他日期或时间。")
+   151	
+   152	# The nearest-band offer. A patient who asked for late in the day on a day too thin to hold
+   153	# a late slot used to be sent to the afternoon page, whose message opens "Great news" and
+   154	# calls the times afternoon openings. That is a silent substitution: they asked for after 4
+   155	# and were shown midday as though it answered them. This line names the miss first.
+   156	NEAR_EN = ("I don't have anything that late that day. The closest I have is "
+   157	           "{{slot_1_day_name}} {{slot_1_start}} or {{slot_2_day_name}} {{slot_2_start}} "
+   158	           "at MK2. Reply 1 or 2 to take one, or tell me another day.")
+   159	NEAR_ZH = ("那天没有那么晚的时段了。最接近的是 {{slot_1_day_name}} {{slot_1_start}} 或 "
+   160	           "{{slot_2_day_name}} {{slot_2_start}}（地点：MK2）。回复 1 或 2 预约，"
+   161	           "或告诉我们其他日期。")
+   162	
+   163	OPENER_ZH = (
+   164	    "您好 {{patient_first}}，这里是 Mott Optical。我们注意到您距离上次到访已经有一段时间了。"
+   165	    "现在正是更新镜片、挑选新眼镜、并通过全面眼科检查守护眼睛健康的好时机。"
+   166	    "许多视力保险福利每年都会更新，请不要浪费您的福利！"
+   167	    "您希望什么时候来诊所？请直接回复适合您的日期和时间，我来为您查询。回复 STOP 退订。")
+   168	
+   169	SLOT_FIELDS = ["slot_count", "slot_1_start", "slot_1_end", "slot_1_doctor",
+   170	               "slot_1_day_name", "slot_2_start", "slot_2_end", "slot_2_doctor",
+   171	               "slot_2_day_name", "time_pref_relaxed",]
+   172	
+   173	RESP = {
+   174	    "ok": "$.ok", "count": "$.result.count", "patient_first": "$.result.patients[0].name_first",
+   175	    "patient_id": "$.result.patients[0].patient_id", "exam_type_id": "$.result.exam_type_id",
+   176	    "slot_count": "$.result.count",
+   177	    "slot_1_start": "$.result.slots[0].start", "slot_1_end": "$.result.slots[0].end",
+   178	    "slot_1_doctor": "$.result.slots[0].doctor_id",
+   179	    "slot_1_day_name": "$.result.slots[0].day_name",
+   180	    "slot_2_start": "$.result.slots[1].start", "slot_2_end": "$.result.slots[1].end",
+   181	    "slot_2_doctor": "$.result.slots[1].doctor_id",
+   182	    "slot_2_day_name": "$.result.slots[1].day_name",
+   183	    "p2_1_start": "$.result.slots[8].start", "p2_1_end": "$.result.slots[8].end",
+   184	    "p2_1_doctor": "$.result.slots[8].doctor_id",
+   185	    "p2_2_start": "$.result.slots[9].start", "p2_2_end": "$.result.slots[9].end",
+   186	    "p2_2_doctor": "$.result.slots[9].doctor_id",
+   187	    "p3_1_start": "$.result.slots[16].start", "p3_1_end": "$.result.slots[16].end",
+   188	    "p3_1_doctor": "$.result.slots[16].doctor_id",
+   189	    "p3_2_start": "$.result.slots[17].start", "p3_2_end": "$.result.slots[17].end",
+   190	    "p3_2_doctor": "$.result.slots[17].doctor_id", "pm_1_end": "$.result.slots[8].end", "pm_2_end": "$.result.slots[9].end",
+   191	    "time_pref_relaxed": "$.result.time_pref_relaxed",
+   192	    "overlap_id": "$.result.overlapping_appt_id", "conflict_reason": "$.result.reason", "book_http_status": "$.http_status", "book_error": "$.error", "error_status": "$.status",
+   193	    "new_appt_id": "$.new_appt_id",
+   194	    # The catalog defines $.result.conflict as true when the slot COLLIDES OR IS OUTSIDE THE
+   195	    # SCHEDULE. overlapping_appt_id only ever carries the collision case, so a slot outside
+   196	    # clinic hours with nothing booked over it read as free and clear and went to the write.
+   197	    # Routed as an extra blocking signal ahead of the existing ones, never as the sole
+   198	    # positive route, so a gateway that does not populate it behaves exactly as before.
+   199	    "slot_conflict": "$.result.conflict",
+   200	    # $.status is error-only and $.http_status is transport, not outcome. The signer's own
+   201	    # success flag is the only thing the catalog permits a patient-facing confirmation on.
+   202	    "book_success": "$.success",
+   203	    "conflict_option_1": "$.date_conflict[1]",
+   204	    "conflict_option_2": "$.date_conflict[2]",
+   205	    "date_conflict_detected": "$.date_conflict[0]",
+   206	}
+   207	
+   208	
+   209	
+   210	# callID lets the gateway pull the patient's RAW message text server-side and
+   211	# resolve the date deterministically (raw-text authority), bypassing the small
+   212	# model's extraction when the patient's own words carry a date. The gateway
+   213	# pops callID before CLI arg mapping; only gateways >= mott-lane-17 accept it,
+   214	# so this graph must not be published until that gateway is live.
+   215	SEARCH_BODY = ('{"store":"{{store}}","from":"{{preference_from}}","to":"{{preference_to}}",'
+   216	               '"after":"none","before":"none",'
+   217	               '"time_pref":"none","slot_minutes":"15","callID":"{{callID}}"}')
+   218	
+   219	
+   220	def page_map(prefix):
+   221	    """Remap a page's offsets onto slot_1_*/slot_2_* so downstream nodes are page-agnostic."""
+   222	    m = dict(RESP)
+   223	    for slot, src in (("1", prefix + "_1"), ("2", prefix + "_2")):
+   224	        for field in ("start", "end", "doctor"):
+   225	            m["slot_" + slot + "_" + field] = RESP[src + "_" + field]
+   226	    return m
+   227	
+   228	
+   229	PAGE2_RESP = page_map("p2")
+   230	PAGE3_RESP = page_map("p3")
+   231	
+   232	
+   233	def wh(nid, name, path, body, resp, pathways, start=False, resp_map=None):
+   234	    d = {"name": name, "url": GW + path, "body": body, "method": "POST",
+   235	         "headers": {"Content-Type": "application/json", "Authorization": SR},
+   236	         "modelOptions": {"retryAttempts": 0, "skipUserResponse": True},
+   237	         "responseData": [{"data": (resp_map or RESP)[n], "name": n} for n in resp],
+   238	         "responsePathways": pathways}
+   239	    if start:
+   240	        d["isStart"] = True
+   241	    return {"id": nid, "type": "Webhook", "data": d}
+   242	
+   243	
+   244	WORLD = ("BACKGROUND. You are the scheduling assistant for Mott Optical, an optometry practice. "
+   245	         "You are texting a patient by name who has not been in for a while, to get them booked for "
+   246	         "a comprehensive eye exam at the MK2 office. The practice management system supplies the "
+   247	         "patient's name and the real open appointment times; you never invent either. Your single "
+   248	         "purpose in this whole conversation is to get one appointment booked. Every detour comes "
+   249	         "back to that. ")
+   250	
+   251	
+   252	def framed(background, goal, task, never):
+   253	    """Background / Goal / Task / Never. The model running these nodes is small and
+   254	    does not infer context, so every prompt states the world explicitly rather than
+   255	    relying on the conversation so far."""
+   256	    return (WORLD + background.strip() + "\n\nGOAL. " + goal.strip()
+   257	            + "\n\nTASK. " + task.strip() + "\n\nNEVER. " + never.strip() + NO_LEAK)
+   258	
+   259	
+   260	def wait(nid, name, prompt, extract=None, glabel=None, auto=False, skip=False):
+# AI Writing Tropes to Avoid
+
+Add this file to your AI assistant's system prompt or context to help it avoid
+common AI writing patterns. Source: [tropes.fyi](https://tropes.fyi) by [ossama.is](https://ossama.is)
+
+---
+
+## Word Choice
+
+### "Quietly" and Other Magic Adverbs
+
+Overuse of "quietly" and similar adverbs to convey subtle importance or understated power. AI reaches for these adverbs to make mundane descriptions feel significant. Also includes: "deeply", "fundamentally", "remarkably", "arguably".
+
+**Avoid patterns like:**
+- "quietly orchestrating workflows, decisions, and interactions"
+- "the one that quietly suffocates everything else"
+- "a quiet intelligence behind it"
+
+### "Delve" and Friends
+
+Used to be the most infamous AI tell. "Delve" went from an uncommon English word to appearing in a staggering percentage of AI-generated text. Part of a family of overused AI vocabulary including "certainly", "utilize", "leverage" (as a verb), "robust", "streamline", and "harness".
+
+**Avoid patterns like:**
+- "Let's delve into the details..."
+- "Delving deeper into this topic..."
+- "We certainly need to leverage these robust frameworks..."
+
+### "Tapestry" and "Landscape"
+
+Overuse of ornate or grandiose nouns where simpler words would do. "Tapestry" is used to describe anything interconnected. "Landscape" is used to describe any field or domain. Other offenders: "paradigm", "synergy", "ecosystem", "framework".
+
+**Avoid patterns like:**
+- "The rich tapestry of human experience..."
+- "Navigating the complex landscape of modern AI..."
+- "The ever-evolving landscape of technology..."
+
+### The "Serves As" Dodge
+
+Replacing simple "is" or "are" with pompous alternatives like "serves as", "stands as", "marks", or "represents". AI avoids basic copulas because its repetition penalty pushes it toward fancier constructions (I've studied this!).
+
+**Avoid patterns like:**
+- "The building serves as a reminder of the city's heritage."
+- "Gallery 825 serves as LAAA's exhibition space for contemporary art."
+- "The station marks a pivotal moment in the evolution of regional transit."
+
+---
+
+## Sentence Structure
+
+### Negative Parallelism
+
+The "It's not X -- it's Y" pattern, often with an em dash. The single most commonly identified AI writing tell. Man I f*cking hate it. AI uses this to create false profundity by framing everything as a surprising reframe. One in a piece can be effective; ten in a blog post is a genuine insult to the reader. Before LLMs, people simply did not write like this at scale. Includes the causal variant "not because X, but because Y" where every explanation is framed as a surprise reveal, the em-dash dismissal "X -- not Y", and the cross-sentence reframe where the same noun is negated then repositioned: "The question isn't X. The question is Y."
+
+**Avoid patterns like:**
+- "It's not bold. It's backwards."
+- "Feeding isn't nutrition. It's dialysis."
+- "Half the bugs you chase aren't in your code. They're in your head."
+
+### "Not X. Not Y. Just Z."
+
+The dramatic countdown pattern. AI builds tension by negating two or more things before revealing the actual point. Creates a false sense of narrowing down to the truth.
+
+**Avoid patterns like:**
+- "Not a bug. Not a feature. A fundamental design flaw."
+- "Not ten. Not fifty. Five hundred and twenty-three lint violations across 67 files."
+- "not recklessly, not completely, but enough"
+
+### "The X? A Y."
+
+Self-posed rhetorical questions answered immediately in the next sentence or clause. The model asks a question nobody was asking, then answers it for dramatic effect. Thinks this is the epitome of great writing.
+
+**Avoid patterns like:**
+- "The result? Devastating."
+- "The worst part? Nobody saw it coming."
+- "The scary part? This attack vector is perfect for developers."
+
+### Anaphora Abuse
+
+Repeating the same sentence opening multiple times in quick succession.
+
+**Avoid patterns like:**
+- "They assume that users will pay... They assume that developers will build... They assume that ecosystems will emerge... They assume that..."
+- "They could expose... They could offer... They could provide... They could create... They could let... They could unlock..."
+- "They have built engines, but not vehicles. They have built power, but not leverage. They have built walls, but not doors."
+
+### Tricolon Abuse
+
+Overuse of the rule-of-three pattern, often extended to four or five. A single tricolon is elegant; three back-to-back tricolons are a pattern recognition failure.
+
+**Avoid patterns like:**
+- "Products impress people; platforms empower them. Products solve problems; platforms create worlds. Products scale linearly; platforms scale exponentially."
+- "identity, payments, compute, distribution"
+- "workflows, decisions, and interactions"
+
+### "It's Worth Noting"
+
+Filler transitions that signal nothing. AI uses these phrases to introduce new points without actually connecting them to the previous argument. Also includes: "It bears mentioning", "Importantly", "Interestingly", "Notably".
+
+**Avoid patterns like:**
+- "It's worth noting that this approach has limitations."
+- "Importantly, we must consider the broader implications."
+- "Interestingly, this pattern repeats across industries."
+
+### Superficial Analyses
+
+Tacking a present participle ("-ing") phrase onto the end of a sentence to inject shallow analysis that says nothing. The model attaches significance, legacy, or broader meaning to mundane facts using phrases like "highlighting its importance", "reflecting broader trends", or "contributing to the development of...".
+
+**Avoid patterns like:**
+- "contributing to the region's rich cultural heritage"
+- "This etymology highlights the enduring legacy of the community's resistance and the transformative power of unity in shaping its identity."
+- "underscoring its role as a dynamic hub of activity and culture"
+
+### False Ranges
+
+Using "from X to Y" constructions where X and Y aren't on any real scale. In legitimate use, "from X to Y" implies a spectrum with a meaningful middle. AI uses it as a fancy way to list two loosely related things. "From innovation to cultural transformation" -- what's in between???? Nothing!
+
+**Avoid patterns like:**
+- "From innovation to implementation to cultural transformation."
+- "From the singularity of the Big Bang to the grand cosmic web."
+- "From problem-solving and tool-making to scientific discovery, artistic expression, and technological innovation."
+
+---
+
+## Paragraph Structure
+
+### Short Punchy Fragments
+
+Excessive use of very short sentences or sentence fragments as standalone paragraphs for manufactured emphasis. RLHF training has pushed models toward "writing for readability" aimed at the lowest common denominator: one thought per sentence, no mental state-keeping required. It's an inhuman style. No real person writes first drafts this way because it doesn't match how humans think or speak.
+
+**Avoid patterns like:**
+- "He published this. Openly. In a book. As a priest."
+- "These weren't just products. And the software side matched. Then it professionalised. But I adapted."
+- "Platforms do."
+
+### Listicle in a Trench Coat
+
+Numbered or labeled points dressed up as continuous prose. The model writes what is essentially a listicle but wraps each point in a paragraph that starts with "The first... The second... The third..." to disguise the format. Perhaps you told it to stop generating lists and it decided to do this instead... still very common.
+
+**Avoid patterns like:**
+- "The first wall is the absence of a free, scoped API... The second wall is the lack of delegated access... The third wall is the absence of scoped permissions..."
+- "The second takeaway is that... The third takeaway is that... The fourth takeaway is that..."
+
+---
+
+## Tone
+
+### "Here's the Kicker"
+
+False suspense transitions that promise a revelation but deliver a point that did NOT need the buildup. The model uses these phrases to manufacture drama before an otherwise unremarkable observation LOL. Also includes: "Here's the thing", "Here's where it gets interesting", "Here's what most people miss", "Here's the starting point", "Here's the deal".
+
+**Avoid patterns like:**
+- "Here's the kicker."
+- "Here's the thing about AI adoption."
+- "Here's where it gets interesting."
+
+### "Think of It As..."
+
+The patronizing analogy. AI constantly reaches for "Think of it as..." or "It's like a..." to simplify concepts. The model defaults to teacher mode and assumes the reader needs a metaphor to understand anything. Often produces analogies that are less clear than the original concept.
+
+**Avoid patterns like:**
+- "Think of it like a highway system for data."
+- "Think of it as a Swiss Army knife for your workflow."
+- "It's like asking someone to buy a car they're only allowed to sit in while it's parked."
+
+### "Imagine a World Where..."
+
+The classic AI invitation to futurism. To sell the argument usually begins with "Imagine" followed by a list of wonderful things that will happen if the reader agrees with the premise.
+
+**Avoid patterns like:**
+- "Imagine a world where every tool you use -- your calendar, your inbox, your documents, your CRM, your code editor -- has a quiet intelligence behind it..."
+- "In that world, workflows stop being collections of manual steps and start becoming orchestrations."
+
+### False Vulnerability
+
+Simulated self-awareness or honesty that reads as performative. The model pretends to break the fourth wall or admit a bias, creating a false sense of authenticity. Real vulnerability is specific and uncomfortable; AI vulnerability is polished and risk-free!!!!
+
+**Avoid patterns like:**
+- "And yes, I'm openly in love with the platform model"
+- "And yes, since we're being honest: I'm looking at you, OpenAI, Google, Anthropic, Meta"
+- "This is not a rant; it's a diagnosis"
+
+### "The Truth Is Simple"
+
+Asserting that something is obvious, clear or simple instead of actually proving it. If you have to tell the reader your point is clear, it very likely isn't. Also includes the dramatic reveal variant: "but none of them is the real story. The real story is..." -- claiming privileged insight while waving away everything before it.
+
+**Avoid patterns like:**
+- "The reality is simpler and less flattering"
+- "History is unambiguous on this point"
+- "History is clear, the metrics are clear, the examples are clear"
+
+### Grandiose Stakes Inflation
+
+Everything is the most important thing ever. AI inflates the stakes of every argument to world-historical significance. A blog post about API pricing becomes a meditation on the fate of civilization.
+
+**Avoid patterns like:**
+- "This will fundamentally reshape how we think about everything."
+- "will define the next era of computing"
+- "something entirely new"
+
+### "Let's Break This Down"
+
+The pedagogical voice that assumes the reader needs hand-holding. AI defaults to a teacher-student dynamic even when writing for expert audiences. Also includes: "Let's unpack this", "Let's explore", "Let's dive in".
+
+**Avoid patterns like:**
+- "Let's break this down step by step."
+- "Let's unpack what this really means."
+- "Let's explore this idea further."
+
+### Vague Attributions
+
+Attributing claims to unnamed authorities instead of being specific. AI loves to invoke "experts", "observers", "industry reports", and "several publications" without naming anyone. It also inflates the quantity of sources -- presenting what one person said as a widely held view, or writing "several publications have cited" when it means two. If you can't name the expert, you don't have a source.
+
+**Avoid patterns like:**
+- "Experts argue that this approach has significant drawbacks."
+- "Industry reports suggest that adoption is accelerating."
+- "Observers have cited the initiative as a turning point."
+
+### Invented Concept Labels
+
+AI clusters invented compound labels that sound analytical without being grounded. It appends abstract problem-nouns (paradox, trap, creep, divide, vacuum, inversion) to domain words — "supervision paradox", "acceleration trap", "workload creep" — and uses them as if they're established, rigorously defined terms. They function as rhetorical shorthand: name a thing, skip the argument. Multiple such labels in the same piece is a strong signal of AI slop.
+
+**Avoid patterns like:**
+- "the supervision paradox"
+- "the acceleration trap"
+- "workload creep"
+
+---
+
+## Formatting
+
+### Em-Dash Addiction
+
+Compulsive overuse of em dashes for dramatic pauses, parenthetical asides and pivot points. A human writer might use 2-3 per piece (and naturally); AI will use 20+.
+
+**Avoid patterns like:**
+- "The problem -- and this is the part nobody talks about -- is systemic."
+- "The tinkerer spirit didn't die of natural causes -- it was bought out."
+- "Not recklessly, not completely -- but enough -- enough to matter."
+
+### Bold-First Bullets
+
+Every bullet point or list item starts with a bolded phrase or sentence. Extremely common in Claude and ChatGPT markdown output. Almost nobody formats lists this way when writing by hand. It's a telltale sign of AI-generated documentation and blog posts AND README files (especially with emojis).
+
+**Avoid patterns like:**
+- "Every single bullet point begins with a bold keyword."
+- "**Security**: Environment-based configuration with..."
+- "**Performance**: Lazy loading of expensive resources..."
+
+### Unicode Decoration
+
+Use of unicode arrows (->), smart/curly quotes, and other special characters that can't be easily typed on a standard keyboard. Real writers typing in a text editor produce straight quotes and -> or =>. Claude in particular loves the -> arrow.
+
+**Avoid patterns like:**
+- "Input → Processing → Output"
+- "This leads to better outcomes → which means higher engagement"
+- "“Smart quotes” instead of straight "quotes" that you’d actually type"
+
+---
+
+## Composition
+
+hook: PostToolUse
+hook: PostToolUse Failed
+codex
+The first pass confirms the pathway has two distinct sources of weekday text: model-written clarification text and gateway-returned `day_name`. I’m now tracing the exact edges and condition expressions to see whether either source is independently checked.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc 'rg -n "n_ask|n_date_conflict|preference_to|preference_from|conflict_option|date_conflict|slot_[12]_day_name|SEARCH_BODY|search|weekday|weekend|responsePathways|pathway|condition" build_v65.py' in /home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65
+ succeeded in 0ms:
+2:"""Mott recall pathway v57 — ambiguity and unsatisfied-time safety routing.
+51:# A live patient was shown "preference_from: monday / preference_to: monday" because the
+62:# A weekday word resolves to the next occurrence of that weekday server-side, and a range of
+63:# two weekday words works (monday..friday returned 126 openings across Mon-Fri). So a vague
+76:    ("preference_from",
+78:     "weekday on its own, such as monday or wednesday, means the next one coming up. If they "
+79:     "used a week qualifier, ALWAYS PRESERVE it by writing the weekday followed by its full "
+81:     "a weekday in texting shorthand, expand it to the full accepted weekday: mon becomes "
+84:     "every clipped variant become tuesday next week, never a bare weekday and never shorthand. "
+85:     "If they asked for next week without naming a day, write next week. Bare weekdays "
+96:     "put monday: they have not asked for a week, so searching the soonest one contradicts "
+109:     "date, a weekday or a clock time in this field. This field must NEVER be left blank."),
+110:    ("preference_to",
+111:     "The last day the patient will accept, in exactly the same forms as preference_from. If "
+113:     "used texting shorthand, expand it to the same full accepted weekday written in "
+114:     "preference_from; never pass abbreviations such as tues, nxt or wk through verbatim. If they "
+116:     "friday next week. When the patient names a week qualifier but no weekday, preference_from "
+117:     "is the week phrase alone and preference_to is friday followed by that same full week "
+119:     "morning or afternoon is NOT a weekday and does not change this week-only range. If they "
+120:     "named no day and no week at all, put friday. Bare weekdays with "
+122:     "left blank: whenever preference_from is unclear, write unclear here too."),
+147:OFFER_EN = ("I have {{slot_1_day_name}} {{slot_1_start}} or {{slot_2_day_name}} "
+149:OFFER_ZH = ("我这里有 {{slot_1_day_name}} {{slot_1_start}} 或 {{slot_2_day_name}} "
+157:           "{{slot_1_day_name}} {{slot_1_start}} or {{slot_2_day_name}} {{slot_2_start}} "
+159:NEAR_ZH = ("那天没有那么晚的时段了。最接近的是 {{slot_1_day_name}} {{slot_1_start}} 或 "
+160:           "{{slot_2_day_name}} {{slot_2_start}}（地点：MK2）。回复 1 或 2 预约，"
+170:               "slot_1_day_name", "slot_2_start", "slot_2_end", "slot_2_doctor",
+171:               "slot_2_day_name", "time_pref_relaxed",]
+179:    "slot_1_day_name": "$.result.slots[0].day_name",
+182:    "slot_2_day_name": "$.result.slots[1].day_name",
+203:    "conflict_option_1": "$.date_conflict[1]",
+204:    "conflict_option_2": "$.date_conflict[2]",
+205:    "date_conflict_detected": "$.date_conflict[0]",
+215:SEARCH_BODY = ('{"store":"{{store}}","from":"{{preference_from}}","to":"{{preference_to}}",'
+233:def wh(nid, name, path, body, resp, pathways, start=False, resp_map=None):
+238:         "responsePathways": pathways}
+263:    # patient message. This is the pattern the mature production pathway on the same
+297:             "{{slot_1_day_name}} {{slot_1_start}} and the second is {{slot_2_day_name}} "
+308:             "to a week already discussed, such as the week after that, do NOT search and do NOT "
+357:    wh("n_identity", "Resolve identity (silent)", "/patient-search",
+363:        ["count", "==", "1", {"id": "n_ask", "name": "Identity confirmed"}],
+371:    # mind: ask -> search -> offer -> validate -> book.
+372:    wait("n_ask", "Asked when",
+377:             "practice schedule is searched automatically for what they said, and the real "
+382:             "Any answer about timing is enough to move forward, whether it is a weekday, a date, "
+393:    wait("n_date_conflict", "Clarify conflicting dates",
+395:          "sure I get the right day. Did you mean {{conflict_option_1}} or "
+396:          "{{conflict_option_2}}? Do not name any other date."),
+397:         extract=[v for v in PREFERENCE_VARS if v[0] in ("preference_from", "day_part")]),
+399:    # n_reask used to be the single target of six different edges: search rejected, window
+408:             "The practice schedule was just searched for exactly what this patient asked for "
+412:             "searched again.",
+414:             "ask for one different day. Give two examples of what always works, a weekday such "
+420:             "never mention searching, systems, errors or anything internal. Never name a time "
+424:    # Reached when the search never ran or was rejected, and when the request could not be
+426:    wait("n_miss_unread", "Could not search yet",
+432:             "Get one concrete day out of this patient so the schedule can be searched.",
+434:             "one specific day. Give two examples of what always works, a weekday such as "
+440:             "mention searching, systems, errors or anything internal. Never name a time you "
+452:             "searched again.",
+455:             "works, a weekday such as Tuesday, or a month and day such as August 5. Ask for "
+460:             "shown them. Never name a time you have not been given. Never mention searching, "
+467:    # slot, so re-running the same search hands back the identical time. Sending this class to
+468:    # the silent re-search would offer the same unbookable time again every single round.
+477:             "searched somewhere it can actually book.",
+480:             "weekday such as Tuesday, or a month and day such as August 5. Ask for one day "
+485:             "searching, systems, errors or anything internal."
+490:    # who said "the week after that in August" get next Monday to Friday searched, with real
+501:             "August 12. If they have already named a weekday, ask which week it falls in by "
+538:                        "{{slot_1_day_name}} {{slot_1_start}} and the second is "
+539:                        "{{slot_2_day_name}} {{slot_2_start}}. This patient asked "
+588:             "schedule is searched automatically using whatever you capture, and the results come "
+590:             "Tell the patient you are looking, and nothing more. The search happens the instant "
+606:    wh("n_search", "Search by preference (silent)", "/availability",
+607:       SEARCH_BODY,
+608:       ["ok"] + SLOT_FIELDS + ["conflict_option_1", "conflict_option_2",
+609:                               "date_conflict_detected"],
+612:       # this condition catches it ahead of every other route. One wasted read is the price
+614:       [["preference_from", "==", "unclear", {"id": "n_clarify", "name": "Could not read the week they meant"}],
+617:        ["date_conflict_detected", "==", "conflict", {"id": "n_date_conflict", "name": "Two dates disagree"}],
+628:       SEARCH_BODY,
+639:       SEARCH_BODY,
+652:       SEARCH_BODY,
+679:       # route exists because the catalog marks `conflict` conditional and no capture proves
+724:    # explanation. This node has NO extractVars, so the window it searched with survives.
+729:             "no appointment. The same day and window they asked for is about to be searched "
+754:             "Never go back to searching, verifying or booking after this point, because that would "
+840:    ("n_ask", "n_search", "says any day, weekday, date, week, weekend, or time preference — including Saturday, this weekend, next week, or a month and day"),
+841:    ("n_ask", "e_declined", "declines at the opening"),
+842:    ("n_ask", "e_timeout", "72-hour timeout"),
+843:    ("n_date_conflict", "n_search", "patient chooses one conflicting date"),
+845:# The four nodes that replaced n_reask all lead back into the same search loop and all offer
+850:        (_miss, "n_search", "names any day, weekday, date, week, or weekend — including Saturday, Sunday, this weekend, next week, or a month and day"),
+856:    ("n_recheck", "n_search", "looking again with the same preference"),
+894:    ("n_negotiate", "n_search", "preference collected"),
+904:    for pw in node["data"].get("responsePathways", []):
+921:# move. Webhook nodes route on responsePathways and globals on their label,
+924:    "n_identity": (0, 0), "n_ask": (0, 200), "n_offer": (0, 400),
+925:    "n_date_conflict": (-900, 750),
+932:    "n_confirm": (0, 1020), "n_negotiate": (-900, 400), "n_search": (-900, 600), "n_page_2": (-1350, 500), "n_page_3": (-1350, 700),
+983:# The value stays a stored-secret reference so the raw bearer never lives in the pathway
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba build_v65.py | sed -n '70,135p'; nl -ba build_v65.py | sed -n '255,430p'; nl -ba build_v65.py | sed -n '570,670p'; nl -ba build_v65.py | sed -n '820,920p'; nl -ba build_v65.py | sed -n '920,1005p'" in /home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65
+ succeeded in 0ms:
+    70	# ignored, so it is the sentinel for "the patient did not say". Never leave one blank.
+    71	# Two closed-vocabulary tokens, nothing more. Every field the model used to carry beyond
+    72	# these fed a gateway parameter measured to be ignored, so they added failure modes and no
+    73	# capability. Clock times and parts of the day are deliberately NOT captured: the gateway
+    74	# cannot filter on them, so capturing them only invited values into the wrong fields.
+    75	PREFERENCE_VARS = [
+    76	    ("preference_from",
+    77	     "The first day the patient wants, written in one of these forms and nothing else. A "
+    78	     "weekday on its own, such as monday or wednesday, means the next one coming up. If they "
+    79	     "used a week qualifier, ALWAYS PRESERVE it by writing the weekday followed by its full "
+    80	     "qualifier. For example, wednesday next week stays wednesday next week. If they name "
+    81	     "a weekday in texting shorthand, expand it to the full accepted weekday: mon becomes "
+    82	     "monday, tue or tues becomes tuesday, wed becomes wednesday, thu or thurs becomes "
+    83	     "thursday, and fri becomes friday. Expand clipped week qualifiers too: `tues nxt wk` and "
+    84	     "every clipped variant become tuesday next week, never a bare weekday and never shorthand. "
+    85	     "If they asked for next week without naming a day, write next week. Bare weekdays "
+    86	     "with no week qualifier stay bare. If they name "
+    87	     "a month and a day, write the month and the number, such as august 5 or aug 12, or write "
+    88	     "08/05/2026. Never write a month on its own. Never write phrases like the week after that "
+    89	     "or in two weeks, because the schedule cannot read them. Never work out a calendar date "
+    90	     "yourself: pass the patient's own wording through in one of the forms above. Never put a "
+    91	     "clock time or a part of the day here. Write the single word unclear ONLY when the "
+    92	     "patient NAMED a timeframe you cannot write in one of the forms above: the week after "
+    93	     "that, in two weeks, in about a month, a bare month name, or any week you would have to "
+    94	     "work out for yourself. If the patient named NO day and NO week at all, whether they said "
+    95	     "nothing about timing or spoke only about a part of the day such as the latest you have, "
+    96	     "put monday: they have not asked for a week, so searching the soonest one contradicts "
+    97	     "nothing they said, and the offer they get back carries its own date. This field must "
+    98	     "NEVER be left blank. The distinction that matters: unclear means they told you a "
+    99	     "timeframe you cannot render, never that they told you nothing."),
+   100	    ("day_part",
+   101	     "Exactly one of these five words: morning, afternoon, late, outside, none. Use morning if the "
+   102	     "patient said morning. Morning clock times within opening hours map to morning. Use afternoon "
+   103	     "if they said afternoon, midday, or lunchtime. Noon to 2:59pm maps to afternoon. Use late if "
+   104	     "they said after 3, after 4, 3pm or later, late afternoon, late in the day, the latest, or end "
+   105	     "of day. All of those phrases map to late, and the 3pm boundary is exact. Use outside if they "
+   106	     "asked for an exact clock time outside normal clinic hours, such as 3am or 11pm. "
+   107	     "This is a routing token only and is never sent to the scheduler. Use none "
+   108	     "if they said nothing about what part of the day suits them. Never put a "
+   109	     "date, a weekday or a clock time in this field. This field must NEVER be left blank."),
+   110	    ("preference_to",
+   111	     "The last day the patient will accept, in exactly the same forms as preference_from. If "
+   112	     "they named one day, repeat it here unchanged, INCLUDING any next week qualifier. If they "
+   113	     "used texting shorthand, expand it to the same full accepted weekday written in "
+   114	     "preference_from; never pass abbreviations such as tues, nxt or wk through verbatim. If they "
+   115	     "gave a span, put the later day. If they asked for next week in general with no day, put "
+   116	     "friday next week. When the patient names a week qualifier but no weekday, preference_from "
+   117	     "is the week phrase alone and preference_to is friday followed by that same full week "
+   118	     "qualifier, giving the pair next week through friday next week. A part of day such as "
+   119	     "morning or afternoon is NOT a weekday and does not change this week-only range. If they "
+   120	     "named no day and no week at all, put friday. Bare weekdays with "
+   121	     "no week qualifier stay bare. Never put a clock time here. This field must NEVER be "
+   122	     "left blank: whenever preference_from is unclear, write unclear here too."),
+   123	]
+   124	
+   125	# The clarify node asks ONLY which date the patient means, so a reply there is a bare date
+   126	# and re-extracting day_part from it would come back none. A patient who said "the latest
+   127	# you have" and was then asked for a date would be shown morning slots. A variable that is
+   128	# not in a node's extractVars keeps the value it already had, so leaving day_part out here
+   129	# is the platform's own carry-forward and needs no memory the platform does not have.
+   130	WINDOW_VARS = [v for v in PREFERENCE_VARS if v[0] != "day_part"]
+   131	
+   132	OPENER_EN = (
+   133	    "Hi {{patient_first}}, this is Mott Optical. We noticed that it's been awhile since your last "
+   134	    "visit with us. This is a great time to update your lenses, explore our newest eyewear "
+   135	    "collection, and even find a new pair of sunglasses while staying on top of your eye health "
+   255	    relying on the conversation so far."""
+   256	    return (WORLD + background.strip() + "\n\nGOAL. " + goal.strip()
+   257	            + "\n\nTASK. " + task.strip() + "\n\nNEVER. " + never.strip() + NO_LEAK)
+   258	
+   259	
+   260	def wait(nid, name, prompt, extract=None, glabel=None, auto=False, skip=False):
+   261	    d = {"name": name, "prompt": prompt, "userWait": not skip}
+   262	    # skipUserResponse: speak, then continue immediately instead of parking for another
+   263	    # patient message. This is the pattern the mature production pathway on the same
+   264	    # account uses for its own hand-off nodes. Without it a node that only announces
+   265	    # "let me check" strands the conversation until the patient texts again.
+   266	    if skip:
+   267	        d["modelOptions"] = {"skipUserResponse": True}
+   268	    # Each variable carries its OWN description. A shared placeholder like "collected from
+   269	    # the patient reply" tells the model nothing about which field is which, and it put
+   270	    # "next week" into time_pref, which only accepts morning/afternoon/evening. Extraction
+   271	    # guidance belongs here, never in the prompt, or the model prints it to the patient.
+   272	    if extract:
+   273	        d["extractVars"] = [[n, "string", desc] for n, desc in extract]
+   274	    if glabel:
+   275	        d.update({"isGlobal": True, "globalLabel": glabel, "enableGlobalAutoReturn": auto})
+   276	    return {"id": nid, "type": "Default", "data": d}
+   277	
+   278	
+   279	def end(nid, outcome, text, glabel=None):
+   280	    d = {"name": outcome, "text": text, "outcome": outcome}
+   281	    if glabel:
+   282	        d.update({"isGlobal": True, "globalLabel": glabel, "enableGlobalAutoReturn": False})
+   283	    return {"id": nid, "type": "End Call", "data": d}
+   284	
+   285	
+   286	def offer_page(nid, name, window, later_hint, extra_never="", line_en=None, line_zh=None,
+   287	               opening=None):
+   288	    """One offer node per page. It sees exactly two openings and nothing else, which is what
+   289	    stops it naming a time it cannot book.
+   290	
+   291	    line_en / line_zh override the offer sentence. The nearest-band variant uses that to
+   292	    say plainly that the band the patient asked for could not be served, instead of
+   293	    presenting a substitution as good news."""
+   294	    return wait(nid, name,
+   295	         framed(
+   296	             (opening or "Exactly two openings exist as far as you are concerned: the first is "
+   297	             "{{slot_1_day_name}} {{slot_1_start}} and the second is {{slot_2_day_name}} "
+   298	             "{{slot_2_start}}. They are " + window + ". You "
+   299	             "have not been shown any other time and you do not know what else the schedule "
+   300	             "holds. Nothing is booked and nothing is held."),
+   301	             "Get this patient to take one of the two openings you have, or find out what they "
+   302	             "would rather have so the schedule can be looked at again.",
+   303	             "Send this message with the two openings filled in: \"" + (line_en or OFFER_EN) + "\" "
+   304	             "If the patient writes in Chinese, use this form instead: \"" + (line_zh or OFFER_ZH) + "\" "
+   305	             + later_hint +
+   306	             "If they want another day entirely, take the path for a different day. "
+   307	             "If they ask for a week further out than next week, or describe it only in relation "
+   308	             "to a week already discussed, such as the week after that, do NOT search and do NOT "
+   309	             "repeat the times you already gave: ask which date they would like and give an "
+   310	             "example of a form that works, such as August 12. Stay here until they name it. "
+   311	             "If they take the first opening, take the path for the first. If they take the "
+   312	             "second, take the path for the second. A bare 1 or 2, a YES to one of them, or "
+   313	             "naming one of those two times all count as taking it. If one reply both takes "
+   314	             "an opening AND asks for a different day or time, take the clarification path; "
+   315	             "that mixed reply is not consent to either choice. Ask which one the patient meant: "
+   316	             "the opening they selected, or the different day or time they requested. "
+   317	             + TIMES,
+   318	             "NEVER write any appointment time other than the two given to you above, in any "
+   319	             "message, for any reason. You have no other times. Inventing one, or repeating one "
+   320	             "from earlier in the conversation, misleads the patient about what is being booked."
+   321	             + extra_never + NO_CLAIM + NO_PRICE + LANG_OPENER))
+   322	
+   323	
+   324	def suppression(nid, name, reason, exit_id, exit_name, glabel):
+   325	    """A silent recorder sitting in FRONT of an opt-out exit.
+   326	
+   327	    The global trigger lives here rather than on the end node, so the exit cannot be
+   328	    reached without the record being attempted. Both routes land on the same exit: a
+   329	    gateway that answers 503 must not trap the patient in a conversation they asked to
+   330	    leave, and the exit wording never claims the opt-out was saved, so an unrecorded
+   331	    STOP is still honest. Carrier-level STOP remains the actual compliance control.
+   332	    """
+   333	    node = wh(
+   334	        nid, name, "/sms-suppression",
+   335	        ('{"phone_e164":"{{recall_cell}}","reason":"' + reason
+   336	         + '","source":"sms_reply"}'),
+   337	        ["suppression_ok"],
+   338	        [["suppression_ok", "==", "true", {"id": exit_id, "name": exit_name}],
+   339	         ["suppression_ok", "!=", "true", {"id": exit_id, "name": exit_name}]],
+   340	        resp_map={"suppression_ok": "$.ok"},
+   341	    )
+   342	    node["data"].update({
+   343	        "isGlobal": True,
+   344	        "globalLabel": glabel,
+   345	        "enableGlobalAutoReturn": False,
+   346	    })
+   347	    return node
+   348	
+   349	
+   350	def safe(name):
+   351	    return {"id": "e_safe_failure", "name": name}
+   352	
+   353	
+   354	nodes = [
+   355	    # Identity resolves by PHONE with the id as a filter: the id index returns zero,
+   356	    # the phone index works, and a mismatched pair still yields count 0.
+   357	    wh("n_identity", "Resolve identity (silent)", "/patient-search",
+   358	       '{"phone":"{{recall_cell}}","patient_id":"{{recall_patient_id}}"}',
+   359	       ["ok", "count", "patient_first", "patient_id", "exam_type_id"],
+   360	       [["recall_cell", "==", "", {"id": "e_safe_identity", "name": "No mobile supplied"}],
+   361	        ["recall_patient_id", "==", "", {"id": "e_safe_identity", "name": "No patient id supplied"}],
+   362	        ["store", "==", "", {"id": "e_safe_identity", "name": "No booking store supplied"}],
+   363	        ["count", "==", "1", {"id": "n_ask", "name": "Identity confirmed"}],
+   364	        ["count", "==", "0", {"id": "e_safe_identity", "name": "Phone and id do not bind to one patient"}],
+   365	        ["count", ">=", "2", {"id": "e_safe_identity", "name": "Not a unique patient"}],
+   366	        ["ok", "!=", "true", safe("Identity lookup unavailable")]], start=True),
+   367	
+   368	    # The conversation now OPENS by asking when they want to come, instead of guessing two
+   369	    # consecutive slots the practice happened to have first. Same capture fields as the
+   370	    # negotiation step, so one loop serves both the first answer and every later change of
+   371	    # mind: ask -> search -> offer -> validate -> book.
+   372	    wait("n_ask", "Asked when",
+   373	         framed(
+   374	             "This is the very first message this patient receives. They have not been in for a "
+   375	             "while and nothing has been looked up for them yet. You do not have any appointment "
+   376	             "times in hand, and you are not going to guess at any. The moment they answer, the "
+   377	             "practice schedule is searched automatically for what they said, and the real "
+   378	             "openings come back as an offer.",
+   379	             "Send the recall message and find out when this patient would like to come in.",
+   380	             "Send this message with the patient's first name filled in: \"" + OPENER_EN + "\" "
+   381	             "If the patient writes in Chinese, send this form instead: \"" + OPENER_ZH + "\" "
+   382	             "Any answer about timing is enough to move forward, whether it is a weekday, a date, "
+   383	             "a part of the day, or a whole week. If they answer with something that is not about "
+   384	             "timing at all, answer them and then ask again when they would like to come in.",
+   385	             "Never name, invent or imply a specific appointment time, date, or day of the week "
+   386	             "here, because you do not have one yet and nothing has been checked. If their "
+   387	             "answer mentions two different days that seem to disagree, like tomorrow and a "
+   388	             "date that is not tomorrow, ask them to clarify which day they mean. Do not pick "
+   389	             "one for them and do not guess what day of the week a date falls on."
+   390	             + NO_CLAIM + NO_PRICE + LANG_OPENER),
+   391	         extract=PREFERENCE_VARS),
+   392	
+   393	    wait("n_date_conflict", "Clarify conflicting dates",
+   394	         ("The patient gave two dates that disagree. Ask them to choose. Say: I want to make "
+   395	          "sure I get the right day. Did you mean {{conflict_option_1}} or "
+   396	          "{{conflict_option_2}}? Do not name any other date."),
+   397	         extract=[v for v in PREFERENCE_VARS if v[0] in ("preference_from", "day_part")]),
+   398	
+   399	    # n_reask used to be the single target of six different edges: search rejected, window
+   400	    # empty, band too thin, and slot not real. One apology had to cover "we looked and there
+   401	    # is nothing", "we never managed to look", and "your part of the day is thin", so it was
+   402	    # forbidden from saying any of them and the patient could not tell what to change. The
+   403	    # arrival edge, not the prompt, now decides which of these three the patient hears.
+   404	
+   405	    # Reached ONLY by slot_count == 0. Emptiness is proven here, so it may be stated.
+   406	    wait("n_miss_empty", "Window had no openings",
+   407	         framed(
+   408	             "The practice schedule was just searched for exactly what this patient asked for "
+   409	             "and it came back with no openings at all in that window. That is a real, checked "
+   410	             "answer, not a failure. Nothing is booked and nothing is being held.",
+   411	             "Get one different concrete day out of this patient so the schedule can be "
+   412	             "searched again.",
+   413	             "Tell them plainly that you do not have anything open in what they asked for, then "
+   414	             "ask for one different day. Give two examples of what always works, a weekday such "
+   415	             "as Tuesday, or a month and day such as August 5. If they have been asking for "
+   416	             "something further out than the next two weeks, ask for the month and the day. "
+   417	             "Ask for one day only.",
+   418	             "Never say a morning, an afternoon or a part of the day is empty, because only the "
+   419	             "whole window was checked. Never blame the patient for how they phrased it and "
+   420	             "never mention searching, systems, errors or anything internal. Never name a time "
+   421	             "you have not been given." + NO_CLAIM + NO_PRICE + LANG_REPLY),
+   422	         extract=PREFERENCE_VARS),
+   423	
+   424	    # Reached when the search never ran or was rejected, and when the request could not be
+   425	    # rendered in a form the schedule reads. Nothing was checked, so nothing may be claimed.
+   426	    wait("n_miss_unread", "Could not search yet",
+   427	         framed(
+   428	             "Nothing has been checked for this patient. Either the request could not be put "
+   429	             "into a form the practice schedule reads, or the schedule could not be reached at "
+   430	             "all. No day and no part of any day has been looked at. The patient has no idea "
+   570	
+   571	    wait("n_gate_2", "Confirm opening 2",
+   572	         framed(
+   573	             "The patient has picked the second opening. Nothing has been written yet. The very "
+   574	             "next step, if they say yes, sends this exact appointment to the booking system.",
+   575	             "Get a clear yes or no to this specific appointment before anything is written.",
+   576	             "Send this message with the time filled in: \"To confirm, your eye exam would be "
+   577	             "{{slot_2_start}} at MK2. Reply YES to book it, or NO to look at other times.\" "
+   578	             "If the patient writes in Chinese, send: \"确认一下，您的眼科检查时间为 "
+   579	             "{{slot_2_start}}（地点：MK2）。回复 YES 确认预约，或回复 NO 查看其他时间。\"",
+   580	             "Never add a time of your own and never treat anything other than a clear yes as a "
+   581	             "yes." + NO_CLAIM + NO_PRICE + LANG_REPLY)),
+   582	
+   583	
+   584	    wait("n_negotiate", "Negotiating",
+   585	         framed(
+   586	             "The patient has seen the openings and does not want them, or none were found. You are "
+   587	             "the step that collects what they DO want. Immediately after you, the practice "
+   588	             "schedule is searched automatically using whatever you capture, and the results come "
+   589	             "back as a fresh offer. You are not the end of anything.",
+   590	             "Tell the patient you are looking, and nothing more. The search happens the instant "
+   591	             "you finish, without waiting for them to reply again.",
+   592	             "Send ONE short, friendly line saying you are checking the schedule for what they "
+   593	             "asked for. Something like \"Let me check that for you.\" and nothing else. Do not ask "
+   594	             "them a question, do not repeat their request back to them, and do not offer any "
+   595	             "times, because you do not have the new ones yet." + NO_LEAK,
+   596	             "Never convert their words into a calendar date yourself, never guess today's date, "
+   597	             "never guess what day of the week a date falls on, and never invent availability. "
+   598	             "If their request seems to contain two conflicting dates, ask which one they mean."
+   599	             + NO_CLAIM + NO_PRICE + LANG_REPLY),
+   600	         skip=True,
+   601	         extract=PREFERENCE_VARS,
+   602	         glabel=("Before any booking is confirmed, the patient asks for a different date, time or "
+   603	                 "range for this new appointment. Does not match a reply that also selects an "
+   604	                 "offered opening, and does not apply once a booking is confirmed.")),
+   605	
+   606	    wh("n_search", "Search by preference (silent)", "/availability",
+   607	       SEARCH_BODY,
+   608	       ["ok"] + SLOT_FIELDS + ["conflict_option_1", "conflict_option_2",
+   609	                               "date_conflict_detected"],
+   610	       # The unclear guard is FIRST. A node either waits or continues, so the call cannot be
+   611	       # gated before it fires; the request goes out carrying the sentinel, is refused, and
+   612	       # this condition catches it ahead of every other route. One wasted read is the price
+   613	       # of never showing a patient times from a week they did not ask for.
+   614	       [["preference_from", "==", "unclear", {"id": "n_clarify", "name": "Could not read the week they meant"}],
+   615	        ["ok", "!=", "true", {"id": "n_miss_unread", "name": "Search rejected or unavailable"}],
+   616	        ["day_part", "==", "outside", {"id": "n_miss_time", "name": "Requested clock time is outside clinic hours"}],
+   617	        ["date_conflict_detected", "==", "conflict", {"id": "n_date_conflict", "name": "Two dates disagree"}],
+   618	        ["slot_count", "==", "0", {"id": "n_miss_empty", "name": "Window checked and empty"}],
+   619	        ["day_part", "==", "late", {"id": "n_page_3", "name": "Asked for late in the day"}],
+   620	        ["day_part", "==", "afternoon", {"id": "n_page_2", "name": "Asked for the afternoon"}],
+   621	        ["slot_count", "==", "1", {"id": "n_offer", "name": "One opening found"}],
+   622	        ["slot_count", ">=", "2", {"id": "n_offer", "name": "Two or more found"}]]),
+   623	
+   624	    # The same question asked again, with a later offset of the answer read instead. If the
+   625	    # day is too thin to hold an opening at that offset the value arrives empty and the patient
+   626	    # is asked for another day, never shown a morning they did not ask for.
+   627	    wh("n_page_2", "Afternoon openings (silent)", "/availability",
+   628	       SEARCH_BODY,
+   629	       ["ok"] + SLOT_FIELDS,
+   630	       [["ok", "!=", "true", {"id": "n_miss_unread", "name": "Search rejected or unavailable"}],
+   631	        # The day has openings, just none at this offset. Band thin, day NOT empty. Moving
+   632	        # down to the morning band needs the page_first node, which is v56 work, so this
+   633	        # states the miss honestly rather than substituting a time silently.
+   634	        ["slot_1_start", "==", "", {"id": "n_miss_thin", "name": "Nothing in the afternoon that day"}],
+   635	        ["slot_1_start", "!=", "", {"id": "n_offer_2", "name": "Afternoon openings found"}]],
+   636	       resp_map=PAGE2_RESP),
+   637	
+   638	    wh("n_page_3", "Late openings (silent)", "/availability",
+   639	       SEARCH_BODY,
+   640	       ["ok"] + SLOT_FIELDS,
+   641	       [["ok", "!=", "true", {"id": "n_miss_unread", "name": "Search rejected or unavailable"}],
+   642	        # Was routed at n_page_2, whose offer node opens "Great news" and calls the times
+   643	        # afternoon openings. A patient who said "after 4" was shown midday as though it
+   644	        # answered them. Same offsets, but the offer node now names the miss first.
+   645	        ["slot_1_start", "==", "", {"id": "n_page_near", "name": "Too thin for late, offer the closest"}],
+   646	        ["slot_1_start", "!=", "", {"id": "n_offer_3", "name": "Late openings found"}]],
+   647	       resp_map=PAGE3_RESP),
+   648	
+   649	    # Identical call and identical offsets to n_page_2. It exists as its own node purely so
+   650	    # the thin-late path lands on the nearest-band offer instead of the afternoon offer.
+   651	    wh("n_page_near", "Closest openings to a late request (silent)", "/availability",
+   652	       SEARCH_BODY,
+   653	       ["ok"] + SLOT_FIELDS,
+   654	       [["ok", "!=", "true", {"id": "n_miss_unread", "name": "Search rejected or unavailable"}],
+   655	        ["slot_1_start", "==", "", {"id": "n_miss_thin", "name": "Nothing in the afternoon either"}],
+   656	        ["slot_1_start", "!=", "", {"id": "n_offer_near", "name": "Closest openings found"}]],
+   657	       resp_map=PAGE2_RESP),
+   658	
+   659	    # Same call, same day, read from later in the list. The gateway ignores time_pref, so
+   660	    # this is how an afternoon becomes reachable at all. If that day is too thin to have a
+   661	    # slot at this position the value comes back empty and the patient is asked for another
+   662	    # day, rather than being shown nothing or being shown a morning they did not ask for.
+   663	    wh("n_verify_1", "Verify opening 1 (silent)", "/conflict-check",
+   664	       '{"store":"{{store}}","doctor":"{{slot_1_doctor}}","start":"{{slot_1_start}}","end":"{{slot_1_end}}"}',
+   665	       ["ok", "slot_conflict", "conflict_reason"],
+   666	       # $.result.overlapping_appt_id, which every version up to v54 routed on, DOES NOT
+   667	       # EXIST. It appears in no gateway source file, in no contract test, and in no row of
+   668	       # the 350-row endpoint field catalog, whose only /conflict-check response fields are
+   669	       # $.ok, $.result.conflict -> slot_conflict, $.result.reason -> conflict_reason and
+   670	       # $.error. The gateway passes the CLI payload through untouched and the CLI documents
+   820	        glabel="The patient is not interested or declines this offer without revoking consent."),
+   821	    suppression("n_suppress_stop", "Record STOP suppression (silent)", "stop",
+   822	                "e_stop", "STOP response delivered",
+   823	                'The patient wants the texts to stop. This includes a message that is just the word STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT or REMOVE on its own in any casing, and any message asking to be taken off the list, to stop texting, or to not be contacted again. Match this even when the message is a single word with no other context.'),
+   824	    end("e_stop", "stopped",
+   825	        "Understood. If you would like to be taken off our list, please call Mott Optical at "
+   826	        "(855) 750-6688 and the office can take care of it."),
+   827	    suppression("n_suppress_not_me", "Record wrong-person suppression (silent)", "complaint",
+   828	                "e_not_me", "Wrong-person response delivered",
+   829	                'The person holding this phone is not the patient. This includes a message that is just NOT ME or WRONG NUMBER, and any message saying they are not that person, they do not know that person, this is the wrong number, or asking who this is because they were not expecting to hear from an eye doctor.'),
+   830	    end("e_not_me", "wrong_person",
+   831	        "Sorry about that. If you would like to be taken off our list, please call Mott Optical at "
+   832	        "(855) 750-6688 and the office can take care of it."),
+   833	    end("e_existing", "existing_appointment",
+   834	        "Please call Mott Optical at (855) 750-6688 and the office can help with that appointment.",
+   835	        glabel="The patient already has a different appointment they want to cancel or move."),
+   836	    end("e_timeout", "no_reply", "Closing this conversation."),
+   837	]
+   838	
+   839	edges = [
+   840	    ("n_ask", "n_search", "says any day, weekday, date, week, weekend, or time preference — including Saturday, this weekend, next week, or a month and day"),
+   841	    ("n_ask", "e_declined", "declines at the opening"),
+   842	    ("n_ask", "e_timeout", "72-hour timeout"),
+   843	    ("n_date_conflict", "n_search", "patient chooses one conflicting date"),
+   844	]
+   845	# The four nodes that replaced n_reask all lead back into the same search loop and all offer
+   846	# the same two ways out. Generated rather than written four times so they cannot drift apart.
+   847	for _miss in ("n_miss_empty", "n_miss_unread", "n_miss_thin", "n_miss_unbookable",
+   848	              "n_miss_time", "n_clarify"):
+   849	    edges += [
+   850	        (_miss, "n_search", "names any day, weekday, date, week, or weekend — including Saturday, Sunday, this weekend, next week, or a month and day"),
+   851	        (_miss, "e_declined", "gives up on booking"),
+   852	        (_miss, "e_timeout", "72-hour timeout"),
+   853	    ]
+   854	edges += [
+   855	    # No extraction on this node, so this edge carries the window the patient already gave.
+   856	    ("n_recheck", "n_search", "looking again with the same preference"),
+   857	    ("n_offer_near", "n_which_intent", "both selects an opening and asks for a different day or time"),
+   858	    ("n_offer_near", "n_gate_1", "takes only the first opening offered"),
+   859	    ("n_offer_near", "n_gate_2", "takes only the second opening offered"),
+   860	    ("n_offer_near", "n_negotiate", "wants a different day"),
+   861	    ("n_offer_near", "e_declined", "declines this offer"),
+   862	    ("n_offer_near", "e_timeout", "72-hour timeout"),
+   863	    ("n_offer", "n_which_intent", "both selects an opening and asks for a different day or time"),
+   864	    ("n_offer", "n_gate_1", "takes only the first opening offered"),
+   865	    ("n_offer", "n_gate_2", "takes only the second opening offered"),
+   866	    ("n_offer", "n_page_2", "wants later in the day"),
+   867	    ("n_offer_2", "n_which_intent", "both selects an opening and asks for a different day or time"),
+   868	    ("n_offer_2", "n_gate_1", "takes only the first opening offered"),
+   869	    ("n_offer_2", "n_gate_2", "takes only the second opening offered"),
+   870	    ("n_offer_2", "n_page_3", "wants later still in the day"),
+   871	    ("n_offer_2", "n_negotiate", "wants a different day"),
+   872	    ("n_offer_2", "e_declined", "declines this offer"),
+   873	    ("n_offer_2", "e_timeout", "72-hour timeout"),
+   874	    ("n_offer_3", "n_which_intent", "both selects an opening and asks for a different day or time"),
+   875	    ("n_offer_3", "n_gate_1", "takes only the first opening offered"),
+   876	    ("n_offer_3", "n_gate_2", "takes only the second opening offered"),
+   877	    ("n_offer_3", "n_negotiate", "wants a different day"),
+   878	    ("n_offer_3", "e_declined", "declines this offer"),
+   879	    ("n_offer_3", "e_timeout", "72-hour timeout"),
+   880	    ("n_which_intent", "n_gate_1", "clarifies that only the first opening was intended"),
+   881	    ("n_which_intent", "n_gate_2", "clarifies that only the second opening was intended"),
+   882	    ("n_which_intent", "n_negotiate", "clarifies that the different day or time was intended"),
+   883	    ("n_which_intent", "e_declined", "declines both choices"),
+   884	    ("n_which_intent", "e_timeout", "72-hour timeout"),
+   885	    ("n_gate_1", "n_verify_1", "confirms yes to the first opening"),
+   886	    ("n_gate_1", "n_negotiate", "says no or wants other times"),
+   887	    ("n_gate_1", "e_timeout", "72-hour timeout"),
+   888	    ("n_gate_2", "n_verify_2", "confirms yes to the second opening"),
+   889	    ("n_gate_2", "n_negotiate", "says no or wants other times"),
+   890	    ("n_gate_2", "e_timeout", "72-hour timeout"),
+   891	    ("n_offer", "n_negotiate", "wants a different day or time"),
+   892	    ("n_offer", "e_declined", "declines this offer"),
+   893	    ("n_offer", "e_timeout", "72-hour timeout"),
+   894	    ("n_negotiate", "n_search", "preference collected"),
+   895	    ("n_negotiate", "e_declined", "declines after negotiating"),
+   896	    ("n_negotiate", "e_timeout", "72-hour timeout"),
+   897	    ("n_confirm", "e_booked", "confirmation delivered"),
+   898	    ("n_confirm", "n_office", "change requested after confirmation"),
+   899	    ("n_confirm", "e_booked", "72-hour silence after booking"),
+   900	    ("n_office", "e_office", "office direction delivered"),
+   901	    ("n_faq", "n_office", "patient asks to speak to someone"),
+   902	]
+   903	for node in nodes:
+   904	    for pw in node["data"].get("responsePathways", []):
+   905	        edges.append((node["id"], pw[3]["id"], f"{pw[0]} {pw[1]} {pw[2]}"))
+   906	
+   907	# Match the remaining node-data fields present in the graph Bland's own UI
+   908	# renders and executes: `active` on every node, `text` on webhooks, and an
+   909	# outcome `tag` on every end node.
+   910	for node in nodes:
+   911	    d = node["data"]
+   912	    d.setdefault("active", False)
+   913	    if node["type"] == "Webhook":
+   914	        d.setdefault("text", "")
+   915	    if node["type"] == "End Call":
+   916	        d.setdefault("tag", {"name": "outcome:" + d.get("outcome", "unknown"),
+   917	                             "color": "#455A64"})
+   918	
+   919	# Layout and identity metadata. NOT cosmetic: an edge without an id and
+   920	# type "custom" is not a usable transition, so conversational nodes can never
+   920	# type "custom" is not a usable transition, so conversational nodes can never
+   921	# move. Webhook nodes route on responsePathways and globals on their label,
+   922	# which is why only those two worked before this was added.
+   923	LANES = {
+   924	    "n_identity": (0, 0), "n_ask": (0, 200), "n_offer": (0, 400),
+   925	    "n_date_conflict": (-900, 750),
+   926	    "n_miss_empty": (-450, 600), "n_miss_unread": (-450, 740), "n_miss_thin": (-450, 880),
+   927	    "n_miss_time": (-450, 1020), "n_clarify": (-450, 1160),
+   928	    "n_miss_unbookable": (-450, 1300),
+   929	    "n_gate_1": (-420, 560), "n_verify_1": (-420, 700), "n_book_1": (-420, 860),
+   930	    "n_gate_2": (420, 560), "n_verify_2": (420, 700), "n_book_2": (420, 860),
+   931	    "n_recheck": (0, 780),
+   932	    "n_confirm": (0, 1020), "n_negotiate": (-900, 400), "n_search": (-900, 600), "n_page_2": (-1350, 500), "n_page_3": (-1350, 700),
+   933	    "n_page_near": (-1350, 900), "n_offer_near": (-450, 100),
+   934	    "n_offer_2": (-450, 400), "n_offer_3": (-450, 250), "n_which_intent": (0, 560),
+   935	    "n_office": (900, 400), "n_faq": (900, 200), "n_help": (900, 600),
+   936	    "e_safe_identity": (-1350, 0), "e_safe_failure": (-1350, 200),
+   937	    "e_booking_failed": (-1350, 820), "e_booked": (0, 1220),
+   938	    "e_office": (1350, 400), "e_declined": (1350, 200), "e_stop": (1350, 0),
+   939	    "n_suppress_stop": (1125, 0), "n_suppress_not_me": (1125, -200),
+   940	    "e_not_me": (1350, -200), "e_existing": (900, 0), "e_timeout": (-900, 1020),
+   941	}
+   942	for node in nodes:
+   943	    x, y = LANES.get(node["id"], (0, 0))
+   944	    node.update({"x": x, "y": y, "width": 320, "height": 115,
+   945	                 "position": {"x": x, "y": y},
+   946	                 "sourcePosition": "bottom", "targetPosition": "top"})
+   947	
+   948	def slug(text):
+   949	    out = "".join(c if c.isalnum() else "-" for c in text.lower())
+   950	    while "--" in out:
+   951	        out = out.replace("--", "-")
+   952	    return out.strip("-")[:60]
+   953	
+   954	built, seen = [], set()
+   955	for s, tgt, lbl in edges:
+   956	    eid = f"edge-{s}-{tgt}-{slug(lbl)}"
+   957	    n = 2
+   958	    while eid in seen:
+   959	        eid = f"edge-{s}-{tgt}-{slug(lbl)}-{n}"; n += 1
+   960	    seen.add(eid)
+   961	    built.append({
+   962	        "id": eid,
+   963	        "data": {"label": lbl, "description": f"Route from {s} to {tgt} when: {lbl}.",
+   964	                 "isHighlighted": False},
+   965	        "type": "custom", "source": s, "target": tgt, "animated": True,
+   966	        "sourceHandle": None, "targetHandle": None,
+   967	    })
+   968	
+   969	graph = {
+   970	    "nodes": nodes,
+   971	    "edges": built,
+   972	    "analysis_options": {"fields": [
+   973	        {"name": "outcome", "type": "enum",
+   974	         "values": ["booked", "declined", "no_reply", "office", "wrong_person", "stopped",
+   975	                    "identity_failed", "gateway_failed", "booking_failed"]},
+   976	        {"name": "slot_chosen", "type": "enum", "values": ["slot_1", "slot_2", "negotiated", "none"]},
+   977	        {"name": "negotiation_loop_ran", "type": "boolean"},
+   978	        {"name": "faq_answered", "type": "boolean"},
+   979	    ]},
+   980	}
+   981	
+   982	# Owner requirement: every webhook carries credentials, and it is checked, not assumed.
+   983	# The value stays a stored-secret reference so the raw bearer never lives in the pathway
+   984	# definition. A dashboard edit that pastes the literal value in is a credential leak.
+   985	unauthed = []
+   986	for _n in nodes:
+   987	    if _n.get("type") != "Webhook":
+   988	        continue
+   989	    _h = (_n["data"].get("headers") or {})
+   990	    _a = _h.get("Authorization") or _h.get("authorization")
+   991	    if _a != SR:
+   992	        unauthed.append(f"{_n['id']}={_a!r}")
+   993	if unauthed:
+   994	    raise SystemExit("REFUSED: webhook nodes without the stored-secret reference: " + ", ".join(unauthed))
+   995	if any(len(v) < 40 for v in (SR,)) and "SECRET." not in SR:
+   996	    raise SystemExit("REFUSED: authorization is not a stored-secret reference")
+   997	print(f"guard_webhook_auth=all {sum(1 for n in nodes if n.get('type')=='Webhook')} webhooks carry {SR}")
+   998	
+   999	out = os.path.join(os.path.dirname(os.path.abspath(__file__)), "v65_graph.json")
+  1000	with open(out, "w", encoding="utf-8") as fh:
+  1001	    json.dump(graph, fh, indent=2, ensure_ascii=False)
+  1002	print(f"nodes {len(nodes)} edges {len(edges)} -> {out}")
+
+hook: PostToolUse
+hook: PostToolUse Failed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba build_v65.py | sed -n '424,520p'; nl -ba build_v65.py | sed -n '520,570p'; rg -n \"assert|day_name|datetime|strptime|strftime|calendar|isoweekday|weekday\" build_v65.py" in /home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65
+ succeeded in 0ms:
+   424	    # Reached when the search never ran or was rejected, and when the request could not be
+   425	    # rendered in a form the schedule reads. Nothing was checked, so nothing may be claimed.
+   426	    wait("n_miss_unread", "Could not search yet",
+   427	         framed(
+   428	             "Nothing has been checked for this patient. Either the request could not be put "
+   429	             "into a form the practice schedule reads, or the schedule could not be reached at "
+   430	             "all. No day and no part of any day has been looked at. The patient has no idea "
+   431	             "any of that happened. Nothing is booked and nothing is being held.",
+   432	             "Get one concrete day out of this patient so the schedule can be searched.",
+   433	             "Apologise briefly for not having something to show them yet, then ask them for "
+   434	             "one specific day. Give two examples of what always works, a weekday such as "
+   435	             "Tuesday, or a month and day such as August 5. If they have been asking for a week "
+   436	             "further out than next week, or described it only in relation to a week already "
+   437	             "discussed, ask for the month and the day. Ask for one day only.",
+   438	             "Never state or imply that any day, morning or afternoon has no openings, because "
+   439	             "nothing was checked. Never blame the patient for how they phrased it and never "
+   440	             "mention searching, systems, errors or anything internal. Never name a time you "
+   441	             "have not been given." + NO_CLAIM + NO_PRICE + LANG_REPLY),
+   442	         extract=PREFERENCE_VARS),
+   443	
+   444	    # Reached when the day exists and has openings, but not at the offset the requested part
+   445	    # of the day lives at. The band is proven thin. The day is NOT proven empty.
+   446	    wait("n_miss_thin", "Part of the day is thin",
+   447	         framed(
+   448	             "This patient asked for a particular part of the day. That day does have openings, "
+   449	             "but not in the part they asked for. You have not been shown the times that day "
+   450	             "does have, so you cannot name any of them. Nothing is booked and nothing is held.",
+   451	             "Get one different concrete day out of this patient so the schedule can be "
+   452	             "searched again.",
+   453	             "Tell them you do not have anything in the part of the day they asked for on that "
+   454	             "day, then ask them for one different day. Give two examples of what always "
+   455	             "works, a weekday such as Tuesday, or a month and day such as August 5. Ask for "
+   456	             "one day only. Do NOT offer to look at another time on the same day: there is no "
+   457	             "way to move to a different part of that day from here, so offering it would set "
+   458	             "up an answer that cannot be used.",
+   459	             "Never say that day has no openings, because it does and you simply have not been "
+   460	             "shown them. Never name a time you have not been given. Never mention searching, "
+   461	             "systems, errors or anything internal."
+   462	             + NO_CLAIM + NO_PRICE + LANG_REPLY),
+   463	         extract=PREFERENCE_VARS),
+   464	
+   465	    # The slot the patient agreed to was checked and came back not bookable, with no other
+   466	    # appointment sitting on it: it is outside the schedule. Availability still returns such a
+   467	    # slot, so re-running the same search hands back the identical time. Sending this class to
+   468	    # the silent re-search would offer the same unbookable time again every single round.
+   469	    # This node breaks that loop the way v54 did, by asking for a different day.
+   470	    wait("n_miss_unbookable", "That opening is not real",
+   471	         framed(
+   472	             "The opening this patient agreed to was checked and cannot be booked. Nothing is "
+   473	             "sitting on top of it; it is simply not a time the office can take. Nothing was "
+   474	             "written and this patient has no appointment. Searching that same day again would "
+   475	             "hand back the very same time, so it is not worth doing.",
+   476	             "Get one different concrete day out of this patient so the schedule can be "
+   477	             "searched somewhere it can actually book.",
+   478	             "Apologise briefly that the time turned out not to be available after all, then "
+   479	             "ask them for one different day. Give two examples of what always works, a "
+   480	             "weekday such as Tuesday, or a month and day such as August 5. Ask for one day "
+   481	             "only.",
+   482	             "Never say the appointment was booked, because it was not. Never offer that same "
+   483	             "time again and never name any time you have not been given. Never say the day "
+   484	             "has no openings, because other times that day were never checked. Never mention "
+   485	             "searching, systems, errors or anything internal."
+   486	             + NO_CLAIM + NO_PRICE + LANG_REPLY),
+   487	         extract=PREFERENCE_VARS),
+   488	
+   489	    # The replacement for "when in doubt the answer is monday". That fallback made a patient
+   490	    # who said "the week after that in August" get next Monday to Friday searched, with real
+   491	    # times offered as though they matched; the date inside the slot string was the only clue
+   492	    # the window was wrong. Extraction now emits the literal `unclear` instead, and this node
+   493	    # asks rather than guesses. It runs BEFORE any offer, so no wrong times are ever shown.
+   494	    wait("n_clarify", "Ask for one concrete day",
+   495	         framed(
+   496	             "This patient said something about when they want to come, but not in a form the "
+   497	             "practice schedule can read. Nothing has been looked up and no day has been "
+   498	             "checked. The patient has no idea of any of that. Nothing is booked or held.",
+   499	             "Get one concrete day out of this patient, in a form the schedule accepts.",
+   500	             "Ask which date they would like, and give an example of a form that works, such as "
+   501	             "August 12. If they have already named a weekday, ask which week it falls in by "
+   502	             "asking for the month and the day. Ask for one day only and stay here until they "
+   503	             "name it.",
+   504	             "Never guess a day or a week on their behalf and never work out a calendar date "
+   505	             "yourself. Never state or imply that any day or part of a day is empty, because "
+   506	             "nothing has been checked. Never name a time you have not been given."
+   507	             + NO_CLAIM + NO_PRICE + LANG_REPLY),
+   508	         extract=WINDOW_VARS),
+   509	
+   510	    wait("n_miss_time", "Requested clock time is unavailable",
+   511	         framed(
+   512	             "This patient asked for an exact clock time outside normal clinic hours. The "
+   513	             "schedule cannot satisfy that request. The ordinary openings returned for the day "
+   514	             "are not substitutes and must not be shown. Nothing is booked and nothing is held.",
+   515	             "Say plainly that there is nothing available at that time and get one different "
+   516	             "day from the patient.",
+   517	             "Tell them you do not have anything available at the time they requested, then ask "
+   518	             "for another day. Do not offer the unrelated openings that came back.",
+   519	             "Never name any appointment time. Never imply a different opening satisfies the "
+   520	             "request. Never say anything was booked."
+   520	             "request. Never say anything was booked."
+   521	             + NO_CLAIM + NO_PRICE + LANG_REPLY),
+   522	         extract=PREFERENCE_VARS),
+   523	
+   524	    offer_page("n_offer", "Offered, first openings", "the soonest openings that day", "If they ask for something later in the day, a different time of day, or the latest you have, do NOT name any time: say you will look and take the path for later in the day. "),
+   525	
+   526	    offer_page("n_offer_2", "Offered, afternoon", "in the afternoon", "If they ask for something later still, or the latest you have, do NOT name any time: say you will look and take the path for later in the day. "),
+   527	
+   528	    offer_page("n_offer_3", "Offered, late in the day", "late in the day", "These are as late as this day goes. If they want something later, say plainly that this is the latest the office has that day and offer to look at another day. ", extra_never=" Never suggest there is anything later that day than these two."),
+   529	
+   530	    # The nearest-band offer. Reached only when the patient asked for late in the day and the
+   531	    # day was too thin to hold one, so these are afternoon times being offered as the closest
+   532	    # thing rather than as a match. Same two-slot visibility rule as every other offer node.
+   533	    offer_page("n_offer_near", "Offered, closest to what they asked for", "the closest this day has to what they asked for",
+   534	               "If they want to look at a different day instead, take the path for a different day. ",
+   535	               extra_never=" Never describe these as matching what they asked for and never open with good news, because they are not what the patient asked for.",
+   536	               line_en=NEAR_EN, line_zh=NEAR_ZH,
+   537	               opening=("Exactly two openings exist as far as you are concerned: the first is "
+   538	                        "{{slot_1_day_name}} {{slot_1_start}} and the second is "
+   539	                        "{{slot_2_day_name}} {{slot_2_start}}. This patient asked "
+   540	                        "for something LATE in the day and that day does not have one. These two "
+   541	                        "are the closest the day has, and they are earlier than what was asked "
+   542	                        "for. You have not been shown any other time and you do not know what "
+   543	                        "else the schedule holds. Nothing is booked and nothing is held.")),
+   544	
+   545	    wait("n_which_intent", "Clarify selected opening versus different time",
+   546	         framed(
+   547	             "The patient sent one reply that both selected one of the two offered openings and "
+   548	             "asked for a different day or time. Those instructions conflict. Nothing has been "
+   549	             "written, held or confirmed.",
+   550	             "Make the patient choose which instruction they mean before any booking path can run.",
+   551	             "Ask one direct question: did they mean the opening they selected, or should you look "
+   552	             "for the different day or time they requested? Do not interpret the reply for them.",
+   553	             "Never route this mixed reply toward a booking. Never claim an appointment exists and "
+   554	             "never name any time other than the two already offered."
+   555	             + NO_CLAIM + NO_PRICE + LANG_REPLY)),
+   556	
+   557	    wait("n_gate_1", "Confirm opening 1",
+   558	         framed(
+   559	             "The patient has picked the first opening. Nothing has been written yet. The very "
+   560	             "next step, if they say yes, sends this exact appointment to the booking system.",
+   561	             "Get a clear yes or no to this specific appointment before anything is written.",
+   562	             "Send this message with the time filled in: \"To confirm, your eye exam would be "
+   563	             "{{slot_1_start}} at MK2. Reply YES to book it, or NO to look at other times.\" "
+   564	             "If the patient writes in Chinese, send: \"确认一下，您的眼科检查时间为 "
+   565	             "{{slot_1_start}}（地点：MK2）。回复 YES 确认预约，或回复 NO 查看其他时间。\"",
+   566	             "NEVER write any time other than the one interpolated above. Do not restate it in "
+   567	             "another form, do not use a time from earlier in the conversation, and do not treat "
+   568	             "anything other than a clear yes as a yes. The time in your message must be the "
+   569	             "time being booked." + NO_CLAIM + NO_PRICE + LANG_REPLY)),
+   570	
+62:# A weekday word resolves to the next occurrence of that weekday server-side, and a range of
+63:# two weekday words works (monday..friday returned 126 openings across Mon-Fri). So a vague
+65:# arithmetic. The model is never asked to work out a calendar date, which is the failure mode
+78:     "weekday on its own, such as monday or wednesday, means the next one coming up. If they "
+79:     "used a week qualifier, ALWAYS PRESERVE it by writing the weekday followed by its full "
+81:     "a weekday in texting shorthand, expand it to the full accepted weekday: mon becomes "
+84:     "every clipped variant become tuesday next week, never a bare weekday and never shorthand. "
+85:     "If they asked for next week without naming a day, write next week. Bare weekdays "
+89:     "or in two weeks, because the schedule cannot read them. Never work out a calendar date "
+109:     "date, a weekday or a clock time in this field. This field must NEVER be left blank."),
+113:     "used texting shorthand, expand it to the same full accepted weekday written in "
+116:     "friday next week. When the patient names a week qualifier but no weekday, preference_from "
+119:     "morning or afternoon is NOT a weekday and does not change this week-only range. If they "
+120:     "named no day and no week at all, put friday. Bare weekdays with "
+147:OFFER_EN = ("I have {{slot_1_day_name}} {{slot_1_start}} or {{slot_2_day_name}} "
+149:OFFER_ZH = ("我这里有 {{slot_1_day_name}} {{slot_1_start}} 或 {{slot_2_day_name}} "
+157:           "{{slot_1_day_name}} {{slot_1_start}} or {{slot_2_day_name}} {{slot_2_start}} "
+159:NEAR_ZH = ("那天没有那么晚的时段了。最接近的是 {{slot_1_day_name}} {{slot_1_start}} 或 "
+160:           "{{slot_2_day_name}} {{slot_2_start}}（地点：MK2）。回复 1 或 2 预约，"
+170:               "slot_1_day_name", "slot_2_start", "slot_2_end", "slot_2_doctor",
+171:               "slot_2_day_name", "time_pref_relaxed",]
+179:    "slot_1_day_name": "$.result.slots[0].day_name",
+182:    "slot_2_day_name": "$.result.slots[1].day_name",
+297:             "{{slot_1_day_name}} {{slot_1_start}} and the second is {{slot_2_day_name}} "
+382:             "Any answer about timing is enough to move forward, whether it is a weekday, a date, "
+414:             "ask for one different day. Give two examples of what always works, a weekday such "
+434:             "one specific day. Give two examples of what always works, a weekday such as "
+455:             "works, a weekday such as Tuesday, or a month and day such as August 5. Ask for "
+480:             "weekday such as Tuesday, or a month and day such as August 5. Ask for one day "
+501:             "August 12. If they have already named a weekday, ask which week it falls in by "
+504:             "Never guess a day or a week on their behalf and never work out a calendar date "
+538:                        "{{slot_1_day_name}} {{slot_1_start}} and the second is "
+539:                        "{{slot_2_day_name}} {{slot_2_start}}. This patient asked "
+596:             "Never convert their words into a calendar date yourself, never guess today's date, "
+840:    ("n_ask", "n_search", "says any day, weekday, date, week, weekend, or time preference — including Saturday, this weekend, next week, or a month and day"),
+850:        (_miss, "n_search", "names any day, weekday, date, week, or weekend — including Saturday, Sunday, this weekend, next week, or a month and day"),
+
+hook: PostToolUse
+hook: PostToolUse Failed
+codex
+Ankit — `failure_modes`
+
+| Failure mode | Severity | Current pathway catches it? |
+|---|---:|---|
+| The model invents a weekday while responding on `n_ask` or `n_negotiate`. The protection exists only as prompt text. No node parses the outbound patient message or compares its weekday with the stated date. The later gateway offer may contradict the invented weekday, but nothing explains the correction; the patient must notice it. See [build_v65.py:372](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:372) and [build_v65.py:584](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:584). | HIGH | No |
+| Empty `preference_from`/`preference_to` still reaches `n_search` because the conversational edge is triggered by what the patient said, not by successful extraction. There is no pre-webhook completeness gate. An unset value can become JSON `null`, which the comments say causes a gateway 400. See [build_v65.py:67](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:67), [build_v65.py:215](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:215), and [build_v65.py:839](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:839). | MEDIUM | Partially |
+| After blank extraction/search rejection, the intended route is `ok != true -> n_miss_unread`, not `n_date_conflict`. The patient receives a generic request for one concrete day. Conflict-specific clarification occurs only when the gateway returns `date_conflict_detected == conflict`. See [build_v65.py:606](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:606) and [build_v65.py:426](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:426). If the platform fails before evaluating webhook response pathways, this file supplies no alternate route. | MEDIUM | Generic recovery only |
+| `n_date_conflict` assumes both conflict options exist. It checks only the conflict flag, not that `conflict_option_1` and `conflict_option_2` are nonempty. A partial/malformed gateway response can produce “Did you mean  or ?” See [build_v65.py:393](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:393). | HIGH | No |
+| `n_date_conflict` re-extracts `preference_from` and `day_part`, but not `preference_to`. The patient can choose one date while the earlier conflicting `preference_to` remains stored. Unless the gateway’s raw-message logic always overrides both fields, the next search can use a chosen start with a stale end. See [build_v65.py:397](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:397). | HIGH | No |
+| Gateway `day_name` values are trusted without independent validation against each slot’s `start`. There is no calendar calculation or consistency node. A gateway defect would be printed directly to the patient; conflict-check later validates bookability, not weekday correctness. See [build_v65.py:173](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:173). | HIGH | No |
+| There is already a deterministic day-name mispairing risk in `page_map`: pagination remaps `start`, `end`, and `doctor`, but omits `day_name`. Afternoon/late offers therefore combine `slots[8/16].start` with `slots[0].day_name`, and `slots[9/17].start` with `slots[1].day_name`. If pagination crosses a date boundary, the displayed weekday can be wrong even when every gateway field is correct. See [build_v65.py:220](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:220). | HIGH | No |
+| Empty `slot_1_day_name` or `slot_2_day_name` is also not gated. Routing checks `slot_count`, while the offer interpolates day names directly. A response with valid slots but missing day-name fields can reach the patient with incomplete copy. | MEDIUM | No |
+| “This weekend” has no extraction rule equivalent to “next week through Friday next week.” The graph claims weekend support in its edges, but `PREFERENCE_VARS` never defines whether the range is Saturday-Sunday, only Saturday, the next occurrence, or something else. See [build_v65.py:75](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:75) and [build_v65.py:110](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:110). | HIGH | Partially |
+| Consequently, there is no deterministic answer for what the model puts in `preference_to` for “this weekend.” It may copy `this weekend`, infer `sunday`, repeat `saturday`, or emit `unclear`. `unclear` reaches `n_clarify`, and a rejected string reaches `n_miss_unread`; a valid-looking but wrong Saturday/Sunday interpretation passes into the search. | HIGH | Only invalid/`unclear` outputs |
+
+The strongest concrete defect is the `page_map` omission: later-page weekdays can be wrong without any model or gateway error.
+
+Status
+- % to true goal: 100% (97%)
+- % to current goal: 100% (99%)
+- Done / ready: Read-only contrarian trace completed with line-level evidence
+- In flight: nothing
+- Not done: nothing
+- Blocked: nothing
+- Needs you: nothing
+Assumptions: Bland evaluates `responsePathways` after ordinary gateway rejection; transport/template failures may behave differently.
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Completed
+tokens used
+113,409
+Ankit — `failure_modes`
+
+| Failure mode | Severity | Current pathway catches it? |
+|---|---:|---|
+| The model invents a weekday while responding on `n_ask` or `n_negotiate`. The protection exists only as prompt text. No node parses the outbound patient message or compares its weekday with the stated date. The later gateway offer may contradict the invented weekday, but nothing explains the correction; the patient must notice it. See [build_v65.py:372](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:372) and [build_v65.py:584](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:584). | HIGH | No |
+| Empty `preference_from`/`preference_to` still reaches `n_search` because the conversational edge is triggered by what the patient said, not by successful extraction. There is no pre-webhook completeness gate. An unset value can become JSON `null`, which the comments say causes a gateway 400. See [build_v65.py:67](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:67), [build_v65.py:215](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:215), and [build_v65.py:839](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:839). | MEDIUM | Partially |
+| After blank extraction/search rejection, the intended route is `ok != true -> n_miss_unread`, not `n_date_conflict`. The patient receives a generic request for one concrete day. Conflict-specific clarification occurs only when the gateway returns `date_conflict_detected == conflict`. See [build_v65.py:606](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:606) and [build_v65.py:426](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:426). If the platform fails before evaluating webhook response pathways, this file supplies no alternate route. | MEDIUM | Generic recovery only |
+| `n_date_conflict` assumes both conflict options exist. It checks only the conflict flag, not that `conflict_option_1` and `conflict_option_2` are nonempty. A partial/malformed gateway response can produce “Did you mean  or ?” See [build_v65.py:393](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:393). | HIGH | No |
+| `n_date_conflict` re-extracts `preference_from` and `day_part`, but not `preference_to`. The patient can choose one date while the earlier conflicting `preference_to` remains stored. Unless the gateway’s raw-message logic always overrides both fields, the next search can use a chosen start with a stale end. See [build_v65.py:397](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:397). | HIGH | No |
+| Gateway `day_name` values are trusted without independent validation against each slot’s `start`. There is no calendar calculation or consistency node. A gateway defect would be printed directly to the patient; conflict-check later validates bookability, not weekday correctness. See [build_v65.py:173](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:173). | HIGH | No |
+| There is already a deterministic day-name mispairing risk in `page_map`: pagination remaps `start`, `end`, and `doctor`, but omits `day_name`. Afternoon/late offers therefore combine `slots[8/16].start` with `slots[0].day_name`, and `slots[9/17].start` with `slots[1].day_name`. If pagination crosses a date boundary, the displayed weekday can be wrong even when every gateway field is correct. See [build_v65.py:220](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:220). | HIGH | No |
+| Empty `slot_1_day_name` or `slot_2_day_name` is also not gated. Routing checks `slot_count`, while the offer interpolates day names directly. A response with valid slots but missing day-name fields can reach the patient with incomplete copy. | MEDIUM | No |
+| “This weekend” has no extraction rule equivalent to “next week through Friday next week.” The graph claims weekend support in its edges, but `PREFERENCE_VARS` never defines whether the range is Saturday-Sunday, only Saturday, the next occurrence, or something else. See [build_v65.py:75](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:75) and [build_v65.py:110](/home/ankit114/repos/ringer/my-manifests/mott-weekday-conflict/work/pathway-v65/build_v65.py:110). | HIGH | Partially |
+| Consequently, there is no deterministic answer for what the model puts in `preference_to` for “this weekend.” It may copy `this weekend`, infer `sunday`, repeat `saturday`, or emit `unclear`. `unclear` reaches `n_clarify`, and a rejected string reaches `n_miss_unread`; a valid-looking but wrong Saturday/Sunday interpretation passes into the search. | HIGH | Only invalid/`unclear` outputs |
+
+The strongest concrete defect is the `page_map` omission: later-page weekdays can be wrong without any model or gateway error.
+
+Status
+- % to true goal: 100% (97%)
+- % to current goal: 100% (99%)
+- Done / ready: Read-only contrarian trace completed with line-level evidence
+- In flight: nothing
+- Not done: nothing
+- Blocked: nothing
+- Needs you: nothing
+Assumptions: Bland evaluates `responsePathways` after ordinary gateway rejection; transport/template failures may behave differently.

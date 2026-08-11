@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workRachelClean",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "rachel-clean-slate",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["clean.txt"],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u - <<'PY' > clean.txt 2>&1\nimport json, os, sys, urllib.request, urllib.error\nBASE = \"https://mott-booking-gw.mail.mybcat.com\"\nauth = os.environ[\"GW_TOKEN\"].strip()\nif not auth.lower().startswith(\"bearer\"):\n    auth = \"Bearer \" + auth\n\ndef call(path, payload):\n    req = urllib.request.Request(BASE + path, data=json.dumps(payload).encode(), method=\"POST\", headers={\"Content-Type\": \"application/json\", \"Authorization\": auth, \"User-Agent\": \"mybcat-cli\"})\n    try:\n        with urllib.request.urlopen(req, timeout=90) as r:\n            return r.status, json.loads(r.read().decode() or \"{}\")\n    except urllib.error.HTTPError as e:\n        return e.code, e.read().decode(errors=\"replace\")[:300]\n\nPID, STORE = \"4376662466\", \"711\"\nst, body = call(\"/appt-list\", {\"patient_id\": PID, \"store\": STORE})\nappts = ((body.get(\"result\") or {}).get(\"appointments\") or []) if isinstance(body, dict) else []\nprint(\"PRE-LIST HTTP %s count=%d\" % (st, len(appts)))\nif st != 200:\n    sys.exit(\"LIST_FAIL\")\nfor a in appts:\n    print(\"  appt id=...%s start=%s status=%s\" % (str(a.get(\"appointment_id\"))[-4:], a.get(\"start\"), a.get(\"status\")))\nif len(appts) > 3:\n    sys.exit(\"SAFETY_STOP: %d appointments on the dummy patient — expected test residue of 1-3; refusing bulk cancel, inspect first\" % len(appts))\nfor a in appts:\n    aid, start = a.get(\"appointment_id\"), str(a.get(\"start\") or \"\")\n    if not aid:\n        sys.exit(\"CANCEL_FAIL: appointment without id\")\n    cs, cb = call(\"/sign\", {\"verb\": \"appt.cancel\", \"target\": aid, \"store\": STORE, \"reason\": \"patient-request\", \"params\": {\"appt_id\": aid, \"day\": start[:10]}})\n    print(\"CANCEL ...%s HTTP %s\" % (str(aid)[-4:], cs))\n    if cs != 200:\n        sys.exit(\"CANCEL_FAIL: HTTP %s\" % cs)\nst2, body2 = call(\"/appt-list\", {\"patient_id\": PID, \"store\": STORE})\nappts2 = ((body2.get(\"result\") or {}).get(\"appointments\") or []) if isinstance(body2, dict) else []\nprint(\"POST-LIST HTTP %s FINAL_COUNT=%d\" % (st2, len(appts2)))\nif st2 != 200 or appts2:\n    sys.exit(\"POSTCONDITION_FAIL: appointments remain\")\nprint(\"CLEAN_VERIFIED\")\nPY\nrc=$?\ncat clean.txt\nexit $rc",
+      "check": "grep -q 'CLEAN_VERIFIED' clean.txt || { echo 'FAIL: clean slate not verified'; tail -4 clean.txt; exit 1; }; grep -q 'FINAL_COUNT=0' clean.txt || { echo 'FAIL: Rachel still has appointments'; grep FINAL_COUNT clean.txt; exit 1; }; echo \"MEASURED: $(grep -m1 'PRE-LIST' clean.txt) -> $(grep -m1 'FINAL_COUNT' clean.txt)\"",
+      "verified": "Rachel dummy-patient's schedule wiped to a proven clean slate via /sign appt.cancel reason patient-request (safety-stopped if more than 3 residue bookings found), pre and post listings printed, restoring the battery's required fixture state."
+    }
+  ]
+}

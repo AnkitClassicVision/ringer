@@ -1,0 +1,55 @@
+{
+ "run_name": "mk2-number-and-comeback",
+ "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workL",
+ "max_parallel": 1,
+ "tasks": [
+  {
+   "key": "hz-gate-clean",
+   "engine": "local-shell",
+   "task_type": "probe",
+   "timeout_s": 900,
+   "expect_files": [
+    "transcript.txt"
+   ],
+   "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workJ/harness-driver/v91_harness.py 92 gate_clean > transcript.txt 2>&1; rc=$?; tail -3 transcript.txt; exit $rc",
+   "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_harness.py --file transcript.txt --mode gate_clean",
+   "verified": "On unattached v92, a clean subject saying hi reaches n_ask with appt_count 0 - the booking flow opens normally."
+  },
+  {
+   "key": "hz-gate-booked",
+   "engine": "local-shell",
+   "task_type": "probe",
+   "timeout_s": 1200,
+   "expect_files": [
+    "transcript.txt"
+   ],
+   "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workJ/harness-driver/v91_harness.py 92 gate_booked > transcript.txt 2>&1; rc=$?; tail -3 transcript.txt; exit $rc",
+   "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_harness.py --file transcript.txt --mode gate_booked",
+   "verified": "On unattached v92, a subject WITH an appointment saying hi defers immediately with the DEFER line and is never offered booking - Opus's sharpest-risk measurement, booked side. Seed appointment cancelled afterward."
+  },
+  {
+   "key": "hz-incident",
+   "engine": "local-shell",
+   "task_type": "probe",
+   "timeout_s": 1200,
+   "expect_files": [
+    "transcript.txt"
+   ],
+   "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workJ/harness-driver/v91_harness.py 92 incident > transcript.txt 2>&1; rc=$?; tail -6 transcript.txt; exit $rc",
+   "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_harness.py --file transcript.txt --mode incident",
+   "verified": "The exact incident replay on v92: 'Friday afternoon' then 'Any later time?' yields offers strictly later than the first offer, every offered time verified as a member of the gateway's real inventory, and no denial of existing availability."
+  },
+  {
+   "key": "hz-happy",
+   "engine": "local-shell",
+   "task_type": "probe",
+   "timeout_s": 1200,
+   "expect_files": [
+    "transcript.txt"
+   ],
+   "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workJ/harness-driver/v91_harness.py 92 happy > transcript.txt 2>&1; rc=$?; tail -4 transcript.txt; exit $rc",
+   "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_harness.py --file transcript.txt --mode happy",
+   "verified": "A full live booking on v92 lands at e_booked with the mandated close, one committed appointment verified at the source, then cancelled clean - the booking path survives the rebase."
+  }
+ ]
+}

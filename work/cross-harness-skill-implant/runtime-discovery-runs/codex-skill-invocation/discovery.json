@@ -1,0 +1,11 @@
+{
+  "runtime": "codex",
+  "skill_name": "clean-my-ai-harness-mission-fit",
+  "invoked": true,
+  "quotes": [
+    "Never treat a path that merely exists as indexed, loaded, or invoked.",
+    "Do not invent native Claude Code, Codex, Gemini, or Hermes commands."
+  ],
+  "tools_used": [],
+  "error": null
+}

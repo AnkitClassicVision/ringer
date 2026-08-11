@@ -1,0 +1,9 @@
+HTTP 200 node=n_goal_ask active=True MESSAGES=1 AGENT_MSGS=1
+  [2026-08-06T15:56:42] AGENT (delivered): Hi ANKIT, this is MK2 Optical 永昌眼鏡公司.  
+  
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with an eye exam is important.  
+  
+Many vision insurance benefits renew yearly, so don't let your benefits go unused!  
+  
+When would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt ou
+STATE_DONE

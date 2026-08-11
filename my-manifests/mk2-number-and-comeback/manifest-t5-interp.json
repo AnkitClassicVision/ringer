@@ -1,0 +1,37 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT5",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "t5-eval-builder",
+      "engine": "codex",
+      "task_type": "code-feature",
+      "timeout_s": 1800,
+      "expect_files": ["eval_ext.py"],
+      "spec": "You are a build worker writing a phrase-interpretation eval harness. OFFLINE while building: no network, no git, no MCP, no skills; write only in your working directory. The script runs LATER in separate runner tasks with AWS Bedrock ambient credentials.\n\nPURPOSE: T5 of the Mott scheduling map — on the T1-extended corpus, does Sonnet beat Haiku 4.5 at phrase-picking (never date arithmetic — the deterministic resolver computes), and how does each compare to the raw non-LLM path that is live today? Per-call latency matters: a model swap is one env var (ECP_LLM_MODEL_ID) so this eval directly decides a production lever.\n\nSOURCE MODULES (read, reuse, never modify): /home/ankit114/repos/ringer/my-manifests/mott-llm-intent/work2/llm-intent-v2/bland_gateway.py — llm_interpret_intent near lines 364-435 (Bedrock call; env ECP_LLM_MODEL_ID; prompt near 365-385); study its exact signature and return shape and reuse it. /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work2/raw-text-authority-v2/bland_gateway_live.py — resolve_from_conversation ~853, extract_date_from_text ~637, resolve_relative_date ~493. BOTH modules top-level-import a deployed-only sibling capability_registry; use the proven stub pattern (register stub modules in sys.modules before importlib import — QueryError as Exception subclass, other names as no-op callables, retry up to 5 missing siblings; see working example /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT1fix/t1-repro-fixer/repro.py).\n\nCORPUS: /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT1r3/t1-final-analysis/eval_cases.json — array of {phrase, context: plain|correction-after-offer, prior_offer, now, expected}.\n\nWRITE ./eval_ext.py, usage: eval_ext.py <eval_cases.json>. Env: MODE=raw|llm|both (default both); FROZEN base time comes from each case's own now field (freeze the modules' notion of current time per case); for llm mode, ECP_LLM_MODEL_ID (exact Bedrock id) OR MODEL_CANDIDATES (comma list — probe each with one trivial Bedrock call, use the first that responds, print MODEL_USED=<id>, or print MODEL_PROBE_FAILED and exit 1 if none respond).\n\nPer case build the conversation shape: plain -> one user message with the phrase; correction-after-offer -> an assistant offer message quoting the prior_offer date in the production offer style ('I have Thursday <prior_offer> 10:30 am or ... Reply 1 or 2 to take one, or tell me another day or time.') followed by the user phrase. Then: raw mode runs resolve_from_conversation on that message list (no LLM); llm mode runs llm_interpret_intent for the phrase pick and resolves the picked phrase with resolve_relative_date, timing the Bedrock call. Print EXACTLY one line per case per mode: CASE=<i> mode=<raw|llm> ctx=<plain|corr> got=<mm/dd/yyyy|NONE> want=<mm/dd/yyyy> ok=<0|1> lat_ms=<int|NA> phrase=<first 40 chars>. After all cases print one TOTAL line per mode run: TOTAL mode=<raw|llm> model=<id|none> ok=<x>/<n> median_lat_ms=<int|NA>. Never invent a resolution — an exception in a case prints got=ERROR:<type> ok=0 and continues.\n\nVERIFY before finishing: PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile eval_ext.py; no-args exits nonzero with usage; and MODE=raw on a self-made 2-case mini corpus runs offline (no network) printing 2 CASE lines and 1 TOTAL line. Final message <=15 lines.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile eval_ext.py || exit 1; if python3 eval_ext.py >/dev/null 2>&1; then echo 'CHECK FAILED: no-args must exit nonzero'; exit 1; fi; printf '[{\"phrase\":\"thursday next week\",\"context\":\"plain\",\"prior_offer\":null,\"now\":\"2026-08-03\",\"expected\":\"08/13/2026\"},{\"phrase\":\"No the following Thursday\",\"context\":\"correction-after-offer\",\"prior_offer\":\"08/06/2026\",\"now\":\"2026-08-03\",\"expected\":\"08/13/2026\"}]' > mini.json; MODE=raw PYTHONDONTWRITEBYTECODE=1 python3 eval_ext.py mini.json > mini_out.txt 2>&1 || { echo 'CHECK FAILED: offline raw-mode run failed:'; tail -6 mini_out.txt; exit 1; }; c=$(grep -cE '^CASE=[0-9]+ mode=raw' mini_out.txt); [ \"$c\" -eq 2 ] || { echo \"CHECK FAILED: expected 2 raw CASE lines, got $c\"; cat mini_out.txt; exit 1; }; grep -qE '^TOTAL mode=raw' mini_out.txt || { echo 'CHECK FAILED: no raw TOTAL line'; exit 1; }; echo \"PASS: compiles; usage guard; offline raw eval executes ($(grep -m1 '^TOTAL' mini_out.txt))\"",
+      "verified": "An eval harness that replays the corpus through the real gateway code three ways (raw path, Haiku pick, Sonnet pick) with per-case correctness and per-call latency, its raw path proven by offline execution."
+    },
+    {
+      "key": "t5-eval-haiku",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["haiku.txt"],
+      "spec": "MODE=both ECP_LLM_MODEL_ID=us.anthropic.claude-haiku-4-5-20251001-v1:0 PYTHONDONTWRITEBYTECODE=1 python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT5/t5-eval-builder/eval_ext.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT1r3/t1-final-analysis/eval_cases.json > haiku.txt 2>&1; rc=$?; grep '^TOTAL' haiku.txt; exit $rc",
+      "check": "c=$(grep -cE '^CASE=' haiku.txt); [ \"$c\" -ge 20 ] || { echo \"FAIL: only $c CASE lines - corpus has 12+ cases x 2 modes\"; tail -6 haiku.txt; exit 1; }; grep -qE '^TOTAL mode=raw' haiku.txt || { echo 'FAIL: no raw TOTAL'; exit 1; }; grep -qE '^TOTAL mode=llm model=us.anthropic.claude-haiku' haiku.txt || { echo 'FAIL: no Haiku llm TOTAL'; exit 1; }; echo \"PASS: $(grep '^TOTAL' haiku.txt | tr '\\n' ' ')\"",
+      "verified": "The 12-case corpus scored through the deployed default Haiku 4.5 phrase-picker AND the raw non-LLM path, per-case correctness and Bedrock latency on the record."
+    },
+    {
+      "key": "t5-eval-sonnet",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["sonnet.txt"],
+      "spec": "MODE=llm MODEL_CANDIDATES=us.anthropic.claude-sonnet-5-20251101-v1:0,us.anthropic.claude-sonnet-4-5-20250929-v1:0 PYTHONDONTWRITEBYTECODE=1 python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT5/t5-eval-builder/eval_ext.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT1r3/t1-final-analysis/eval_cases.json > sonnet.txt 2>&1; rc=$?; grep -E '^MODEL_USED|^TOTAL' sonnet.txt; exit $rc",
+      "check": "grep -qE '^MODEL_USED=us.anthropic.claude-sonnet' sonnet.txt || { echo 'FAIL: no Sonnet-class model responded to the probe:'; head -6 sonnet.txt; exit 1; }; c=$(grep -cE '^CASE=.*mode=llm' sonnet.txt); [ \"$c\" -ge 10 ] || { echo \"FAIL: only $c llm CASE lines\"; tail -6 sonnet.txt; exit 1; }; grep -qE '^TOTAL mode=llm model=us.anthropic.claude-sonnet' sonnet.txt || { echo 'FAIL: no Sonnet TOTAL line'; exit 1; }; echo \"PASS: $(grep -m1 '^MODEL_USED' sonnet.txt); $(grep -m1 '^TOTAL' sonnet.txt)\"",
+      "verified": "The same corpus scored through a Sonnet-class phrase-picker (exact Bedrock id printed), completing the Haiku-vs-Sonnet-vs-raw comparison Ankit asked for."
+    }
+  ]
+}

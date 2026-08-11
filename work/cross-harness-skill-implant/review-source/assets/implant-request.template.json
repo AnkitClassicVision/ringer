@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0.0",
+  "implant_id": "one-job-one-goal-id",
+  "source": {
+    "path": "/absolute/path/to/canonical-skill-package",
+    "uri": "file:///absolute/path/to/canonical-skill-package",
+    "expected_skill_name": "canonical-skill-name"
+  },
+  "scope": {
+    "goal": "Install one named skill for one approved job",
+    "allowed_actions": [
+      "link",
+      "copy",
+      "verify",
+      "rollback"
+    ],
+    "excluded_expansions": [
+      "remote rollout",
+      "repository migration",
+      "control plane",
+      "cron"
+    ]
+  },
+  "compatibility": {
+    "status": "compatible",
+    "blocking_reasons": []
+  },
+  "targets": [
+    {
+      "surface": "operator-supplied-surface",
+      "root": "/absolute/existing/target-root",
+      "destination_name": "canonical-skill-name",
+      "ownership": "operator-declared-runtime-owner",
+      "method": "link",
+      "collision_action": "BLOCK",
+      "rename_to": null,
+      "minimum_discovery_level": "invoked",
+      "discovery_adapters": [
+        {
+          "level": "indexed",
+          "version_command": [
+            "/absolute/native-cli",
+            "<operator-supplied-version-argument>"
+          ],
+          "version_regex": "<version-pinned-regex>",
+          "command": [
+            "/absolute/native-cli",
+            "<operator-supplied-index-check>"
+          ],
+          "success_regex": "<operator-supplied-success-regex>",
+          "timeout_seconds": 10
+        },
+        {
+          "level": "loaded",
+          "version_command": [
+            "/absolute/native-cli",
+            "<operator-supplied-version-argument>"
+          ],
+          "version_regex": "<version-pinned-regex>",
+          "command": [
+            "/absolute/native-cli",
+            "<operator-supplied-loaded-check>"
+          ],
+          "success_regex": "<operator-supplied-success-regex>",
+          "timeout_seconds": 10
+        },
+        {
+          "level": "invoked",
+          "version_command": [
+            "/absolute/native-cli",
+            "<operator-supplied-version-argument>"
+          ],
+          "version_regex": "<version-pinned-regex>",
+          "command": [
+            "/absolute/native-cli",
+            "<operator-supplied-invocation-check>"
+          ],
+          "success_regex": "<operator-supplied-success-regex>",
+          "timeout_seconds": 10
+        }
+      ]
+    }
+  ],
+  "rollback": {
+    "required": true,
+    "backup_root_required_for_replace": true,
+    "backup_root": "/absolute/operator-approved/backup-root"
+  }
+}

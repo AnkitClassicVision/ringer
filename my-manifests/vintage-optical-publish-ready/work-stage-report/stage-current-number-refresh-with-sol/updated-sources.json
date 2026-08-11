@@ -1,0 +1,247 @@
+{
+  "schema_version": "stage1-sources-v1",
+  "accessed_at": "2026-07-30",
+  "report_visibility": "internal_only_unroomed_draft",
+  "sources": [
+    {
+      "id": "S01",
+      "url": "https://www.vintageopt.com/",
+      "source_family": "official_subject_website",
+      "accessed": "2026-07-29",
+      "claim_use": "Subject identity, routine and medical eye-care breadth, dry-eye and myopia links, optical, on-site lab, three named optometrists, and public appointment CTA.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "Practice-controlled claims do not prove utilization, outcomes, capacity, conversion, or economics."
+    },
+    {
+      "id": "S02",
+      "url": "https://www.vintageopt.com/hours-location/",
+      "source_family": "official_subject_website",
+      "accessed": "2026-07-29",
+      "claim_use": "Current address, posted hours, parking statement, same-day emergency claim, and appointment link.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "Posted access does not prove live appointment availability, phone performance, or realized demand."
+    },
+    {
+      "id": "S03",
+      "url": "https://www.vintageopt.com/medical-eye-care/dry-eye-treatment/",
+      "source_family": "official_subject_service_page",
+      "accessed": "2026-07-29",
+      "claim_use": "Public dry-eye service and modality evidence.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "Confirms the public offer only, not case volume, clinical outcomes, capacity, or contribution margin."
+    },
+    {
+      "id": "S04",
+      "url": "https://www.vintageopt.com/medical-eye-care/myopia-management/",
+      "source_family": "official_subject_service_page",
+      "accessed": "2026-07-29",
+      "claim_use": "Public myopia-management service and treatment-option evidence.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "Confirms the public offer only, not starts, retention, outcomes, or economics."
+    },
+    {
+      "id": "S05",
+      "url": "https://www.vintageopt.com/contact-lenses/specialty-contact-lenses/",
+      "source_family": "official_subject_service_page",
+      "accessed": "2026-07-29",
+      "claim_use": "Public specialty-contact service and lens-type evidence.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "Does not establish referral volume, chair time, fit success, capacity, or economics."
+    },
+    {
+      "id": "S06",
+      "url": "https://scheduleyourexam.com/v3/index.php/5788",
+      "source_family": "subject_linked_public_booking_vendor",
+      "accessed": "2026-07-29",
+      "claim_use": "Public booking path reached a service and provider selection flow.",
+      "confidence": "high",
+      "status": "fetched_no_submission",
+      "limitation": "No service, provider, slot, appointment, or form was selected or submitted. Slot depth and completion rate remain unknown."
+    },
+    {
+      "id": "S07",
+      "url": "https://visionsource-focusoneyes.com/",
+      "source_family": "official_peer_website",
+      "accessed": "2026-07-29",
+      "claim_use": "Focus On Eyes entity, Morton address, comprehensive examinations, disease care, lenses, frames, contacts, posted weekday and Saturday hours, and appointment request.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "Peer-controlled content. No independent review export, live slot inventory, utilization, or capacity evidence was collected."
+    },
+    {
+      "id": "S08",
+      "url": "https://www.tricountyeyecenter.com/",
+      "source_family": "official_peer_website",
+      "accessed": "2026-07-29",
+      "claim_use": "Washington entity and address plus eye examinations, disease treatment, dry-eye clinic, contact lenses, macular-health center, emergency care, and eyewear.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "Peer-controlled service claims do not prove capacity, volume, outcomes, or patient draw from Morton."
+    },
+    {
+      "id": "S09",
+      "url": "https://vcc2020.com/",
+      "source_family": "official_peer_website",
+      "accessed": "2026-07-29",
+      "claim_use": "Vision Care Center entity and specialty overlap, including dry-eye diagnostics and therapy.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "Peer-controlled content. No independent review export, utilization, outcomes, capacity, or Morton patient-origin evidence was collected."
+    },
+    {
+      "id": "S10",
+      "url": "https://vcc2020.com/service/myopia-control/",
+      "source_family": "official_peer_service_page",
+      "accessed": "2026-07-29",
+      "claim_use": "Vision Care Center myopia-control options including atropine, multifocal contacts and glasses, and Ortho-K.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "Confirms public positioning, not starts, outcomes, capacity, or economics."
+    },
+    {
+      "id": "S11",
+      "url": "https://www.bardoptical.com/eye-doctor-peoria-east/",
+      "source_family": "official_peer_location_page",
+      "accessed": "2026-07-29",
+      "claim_use": "Bard Optical East Peoria entity, exact address, eye-care and optical model, appointment request, and public access information.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "Official page does not prove how much demand originates in Morton or provide independent review normalization."
+    },
+    {
+      "id": "S12",
+      "url": "https://www.illinoiseyecenter.com/location/washington/",
+      "source_family": "official_peer_location_page",
+      "accessed": "2026-07-29",
+      "claim_use": "Current Washington location at 93 Eastgate Drive and routine, medical, contact-lens, and optical service breadth.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "The official entity is current, but the supplied Nominatim attempt returned no match and no OSRM route was produced."
+    },
+    {
+      "id": "S13",
+      "url": "https://www.walmart.com/store/5157-morton-il/vision-center",
+      "source_family": "official_retail_location_page",
+      "accessed": "2026-07-29",
+      "claim_use": "Attempted first-party verification of the named Morton Vision Center.",
+      "confidence": "unknown",
+      "status": "blocked",
+      "limitation": "Direct fetch was bot-blocked. No official Walmart service, hours, booking, or review claim is treated as fetched in this pack."
+    },
+    {
+      "id": "S14",
+      "url": "https://www.census.gov/quickfacts/fact/table/mortonvillageillinois/PST045224",
+      "source_family": "us_census_quickfacts",
+      "accessed": "2026-07-29",
+      "claim_use": "Morton village, Illinois city context: current QuickFacts age shares, median household income, population density, and mean commute.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "City-boundary statistics are context only and are not substituted into any drive-time window."
+    },
+    {
+      "id": "S15",
+      "url": "https://api.census.gov/data/2024/acs/acs5.html",
+      "source_family": "us_census_acs_documentation",
+      "accessed": "2026-07-29",
+      "claim_use": "Authority and vintage for 2024 ACS 5-year detailed-table context.",
+      "confidence": "high",
+      "status": "fetched",
+      "limitation": "No block-group-to-isochrone intersection was completed, so ACS values cannot populate fixed drive-time windows."
+    },
+    {
+      "id": "S16",
+      "url": "https://www.google.com/maps/search/optometrist+near+Morton%2C+IL",
+      "source_family": "dated_google_maps_sample",
+      "accessed": "2026-07-29",
+      "claim_use": "Dated limited sample showing Vintage Optical at 4.9 and a Book online action.",
+      "confidence": "medium",
+      "status": "partial_sample",
+      "limitation": "No reliable review count, review recency, owner-response field, peer-normalized export, or complete result set was available. Rating is not clinical-quality proof."
+    },
+    {
+      "id": "S17",
+      "url": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/cities/totals/sub-est2025.csv",
+      "source_family": "us_census_pep_official_file",
+      "accessed": "2026-07-30",
+      "claim_use": "Morton village, Illinois 2025 population estimate of 17,565.",
+      "confidence": "high",
+      "status": "fetched_frozen",
+      "limitation": "Morton village-boundary context only; it is not a 5, 10, 15, 20, or 30-minute drive-time catchment population."
+    },
+    {
+      "id": "N00",
+      "url": "https://nominatim.openstreetmap.org/search?q=605+South+Main+Street%2C+Morton%2C+Illinois+61550&format=jsonv2&limit=5&addressdetails=1&countrycodes=us",
+      "source_family": "nominatim_subject_geocode_receipt",
+      "accessed": "2026-07-30",
+      "claim_use": "Exact-address subject geocode used as the origin for stored routes.",
+      "confidence": "high",
+      "status": "matched",
+      "limitation": "OpenStreetMap geocoding is not an official practice listing and requires entity review."
+    },
+    {
+      "id": "R01",
+      "url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4680865,40.6196077?overview=false&steps=false&alternatives=false",
+      "source_family": "osrm_point_to_point_route_receipt",
+      "accessed": "2026-07-30",
+      "claim_use": "Vintage Optical to Focus On Eyes: 4.07 minutes and 1.56 route miles.",
+      "confidence": "high",
+      "status": "routed",
+      "limitation": "Single practice-origin route with no traffic or time-of-day model. It is not an isochrone or patient-origin choice set."
+    },
+    {
+      "id": "R02",
+      "url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4617449,40.6301455?overview=false&steps=false&alternatives=false",
+      "source_family": "osrm_point_to_point_route_receipt",
+      "accessed": "2026-07-30",
+      "claim_use": "Vintage Optical to the Nominatim-matched Walmart Supercenter entity: 5.71 minutes and 2.35 route miles.",
+      "confidence": "medium",
+      "status": "routed",
+      "limitation": "Destination match is the Walmart Supercenter store entity, not a separately matched Vision Center entity. Location context only. Single route, no traffic, no isochrone."
+    },
+    {
+      "id": "R03",
+      "url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.432644,40.704092?overview=false&steps=false&alternatives=false",
+      "source_family": "osrm_point_to_point_route_receipt",
+      "accessed": "2026-07-30",
+      "claim_use": "Vintage Optical to Tri-County Eye Center Washington: 20.94 minutes and 10.85 route miles.",
+      "confidence": "high",
+      "status": "routed",
+      "limitation": "Single practice-origin route with no traffic or time-of-day model. It is not an isochrone or patient-origin choice set."
+    },
+    {
+      "id": "R04",
+      "url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4455579,40.7145273?overview=false&steps=false&alternatives=false",
+      "source_family": "osrm_point_to_point_route_receipt",
+      "accessed": "2026-07-30",
+      "claim_use": "Vintage Optical to Vision Care Center Washington: 22.41 minutes and 16.33 route miles.",
+      "confidence": "high",
+      "status": "routed",
+      "limitation": "Single practice-origin route with no traffic or time-of-day model. It is not an isochrone or patient-origin choice set."
+    },
+    {
+      "id": "R05",
+      "url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.5857929,40.6821622?overview=false&steps=false&alternatives=false",
+      "source_family": "osrm_point_to_point_route_receipt",
+      "accessed": "2026-07-30",
+      "claim_use": "Vintage Optical to Bard Optical East Peoria: 14.00 minutes and 9.25 route miles.",
+      "confidence": "high",
+      "status": "routed",
+      "limitation": "Single practice-origin route with no traffic or time-of-day model. It is not an isochrone or patient-origin choice set."
+    },
+    {
+      "id": "R06",
+      "url": "https://nominatim.openstreetmap.org/search?q=93+Eastgate+Drive%2C+Washington%2C+Illinois+61571&format=jsonv2&limit=5&addressdetails=1&countrycodes=us",
+      "source_family": "nominatim_peer_geocode_receipt",
+      "accessed": "2026-07-30",
+      "claim_use": "Attempted geocode for Illinois Eye Center Washington.",
+      "confidence": "unknown",
+      "status": "geocode_missing",
+      "limitation": "No coordinate match and no OSRM route were produced. The current entity and address are supported separately by S12."
+    }
+  ]
+}

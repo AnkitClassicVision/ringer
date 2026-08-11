@@ -1,0 +1,87 @@
+{
+  "subject": {
+    "name": "Vintage Optical",
+    "lat": 40.6048878,
+    "lon": -89.4669666,
+    "selected_display_name": "605, South Main Street, Morton, Tazewell County, Illinois, 61550, United States"
+  },
+  "routes": [
+    {
+      "id": "R01",
+      "name": "Focus On Eyes",
+      "candidate_tier": "tier_1",
+      "category": "independent_optometry",
+      "status": "routed",
+      "lat": 40.6196077,
+      "lon": -89.4680865,
+      "route_minutes": 4.07,
+      "route_miles": 1.56,
+      "selected_display_name": "Focus on Eyes, Clark Street, Morton, Tazewell County, Illinois, 61550, United States"
+    },
+    {
+      "id": "R02",
+      "name": "Walmart Vision Center Morton",
+      "candidate_tier": "tier_2",
+      "category": "retail_optical_with_od",
+      "status": "routed",
+      "lat": 40.6301455,
+      "lon": -89.4617449,
+      "route_minutes": 5.71,
+      "route_miles": 2.35,
+      "selected_display_name": "Walmart Supercenter, 155, East Courtland Street, Morton, Tazewell County, Illinois, 61550, United States"
+    },
+    {
+      "id": "R03",
+      "name": "Tri-County Eye Center Washington",
+      "candidate_tier": "tier_1",
+      "category": "regional_eye_care_group",
+      "status": "routed",
+      "lat": 40.704092,
+      "lon": -89.432644,
+      "route_minutes": 20.94,
+      "route_miles": 10.85,
+      "selected_display_name": "100, Hillcrest Drive, Washington, Tazewell County, Illinois, 61571, United States"
+    },
+    {
+      "id": "R04",
+      "name": "Vision Care Center Washington",
+      "candidate_tier": "tier_1",
+      "category": "regional_optometry_specialty_peer",
+      "status": "routed",
+      "lat": 40.7145273,
+      "lon": -89.4455579,
+      "route_minutes": 22.41,
+      "route_miles": 16.33,
+      "selected_display_name": "1009, North Cummings Lane, Washington, Tazewell County, Illinois, 61571, United States"
+    },
+    {
+      "id": "R05",
+      "name": "Bard Optical East Peoria",
+      "candidate_tier": "tier_2",
+      "category": "retail_optical_with_eye_care",
+      "status": "routed",
+      "lat": 40.6821622,
+      "lon": -89.5857929,
+      "route_minutes": 14.0,
+      "route_miles": 9.25,
+      "selected_display_name": "412, Riverside Drive, East Peoria, Tazewell County, Illinois, 61611, United States"
+    },
+    {
+      "id": "R06",
+      "name": "Illinois Eye Center Washington",
+      "candidate_tier": "tier_2",
+      "category": "ophthalmology_medical_surgical",
+      "status": "geocode_missing",
+      "lat": null,
+      "lon": null,
+      "route_minutes": null,
+      "route_miles": null,
+      "selected_display_name": null
+    }
+  ],
+  "limitations": [
+    "Point-to-point practice-origin routes are not polygon isochrones or patient-origin choice sets.",
+    "Nominatim entity matches require review against official addresses before scoring.",
+    "Traffic and time-of-day variation are not represented by the public OSRM route."
+  ]
+}

@@ -1,0 +1,31 @@
+=== SECTION 1: START MARKERS v123 vs v124 (stored) ===
+v123 HTTP 200 nodes=42 first_node=n_identity
+  v123 node=n_identity data_flags={'isStart': True} top_flags={'type': 'Webhook'}
+  v123 node=n_help data_flags={'isGlobal': True} top_flags={'type': 'Default'}
+  v123 node=n_office data_flags={'isGlobal': True} top_flags={'type': 'Default'}
+  v123 node=n_faq data_flags={'isGlobal': True} top_flags={'type': 'Default'}
+  v123 node=e_declined data_flags={'isGlobal': True} top_flags={'type': 'End Call'}
+  v123 node=n_suppress_stop data_flags={'isGlobal': True} top_flags={'type': 'Webhook'}
+  v123 node=n_suppress_not_me data_flags={'isGlobal': True} top_flags={'type': 'Webhook'}
+  v123 node=e_existing data_flags={'isGlobal': True} top_flags={'type': 'End Call'}
+v124 HTTP 200 nodes=42 first_node=n_identity
+  v124 node=n_identity data_flags={'isStart': True} top_flags={'type': 'Webhook'}
+  v124 node=n_help data_flags={'isGlobal': True} top_flags={'type': 'Default'}
+  v124 node=n_office data_flags={'isGlobal': True} top_flags={'type': 'Default'}
+  v124 node=n_faq data_flags={'isGlobal': True} top_flags={'type': 'Default'}
+  v124 node=e_declined data_flags={'isGlobal': True} top_flags={'type': 'End Call'}
+  v124 node=n_suppress_stop data_flags={'isGlobal': True} top_flags={'type': 'Webhook'}
+  v124 node=n_suppress_not_me data_flags={'isGlobal': True} top_flags={'type': 'Webhook'}
+  v124 node=e_existing data_flags={'isGlobal': True} top_flags={'type': 'End Call'}
+MARKERS_DONE
+=== SECTION 2: stored v124 vs sent draft-v124.json ===
+STORED_VS_SENT_DIFFS=0
+DIFF_DONE
+=== SECTION 3: chat repro x3 per version (no start_node, like the battery) ===
+REPRO v123 run1 create_node=None after_hi_node=n_post_booking
+REPRO v123 run2 create_node=None after_hi_node=n_post_booking
+REPRO v123 run3 create_node=None after_hi_node=n_post_booking
+REPRO v124 run1 create_node=None after_hi_node=n_post_booking
+REPRO v124 run2 create_node=None after_hi_node=n_post_booking
+REPRO v124 run3 create_node=None after_hi_node=n_post_booking
+REPRO_DONE

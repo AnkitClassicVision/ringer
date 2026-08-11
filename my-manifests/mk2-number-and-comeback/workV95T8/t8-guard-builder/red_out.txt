@@ -1,0 +1,236 @@
+ ! OPEN item OPEN-1: listed separately; pre-approved item warns but does not automatically fail
+ ! OPEN item OPEN-2: listed separately; pre-approved item warns but does not automatically fail
+ - [1] nodes: expected count 49, got 0
+ - [1] edges: expected count 127, got 0
+ - [2] nodes: missing v86 node ids ['e_booked', 'e_booking_failed', 'e_declined', 'e_existing', 'e_not_me', 'e_office', 'e_safe_failure', 'e_safe_identity', 'e_stop', 'e_timeout', 'n_ask', 'n_book_1', 'n_book_2', 'n_clarify', 'n_confirm', 'n_date_conflict', 'n_faq', 'n_gate_1', 'n_gate_2', 'n_help', 'n_identity', 'n_miss_empty', 'n_miss_thin', 'n_miss_time', 'n_miss_unbookable', 'n_miss_unread', 'n_negotiate', 'n_offer', 'n_offer_2', 'n_offer_3', 'n_offer_near', 'n_office', 'n_page_2', 'n_page_3', 'n_page_near', 'n_recheck', 'n_search', 'n_suppress_not_me', 'n_suppress_stop', 'n_verify_1', 'n_verify_2', 'n_which_intent']
+ - [2] nodes: new ids expected ['e_book_unknown', 'e_booked_recovered', 'e_defer', 'n_appt_check', 'n_date_conflict_retry', 'n_reconcile_1', 'n_reconcile_2'], got []
+ - [3] node n_date_conflict: required node is missing
+ - [3] node n_help: required node is missing
+ - [5] edge edge-n_ask-e_declined-declines-at-the-opening: immutable v86 edge is missing
+ - [5] edge edge-n_ask-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_book_1-n_confirm-book-success-true: immutable v86 edge is missing
+ - [5] edge edge-n_book_1-n_recheck-book-error-slot-conflict: immutable v86 edge is missing
+ - [5] edge edge-n_book_2-n_confirm-book-success-true: immutable v86 edge is missing
+ - [5] edge edge-n_book_2-n_recheck-book-error-slot-conflict: immutable v86 edge is missing
+ - [5] edge edge-n_clarify-e_declined-gives-up-on-booking: immutable v86 edge is missing
+ - [5] edge edge-n_clarify-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_clarify-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda: immutable v86 edge is missing
+ - [5] edge edge-n_confirm-e_booked-72-hour-silence-after-booking: immutable v86 edge is missing
+ - [5] edge edge-n_faq-n_office-patient-asks-to-speak-to-someone: immutable v86 edge is missing
+ - [5] edge edge-n_gate_1-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_gate_1-n_negotiate-says-no-or-wants-other-times: immutable v86 edge is missing
+ - [5] edge edge-n_gate_1-n_verify_1-confirms-yes-to-the-first-opening: immutable v86 edge is missing
+ - [5] edge edge-n_gate_2-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_gate_2-n_negotiate-says-no-or-wants-other-times: immutable v86 edge is missing
+ - [5] edge edge-n_gate_2-n_verify_2-confirms-yes-to-the-second-opening: immutable v86 edge is missing
+ - [5] edge edge-n_identity-e_safe_failure-ok-true: immutable v86 edge is missing
+ - [5] edge edge-n_identity-e_safe_identity-count-0: immutable v86 edge is missing
+ - [5] edge edge-n_identity-e_safe_identity-count-2: immutable v86 edge is missing
+ - [5] edge edge-n_identity-e_safe_identity-recall-cell: immutable v86 edge is missing
+ - [5] edge edge-n_identity-e_safe_identity-recall-patient-id: immutable v86 edge is missing
+ - [5] edge edge-n_identity-e_safe_identity-store: immutable v86 edge is missing
+ - [5] edge edge-n_miss_empty-e_declined-gives-up-on-booking: immutable v86 edge is missing
+ - [5] edge edge-n_miss_empty-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_miss_empty-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda: immutable v86 edge is missing
+ - [5] edge edge-n_miss_thin-e_declined-gives-up-on-booking: immutable v86 edge is missing
+ - [5] edge edge-n_miss_thin-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_miss_thin-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda: immutable v86 edge is missing
+ - [5] edge edge-n_miss_time-e_declined-gives-up-on-booking: immutable v86 edge is missing
+ - [5] edge edge-n_miss_time-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_miss_time-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda: immutable v86 edge is missing
+ - [5] edge edge-n_miss_unbookable-e_declined-gives-up-on-booking: immutable v86 edge is missing
+ - [5] edge edge-n_miss_unbookable-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_miss_unbookable-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda: immutable v86 edge is missing
+ - [5] edge edge-n_miss_unread-e_declined-gives-up-on-booking: immutable v86 edge is missing
+ - [5] edge edge-n_miss_unread-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_miss_unread-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda: immutable v86 edge is missing
+ - [5] edge edge-n_negotiate-e_declined-declines-after-negotiating: immutable v86 edge is missing
+ - [5] edge edge-n_negotiate-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_negotiate-n_search-preference-collected: immutable v86 edge is missing
+ - [5] edge edge-n_offer-e_declined-declines-this-offer: immutable v86 edge is missing
+ - [5] edge edge-n_offer-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_offer-n_gate_1-takes-only-the-first-opening-offered: immutable v86 edge is missing
+ - [5] edge edge-n_offer-n_gate_2-takes-only-the-second-opening-offered: immutable v86 edge is missing
+ - [5] edge edge-n_offer-n_negotiate-wants-a-different-day-or-time: immutable v86 edge is missing
+ - [5] edge edge-n_offer-n_page_2-wants-later-in-the-day: immutable v86 edge is missing
+ - [5] edge edge-n_offer-n_which_intent-both-selects-an-opening-and-asks-for-a-different-day-or-time: immutable v86 edge is missing
+ - [5] edge edge-n_offer_2-e_declined-declines-this-offer: immutable v86 edge is missing
+ - [5] edge edge-n_offer_2-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_offer_2-n_gate_1-takes-only-the-first-opening-offered: immutable v86 edge is missing
+ - [5] edge edge-n_offer_2-n_gate_2-takes-only-the-second-opening-offered: immutable v86 edge is missing
+ - [5] edge edge-n_offer_2-n_negotiate-wants-a-different-day: immutable v86 edge is missing
+ - [5] edge edge-n_offer_2-n_page_3-wants-later-still-in-the-day: immutable v86 edge is missing
+ - [5] edge edge-n_offer_2-n_which_intent-both-selects-an-opening-and-asks-for-a-different-day-or-time: immutable v86 edge is missing
+ - [5] edge edge-n_offer_3-e_declined-declines-this-offer: immutable v86 edge is missing
+ - [5] edge edge-n_offer_3-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_offer_3-n_gate_1-takes-only-the-first-opening-offered: immutable v86 edge is missing
+ - [5] edge edge-n_offer_3-n_gate_2-takes-only-the-second-opening-offered: immutable v86 edge is missing
+ - [5] edge edge-n_offer_3-n_negotiate-wants-a-different-day: immutable v86 edge is missing
+ - [5] edge edge-n_offer_3-n_which_intent-both-selects-an-opening-and-asks-for-a-different-day-or-time: immutable v86 edge is missing
+ - [5] edge edge-n_offer_near-e_declined-declines-this-offer: immutable v86 edge is missing
+ - [5] edge edge-n_offer_near-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_offer_near-n_gate_1-takes-only-the-first-opening-offered: immutable v86 edge is missing
+ - [5] edge edge-n_offer_near-n_gate_2-takes-only-the-second-opening-offered: immutable v86 edge is missing
+ - [5] edge edge-n_offer_near-n_negotiate-wants-a-different-day: immutable v86 edge is missing
+ - [5] edge edge-n_offer_near-n_which_intent-both-selects-an-opening-and-asks-for-a-different-day-or-time: immutable v86 edge is missing
+ - [5] edge edge-n_office-e_office-office-direction-delivered: immutable v86 edge is missing
+ - [5] edge edge-n_page_2-n_miss_thin-slot-count-0: immutable v86 edge is missing
+ - [5] edge edge-n_page_2-n_miss_unread-ok-true: immutable v86 edge is missing
+ - [5] edge edge-n_page_2-n_offer_2-slot-count-1: immutable v86 edge is missing
+ - [5] edge edge-n_page_2-n_offer_near-time-pref-relaxed: immutable v86 edge is missing
+ - [5] edge edge-n_page_3-n_miss_unread-ok-true: immutable v86 edge is missing
+ - [5] edge edge-n_page_3-n_offer_3-slot-count-1: immutable v86 edge is missing
+ - [5] edge edge-n_page_3-n_offer_near-time-pref-relaxed: immutable v86 edge is missing
+ - [5] edge edge-n_page_3-n_page_near-slot-count-0: immutable v86 edge is missing
+ - [5] edge edge-n_page_near-n_miss_thin-slot-count-0: immutable v86 edge is missing
+ - [5] edge edge-n_page_near-n_miss_unread-ok-true: immutable v86 edge is missing
+ - [5] edge edge-n_page_near-n_offer_near-slot-count-1: immutable v86 edge is missing
+ - [5] edge edge-n_recheck-n_search-looking-again-with-the-same-preference: immutable v86 edge is missing
+ - [5] edge edge-n_search-n_clarify-preference-from-unclear: immutable v86 edge is missing
+ - [5] edge edge-n_search-n_date_conflict-date-conflict-detected-conflict: immutable v86 edge is missing
+ - [5] edge edge-n_search-n_miss_empty-slot-count-0: immutable v86 edge is missing
+ - [5] edge edge-n_search-n_miss_time-day-part-outside: immutable v86 edge is missing
+ - [5] edge edge-n_search-n_miss_unread-ok-true: immutable v86 edge is missing
+ - [5] edge edge-n_search-n_offer-slot-count-1: immutable v86 edge is missing
+ - [5] edge edge-n_search-n_offer-slot-count-2: immutable v86 edge is missing
+ - [5] edge edge-n_search-n_page_2-day-part-afternoon: immutable v86 edge is missing
+ - [5] edge edge-n_search-n_page_3-day-part-late: immutable v86 edge is missing
+ - [5] edge edge-n_suppress_not_me-e_not_me-suppression-ok-true: immutable v86 edge is missing
+ - [5] edge edge-n_suppress_not_me-e_not_me-suppression-ok-true-2: immutable v86 edge is missing
+ - [5] edge edge-n_suppress_stop-e_stop-suppression-ok-true: immutable v86 edge is missing
+ - [5] edge edge-n_suppress_stop-e_stop-suppression-ok-true-2: immutable v86 edge is missing
+ - [5] edge edge-n_verify_1-e_safe_failure-ok-true: immutable v86 edge is missing
+ - [5] edge edge-n_verify_1-n_book_1-slot-conflict: immutable v86 edge is missing
+ - [5] edge edge-n_verify_1-n_book_1-slot-conflict-false: immutable v86 edge is missing
+ - [5] edge edge-n_verify_1-n_miss_unbookable-conflict-reason: immutable v86 edge is missing
+ - [5] edge edge-n_verify_1-n_miss_unbookable-slot-conflict-true: immutable v86 edge is missing
+ - [5] edge edge-n_verify_2-e_safe_failure-ok-true: immutable v86 edge is missing
+ - [5] edge edge-n_verify_2-n_book_2-slot-conflict: immutable v86 edge is missing
+ - [5] edge edge-n_verify_2-n_book_2-slot-conflict-false: immutable v86 edge is missing
+ - [5] edge edge-n_verify_2-n_miss_unbookable-conflict-reason: immutable v86 edge is missing
+ - [5] edge edge-n_verify_2-n_miss_unbookable-slot-conflict-true: immutable v86 edge is missing
+ - [5] edge edge-n_which_intent-e_declined-declines-both-choices: immutable v86 edge is missing
+ - [5] edge edge-n_which_intent-e_timeout-72-hour-timeout: immutable v86 edge is missing
+ - [5] edge edge-n_which_intent-n_gate_1-clarifies-that-only-the-first-opening-was-intended: immutable v86 edge is missing
+ - [5] edge edge-n_which_intent-n_gate_2-clarifies-that-only-the-second-opening-was-intended: immutable v86 edge is missing
+ - [5] edge edge-n_which_intent-n_negotiate-clarifies-that-the-different-day-or-time-was-intended: immutable v86 edge is missing
+ - [9] top-level memory_enabled: differs from v86
+ - [10] node n_search data.body: invalid JSON: the JSON object must be str, bytes or bytearray, not NoneType
+ - [10] node n_search data.body field callID: expected '{{callID}}', got None
+ - [10] node n_search data.body field after: expected '{{time_after}}', got None
+ - [10] node n_search data.body field user_text: expected '{{lastUserMessage}}', got None
+ - [10] node n_search data.body field user_verbatim: expected '{{user_verbatim}}', got None
+ - [10] node n_page_2 data.body: invalid JSON: the JSON object must be str, bytes or bytearray, not NoneType
+ - [10] node n_page_2 data.body field callID: expected '{{callID}}', got None
+ - [10] node n_page_2 data.body field after: expected '{{time_after}}', got None
+ - [10] node n_page_2 data.body field user_text: expected '{{lastUserMessage}}', got None
+ - [10] node n_page_2 data.body field user_verbatim: expected '{{user_verbatim}}', got None
+ - [10] node n_page_3 data.body: invalid JSON: the JSON object must be str, bytes or bytearray, not NoneType
+ - [10] node n_page_3 data.body field callID: expected '{{callID}}', got None
+ - [10] node n_page_3 data.body field after: expected '{{time_after}}', got None
+ - [10] node n_page_3 data.body field user_text: expected '{{lastUserMessage}}', got None
+ - [10] node n_page_3 data.body field user_verbatim: expected '{{user_verbatim}}', got None
+ - [10] node n_page_near data.body: invalid JSON: the JSON object must be str, bytes or bytearray, not NoneType
+ - [10] node n_page_near data.body field callID: expected '{{callID}}', got None
+ - [10] node n_page_near data.body field after: expected '{{time_after}}', got None
+ - [10] node n_page_near data.body field user_text: expected '{{lastUserMessage}}', got None
+ - [10] node n_page_near data.body field user_verbatim: expected '{{user_verbatim}}', got None
+ - [11] node n_search data.body field time_pref: expected 'none', got None
+ - [11] node n_page_2 data.body field time_pref: expected 'afternoon', got None
+ - [11] node n_page_3 data.body field time_pref: expected 'late', got None
+ - [11] node n_page_near data.body field time_pref: expected 'afternoon', got None
+ - [13] node n_search data.responseData slot_1_day_name: expected '$.result.slots[0].day_name', got None
+ - [13] node n_search data.responseData slot_2_day_name: expected '$.result.slots[1].day_name', got None
+ - [13] node n_page_2 data.responseData slot_1_day_name: expected '$.result.slots[0].day_name', got None
+ - [13] node n_page_2 data.responseData slot_2_day_name: expected '$.result.slots[1].day_name', got None
+ - [13] node n_page_3 data.responseData slot_1_day_name: expected '$.result.slots[0].day_name', got None
+ - [13] node n_page_3 data.responseData slot_2_day_name: expected '$.result.slots[1].day_name', got None
+ - [13] node n_page_near data.responseData slot_1_day_name: expected '$.result.slots[0].day_name', got None
+ - [13] node n_page_near data.responseData slot_2_day_name: expected '$.result.slots[1].day_name', got None
+ - [14] node n_search data.responsePathways: required route to n_date_conflict is missing
+ - [14] edge n_date_conflict->n_search: required return edge is missing
+ - [14] node n_search data.responseData: missing extraction date_conflict_detected
+ - [14] node n_search data.responseData: missing extraction conflict_option_1
+ - [14] node n_search data.responseData: missing extraction conflict_option_2
+ - [15] node n_page_2 data.responsePathways: missing time_pref_relaxed != '' route to n_offer_near
+ - [15] node n_page_3 data.responsePathways: missing time_pref_relaxed != '' route to n_offer_near
+ - [16] node n_search data.modelOptions.retryAttempts: expected 1, got None
+ - [16] node n_page_2 data.modelOptions.retryAttempts: expected 1, got None
+ - [16] node n_page_3 data.modelOptions.retryAttempts: expected 1, got None
+ - [16] node n_page_near data.modelOptions.retryAttempts: expected 1, got None
+ - [16] node n_book_1 data.modelOptions.retryAttempts: expected 0, got None
+ - [16] node n_book_2 data.modelOptions.retryAttempts: expected 0, got None
+ - [16] node n_reconcile_1 data.modelOptions.retryAttempts: expected 0, got None
+ - [16] node n_reconcile_2 data.modelOptions.retryAttempts: expected 0, got None
+ - [16] node n_appt_check data.modelOptions.retryAttempts: expected 0, got None
+ - [16] node n_identity data.modelOptions.retryAttempts: expected 0, got None
+ - [16] node n_verify_1 data.modelOptions.retryAttempts: expected 0, got None
+ - [16] node n_verify_2 data.modelOptions.retryAttempts: expected 0, got None
+ - [17] nodes with data.extractVars: expected ['n_ask', 'n_clarify', 'n_date_conflict', 'n_date_conflict_retry', 'n_miss_empty', 'n_miss_thin', 'n_miss_time', 'n_miss_unbookable', 'n_miss_unread', 'n_negotiate'], got []
+ - [18] node n_ask data.extractVars: missing user_verbatim
+ - [18] node n_ask data.extractVars: missing time_after
+ - [18] node n_clarify data.extractVars: missing user_verbatim
+ - [18] node n_date_conflict data.extractVars: missing user_verbatim
+ - [18] node n_date_conflict data.extractVars: missing time_after
+ - [18] node n_date_conflict_retry data.extractVars: missing user_verbatim
+ - [18] node n_date_conflict_retry data.extractVars: missing time_after
+ - [18] node n_miss_empty data.extractVars: missing user_verbatim
+ - [18] node n_miss_empty data.extractVars: missing time_after
+ - [18] node n_miss_thin data.extractVars: missing user_verbatim
+ - [18] node n_miss_thin data.extractVars: missing time_after
+ - [18] node n_miss_time data.extractVars: missing user_verbatim
+ - [18] node n_miss_time data.extractVars: missing time_after
+ - [18] node n_miss_unbookable data.extractVars: missing user_verbatim
+ - [18] node n_miss_unbookable data.extractVars: missing time_after
+ - [18] node n_miss_unread data.extractVars: missing user_verbatim
+ - [18] node n_miss_unread data.extractVars: missing time_after
+ - [18] node n_negotiate data.extractVars: missing user_verbatim
+ - [18] node n_negotiate data.extractVars: missing time_after
+ - [21] node n_book_1 data.responsePathways[2]: expected book_success != true to n_reconcile_1
+ - [21] node n_book_1 data.responsePathways[0]: differs from v86
+ - [21] node n_book_1 data.responsePathways[1]: differs from v86
+ - [21] node n_book_2 data.responsePathways[2]: expected book_success != true to n_reconcile_2
+ - [21] node n_book_2 data.responsePathways[0]: differs from v86
+ - [21] node n_book_2 data.responsePathways[1]: differs from v86
+ - [22] node n_reconcile_1 data.responseData: expected exact recon_ok/recon_count mapping
+ - [22] node n_reconcile_1 data.responsePathways: expected conservative-first exact ordering
+ - [22] node n_reconcile_2 data.responseData: expected exact recon_ok/recon_count mapping
+ - [22] node n_reconcile_2 data.responsePathways: expected conservative-first exact ordering
+ - [23] node e_booked_recovered data.text: differs from SPEC-v88 reference
+ - [23] node e_book_unknown data.text: differs from SPEC-v88 reference
+ - [24] node n_appt_check data.responsePathways[0]: must be first and route appt_count >= 1 to e_defer
+ - [25] node e_booked_recovered: inbound/reaching sources must be only reconciles, got []
+ - [25] node n_confirm adjacency: expected ['e_booked', 'e_defer'], got []
+ - [35] node n_date_conflict adjacency: expected ['n_date_conflict_retry', 'n_search'], got []
+ - [35] node n_date_conflict_retry adjacency: expected ['n_search'], got []
+ - [27] office-number carrier nodes: expected ['e_book_unknown', 'e_booked_recovered', 'e_booking_failed', 'e_declined', 'e_defer', 'e_existing', 'e_not_me', 'e_office', 'e_safe_failure', 'e_safe_identity', 'e_stop', 'n_confirm', 'n_faq', 'n_help', 'n_miss_empty', 'n_miss_unread', 'n_office'], got []
+ - [28] v62 CLOSE carrier nodes: expected ['e_booked_recovered', 'n_confirm'], got []
+ - [28] v62 DEFER carrier nodes: expected ['e_defer'], got []
+ - [29] node n_ask data.prompt: exact five-paragraph greeting block from v90 is missing
+ - [29] node n_ask data.prompt: missing 'ABSOLUTE RULE ON TIMES'
+ - [29] node n_ask data.prompt: missing 'CONFLICT RULE'
+ - [30] node n_ask data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_empty data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_unread data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_thin data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_unbookable data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_clarify data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_miss_time data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer_2 data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer_3 data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_offer_near data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_which_intent data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_gate_1 data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_gate_2 data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_negotiate data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_recheck data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_confirm data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_help data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_office data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [30] node n_faq data.prompt: v86 ABSOLUTE RULE ON TIMES paragraph is missing or changed
+ - [31] graph serialization: expected at least 60 occurrences of 'MK2 Optical', got 0
+ - [35] edge n_ask->n_search: D5 edge is missing
+ - [32] node n_offer_3 data.prompt: exact D4 replacement sentence is missing
+FAIL: 232 assertion failure(s)
+REFUSED: validation failed - a version that fails the canonical assertions must not be minted.

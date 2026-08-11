@@ -1,0 +1,17 @@
+{
+  "run_name": "deepseek-lane-probe",
+  "workdir": "/tmp/ringer-lane-probe-ds",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "deepseek-lane-smoke",
+      "engine": "deepseek",
+      "task_type": "probe",
+      "spec": "Create a Python script named lane_probe.py in the current working directory. It must print exactly NEW_LANE_OK when executed. Do not write outside the current directory. Do not create extra files except lane_probe.py.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\np=Path('lane_probe.py')\nif not p.exists():\n    print('FAIL: lane_probe.py was not created'); sys.exit(1)\nif p.stat().st_size == 0:\n    print('FAIL: lane_probe.py is empty'); sys.exit(1)\nproc=subprocess.run([sys.executable, str(p)], text=True, capture_output=True, timeout=10)\nif proc.returncode != 0:\n    print('FAIL: exited', proc.returncode); print(proc.stderr); sys.exit(1)\nif proc.stdout.strip() != 'NEW_LANE_OK':\n    print(f'FAIL: expected NEW_LANE_OK got {proc.stdout.strip()!r}'); sys.exit(1)\nprint('PASS: deepseek lane executed a checked artifact')\nPY",
+      "expect_files": ["lane_probe.py"],
+      "timeout_s": 600,
+      "verified": "executing the worker-created Python artifact proves the deepseek OpenRouter lane routes and writes checked files"
+    }
+  ]
+}

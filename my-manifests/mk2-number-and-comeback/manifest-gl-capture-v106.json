@@ -1,0 +1,23 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD13",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "capture-v106-dayless",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": [
+        "capture.log",
+        "graph.json",
+        "create.json",
+        "turn1.json",
+        "turn2.json"
+      ],
+      "spec": "CAPTURE_TURNS='[\"hi\", \"3pm works for me\"]' HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py 106 . > capture.log 2>&1; rc=$?; tail -5 capture.log; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_capture.py . 106",
+      "verified": "The round-6 mint's full raw chat envelopes and stored graph are on disk for the same two turns as the v96/v101 captures - the variables object will discriminate edge-not-fired from webhook-fired-and-failed."
+    }
+  ]
+}

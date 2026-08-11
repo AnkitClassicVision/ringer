@@ -1,0 +1,29 @@
+{
+  "run_name": "seedance-video",
+  "workdir": "/tmp/ringer-seedance-video",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "seedance-video",
+      "task_type": "video-gen",
+      "engine": "seedance",
+      "model": "bytedance/seedance-2.0",
+      "timeout_s": 1200,
+      "engine_args": [
+        "--duration",
+        "4",
+        "--resolution",
+        "720p",
+        "--aspect-ratio",
+        "16:9"
+      ],
+      "expect_files": [
+        "video.mp4",
+        "generation.json"
+      ],
+      "spec": "Create a four-second cinematic landscape shot with a locked camera, coherent natural motion, realistic lighting, and no text, lettering, logos, watermarks, people, private data, or brand marks. This specification is sent directly to the OpenRouter Video API by the Seedance engine; it is not a text-agent task.",
+      "check": "python3 '/absolute/path/to/ringer/templates/asset-swarm/checks/check_generated_video.py' --video video.mp4 --metadata generation.json --model bytedance/seedance-2.0",
+      "verified": "video.mp4 has an MP4/ISO-BMFF signature, passes ffprobe as MP4/MOV-compatible media with a video stream, and generation.json reports completed with matching model, byte count, and SHA-256."
+    }
+  ]
+}

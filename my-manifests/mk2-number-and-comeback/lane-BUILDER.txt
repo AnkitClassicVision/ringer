@@ -1,0 +1,1086 @@
+Reading additional input from stdin...
+OpenAI Codex v0.146.0
+--------
+workdir: /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+model: gpt-5.6-luna
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: xhigh
+reasoning summaries: none
+session id: 019fc836-5a99-75c0-a1cf-daf89282fb85
+--------
+user
+DO NOT modify any files. Analyze only. Role: BUILDER. Read the evidence packet at /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md in full. Question: produce a remediation plan for the commit-despite-502 booking defect described there. As BUILDER, do the job that role implies: BUILDER gives the best direct plan; CONTRARIAN attacks what is wrong, risky, brittle, or missing in the evidence and in the proposed fixes; VERIFIER says exactly what must be measured or proven and how, cheapest first, with what result confirms versus refutes; OPERATOR gives owner, outcome, date, risk, visibility, sequencing, and the single next action. Pay particular attention to the unresolved objection: read nodes at the same latency did not time out but the write did. Return a candidate packet with these keys: recommendation, confidence (0-1), evidence, assumptions, unique_catches, risks_or_failure_modes, proof_slots, needs_human_or_owner_gate. Be blunt and specific. No padding.
+2026-08-03T15:20:38.570286Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://gtdtkzjikmsaskyouyin.supabase.co/functions/v1/ob-graph?key=lOCVvO2nAyhULM8X9UMkUcnpQLbYmk6riCcxIJn9354)")))
+2026-08-03T15:20:38.583280Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://gtdtkzjikmsaskyouyin.supabase.co/functions/v1/open-brain-unified?key=2f00597aa5407164628928fceb6fce58903799e4ccdcc26125bf14f788b48a6a)")))
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+codex
+Ankit — I’m using the Codex Operating Card because this is evidence-backed repo analysis. I will read the full packet, check the relevant prior ringer context, then return the requested five-role candidate packet without editing files.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "wc -l EVIDENCE-502.md && sed -n '1,9999p' EVIDENCE-502.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+132 EVIDENCE-502.md
+# Evidence packet: booking commits but the patient is told it failed
+
+All identifiers below are scrubbed. The test subject is a SYNTHETIC dummy record, not a real
+patient. No PHI appears in this file.
+
+## The defect
+
+An SMS AI agent (vendor: **Bland AI**) runs a conversational "pathway" that books eye-exam
+appointments into an EMR (Eye Cloud Pro) through a self-hosted booking gateway. On 2026-08-03 a
+test conversation confirmed a slot, the agent replied **"I couldn't confirm that booking. Please
+call the office so they can check it for you"**, and the appointment **was created in the EMR
+anyway**.
+
+This is live on a production phone line today.
+
+## Architecture
+
+- Pathway version **87**, 42 nodes, of which **12 are Webhook nodes**.
+- A dump of all 12 webhook nodes shows **no `timeout`, `retry`, or `retryCount` field set on any
+  of them**. They inherit the platform default, whose value is unmeasured.
+- The vendor catalog for these nodes specifies `default_node_settings: {"timeout_seconds": 10,
+  "retry_attempts": 0}`. So either the nodes drifted from catalog intent, or the export hides UI
+  defaults. Unreconciled.
+- Gateway: `https://<gw-host>`, edge is **nginx** (response headers: `Server: nginx`,
+  `Connection: close`, no CDN headers, so nginx is the edge directly, nothing in front).
+- Endpoints, all POST JSON with a bearer token: `/patient-search`, `/appt-list`, `/availability`,
+  `/conflict-check`, `/sign`.
+- `/sign` is the governed write path: `{"verb":"appt.book"|"appt.cancel","target":...,"store":...,
+  "reason":...,"params":{...}}`.
+- Booking node order: `n_verify_1` (POST /conflict-check) then `n_book_1` (POST /sign).
+- Pathway routes on `book_success` from `$.success`. Non-success routes to End node
+  `e_booking_failed`.
+- A July snapshot of the gateway source shows Python **`ThreadingHTTPServer` +
+  `BaseHTTPRequestHandler`** behind nginx (NOT gunicorn/uwsgi, so no worker-timeout reaper),
+  `ECP_CLI_TIMEOUT_S` default **90**, and **every internal timeout path returns 504**, never 502.
+  nginx's own read timeout also emits 504. The EMR is driven by shelling out to a CLI; the EMR
+  keeps ONE session per user, logins serialize behind an exclusive lock with a 30s re-login
+  cooldown and up to a 120s login budget. **Caveat: that snapshot predates `/sign` and may not
+  match the deployed build.**
+
+## Incident timeline (UTC, 2026-08-03)
+
+```
+14:47:22.797  USER   "1"      (picks offered slot 1)
+14:47:26.083  AGENT  "To confirm, your eye exam would be 08/04/2026 01:00 pm. Reply YES to book it"
+14:49:09.678  USER   "Yes"
+14:49:57.901  AGENT  "I couldn't confirm that booking. Please call the office..."
+```
+
+Gap from YES to failure message: **48.2 seconds**.
+
+End state: `current_node_id: e_booking_failed`, `ended_by_end_call_node: true`,
+`is_active: false`, **`BlandStatusCode: 502`**, `appt_count: 0`, `slot_conflict: false`,
+`slot_count: 25`, `ok: true`, `conflict_reason: ""`.
+
+## Proof the write committed
+
+`/appt-list` afterward returned exactly one upcoming appointment matching the confirmed slot.
+Cancelling it returned `pre_state` with `start "08/04/2026 01:00:00 pm"`, `status "created"` —
+byte-for-byte the slot the patient confirmed.
+
+## Measurement lane 1: direct reproduction (operator workstation)
+
+Posted the identical `/sign` appt.book body directly:
+
+- **HTTP 200, `success: true`, in 16.0s.** Rolled back cleanly.
+- A second independent direct book also returned 200.
+- **Two out of two direct books succeeded. Zero 502s reproduced.**
+
+## Measurement lane 2: latency, idle vs under load
+
+Idle gateway:
+```
+/appt-list        7.9s
+/sign appt.book   16.0s
+/sign appt.cancel 17.1s / 17.5s
+```
+
+Under load (while a 33-scenario live test harness hammered the SAME gateway), twice each:
+```
+/patient-search   22.0s / 21.9s      /appt-list        24.4s / 18.1s
+/availability     21.5s / 23.8s      /conflict-check   19.3s / 22.0s
+```
+
+**Latency roughly triples under load, uniformly across every endpoint, including 84-byte and
+121-byte responses.** That uniformity appears to rule out payload-size and buffering
+explanations.
+
+**Critical timeline overlap:** the harness run that saturated the gateway ran **14:39:06 to
+~14:54**. The patient's YES was at **14:49:09**. The live booking happened inside the load window
+created by our own test harness. The direct reproduction that returned 200 in 16.0s ran later,
+against an idle gateway.
+
+## Measurement lane 3: the analyst brief (a separate model lane already run)
+
+Its leading conclusion, ~60% confidence: a **client-side webhook timeout** on the book node,
+which the platform records as a synthetic 502. Its key argument is that the non-reproduction is a
+**prediction** of that theory, not a puzzle: a client that waits indefinitely is structurally
+incapable of reproducing a client-timeout 502, so n could be 200 and prove nothing.
+
+It also argues that with this stack, "caller sees error, write commits" is the DEFAULT outcome
+for any client less patient than the gateway: when the platform aborts, nginx logs 499 and may
+close the upstream connection, but the Python handler thread only notices at response-write time
+while the EMR subprocess runs to completion. Nothing has to "break."
+
+Its ranked alternatives: genuine nginx 502 from gateway process death mid-request (~20%);
+platform-internal egress blip (~10%); everything else under 5%.
+
+Its fix ranking, lowest risk first: (1) reword the failure message so it stops asserting a
+failure that did not happen; (2) set explicit timeouts of 45-60s on the book and verify nodes;
+(3) add a verify-on-failure branch that calls `/appt-list` and confirms whether the slot exists,
+converting commit-plus-timeout into a truthful confirmation **without retrying the write**;
+(4) keep the EMR session warm to cut p95 latency; (5) REFUSE automatic retry, because `/sign` has
+no idempotency key and no dedupe on (patient, slot), so retry in exactly this state double-books.
+
+## The strongest open objection, unresolved
+
+If a flat webhook timeout were the whole story, the earlier read nodes in the SAME conversation
+(`/patient-search`, `/appt-list`, and several `/availability` calls) were also running at ~20s
+under the same load and should have timed out too. **They did not.** The conversation negotiated
+normally through three rounds of availability and only the write failed. That argues against a
+simple flat timeout applied uniformly to all nodes, and it is not yet explained.
+
+## Constraints on any fix
+
+- `/sign` has **no idempotency key**; the gateway has no visible dedupe on (patient, slot).
+- The vendor catalog says "Never add allow_conflict and never retry automatically."
+- Changing pathway node config requires the vendor dashboard for some operations; the
+  `/v1/sms/update` API returns 500 for every payload including a no-op, so repointing a line is
+  dashboard-only.
+- The test harness and the live patient line **share one gateway**, so running the harness during
+  business hours degrades the live booking path.
+
+hook: PostToolUse
+exec
+/bin/bash -lc "rg -n -i -C 3 'ringer|mk2-number|commit.*502|booking defect|read nodes|write' /home/ankit114/.codex/memories/MEMORY.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+50-## Reusable knowledge
+51-
+52-- The intended board visualizes Podcast → SEO/Blog → Sales with department swimlanes, handoffs, queues, approvals, blockers, agent status, performance, and timestamped audit receipts. Use Backlog, Ready, Running, Human Review, Blocked, and Done; cards carry owner, current job, start time, last activity, evidence link, approval gate, and blocker. [Task 1]
+53:- Measure throughput, cycle time, blocked time, rework, failed runs, human acceptance rate, and evidence freshness; do not score agents by message volume. Keep the first workflow shadow-only: no publishing, CRM writes, or outbound sends. [Task 1]
+54-- `/seeit` should produce a self-contained interactive HTML comprehension artifact and PNG when supported, rather than prose or Mermaid alone. [Task 1]
+55-
+56-## Failures and how to do differently
+--
+82-
+83-### keywords
+84-
+85:- Podcast, SEO/Blog, Sales, handoff card, receipt, shadow mode, duplicate rejection, CRM writes, outbound messages, accepted:true
+86-
+87-## User preferences
+88-
+--
+95-- Keep department state separate: Podcast owns episode production and publish proof; SEO/Blog owns keyword briefs, drafts, metadata, and internal-link suggestions; Sales owns follow-up/campaign work. Buzz exposes canvases, channels, handoff cards, and receipts for verified packets. SEO and Blog may initially share one department. [Task 2]
+96-- Use mirror-first human gates: the originating loop ledger remains authoritative while Buzz presents sanitized issue/approval cards. Persist a verdict before side effects; verify identity/token/TTL/state, transition the source queue, apply its gate, and return a completion/failure receipt. [Task 1]
+97-- Handoffs are one-time sanitized packets with unique ID, source/target, verified artifact/evidence, requested action, urgency/expiry, owner, gate status, and receipt state. Require idempotent consumption; never bypass send, CRM, publish, or approval gates; exclude raw PHI/PII, secrets, contact IDs, and message bodies. [Task 1][Task 2]
+98:- The first proof is a shadow Podcast-to-Sales handoff with zero CRM writes/sends, single acceptance, duplicate rejection, and receipt return. Existing Podcast seam: `server/pipeline/sales_handoff.py`, `server/pipeline/schemas/handoff_packet.schema.json`, and `tests/test_sales_handoff_packet.py`. [Task 1][Task 2]
+99-
+100-## Failures and how to do differently
+101-
+102-- symptom: a design is described as live Buzz-to-loop approval integration -> cause: the estate router/adapter and round-trip tests were not built -> fix: state the integration is partial; build and prove the adapter before claiming approval application is complete. [Task 1]
+103:- symptom: cross-department work drifts into shared state or direct writes -> cause: Buzz was treated as authoritative rather than a routing surface -> fix: retain department ownership and use sanitized, receipt-backed handoffs. [Task 1][Task 2]
+104-
+105-# Task Group: Buzz threaded messaging and mention routing
+106-
+--
+230-# Task Group: Bland CVC phone rescheduling live goal
+231-
+232-scope: Goal-setting and guarded implementation planning for a live CVC Bland phone reschedule path; use when the user wants same-office phone rescheduling made real, not left as staff-message fallback or analysis-only.
+233:applies_to: cwd=/mnt/d_drive/repos/bland; reuse_rule=safe for this CVC Bland / EyeCloud / conductor lane, but treat live rollout state, Project Room freshness, and provider/write authorization as time-specific
+234-
+235-## Task 1: Define the CVC phone reschedule live goal, partial
+236-
+--
+240-
+241-### keywords
+242-
+243:- bland, eyecloud, cvc, reschedule, same-day, live, conductor, appt.reschedule, project-room, staff-confirmed cancellation, verify-after-write
+244-
+245-## User preferences
+246-
+--
+250-
+251-## Reusable knowledge
+252-
+253:- Same-office rescheduling with exact patient identity, exactly one eligible appointment, explicit old-to-new readback, signed `appt.reschedule`, and EyeCloud read-after-write verification is the intended first live scope [Task 1]
+254-- The current live Bland pathway still uses the staff-request route for rescheduling; direct rescheduling remains planning-partial. Definition of done includes approved requirements, deployed and verified gateway/conductor capability, built pathway, synthetic/test-record proof, dedicated voice QA, explicit production approval, and live-state readback. [Task 1] [ad-hoc note]
+255:- The stored live goal does not itself authorize a deployment, provider mutation, or live patient appointment write. Staff fallback covers zero or multiple appointments, cross-office changes, cancellation, conflicts, elapsed/invalid slots, gateway failures, and unverified outcomes. [Task 1] [ad-hoc note]
+256:- The safer write boundary is the conductor `appt.reschedule` path in `internal/cli/gateway_dispatch_prod.go`, not the older Python `/reschedule` path [Task 1]
+257:- The conductor dispatcher resolves the target appointment and verifies the write back with `productionVerify` / `verifyWrite` [Task 1]
+258-- The route allowlist already includes `/v1/appt/reschedule`, and the focused gateway/conductor test slice was the right proof lane even though the broader CLI suite had an unrelated PracticeCanopy fail-closed gate [Task 1]
+259-- Related planning note: `extensions/ad_hoc/notes/2026-07-21T2025-cvc-live-reschedule-goal.md` captures the live-goal boundary, fallback cases, definition of done, and authorization boundary for this lane [Task 1] [ad-hoc note]
+260-
+--
+480-
+481-### keywords
+482-
+483:- automation-discovery, ringer, corpus.db, BUILD_RECEIPT.md, evidence-bundle, allow-review, receipts, sources=21 events_checked=2120 candidates=14 offers=5 receipts=20
+484-
+485-## Task 2: Inspect and pause the full-stack hiring process group, success
+486-
+--
+494-
+495-## User preferences
+496-
+497:- when the user says, "use $automation-discovery and $ringer To aceeaa all my data and connectiongs and fan out and tice me automations" -> treat it as a request to audit real traces and build proof from evidence, not brainstorm from memory [Task 1]
+498-- after the source plan/walls are shown, "confirm all" is enough approval to proceed [Task 1]
+499-- when the user asks "status" during long proof work -> provide concise progress plus blocked/unblocked updates without waiting to be asked repeatedly [Task 1]
+500-- when the user asks whether background terminals are doing anything or says "can we pause fullnsatck hiring eun" -> inspect live state directly, then stop the exact process group and verify it entered `T`/stopped state [Task 1][Task 2]
+501-
+502-## Reusable knowledge
+503-
+504:- The reliable closure sequence for this stack was: corrected tests -> strict validator -> Ringer PASS -> two fresh ALLOW reviews -> receipt merge -> corpus validation -> backup/export -> continuity capture [Task 1]
+505-- The first acceptable proof required per-contract observed CLI command/output/exit evidence, strict schema binding, evidence-bundle binding, input hardening, and transaction gates for receipt merging [Task 1]
+506-- Final validated local state was five built offers and 20 receipts, with corpus validation `sources=21 events_checked=2120 candidates=14 offers=5 receipts=20`; no external send/deploy/commit/schedule action happened [Task 1]
+507-- The key human-facing artifact is `/home/ankit114/workspaces/automation-discovery-2026-07-17/automation-stack/BUILD_RECEIPT.md` [Task 1]
+--
+511-
+512-- symptom: proof harness says PASS but acceptance still fails -> cause: only outer PASS lines were recorded -> fix: persist each observed command/output/exit separately and reject reduced receipt shapes [Task 1]
+513-- symptom: validator passes evidence that should fail policy -> cause: it only sanitizes values -> fix: explicitly reject forbidden field names and unexpected evidence keys [Task 1]
+514:- symptom: `resume` / `handoff` pair leaves a main artifact behind when a sidecar write fails -> cause: partial write treated as success -> fix: treat any nonzero exit as failure and retry in a clean output directory [Task 1]
+515-- symptom: `ps` output is too noisy to tell if the target job is still active -> cause: many unrelated long-lived agents on the machine -> fix: filter by job/repo name first, then verify PGID plus `T` state [Task 2]
+516-
+517-# Task Group: Fedora storage, backups, and disk layout planning
+--
+600-
+601-### keywords
+602-
+603:- Steam, ARC Raiders, ntfs3, kernel BUG, iomap_write_end, ntfs_file_write_iter, /mnt/d_drive, journalctl -k, appmanifest_1808500.acf
+604-
+605-## Task 2: Restart Steam cleanly after stale zombie state, success
+606-
+--
+621-
+622-- On this machine, ARC Raiders lived under `/mnt/d_drive/SteamLibrary/steamapps/common/Arc Raiders/`, and `/mnt/d_drive` was mounted as `ntfs3` [Task 1]
+623-- If Steam/game startup is failing and many processes are blocked, check `journalctl -k` for `ntfs3` faults and `findmnt` for the mount type before assuming a Steam-only problem [Task 1]
+624:- The decisive kernel evidence was `kernel BUG at fs/iomap/buffered-io.c:1061!`, `iomap_write_end+0x1b4/0x1c0`, and `ntfs_file_write_iter+0x250/0x2f0 [ntfs3]` [Task 1]
+625-- Stale Steam client state here was recoverable by moving `/home/ankit114/.steam/steam.pid` and `/home/ankit114/.steam/steam.pipe` aside to `/tmp`, then relaunching `/usr/bin/steam` and verifying a new PID file, live `steam`/`steamwebhelper` processes, and a visible UI window [Task 2]
+626-
+627-## Failures and how to do differently
+
+hook: PostToolUse
+exec
+/bin/bash -lc "sed -n '1,260p' /home/ankit114/.claude/skills/codex-operating-card/SKILL.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+---
+name: codex-operating-card
+description: "Operate Codex with Nate-style project induction, read-only-first task starts, one-thread-one-outcome discipline, UI/browser evidence, self-review gates, and durable-rule extraction. Use when working in Codex on a repo, starting a new Codex thread, doing project induction, implementing or reviewing code, doing frontend/UI QA, or deciding whether to promote a prompt pattern into AGENTS.md or a skill."
+---
+
+# Codex Operating Card
+
+Purpose: make Codex behave like a repo worker with a tight work contract, not a wandering owner. These prompts are operating defaults, not safety gates. For production writes, deploys, PHI/PII, secrets, CRM/EHR/finance writes, external sends, or autonomy changes, follow the relevant deterministic gate and human approval rules.
+
+## Default behavior
+
+Use this operating card unless the user explicitly overrides it:
+
+1. Read first. Do not edit until you can explain the current project shape.
+2. One thread = one outcome. If a new goal appears, propose a new thread.
+3. Prefer read-only or sandbox mode unless write access is explicitly intended.
+4. Before changes, state likely files, risk, test plan, and rollback path.
+5. Treat AGENTS.md and project docs as local law. If missing, infer lightly and flag gaps.
+6. For UI work, use browser or visual evidence rather than guessing.
+7. Verify with actual command output, visual check, or a named source before claiming done.
+8. End with: Changed, Verified by, Risks left, Next action.
+9. If the task reveals a reusable rule, propose AGENTS.md or skill capture, but do not write it without approval.
+
+## Prompt pack
+
+For exact copy/paste prompts, read `references/prompt-pack.md` and choose the smallest prompt that matches the work:
+
+- Project induction prompt: first pass on a repo.
+- Task starter prompt: normal implementation.
+- UI/browser evidence prompt: frontend or visual QA.
+- Review gate prompt: before accepting Codex output.
+- Durable-rule extraction prompt: after a repeated pattern appears.
+
+## Output contract
+
+For routine work, keep the final terse:
+
+- Changed: files/behavior changed.
+- Verified by: real command, screenshot/visual check, or source.
+- Risks left: only what matters.
+- Next action: one step.
+
+Do not call work complete if verification did not run. Say `Partial` or `Blocked` instead.
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+The packet is 132 lines and has been read in full. The key uncertainty is real: the incident occurred only during shared-gateway load, but same-conversation reads at roughly 18–24 seconds completed while the booking produced a 502 after 48.2 seconds and still committed. I’m checking the canonical ringer context and local repository rules before separating facts from hypotheses.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "find .. -name AGENTS.md -o -name MODULE_MAP.md -o -path '*/.ai/fable-proof-run.md'" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+hook: PostToolUse
+hook: PreToolUse Completed
+mcp: ob_mybcat/search_thoughts started
+exec
+/bin/bash -lc 'git status --short --branch' in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+## main...upstream/main [ahead 1, behind 24]
+ M ../../.claude/skills/ringer/SKILL.md
+ M ../../README.md
+ M ../../config.sample.toml
+ M ../../docs/MODEL-NOTES.md
+ M ../../registry/model-identity.toml
+ M ../../templates/README.md
+ M ../../templates/asset-swarm/README.md
+ M ../../tests/test_catalog.py
+ M ../../tests/test_model_db.py
+ M ../../tests/test_model_field.py
+ M ../../tests/test_model_log.py
+ M ../../tests/test_scoreboard_page.py
+?? ../../docs/MANIFEST-GUIDE.md
+?? ../../docs/MODEL-MENU.md
+?? ../../docs/PI-OPENROUTER-ROUTING.md
+?? ../../docs/SEEDANCE-VIDEO.md
+?? ../../docs/sales-ops-full-automation-plan.md
+?? ../../engines/claude-oauth.sh
+?? ../../engines/codex-oauth.sh
+?? ../../engines/gemini-oauth-settings.json
+?? ../../engines/gemini-oauth.sh
+?? ../../engines/opencode-auth-policy.sh
+?? ../../engines/opencode-xai-aws.sh
+?? ../../engines/openrouter-video.py
+?? ../../engines/pi-openrouter-ringer.sh
+?? ../../engines/test_gemini_oauth_wrapper.py
+?? ../../local-probes/
+?? ../../local-sales-ops/
+?? ../
+?? ../../resume.md
+?? ../../swarm.json
+?? ../../templates/asset-swarm/checks/check_generated_video.py
+?? ../../templates/asset-swarm/seedance.manifest.json
+?? ../../templates/fable-sol-loop/
+?? ../../tests/test_codex_isolation.py
+?? ../../tests/test_disk_headroom.py
+?? ../../tests/test_oauth_routing_local.py
+?? ../../tests/test_oauth_wrappers.py
+?? ../../tests/test_openrouter_video.py
+?? ../../tests/test_pi_openrouter_wrapper.py
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+mcp: ob_mybcat/search_thoughts (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba EVIDENCE-502.md | sed -n '1,132p'" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+     1	# Evidence packet: booking commits but the patient is told it failed
+     2	
+     3	All identifiers below are scrubbed. The test subject is a SYNTHETIC dummy record, not a real
+     4	patient. No PHI appears in this file.
+     5	
+     6	## The defect
+     7	
+     8	An SMS AI agent (vendor: **Bland AI**) runs a conversational "pathway" that books eye-exam
+     9	appointments into an EMR (Eye Cloud Pro) through a self-hosted booking gateway. On 2026-08-03 a
+    10	test conversation confirmed a slot, the agent replied **"I couldn't confirm that booking. Please
+    11	call the office so they can check it for you"**, and the appointment **was created in the EMR
+    12	anyway**.
+    13	
+    14	This is live on a production phone line today.
+    15	
+    16	## Architecture
+    17	
+    18	- Pathway version **87**, 42 nodes, of which **12 are Webhook nodes**.
+    19	- A dump of all 12 webhook nodes shows **no `timeout`, `retry`, or `retryCount` field set on any
+    20	  of them**. They inherit the platform default, whose value is unmeasured.
+    21	- The vendor catalog for these nodes specifies `default_node_settings: {"timeout_seconds": 10,
+    22	  "retry_attempts": 0}`. So either the nodes drifted from catalog intent, or the export hides UI
+    23	  defaults. Unreconciled.
+    24	- Gateway: `https://<gw-host>`, edge is **nginx** (response headers: `Server: nginx`,
+    25	  `Connection: close`, no CDN headers, so nginx is the edge directly, nothing in front).
+    26	- Endpoints, all POST JSON with a bearer token: `/patient-search`, `/appt-list`, `/availability`,
+    27	  `/conflict-check`, `/sign`.
+    28	- `/sign` is the governed write path: `{"verb":"appt.book"|"appt.cancel","target":...,"store":...,
+    29	  "reason":...,"params":{...}}`.
+    30	- Booking node order: `n_verify_1` (POST /conflict-check) then `n_book_1` (POST /sign).
+    31	- Pathway routes on `book_success` from `$.success`. Non-success routes to End node
+    32	  `e_booking_failed`.
+    33	- A July snapshot of the gateway source shows Python **`ThreadingHTTPServer` +
+    34	  `BaseHTTPRequestHandler`** behind nginx (NOT gunicorn/uwsgi, so no worker-timeout reaper),
+    35	  `ECP_CLI_TIMEOUT_S` default **90**, and **every internal timeout path returns 504**, never 502.
+    36	  nginx's own read timeout also emits 504. The EMR is driven by shelling out to a CLI; the EMR
+    37	  keeps ONE session per user, logins serialize behind an exclusive lock with a 30s re-login
+    38	  cooldown and up to a 120s login budget. **Caveat: that snapshot predates `/sign` and may not
+    39	  match the deployed build.**
+    40	
+    41	## Incident timeline (UTC, 2026-08-03)
+    42	
+    43	```
+    44	14:47:22.797  USER   "1"      (picks offered slot 1)
+    45	14:47:26.083  AGENT  "To confirm, your eye exam would be 08/04/2026 01:00 pm. Reply YES to book it"
+    46	14:49:09.678  USER   "Yes"
+    47	14:49:57.901  AGENT  "I couldn't confirm that booking. Please call the office..."
+    48	```
+    49	
+    50	Gap from YES to failure message: **48.2 seconds**.
+    51	
+    52	End state: `current_node_id: e_booking_failed`, `ended_by_end_call_node: true`,
+    53	`is_active: false`, **`BlandStatusCode: 502`**, `appt_count: 0`, `slot_conflict: false`,
+    54	`slot_count: 25`, `ok: true`, `conflict_reason: ""`.
+    55	
+    56	## Proof the write committed
+    57	
+    58	`/appt-list` afterward returned exactly one upcoming appointment matching the confirmed slot.
+    59	Cancelling it returned `pre_state` with `start "08/04/2026 01:00:00 pm"`, `status "created"` —
+    60	byte-for-byte the slot the patient confirmed.
+    61	
+    62	## Measurement lane 1: direct reproduction (operator workstation)
+    63	
+    64	Posted the identical `/sign` appt.book body directly:
+    65	
+    66	- **HTTP 200, `success: true`, in 16.0s.** Rolled back cleanly.
+    67	- A second independent direct book also returned 200.
+    68	- **Two out of two direct books succeeded. Zero 502s reproduced.**
+    69	
+    70	## Measurement lane 2: latency, idle vs under load
+    71	
+    72	Idle gateway:
+    73	```
+    74	/appt-list        7.9s
+    75	/sign appt.book   16.0s
+    76	/sign appt.cancel 17.1s / 17.5s
+    77	```
+    78	
+    79	Under load (while a 33-scenario live test harness hammered the SAME gateway), twice each:
+    80	```
+    81	/patient-search   22.0s / 21.9s      /appt-list        24.4s / 18.1s
+    82	/availability     21.5s / 23.8s      /conflict-check   19.3s / 22.0s
+    83	```
+    84	
+    85	**Latency roughly triples under load, uniformly across every endpoint, including 84-byte and
+    86	121-byte responses.** That uniformity appears to rule out payload-size and buffering
+    87	explanations.
+    88	
+    89	**Critical timeline overlap:** the harness run that saturated the gateway ran **14:39:06 to
+    90	~14:54**. The patient's YES was at **14:49:09**. The live booking happened inside the load window
+    91	created by our own test harness. The direct reproduction that returned 200 in 16.0s ran later,
+    92	against an idle gateway.
+    93	
+    94	## Measurement lane 3: the analyst brief (a separate model lane already run)
+    95	
+    96	Its leading conclusion, ~60% confidence: a **client-side webhook timeout** on the book node,
+    97	which the platform records as a synthetic 502. Its key argument is that the non-reproduction is a
+    98	**prediction** of that theory, not a puzzle: a client that waits indefinitely is structurally
+    99	incapable of reproducing a client-timeout 502, so n could be 200 and prove nothing.
+   100	
+   101	It also argues that with this stack, "caller sees error, write commits" is the DEFAULT outcome
+   102	for any client less patient than the gateway: when the platform aborts, nginx logs 499 and may
+   103	close the upstream connection, but the Python handler thread only notices at response-write time
+   104	while the EMR subprocess runs to completion. Nothing has to "break."
+   105	
+   106	Its ranked alternatives: genuine nginx 502 from gateway process death mid-request (~20%);
+   107	platform-internal egress blip (~10%); everything else under 5%.
+   108	
+   109	Its fix ranking, lowest risk first: (1) reword the failure message so it stops asserting a
+   110	failure that did not happen; (2) set explicit timeouts of 45-60s on the book and verify nodes;
+   111	(3) add a verify-on-failure branch that calls `/appt-list` and confirms whether the slot exists,
+   112	converting commit-plus-timeout into a truthful confirmation **without retrying the write**;
+   113	(4) keep the EMR session warm to cut p95 latency; (5) REFUSE automatic retry, because `/sign` has
+   114	no idempotency key and no dedupe on (patient, slot), so retry in exactly this state double-books.
+   115	
+   116	## The strongest open objection, unresolved
+   117	
+   118	If a flat webhook timeout were the whole story, the earlier read nodes in the SAME conversation
+   119	(`/patient-search`, `/appt-list`, and several `/availability` calls) were also running at ~20s
+   120	under the same load and should have timed out too. **They did not.** The conversation negotiated
+   121	normally through three rounds of availability and only the write failed. That argues against a
+   122	simple flat timeout applied uniformly to all nodes, and it is not yet explained.
+   123	
+   124	## Constraints on any fix
+   125	
+   126	- `/sign` has **no idempotency key**; the gateway has no visible dedupe on (patient, slot).
+   127	- The vendor catalog says "Never add allow_conflict and never retry automatically."
+   128	- Changing pathway node config requires the vendor dashboard for some operations; the
+   129	  `/v1/sms/update` API returns 500 for every payload including a no-op, so repointing a line is
+   130	  dashboard-only.
+   131	- The test harness and the live patient line **share one gateway**, so running the harness during
+   132	  business hours degrades the live booking path.
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '460,515p' /home/ankit114/.codex/memories/MEMORY.md && rg -n -i 'ringer|mk2-number|booking|502' /home/ankit114/.codex/memories/rollout_summaries | head -40" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+
+- symptom: `ai` works but Claude does not show correctly in HERDR -> cause: launched via plain `toolbox run ... claude` or wrong identity handoff -> fix: use the HERDR-aware launcher path and preserve `HERDR_AGENT=claude` into Toolbx [Task 1][Task 2]
+- symptom: first fix opens a new pane -> cause: launcher design assumed managed-pane flow -> fix: default to same-pane registration unless the user explicitly asks for a new pane [Task 1]
+- symptom: rebuild logic thinks a healthy Toolbx is corrupt -> cause: failed `toolbox run` / `podman exec` probe misclassified as corruption -> fix: require independent Podman confirmation, fail closed on runtime outages, and quarantine/rollback instead of deleting [Task 2]
+- symptom: proof looks good because `claude --version` works -> cause: verification stopped too early -> fix: verify HERDR visibility, environment propagation, and live pane identity too [Task 2]
+- symptom: `herdr agent focus` succeeds but the user still sees the old shell in Orca -> cause: HERDR focus was treated as proof for the wrong surface -> fix: confirm whether the visible shell is an Orca terminal first; if `ORCA_TERMINAL_HANDLE` is present, route Claude in-place instead of focusing a separate HERDR pane [Task 3]
+- symptom: a direct launcher test appears to pass but did not exercise the intended branch -> cause: inherited `HERDR_*` variables from the parent environment -> fix: rerun with `env -u HERDR_ENV -u HERDR_AGENT -u HERDR_SOCKET_PATH -u HERDR_PANE_ID -u HERDR_TAB_ID -u HERDR_WORKSPACE_ID -u AI_HERDR_MANAGED_CHILD ...` [Task 3]
+- symptom: `ai --resume` fails during Sunday updates after a repair/rebuild -> cause: interactive repair and `fullupgrade` raced on `ai-agents`, then `podman system prune -f` deleted the quarantined recovery container -> fix: one shared `flock` around recovery and image-only pruning; do not force a destructive test while healthy—the next natural Sunday run is remaining environmental confirmation [Task 4]
+- symptom: lock regression fails despite the implementation lock -> cause: fixture changes `AI_AGENTS_LOCK_FILE` after `LOCK_FILE` was resolved -> fix: override `LOCK_FILE` directly; if `shellcheck` is unavailable, retain Bash parser checks plus executed regressions and runtime verification [Task 4]
+
+# Task Group: Automation-discovery proof loop and background process control
+
+scope: Local automation-discovery build/proof closure and live process-group pause work; use when the user wants evidence-backed automation offers or asks whether a long-running local terminal should be inspected and paused.
+applies_to: cwd=/home/ankit114/projects/mybcat-fit-battery with work in /home/ankit114/workspaces/automation-discovery-2026-07-17/automation-stack and machine-local process inspection; reuse_rule=safe for similar local proof loops and process-control checks on this machine, but treat PGIDs, result hashes, and run IDs as task-specific
+
+## Task 1: Build and prove the five-offer automation-discovery stack locally, success
+
+### rollout_summary_files
+
+- rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md (cwd=/home/ankit114/projects/mybcat-fit-battery, rollout_path=/home/ankit114/.codex/sessions/2026/07/17/rollout-2026-07-17T15-55-34-019f71a6-0749-70d3-ae61-4c503a9fb0d5.jsonl, updated_at=2026-07-18T02:27:47+00:00, thread_id=019f71a6-0749-70d3-ae61-4c503a9fb0d5, local-only proof closure with strict receipts and corpus merge)
+
+### keywords
+
+- automation-discovery, ringer, corpus.db, BUILD_RECEIPT.md, evidence-bundle, allow-review, receipts, sources=21 events_checked=2120 candidates=14 offers=5 receipts=20
+
+## Task 2: Inspect and pause the full-stack hiring process group, success
+
+### rollout_summary_files
+
+- rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md (cwd=/home/ankit114/projects/mybcat-fit-battery, rollout_path=/home/ankit114/.codex/sessions/2026/07/17/rollout-2026-07-17T15-55-34-019f71a6-0749-70d3-ae61-4c503a9fb0d5.jsonl, updated_at=2026-07-18T02:27:47+00:00, thread_id=019f71a6-0749-70d3-ae61-4c503a9fb0d5, exact PGID pause with stopped-state verification)
+
+### keywords
+
+- process-group, SIGSTOP, background terminals, run_ph_hiring_loop.sh, kill -STOP -- -865948, state T, tee -a
+
+## User preferences
+
+- when the user says, "use $automation-discovery and $ringer To aceeaa all my data and connectiongs and fan out and tice me automations" -> treat it as a request to audit real traces and build proof from evidence, not brainstorm from memory [Task 1]
+- after the source plan/walls are shown, "confirm all" is enough approval to proceed [Task 1]
+- when the user asks "status" during long proof work -> provide concise progress plus blocked/unblocked updates without waiting to be asked repeatedly [Task 1]
+- when the user asks whether background terminals are doing anything or says "can we pause fullnsatck hiring eun" -> inspect live state directly, then stop the exact process group and verify it entered `T`/stopped state [Task 1][Task 2]
+
+## Reusable knowledge
+
+- The reliable closure sequence for this stack was: corrected tests -> strict validator -> Ringer PASS -> two fresh ALLOW reviews -> receipt merge -> corpus validation -> backup/export -> continuity capture [Task 1]
+- The first acceptable proof required per-contract observed CLI command/output/exit evidence, strict schema binding, evidence-bundle binding, input hardening, and transaction gates for receipt merging [Task 1]
+- Final validated local state was five built offers and 20 receipts, with corpus validation `sources=21 events_checked=2120 candidates=14 offers=5 receipts=20`; no external send/deploy/commit/schedule action happened [Task 1]
+- The key human-facing artifact is `/home/ankit114/workspaces/automation-discovery-2026-07-17/automation-stack/BUILD_RECEIPT.md` [Task 1]
+- For noisy background-job checks on this machine, filter by target repo/job name first, then confirm PGID and process state; if pausing, stop the whole process group, not one PID [Task 2]
+
+## Failures and how to do differently
+
+- symptom: proof harness says PASS but acceptance still fails -> cause: only outer PASS lines were recorded -> fix: persist each observed command/output/exit separately and reject reduced receipt shapes [Task 1]
+- symptom: validator passes evidence that should fail policy -> cause: it only sanitizes values -> fix: explicitly reject forbidden field names and unexpected evidence keys [Task 1]
+- symptom: `resume` / `handoff` pair leaves a main artifact behind when a sidecar write fails -> cause: partial write treated as success -> fix: treat any nonzero exit as failure and retry in a clean output directory [Task 1]
+- symptom: `ps` output is too noisy to tell if the target job is still active -> cause: many unrelated long-lived agents on the machine -> fix: filter by job/repo name first, then verify PGID plus `T` state [Task 2]
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md:33:- `docs/superpowers/_qa/cvc_emergency_hours_ringer_review_20260713.json`
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md:34:- `docs/superpowers/_qa/cvc_emergency_hours_final_ringer_review_20260713.json`
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md:56:  - Booking claims require `book_success == true`.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md:57:  - Booking failure says nothing is booked, confirms callback readback, then promises one callback.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md:58:  - Caller-ID/DOB/routine-booking contracts stay intact, except the approved urgent-alert callback binding.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md:63:- The final fresh Ringer QA run could not review the repo because the worker’s file-access allowlist blocked `/mnt/d_drive/repos/bland`; this was an environment blocker, not a code failure.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md:64:- No provider version, attachment, call, booking, message, or alert was created during this rollout; that remained intentionally out of scope.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md:91:- None beyond the earlier Ringer file-access blocker.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md:99:This lane is a narrow, tested v31-derived Bland emergency/hours correction in `/mnt/d_drive/repos/bland`, not a broad rewrite. The durable facts are: topology preserved at 88 nodes / 146 edges, `n_hours` remains authoritative, ER speech is gated/non-repeating, booking truth is enforced through `book_success`, and the final documented state is paused at the fresh-review/provider-proof boundary.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md:9:Rollout context: working directory was `/home/ankit114/projects/mybcat-fit-battery`, but the substantive build work was done in `/home/ankit114/workspaces/automation-discovery-2026-07-17/automation-stack` and the work-ledger follow-up happened in `/mnt/d_drive/repos/ai-work-ledger-dashboard`. The user first asked to use automation-discovery/ringer to audit traces and later asked to check background terminals and pause the hiring run.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md:16:- The user’s initial ask was broad and typo-heavy: "use $automation-discovery and $ringer To aceeaa all my data and connectiongs and fan out and tice me automations" -> future similar asks should be treated as a request to discover automations from real traces, not brainstorm from memory.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md:24:- Used Ringer as the visible proof harness; the first proof pass found receipt-provenance gaps, which were fixed before acceptance.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md:26:- Ran a corrected Ringer pass, two fresh hash-bound reviews, merged exactly 20 receipts, marked five offers `built`, validated the corpus, created a backup, and exported markdown views.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md:35:- For this stack, the reliable closure sequence was: corrected tests -> strict validator -> Ringer PASS -> two fresh ALLOW reviews -> receipt merge -> corpus validation -> backup/export -> continuity capture.
+/home/ankit114/.codex/memories/rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md:42:- [2] Corrected Ringer run: `automation-stack-build-20260718T001434Z-p656480` with result SHA `ef88aaf0c5d577d2eaac18cd78b416b0116b4d1cc969280ad0f4255f10032fb7` and evidence SHA `1f3f7b623f45029c1ea8480c59086f10d14582d50b6cdb6bd93f596a36ead29e`
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '20,48p' /home/ankit114/.codex/memories/rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md && sed -n '50,60p' /home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+
+Key steps:
+- Audited local trace surfaces and connectors, then wrote a planned source table and proposed walls/write root before ingestion.
+- Created a local corpus and source inventory, then built a local five-offer automation stack in a separate workspace.
+- Used Ringer as the visible proof harness; the first proof pass found receipt-provenance gaps, which were fixed before acceptance.
+- Added strict receipt validation, evidence-bundle binding, input hardening, and transaction gates for receipt merging.
+- Ran a corrected Ringer pass, two fresh hash-bound reviews, merged exactly 20 receipts, marked five offers `built`, validated the corpus, created a backup, and exported markdown views.
+- Captured sanitized continuity records to OB_mybcat and a work-ledger checkpoint at the end.
+
+Failures and how to do differently:
+- The first proof pass was not acceptable because it recorded harness-level PASS lines instead of per-contract observed CLI evidence and allowed reduced receipt shapes. Future proof flows should store per-scenario observed command/output/exit evidence and require strict schema binding before merge.
+- The proof validator initially missed forbidden field names and extra evidence fields; future similar validators should reject unexpected evidence keys explicitly, not just sanitize values.
+- `resume`/`handoff` artifact writing can still leave a main artifact behind if the sidecar write fails; treat nonzero exits as failure and retry only in a clean output directory.
+
+Reusable knowledge:
+- For this stack, the reliable closure sequence was: corrected tests -> strict validator -> Ringer PASS -> two fresh ALLOW reviews -> receipt merge -> corpus validation -> backup/export -> continuity capture.
+- The local proof artifacts are in `/home/ankit114/workspaces/automation-discovery-2026-07-17/automation-stack`, with the key human-facing receipt at `BUILD_RECEIPT.md`.
+- The merged discovery corpus ended with 20 receipts and five built offers, and corpus integrity passed.
+- The run stayed local: no external sends, deploys, commits, or schedule changes were performed.
+
+References:
+- [1] Local build receipt: `/home/ankit114/workspaces/automation-discovery-2026-07-17/automation-stack/BUILD_RECEIPT.md`
+- [2] Corrected Ringer run: `automation-stack-build-20260718T001434Z-p656480` with result SHA `ef88aaf0c5d577d2eaac18cd78b416b0116b4d1cc969280ad0f4255f10032fb7` and evidence SHA `1f3f7b623f45029c1ea8480c59086f10d14582d50b6cdb6bd93f596a36ead29e`
+- [3] Final corpus validation output: `sources=21 events_checked=2120 candidates=14 offers=5 receipts=20`
+- [4] User approval gate: "confirm all"
+
+## Task 2: inspect and pause background hiring terminal
+
+Outcome: success
+- The following behaviors were enforced:
+  - `n_hours` is authoritative for `open`, `about_to_close`, and `after_hours`.
+  - `{{now_utc}}` is labeled UTC, not Eastern time.
+  - Open urgent flow sets `urgent_slot_mode` to `same_day`.
+  - Closed/unconfirmed-hours flow sets `urgent_slot_mode` to `first_am`.
+  - ER/911 language is gated on explicit severe/worsening symptoms and is non-repeating.
+  - Booking claims require `book_success == true`.
+  - Booking failure says nothing is booked, confirms callback readback, then promises one callback.
+  - Caller-ID/DOB/routine-booking contracts stay intact, except the approved urgent-alert callback binding.
+- Final real-repo verification passed with `1115 passed`.
+- The live read-only builder proof reported `source=v31 nodes=88 edges=146 changed_fields=29 created_version=none attached=false`.
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba /home/ankit114/.codex/memories/rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md | sed -n '22,42p'; nl -ba /home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md | sed -n '50,60p'; nl -ba /home/ankit114/.codex/memories/MEMORY.md | sed -n '502,507p'" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+    22	- Audited local trace surfaces and connectors, then wrote a planned source table and proposed walls/write root before ingestion.
+    23	- Created a local corpus and source inventory, then built a local five-offer automation stack in a separate workspace.
+    24	- Used Ringer as the visible proof harness; the first proof pass found receipt-provenance gaps, which were fixed before acceptance.
+    25	- Added strict receipt validation, evidence-bundle binding, input hardening, and transaction gates for receipt merging.
+    26	- Ran a corrected Ringer pass, two fresh hash-bound reviews, merged exactly 20 receipts, marked five offers `built`, validated the corpus, created a backup, and exported markdown views.
+    27	- Captured sanitized continuity records to OB_mybcat and a work-ledger checkpoint at the end.
+    28	
+    29	Failures and how to do differently:
+    30	- The first proof pass was not acceptable because it recorded harness-level PASS lines instead of per-contract observed CLI evidence and allowed reduced receipt shapes. Future proof flows should store per-scenario observed command/output/exit evidence and require strict schema binding before merge.
+    31	- The proof validator initially missed forbidden field names and extra evidence fields; future similar validators should reject unexpected evidence keys explicitly, not just sanitize values.
+    32	- `resume`/`handoff` artifact writing can still leave a main artifact behind if the sidecar write fails; treat nonzero exits as failure and retry only in a clean output directory.
+    33	
+    34	Reusable knowledge:
+    35	- For this stack, the reliable closure sequence was: corrected tests -> strict validator -> Ringer PASS -> two fresh ALLOW reviews -> receipt merge -> corpus validation -> backup/export -> continuity capture.
+    36	- The local proof artifacts are in `/home/ankit114/workspaces/automation-discovery-2026-07-17/automation-stack`, with the key human-facing receipt at `BUILD_RECEIPT.md`.
+    37	- The merged discovery corpus ended with 20 receipts and five built offers, and corpus integrity passed.
+    38	- The run stayed local: no external sends, deploys, commits, or schedule changes were performed.
+    39	
+    40	References:
+    41	- [1] Local build receipt: `/home/ankit114/workspaces/automation-discovery-2026-07-17/automation-stack/BUILD_RECEIPT.md`
+    42	- [2] Corrected Ringer run: `automation-stack-build-20260718T001434Z-p656480` with result SHA `ef88aaf0c5d577d2eaac18cd78b416b0116b4d1cc969280ad0f4255f10032fb7` and evidence SHA `1f3f7b623f45029c1ea8480c59086f10d14582d50b6cdb6bd93f596a36ead29e`
+    50	- The following behaviors were enforced:
+    51	  - `n_hours` is authoritative for `open`, `about_to_close`, and `after_hours`.
+    52	  - `{{now_utc}}` is labeled UTC, not Eastern time.
+    53	  - Open urgent flow sets `urgent_slot_mode` to `same_day`.
+    54	  - Closed/unconfirmed-hours flow sets `urgent_slot_mode` to `first_am`.
+    55	  - ER/911 language is gated on explicit severe/worsening symptoms and is non-repeating.
+    56	  - Booking claims require `book_success == true`.
+    57	  - Booking failure says nothing is booked, confirms callback readback, then promises one callback.
+    58	  - Caller-ID/DOB/routine-booking contracts stay intact, except the approved urgent-alert callback binding.
+    59	- Final real-repo verification passed with `1115 passed`.
+    60	- The live read-only builder proof reported `source=v31 nodes=88 edges=146 changed_fields=29 created_version=none attached=false`.
+   502	## Reusable knowledge
+   503	
+   504	- The reliable closure sequence for this stack was: corrected tests -> strict validator -> Ringer PASS -> two fresh ALLOW reviews -> receipt merge -> corpus validation -> backup/export -> continuity capture [Task 1]
+   505	- The first acceptable proof required per-contract observed CLI command/output/exit evidence, strict schema binding, evidence-bundle binding, input hardening, and transaction gates for receipt merging [Task 1]
+   506	- Final validated local state was five built offers and 20 receipts, with corpus validation `sources=21 events_checked=2120 candidates=14 offers=5 receipts=20`; no external send/deploy/commit/schedule action happened [Task 1]
+   507	- The key human-facing artifact is `/home/ankit114/workspaces/automation-discovery-2026-07-17/automation-stack/BUILD_RECEIPT.md` [Task 1]
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '1,12p' /home/ankit114/.codex/memories/rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+thread_id: 019f4dd0-8703-7562-b8c4-bd12ab5a5162
+updated_at: 2026-07-14T13:57:16+00:00
+rollout_path: /home/ankit114/.codex/sessions/2026/07/10/rollout-2026-07-10T16-55-39-019f4dd0-8703-7562-b8c4-bd12ab5a5162.jsonl
+cwd: /mnt/d_drive/repos/bland
+
+# CVC emergency/hours correction was implemented and documented, then the session was paused at the remaining review gate.
+
+Rollout context: The work was in `/mnt/d_drive/repos/bland` and focused on a v31-derived Bland AI pathway correction for CVC emergency/hours behavior. The user first asked to pick up after a crash, then the session recovered the prior objective, built and verified a local candidate, and later asked to “document what you've done and pause here.” The final state was a documented handoff with no live/provider action taken.
+
+## Task 1: Crash recovery and lane reconstruction
+
+Outcome: success
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+The evidence supports containment and an “unknown outcome” path, but not a confident single root cause. I’m applying the repo’s compound-engineering review standard to keep the plan tied to measurable proof, explicit gates, and a reversible rollout. No files will be changed.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '1,320p' /home/ankit114/.claude/skills/compound-engineering-primitives/SKILL.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+---
+name: compound-engineering-primitives
+description: Use for serious non-PHI code/repo/agentic engineering tasks, repo-agent run cards, code-agent standards, Cross-Review QA, completion claims, or when applying the Every/Compound Engineering GO-now pattern. Requires plan/spec yardsticks, unitized proof, report-only fresh review, durable artifacts, user-directive precedence, behavior verification before done, and post-solve learning capture. Do not use for tiny edits, PHI/client-sensitive raw plugin use, or installing the Every plugin.
+---
+
+# Compound Engineering Primitives
+
+Use this as Ankit's owned version of the Compound Engineering GO-now. It is a standards implant, not a third-party plugin adoption.
+
+## Fire conditions
+
+Apply for serious non-PHI code/repo/agentic engineering work when any of these are true:
+- a task involves implementation across multiple files, repo changes, tests, PRs, deployment prep, or agent-generated code;
+- a worker is about to claim fixed/done/complete/ready;
+- a fresh-context review, Cross-Review QA, or Hermes Kanban review-required handoff is needed;
+- a reusable lesson appears that should compound into a skill, runbook, solution note, or sanitized OB/Work Ledger capture.
+
+Skip for tiny one-line edits, routine lookups, disposable scratch scripts, or any raw PHI/client-sensitive workflow. This skill does not authorize external sends, CRM/EHR/finance writes, deploys, merges, public uploads, or autonomous commit/push/PR loops.
+
+## Core loop
+
+Run: **Plan -> Work -> Review -> Compound -> Repeat**.
+
+### 1. Plan
+
+Before implementation, create or identify a durable yardstick:
+- product/requirements contract separated from implementation plan;
+- implementation units with stable IDs (`U1`, `U2`, ...);
+- expected proof/test for each unit;
+- acceptance criteria and explicit non-goals;
+- the three decision-residue questions:
+  1. What was the hardest decision made?
+  2. What alternatives were rejected?
+  3. What assumption is least confident?
+
+If no yardstick exists for serious work, make one before changing code.
+
+### 2. Work
+
+Implement against unit IDs. Keep each proof attached to the unit it validates. Prefer the smallest safe diff that satisfies the yardstick.
+
+### 3. Review
+
+Run report-only review by default:
+- fresh context when possible;
+- reviewer findings cite the original plan/spec/unit, not the builder's narrative;
+- reviewer/subagent outputs land in durable artifacts or run comments, not chat-only prose;
+- user directives outrank reviewer best judgment; if a reviewer disagrees, it must flag rather than override;
+- no auto-apply, merge, deploy, external send, or public upload from review alone.
+
+### 4. Compound
+
+Before saying done, classify the highest true state reached and attach evidence:
+- local artifact only / tests passed / committed / pushed / PR opened / merged / deployed / live action taken / blocked / review-required;
+- exact commands/tests/evidence;
+- missing proof or skipped checks;
+- changed files/artifacts;
+- reusable lesson, if any.
+
+If the lesson is reusable, update the smallest durable surface: skill patch, run-card line, solution note, or sanitized Work Ledger/OB capture. Do not capture raw secrets, PHI, client-sensitive details, raw IDs, or raw message bodies.
+
+## Hard no's
+
+- Do not raw-install the Every Compound Engineering plugin by default.
+- Do not use `bunx @every-env/compound-plugin` unless version parity with the current repo/release is proven.
+- Do not trust stale article/install claims without checking the repo/package state.
+- Do not use side-effect-heavy flows such as autonomous commit/push/PR/CI as defaults.
+- Do not use in PHI/client-sensitive contexts without explicit HIPAA/BAA/data-flow review.
+- Do not upload proof/demo artifacts publicly without explicit user approval.
+
+## Required handoff block for serious work
+
+End serious code/repo work with:
+
+```text
+Compound proof:
+- Plan/spec yardstick: <path/ref or none + why acceptable>
+- Units proved: <U-IDs + proof>
+- Review: <fresh/report-only review artifact or why skipped>
+- Highest true state: <local/tested/committed/pushed/PR/merged/deployed/blocked/review-required>
+- Behavior verification: <command/output/ref>
+- Decision residue: hardest decision / alternatives rejected / least-confident assumption
+- Compound capture: <skill/runbook/OB/none + reason>
+```
+
+## See also
+
+Read `references/ce-addendum.md` for the compact run-card checklist to paste into project-local standards.
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+Ankit — candidate packet
+
+CANARY: blue paperclip
+
+recommendation:
+
+BUILDER: Pause automated booking on the production line today, 2026-08-03. Route booking confirmations to staff callback until outcome verification exists.
+
+Then implement this sequence:
+
+1. Treat `/sign` outcomes as `confirmed`, `not_committed`, or `unknown`.
+2. On 502, timeout, disconnect, or malformed response after `/sign` begins, perform bounded exact readback. Match patient, store, slot, status, and uniqueness. Never retry the write.
+3. If exactly one appointment exists, tell the caller it is confirmed. If zero or multiple exist, say the booking is pending office verification. Never say “failed” or ask the caller to rebook.
+4. Add an idempotency/operation key and durable gateway ledger before permitting any retry.
+5. Measure the real write timeout and set explicit node configuration only after measurement. Treat session warming as a later performance optimization.
+
+Rewording the failure message alone is not remediation. A timeout increase alone is unsafe.
+
+OPERATOR:
+
+- Owner: Bland pathway owner, with gateway/EMR owner and office operations owner.
+- Outcome: zero cases where the caller hears failure while an appointment exists; zero duplicate bookings.
+- Date: contain 2026-08-03; obtain timeout/log evidence by 2026-08-04; re-enable only after synthetic canary proof.
+- Risk: continuing live booking exposes callers to false failure and unsafe rebooking.
+- Visibility: Bland node export/events, nginx access/error logs, gateway handler logs, EMR CLI logs, and a receipt containing request ID, commit state, verification result, and final caller branch.
+- Sequence: contain → reconstruct incident → test isolated write under load → implement unknown-state verification → add idempotency → canary → re-enable.
+- Single next action: pause automated booking on the production line through the Bland dashboard, using staff callback as fallback.
+
+confidence (0-1):
+
+`0.84` for the remediation sequence. Only `0.43` for the analyst’s specific client-timeout root cause.
+
+evidence:
+
+- The caller received failure, but the confirmed appointment was created anyway: [EVIDENCE-502.md:10](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:10), [EVIDENCE-502.md:58](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:58).
+- The failure came 48.2 seconds after “Yes,” with `BlandStatusCode: 502`: [EVIDENCE-502.md:46](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:46), [EVIDENCE-502.md:50](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:50).
+- Direct idle `/sign` succeeded twice, so the test did not reproduce the live failure conditions: [EVIDENCE-502.md:64](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:64).
+- The live failure overlapped the shared-gateway load test: [EVIDENCE-502.md:89](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:89).
+- Read latency under load was 18.1–24.4 seconds, but `/sign` was not measured under that same load: [EVIDENCE-502.md:79](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:79).
+- Effective webhook timeout is unknown, and exported settings conflict with the vendor catalog: [EVIDENCE-502.md:19](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:19), [EVIDENCE-502.md:21](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:21).
+- The gateway source snapshot is stale and says internal timeout paths return 504, not 502: [EVIDENCE-502.md:33](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:33).
+
+assumptions:
+
+- Bland dashboard event data and gateway logs still exist for the 2026-08-03 incident.
+- The synthetic record can be used on an isolated gateway or non-production pathway.
+- `/appt-list` can return enough identity fields for an exact match. If not, the gateway needs an operation-status endpoint.
+- Production containment can be approved by the pathway or office owner.
+- The deployed `/sign` implementation may differ materially from the July source snapshot.
+
+unique_catches:
+
+CONTRARIAN:
+
+- The read-node objection is valid against a flat, uniform timeout theory. It does not refute a write-specific timeout because `/sign` under load was never measured.
+- “48.2 seconds” is user-to-agent message latency, not the `/sign` request duration. It cannot be compared directly with the 18–24 second read timings.
+- Writes can take a different path: EMR session lock, login cooldown, CLI commit, persistence, or response serialization. Equal endpoint latency does not imply equal internal work.
+- `BlandStatusCode: 502` may be a Bland synthetic status, not nginx’s status. The stale gateway snapshot cannot establish its origin.
+- `appt_count: 0` in the pathway state versus one appointment in `/appt-list` proves the pathway state is not the booking source of truth.
+- A verify-on-failure branch that only checks “slot exists” can confirm the wrong appointment or miss eventual consistency.
+- Increasing the timeout to 45–60 seconds may increase queue occupancy and worsen the shared-gateway overload. It must be derived from measured write p99 and capacity.
+- Automatic retry remains prohibited until idempotency is proven. `/sign` currently has neither an idempotency key nor visible dedupe: [EVIDENCE-502.md:126](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:126).
+
+risks_or_failure_modes:
+
+- False confirmation from stale or non-unique `/appt-list` results.
+- Double-booking if Bland retries internally or the pathway retries after a client disconnect.
+- Gateway saturation worsened by the test harness or by longer webhook timeouts.
+- Dashboard configuration differs from export, causing a false sense of safety.
+- Logs lack a shared request ID, making the incident impossible to reconstruct.
+- A gateway ledger or logs accidentally retain patient data, tokens, or raw payloads.
+- Staff callback becomes the only safe path but lacks an owner or response-time target.
+
+proof_slots:
+
+VERIFIER, cheapest first:
+
+- `U1 Effective timeout contract`: export the actual `n_book_1` timeout, retry settings, and Bland 502 mapping from the dashboard.  
+  Confirm: the effective timer is shorter than the measured write duration and maps client aborts to synthetic 502.  
+  Refute: timer exceeds the write duration or 502 is generated upstream.
+
+- `U2 Incident timeline`: correlate Bland events, nginx `status`, `upstream_status`, `request_time`, `upstream_response_time`, gateway handler timestamps, and EMR CLI start/finish times.  
+  Confirm: client disconnect/499 occurs before commit or response write, then the EMR completes.  
+  Refute: nginx emits a genuine upstream 502, the gateway process dies, or `/sign` never commits.
+
+- `U3 Write-versus-read load test`: on an isolated gateway, run identical synthetic `/sign` bookings under controlled concurrency while measuring the same reads.  
+  Confirm write-specific timeout if `/sign` p99 exceeds the effective book-node timeout while reads remain below theirs.  
+  Refute the timeout theory if `/sign` completes below the timeout and Bland still produces 502.
+
+- `U4 Ambiguous-outcome test`: simulate commit-then-disconnect and no-commit-then-disconnect.  
+  Confirm: one exact appointment produces confirmation; zero or ambiguous matches produce pending/human callback; neither path retries the write.
+
+- `U5 Idempotency test`: submit the same operation key twice and submit different keys for the same slot.  
+  Confirm: one appointment and the same receipt for the duplicate key; conflict/human review for a distinct operation.  
+  Refute: any duplicate appointment or inability to distinguish attempts.
+
+- `U6 Synthetic canary`: run at least 30 synthetic bookings across idle, normal, and isolated peak load.  
+  Re-enable only with zero false failures, zero duplicates, complete receipts, and write p99 below the configured timeout with measured margin.
+
+needs_human_or_owner_gate:
+
+- Human approval is required before pausing or changing the live Bland pathway, deploying gateway changes, changing timeout policy, or re-enabling booking.
+- Vendor owner must confirm dashboard-effective settings and Bland’s 502 semantics.
+- Gateway owner must approve the operation-key/idempotency contract and logging fields.
+- Office operations must approve the pending-booking message and callback SLA.
+- No production load test may use the shared gateway. The packet explicitly says that harness degraded the live path: [EVIDENCE-502.md:131](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:131).
+
+Status
+- % to true goal: 65% (85%)
+- % to current goal: 100% (98%)
+- Done / ready: evidence-only remediation packet; no files or live systems changed
+- In flight: nothing
+- Not done: containment, instrumentation, implementation, and proof
+- Blocked: production changes require pathway, gateway, and operations owner approval
+- Needs you: approve the owner who will pause automated booking
+Assumptions: the production line can be safely routed to staff callback
+
+
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Completed
+tokens used
+74,833
+Ankit — candidate packet
+
+CANARY: blue paperclip
+
+recommendation:
+
+BUILDER: Pause automated booking on the production line today, 2026-08-03. Route booking confirmations to staff callback until outcome verification exists.
+
+Then implement this sequence:
+
+1. Treat `/sign` outcomes as `confirmed`, `not_committed`, or `unknown`.
+2. On 502, timeout, disconnect, or malformed response after `/sign` begins, perform bounded exact readback. Match patient, store, slot, status, and uniqueness. Never retry the write.
+3. If exactly one appointment exists, tell the caller it is confirmed. If zero or multiple exist, say the booking is pending office verification. Never say “failed” or ask the caller to rebook.
+4. Add an idempotency/operation key and durable gateway ledger before permitting any retry.
+5. Measure the real write timeout and set explicit node configuration only after measurement. Treat session warming as a later performance optimization.
+
+Rewording the failure message alone is not remediation. A timeout increase alone is unsafe.
+
+OPERATOR:
+
+- Owner: Bland pathway owner, with gateway/EMR owner and office operations owner.
+- Outcome: zero cases where the caller hears failure while an appointment exists; zero duplicate bookings.
+- Date: contain 2026-08-03; obtain timeout/log evidence by 2026-08-04; re-enable only after synthetic canary proof.
+- Risk: continuing live booking exposes callers to false failure and unsafe rebooking.
+- Visibility: Bland node export/events, nginx access/error logs, gateway handler logs, EMR CLI logs, and a receipt containing request ID, commit state, verification result, and final caller branch.
+- Sequence: contain → reconstruct incident → test isolated write under load → implement unknown-state verification → add idempotency → canary → re-enable.
+- Single next action: pause automated booking on the production line through the Bland dashboard, using staff callback as fallback.
+
+confidence (0-1):
+
+`0.84` for the remediation sequence. Only `0.43` for the analyst’s specific client-timeout root cause.
+
+evidence:
+
+- The caller received failure, but the confirmed appointment was created anyway: [EVIDENCE-502.md:10](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:10), [EVIDENCE-502.md:58](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:58).
+- The failure came 48.2 seconds after “Yes,” with `BlandStatusCode: 502`: [EVIDENCE-502.md:46](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:46), [EVIDENCE-502.md:50](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:50).
+- Direct idle `/sign` succeeded twice, so the test did not reproduce the live failure conditions: [EVIDENCE-502.md:64](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:64).
+- The live failure overlapped the shared-gateway load test: [EVIDENCE-502.md:89](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:89).
+- Read latency under load was 18.1–24.4 seconds, but `/sign` was not measured under that same load: [EVIDENCE-502.md:79](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:79).
+- Effective webhook timeout is unknown, and exported settings conflict with the vendor catalog: [EVIDENCE-502.md:19](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:19), [EVIDENCE-502.md:21](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:21).
+- The gateway source snapshot is stale and says internal timeout paths return 504, not 502: [EVIDENCE-502.md:33](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:33).
+
+assumptions:
+
+- Bland dashboard event data and gateway logs still exist for the 2026-08-03 incident.
+- The synthetic record can be used on an isolated gateway or non-production pathway.
+- `/appt-list` can return enough identity fields for an exact match. If not, the gateway needs an operation-status endpoint.
+- Production containment can be approved by the pathway or office owner.
+- The deployed `/sign` implementation may differ materially from the July source snapshot.
+
+unique_catches:
+
+CONTRARIAN:
+
+- The read-node objection is valid against a flat, uniform timeout theory. It does not refute a write-specific timeout because `/sign` under load was never measured.
+- “48.2 seconds” is user-to-agent message latency, not the `/sign` request duration. It cannot be compared directly with the 18–24 second read timings.
+- Writes can take a different path: EMR session lock, login cooldown, CLI commit, persistence, or response serialization. Equal endpoint latency does not imply equal internal work.
+- `BlandStatusCode: 502` may be a Bland synthetic status, not nginx’s status. The stale gateway snapshot cannot establish its origin.
+- `appt_count: 0` in the pathway state versus one appointment in `/appt-list` proves the pathway state is not the booking source of truth.
+- A verify-on-failure branch that only checks “slot exists” can confirm the wrong appointment or miss eventual consistency.
+- Increasing the timeout to 45–60 seconds may increase queue occupancy and worsen the shared-gateway overload. It must be derived from measured write p99 and capacity.
+- Automatic retry remains prohibited until idempotency is proven. `/sign` currently has neither an idempotency key nor visible dedupe: [EVIDENCE-502.md:126](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:126).
+
+risks_or_failure_modes:
+
+- False confirmation from stale or non-unique `/appt-list` results.
+- Double-booking if Bland retries internally or the pathway retries after a client disconnect.
+- Gateway saturation worsened by the test harness or by longer webhook timeouts.
+- Dashboard configuration differs from export, causing a false sense of safety.
+- Logs lack a shared request ID, making the incident impossible to reconstruct.
+- A gateway ledger or logs accidentally retain patient data, tokens, or raw payloads.
+- Staff callback becomes the only safe path but lacks an owner or response-time target.
+
+proof_slots:
+
+VERIFIER, cheapest first:
+
+- `U1 Effective timeout contract`: export the actual `n_book_1` timeout, retry settings, and Bland 502 mapping from the dashboard.  
+  Confirm: the effective timer is shorter than the measured write duration and maps client aborts to synthetic 502.  
+  Refute: timer exceeds the write duration or 502 is generated upstream.
+
+- `U2 Incident timeline`: correlate Bland events, nginx `status`, `upstream_status`, `request_time`, `upstream_response_time`, gateway handler timestamps, and EMR CLI start/finish times.  
+  Confirm: client disconnect/499 occurs before commit or response write, then the EMR completes.  
+  Refute: nginx emits a genuine upstream 502, the gateway process dies, or `/sign` never commits.
+
+- `U3 Write-versus-read load test`: on an isolated gateway, run identical synthetic `/sign` bookings under controlled concurrency while measuring the same reads.  
+  Confirm write-specific timeout if `/sign` p99 exceeds the effective book-node timeout while reads remain below theirs.  
+  Refute the timeout theory if `/sign` completes below the timeout and Bland still produces 502.
+
+- `U4 Ambiguous-outcome test`: simulate commit-then-disconnect and no-commit-then-disconnect.  
+  Confirm: one exact appointment produces confirmation; zero or ambiguous matches produce pending/human callback; neither path retries the write.
+
+- `U5 Idempotency test`: submit the same operation key twice and submit different keys for the same slot.  
+  Confirm: one appointment and the same receipt for the duplicate key; conflict/human review for a distinct operation.  
+  Refute: any duplicate appointment or inability to distinguish attempts.
+
+- `U6 Synthetic canary`: run at least 30 synthetic bookings across idle, normal, and isolated peak load.  
+  Re-enable only with zero false failures, zero duplicates, complete receipts, and write p99 below the configured timeout with measured margin.
+
+needs_human_or_owner_gate:
+
+- Human approval is required before pausing or changing the live Bland pathway, deploying gateway changes, changing timeout policy, or re-enabling booking.
+- Vendor owner must confirm dashboard-effective settings and Bland’s 502 semantics.
+- Gateway owner must approve the operation-key/idempotency contract and logging fields.
+- Office operations must approve the pending-booking message and callback SLA.
+- No production load test may use the shared gateway. The packet explicitly says that harness degraded the live path: [EVIDENCE-502.md:131](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:131).
+
+Status
+- % to true goal: 65% (85%)
+- % to current goal: 100% (98%)
+- Done / ready: evidence-only remediation packet; no files or live systems changed
+- In flight: nothing
+- Not done: containment, instrumentation, implementation, and proof
+- Blocked: production changes require pathway, gateway, and operations owner approval
+- Needs you: approve the owner who will pause automated booking
+Assumptions: the production line can be safely routed to staff callback
+
+

@@ -1,0 +1,20 @@
+{
+  "run_name": "north-mini-code-rookie-audition",
+  "workdir": "/tmp/ringer-north-mini-code-rookie-audition-v2",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "route-normalizer",
+      "task_type": "code-feature",
+      "engine": "opencode",
+      "model": "openrouter/cohere/north-mini-code:free",
+      "spec": "You are a low-stakes rookie coding worker being evaluated through an executable check. Work only in your current task directory. Create exactly one owned file, ./normalize_route.py, and no other files. Do not modify a repository, install packages, use the network, or run git. The script must read exactly one JSON object from stdin. It must require non-empty string fields task_type and engine, accept an optional string field model that defaults to an empty string, trim surrounding whitespace from all three values, lowercase task_type and engine, preserve the trimmed model value, and write exactly one compact JSON object followed by one newline to stdout with keys task_type, engine, and model. Invalid JSON, non-object input, missing or blank required fields, and non-string field values must exit nonzero and write a single stderr line beginning with ERROR:. Use only the Python standard library. Do not merely describe the solution; implement and locally exercise normalize_route.py before finishing.",
+      "check": "python3 '/home/ankit114/repos/ringer/my-manifests/probes/checks/north-mini-code-route-normalizer-check.py' normalize_route.py",
+      "expect_files": [
+        "normalize_route.py"
+      ],
+      "timeout_s": 600,
+      "verified": "the worker's Python route normalizer passes two success fixtures and rejects blank-engine, invalid-JSON, non-object, and all three non-string field inputs with the required error contract"
+    }
+  ]
+}

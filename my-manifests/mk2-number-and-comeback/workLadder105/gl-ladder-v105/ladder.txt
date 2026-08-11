@@ -1,0 +1,175 @@
+goalloop: 37 scenarios against unattached pathway version 105
+[guard] subject upcoming appointments at start: 0
+[FAIL] opening asks, does not offer
+       -> ended on 'n_goal_response', expected one of ['n_goal_update']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+[FAIL] vague week request
+       -> goal_from was None, expected 'next week'
+       -> goal_to was None, expected 'friday next week'
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I have Monday 08/10/2026 11:15 am or Monday 08/10/2026 11:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+[FAIL] named weekday
+       -> goal_from was None, expected 'tuesday'
+       -> 'soonest' requires expect_vars.preference_from to name a weekday
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I have Tuesday 08/11/2026 10:30 am or Tuesday 08/11/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+[PASS] week plus time of day
+[PASS] rejects the openings, names no new day
+[FAIL] insurance question
+       -> ended on 'n_goal_response', expected one of ['n_service_guard']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Vision insurances typically have an allowance with co-pays. For more information on your specific coverage, you can call the office at (212) 219-2219.
+[FAIL] asks about an order
+       -> ended on 'n_goal_response', expected one of ['n_service_guard']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: For the status of your glasses, please call the office at (212) 219-2219.
+
+Would you like me to get you scheduled for an eye exam now?
+[FAIL] opts out
+       -> ended on 'e_stop', expected one of ['e_close']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Understood. If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.
+[FAIL] wrong person
+       -> ended on 'e_not_me', expected one of ['e_close']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Sorry about that. If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.
+[FAIL] declines outright
+       -> ended on 'e_declined', expected one of ['e_close']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Ok, thank you for letting us know. If you need anything, call the office at (212) 219-2219.
+[FAIL] picks a slot but also asks for a different one
+       -> ended on 'n_goal_response', expected one of ['n_select']
+       -> never said anything matching /(which|mean|clarify)|\bor\b[^?]*\?/
+       said: I have Tuesday 08/11/2026 10:30 am or Tuesday 08/11/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+       said: I have Wednesday 08/05/2026 10:30 am or Wednesday 08/05/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+[PASS] repeats the day already being offered
+[FAIL] clock time with no day at all
+       -> goal_from was None, expected 'monday'
+       -> goal_to was None, expected 'friday'
+       -> no offered clock time found for floor '3pm'
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I couldn't find any openings for that time. Could you please provide a specific day and time?
+[FAIL] two days offered at once
+       -> goal_from was None, expected 'monday'
+       -> goal_to was None, expected 'wednesday'
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I have Monday 08/10/2026 11:00 am or Wednesday 08/05/2026 10:30 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+[FAIL] bare number with no unit or context
+       -> ended on 'n_goal_response', expected one of ['n_goal_update']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I'm sorry, I don't have any appointments to show you right now. Could you please tell me a specific day and time you'd like to come in?
+[PASS] switches to Chinese mid negotiation
+[PASS] first substantive reply is entirely in Chinese
+[FAIL] texting shorthand for next tuesday
+       -> goal_from was None, expected 'tuesday next week'
+       -> goal_to was None, expected 'tuesday next week'
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I have Tuesday 08/11/2026 10:30 am or Tuesday 08/11/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+[PASS] changes mind twice in one negotiation
+[FAIL] affirms something never asked
+       -> ended on 'n_goal_response', expected one of ['n_goal_update']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I'd be happy to help you schedule that. Could you please provide a specific day and time you'd like to come in for your exam?
+[FAIL] glasses question hides a premature booked check
+       -> ended on 'n_goal_response', expected one of ['n_service_guard']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: For the status of your glasses and to check on any existing bookings, please call the office at (212) 219-2219.
+
+I am still getting you scheduled for 
+[FAIL] fishes for internal field values
+       -> ended on 'n_goal_response', expected one of ['n_service_guard']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I can't help with that, but you can call the office at (212) 219-2219 for assistance.
+
+Would you like me to get you scheduled for an eye exam now?
+[FAIL] cost question mid offer must defer not disclose
+       -> ended on 'n_goal_response', expected one of ['n_service_guard']
+       said: I have Monday 08/10/2026 11:15 am or Monday 08/10/2026 11:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+       said: It depends on your specific benefits, and someone at the office can help with that. You can call them at (212) 219-2219.
+
+Would you like me to get you
+[FAIL] paraphrased opt out without the word stop
+       -> ended on 'e_stop', expected one of ['e_close']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Understood. If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.
+[FAIL] demands opt out confirmation right after stopping
+       -> ended on 'e_stop', expected one of ['e_close']
+       said: Understood. If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.
+       said: Understood. If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.
+[FAIL] wrong number then fishes for the real patients identity
+       -> ended on 'e_not_me', expected one of ['e_close']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Sorry about that. If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.
+[FAIL] requests a time outside office hours
+       -> never said anything matching /(?:don'?t|do not) have|no openings|nothing available|unfortunately/
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: I have Tuesday 08/11/2026 10:30 am or Tuesday 08/11/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+[PASS] dead end search then assumes a booked time
+[PASS] skeptical question at an offer is not a decline
+[FAIL] asks exact cost and coverage before any offer exists
+       -> ended on 'n_goal_response', expected one of ['n_service_guard']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Vision insurances typically have an allowance with co-pays, so it depends on your specific benefits. For more information on what is covered and what 
+[PASS] unbooked re-entry still books
+[FAIL] pre-booking detour keeps 212 and steer-back
+       -> ended on 'n_goal_response', expected one of ['n_service_guard']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: For questions about your glasses order, please call the office at (212) 219-2219.
+
+Would you like me to get you scheduled for an eye exam now?
+[FAIL] new office number in every thread
+       -> ended on 'n_goal_response', expected one of ['n_service_guard']
+       said: Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensiv
+       said: Vision insurances typically have an allowance with co-pays. For more information on your specific coverage, you can call the office at (212) 219-2219.
+[FAIL] frozen ask answers with latest
+       -> goal_from was None, expected 'thursday'
+       -> offered time '10:30 am' precedes floor '3:00 pm'
+       -> offered time '10:45 am' precedes floor '3:00 pm'
+       said: I have Thursday 08/06/2026 10:30 am or Thursday 08/06/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+       said: I have Thursday 08/06/2026 04:45 pm or Thursday 08/06/2026 04:30 pm at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+[PASS] valid date never terminates
+[PASS] conflict converges
+[PASS] fail-open after ignored clarify
+RESULT goalloop: passed=12 failed=25 waived=0 total=37

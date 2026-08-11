@@ -1,0 +1,91 @@
+{
+  "verdict": "PASS",
+  "inspected_at_utc": "2026-07-30T16:47:52Z",
+  "inspection_method": [
+    "Fresh Google Chrome PDFs rendered at Letter size",
+    "All 27 pages rasterized at 150 dpi",
+    "Retained one-pager inspected after byte-matched MyBCAT logo insertion",
+    "Template-framed one-pager inspected against the uploaded sample after two page-balance refinements",
+    "Explainer pages 1 through 25 inspected in five numbered contact sheets",
+    "PDF word-box and raster-edge bottom-safety validators for both one-pagers"
+  ],
+  "expected_pages": 27,
+  "pages_inspected": 27,
+  "approved_logo": {
+    "source_sha256": "1e969dcafdefe20f809f4a393b6be0ca41a226ad5efeaa207d683a6c0fa36942",
+    "embedded_byte_match_current": true,
+    "embedded_byte_match_template_framed": true,
+    "visible_crisp_and_proportional": "PASS"
+  },
+  "artifacts": {
+    "onepager": {
+      "pages": 1,
+      "page_size_points": [612, 792],
+      "sha256": "e72e6ba5d230e70ad831d0e6d27e1cf4bdc7e1a22f89785b82969375b19e4d70"
+    },
+    "template_framed_onepager": {
+      "pages": 1,
+      "page_size_points": [612, 792],
+      "sha256": "ecd9f8c1725b1fafc203cc9c334bdb0102a1cc9775256f060d568048e39856a3"
+    },
+    "number_explainer": {
+      "pages": 25,
+      "page_size_points": [612, 792],
+      "sha256": "1e98ba54b64aa0d1042d006dd87458b318320ac9c1333f3219337349ec079b0f"
+    }
+  },
+  "checks": {
+    "real_mybcat_logo_both_onepagers": "PASS",
+    "retained_page_visible_content_unchanged": "PASS",
+    "template_framed_sample_hierarchy": "PASS",
+    "template_framed_truthful_message_boundary": "PASS",
+    "dark_navy_heroes": "PASS",
+    "client_opportunity_54_circular_gauges": "PASS",
+    "aqua_teal_gold_palette": "PASS",
+    "complete_executive_reads": "PASS",
+    "five_window_catchment_table_retained": "PASS",
+    "four_market_proof_points_template_framed": "PASS",
+    "competition_wedge_bounded_to_same_page_google_sample": "PASS",
+    "four_proof_to_unlock_rows": "PASS",
+    "exactly_three_fix_cards_each": "PASS",
+    "project_room_boundary": "PASS",
+    "white_bottom_safety_gutters": "PASS",
+    "retained_bottom_pdf_text_margin_points": 25.70,
+    "retained_bottom_raster_margin_pixels_at_150dpi": 27,
+    "template_bottom_pdf_text_margin_points": 42.49,
+    "template_bottom_raster_margin_pixels_at_150dpi": 150,
+    "clipping": "PASS",
+    "overlap": "PASS",
+    "cut_off_text": "PASS",
+    "blank_or_near_blank_spill_pages": "PASS",
+    "broken_tables_or_meters": "PASS",
+    "orphaned_headings": "PASS",
+    "page_edge_violations": "PASS",
+    "header_footer_consistency": "PASS",
+    "score_direction_clarity": "PASS"
+  },
+  "page_results": [
+    {"scope": "retained logo-backed onepager page 1", "result": "PASS"},
+    {"scope": "template-framed logo-backed onepager page 1", "result": "PASS"},
+    {"scope": "explainer pages 1-5", "result": "PASS"},
+    {"scope": "explainer pages 6-10", "result": "PASS"},
+    {"scope": "explainer pages 11-15", "result": "PASS"},
+    {"scope": "explainer pages 16-20", "result": "PASS"},
+    {"scope": "explainer pages 21-25", "result": "PASS"}
+  ],
+  "corrected_findings": [
+    {
+      "finding": "The retained one-pager used a CSS-drawn placeholder mark rather than the approved MyBCAT logo.",
+      "resolution": "Embedded the exact approved transparent PNG bytes while preserving all visible report text and page geometry.",
+      "status": "resolved"
+    },
+    {
+      "finding": "The first template-framed render left unnecessary unused space below the methodology and underused the sample's lower-page decision frame.",
+      "resolution": "Enlarged proof rows and First 30 Days copy, added a bounded decision rule and evidence-return CTA, then centered the methodology in its existing safe footer box.",
+      "status": "resolved"
+    }
+  ],
+  "blocking_findings": [],
+  "external_actions_taken": "none",
+  "highest_truthful_state": "VISUAL_QA_PASSED_FRESH_REVIEWS_PENDING"
+}

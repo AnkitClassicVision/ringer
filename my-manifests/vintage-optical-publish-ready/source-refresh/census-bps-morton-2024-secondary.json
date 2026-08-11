@@ -1,0 +1,30 @@
+{
+  "requestId": "43ca44ecec11872e36b2d532be713cc9",
+  "results": [
+    {
+      "id": "https://mytownview.com/illinois/tazewell/morton/business",
+      "title": "Building Permits in Morton, Illinois",
+      "url": "https://mytownview.com/illinois/tazewell/morton/business",
+      "author": null,
+      "text": "Building Permits in Morton, Illinois\n\nMyTownView\n\nMorton, Illinois issued 12 residential building permits in 2024, worth $5.5M. Single-family homes made up 100% of permits. We have 2 years of data from the Census Building Permits Survey. See also local economy and business directory.\n\nConstruction Value\n\n$5.5M \u25b2 58.6%\n\nUnits Permitted\n\n12 \u25b2 71.4%\n\nAvg Value / Unit\n\n$455K\n\n2024 \u00b7 Census Bureau Building Permits Survey\n\n---\n\nConstruction activity in Morton jumped in 2024, up 71.4% from the prior year with 12 housing units permitted. At $455K per unit, new builds are running 77% above the Tazewell County average of $257K, pointing to higher-end construction. Volume is still modest compared to neighboring towns (90% fewer units than the county average of 117), but the investment per project is strong. All permits were for single-family homes.\n\nHousing Mixi\n\n12units\n\n\u25a0Single-Family100%\n\n\u25a0Duplex0%\n\n\u25a03-4 Unit0%\n\n\u25a05+ Unit0%\n\nDevelopment Densityi\n\nUnits per building permitted\n\n1.0\n\n1.05.01020+\n\nAll HousesHigh-Density\n\n1.0 units/bldgCounty avg: 1.2\n\nAll construction is single-family detached homes.\n\nConstruction Intensityi\n\n$329\n\nper resident\n\nCounty avg: $9K-97%\n\n$424K\n\nper square mile\n\nMorton vs. Tazewell County Averagei\n\nTotal Units-90%\n\nMorton\n\n12\n\nCounty\n\n117\n\nConstruction Value-82%\n\nMorton\n\n$5.5M\n\nCounty\n\n$30.0M\n\nValue per Unit+77%\n\nMorton\n\n$455K\n\nCounty\n\n$257K\n\nMulti-Family Units-100%\n\nMorton\n\n0\n\nCounty\n\n19\n\nWhere the Money Goesi\n\nConstruction value by housing type (2024)\n\nSingle-Family $5.5M\n\n| Type | Units | Bldgs | Value | Share |\n| --- | --- | --- | --- | --- |\n| \u25a0 Single-Family | 12 | 12 | $5.5M | 100% |\n| \u25a0 Duplex | 0 | 0 | \u2013 | 0% |\n| \u25a0 3-4 Unit | 0 | 0 | \u2013 | 0% |\n| \u25a0 5+ Unit | 0 | 0 | \u2013 | 0% |\n\nCounty Ranking by Construction Volume\n\nAmong 17 permit-issuing towns in Tazewell County County\n\n#3\n\n#1 East Peoria (33 units)\n\n#17 North Pekin village\n\nHistorical trends, year-over-year analysis, and full permit history available with a paid plan. See products & pricing \u2192\n\n---\n\n### Need a Permit?\n\nPlanning & Community Development\n\n120 N Main St, Morton, IL 61550\n\n## Frequently Asked Questions\n\nWhat types of building permits are tracked here?This page shows data from the Census Bureau's Building Permits Survey, which tracks permits for new residential construction (single-family homes, duplexes, 3-4 unit buildings, and 5+ unit buildings). It includes both the number of permits issued and the total construction valuation.\n\nHow do building permits indicate local growth?Building permit activity is a leading indicator of development and economic health. Rising permit counts suggest growing demand and investment in the community. A shift toward multi-family permits may indicate increasing housing density, while declining permits can signal an economic slowdown.\n\nWhere does this building permit data come from?Data comes from the U.S. Census Bureau's Building Permits Survey (BPS), which collects monthly reports from permit-issuing jurisdictions across the country. Annual totals are published for municipalities with populations over 1,000. Data is typically available within 6-12 months of the reporting period.\n\nFollow Morton, get a free weekly email of new meetings, permits, and crime.\n\nOr subscribe with just an email\n\nSame data on nearby towns: East Peoria\n\nFeedback",
+      "summary": "Morton, Illinois issued 12 residential building permits in 2024, totaling $5.5 million (all for single-family homes). This represents a 71.4% year-over-year increase in permit count and a 58.6% rise in construction value. The average value per unit is $455k, well above the Tazewell County average of $257k, indicating higher-end new builds. Construction activity remains modest relative to the county (about 90% fewer units than the county average of 117), with no multi-family permits issued in 2024. The data come from the U.S. Census Bureau's Building Permits Survey.",
+      "image": "https://mytownview.com/og-image.png",
+      "favicon": "https://mytownview.com/favicon-32x32.png"
+    }
+  ],
+  "statuses": [
+    {
+      "id": "https://mytownview.com/illinois/tazewell/morton/business",
+      "status": "success",
+      "source": "crawled"
+    }
+  ],
+  "costDollars": {
+    "total": 0.002,
+    "contents": {
+      "text": 0.001,
+      "summary": 0.001
+    }
+  },
+  "searchTime": 2712.3654760000063
+}

@@ -1,0 +1,12 @@
+GW_COUNT_BEFORE=0
+TURN 'hi' -> node=n_ask
+  SAID Hi RACHEL, this is MK2 Optical. We noticed that it's been awhile since your last visit with us. This is a great time to update your lenses, explore our newest e
+TURN 'the first available time works' -> node=n_offer
+  SAID I have 08/10/2026 11:15 am or 08/10/2026 11:30 am at MK2. Reply 1 or 2 to take one, or tell me another day or time.
+TURN '1' -> node=n_gate_1
+  SAID To confirm, your eye exam would be 08/10/2026 11:15 am at MK2. Reply YES to book it, or NO to look at other times.
+TURN 'yes' -> node=e_book_unknown
+  SAID I wasn't able to confirm whether that booking went through. The MK2 Optical office will double-check it and reach out to you. If you'd like, you can also call t
+END_NODE=e_book_unknown
+GW_COUNT_AFTER=0
+VERDICT: PASS mode=unknown end=e_book_unknown

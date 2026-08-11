@@ -1,0 +1,7 @@
+TURN=1 node=n_post_booking spoken=[] slots=[] said="Hi Rachel! I'm just calling to confirm that your appointment is all set. Is there anything"
+TURN=2 node=e_existing spoken=[] slots=[] said='Please call MK2 Optical at (212) 219-2219 and the office can help with that appointment.'
+TURN=3 node=e_existing spoken=[] slots=[] said='Please call MK2 Optical at (212) 219-2219 and the office can help with that appointment.'
+TURN=4 node=e_existing spoken=[] slots=[] said='Please call MK2 Optical at (212) 219-2219 and the office can help with that appointment.'
+TURN=5 node=e_existing spoken=[] slots=[] said='Please call MK2 Optical at (212) 219-2219 and the office can help with that appointment.'
+TURN=6 node=e_existing spoken=[] slots=[] said='Please call MK2 Optical at (212) 219-2219 and the office can help with that appointment.'
+PASS: every spoken date is backed by a live slot variable

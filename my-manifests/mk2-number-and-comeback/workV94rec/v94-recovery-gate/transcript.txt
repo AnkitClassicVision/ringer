@@ -1,0 +1,14 @@
+GW_COUNT_BEFORE=0
+TURN 'hi' -> node=n_ask
+  SAID Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.
+
+Many vision insurance benefits renew yearly, so don't let your benefits go unused!
+
+When would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.
+
+如需中文服务，请直接用中文回复。
+END_NODE=n_ask
+APPT_COUNT_VAR=0
+VERDICT: PASS mode=gate_clean

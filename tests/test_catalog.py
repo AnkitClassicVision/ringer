@@ -23,6 +23,7 @@ from ringer import (  # noqa: E402
     CatalogRefreshResult,
     EvalConfig,
     catalog_changes_path,
+    catalog_explore_candidates,
     normalize_catalog_payload,
     refresh_openrouter_catalog,
     run_catalog_command,
@@ -209,6 +210,17 @@ class CatalogTests(unittest.TestCase):
                 "logged_at": "2026-07-04T10:00:00+00:00",
             }
         )
+        rows.append(
+            {
+                "run_id": "prefixed-openrouter-run",
+                "task_key": "task",
+                "worker_engine": "opencode",
+                "model": "openrouter/cohere/north-mini-code:free",
+                "task_type": "code-feature",
+                "verdict": "PASS",
+                "logged_at": "2026-07-05T10:00:00+00:00",
+            }
+        )
         log_path.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
         catalog_path = self.root / "catalog.json"
         source = source_file(
@@ -219,6 +231,7 @@ class CatalogTests(unittest.TestCase):
                 model("probation-model", prompt="0.000001", completion="0.000001"),
                 model("free-candidate:free", prompt="0.000002", completion="0.000002"),
                 model("cheap-candidate", prompt="0.0000005", completion="0.0000005"),
+                model("cohere/north-mini-code:free", prompt="0", completion="0"),
                 model("openrouter/auto", prompt="-1", completion="-1"),
                 model("image-model", prompt="0", completion="0", modality="text+image->text"),
                 model("small-context", prompt="0", completion="0", context_length=16000),
@@ -264,10 +277,39 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("probation ", output)
         self.assertIn("untested  free-candidate:free", output)
         self.assertIn("untested  cheap-candidate", output)
+        self.assertIn("probation openrouter/cohere/north-mini-code:free", output)
+        self.assertNotIn("untested  cohere/north-mini-code:free", output)
         self.assertNotIn("openrouter/auto", output)
         self.assertNotIn("image-model", output)
         self.assertNotIn("small-context", output)
         self.assertNotIn("embedder", output)
+
+    def test_explore_normalization_preserves_returned_catalog_route(self) -> None:
+        candidates = catalog_explore_candidates(
+            [
+                {
+                    "id": "cohere/north-mini-code:free",
+                    "modality": "text->text",
+                    "context_length": 256000,
+                    "free": True,
+                    "variable_pricing": False,
+                    "prompt_per_m": 0,
+                    "completion_per_m": 0,
+                },
+                {
+                    "id": "vendor/new-model:free",
+                    "modality": "text->text",
+                    "context_length": 128000,
+                    "free": True,
+                    "variable_pricing": False,
+                    "prompt_per_m": 0,
+                    "completion_per_m": 0,
+                },
+            ],
+            tested_models={"openrouter/cohere/north-mini-code:free"},
+        )
+
+        self.assertEqual(["vendor/new-model:free"], [row["id"] for row in candidates])
 
     def test_missing_or_malformed_pricing_is_unknown_variable_not_free(self) -> None:
         snapshot = self.root / "catalog.json"

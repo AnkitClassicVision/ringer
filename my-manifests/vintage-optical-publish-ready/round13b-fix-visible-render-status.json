@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-source-refresh-report",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-status-fix",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "correct-visible-render-status",
+      "engine": "local-shell",
+      "task_type": "docs",
+      "timeout_s": 180,
+      "expect_files": ["status_fix_receipt.json"],
+      "spec": "set -euo pipefail; target=/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/fix_render_status.py --dir \"$target\" --receipt \"$PWD/status_fix_receipt.json\"",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_render_status_fix.py --dir /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents --receipt ./status_fix_receipt.json && PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_report_build_sources.py --dir /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents",
+      "verified": "only the three client-visible report source files replace the stale render-pending label with the accurate rendered-internal-candidate label, while all scores, facts, receipts, null gates, and numeric lineage remain unchanged"
+    }
+  ]
+}

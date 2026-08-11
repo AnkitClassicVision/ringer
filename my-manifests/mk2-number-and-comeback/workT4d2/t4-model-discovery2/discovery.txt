@@ -1,0 +1,10 @@
+GET_PATHWAY_HTTP=200
+SCAN pathway.json:
+  "modelOptions":{"newTemperature":0.2
+  "modelOptions":{"retryAttempts":0
+  "modelOptions":{"retryAttempts":1
+  "modelOptions":{"skipUserResponse":true
+GET_VERSIONS_HTTP=200
+SCAN versions.json:
+  NONE-FOUND
+SCAN_DONE

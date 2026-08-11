@@ -1,0 +1,17 @@
+2026-08-05 17:22:04,631 INFO live_text_shape=plain marks=0
+2026-08-05 17:22:04,632 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 17:22:04,637 INFO live_text_shape=plain marks=0
+2026-08-05 17:22:04,637 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 17:22:04,637 INFO live_text_shape=plain marks=0
+2026-08-05 17:22:04,637 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 17:22:04,638 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 17:22:04,638 INFO live_text_shape=plain marks=0
+2026-08-05 17:22:04,638 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 17:22:04,638 INFO live_text_shape=plain marks=0
+2026-08-05 17:22:04,638 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+CASE=garbled-zh-daypart AFTER=12:00
+CASE=verbatim-wins AFTER=16:00
+CASE=garbled-later-floor AFTER_GT=10:30
+CASE=both-empty UNCHANGED=true
+CASE=explicit-still-wins AFTER=15:00
+CASE=english-garble-window BEFORE=12:00

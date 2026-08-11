@@ -1,0 +1,20 @@
+{
+  "run_name": "nemotron-ultra-audition",
+  "workdir": "/tmp/ringer-nemotron-ultra-audition-20260715",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "mechanical-normalizer",
+      "task_type": "probe",
+      "engine": "opencode",
+      "model": "openrouter/nvidia/nemotron-3-ultra-550b-a55b:free",
+      "spec": "You are a bounded mechanical probe worker auditioning NVIDIA Nemotron 3 Ultra through Ringer. Boundary: work only inside your current disposable task directory. Do not read or modify any repository, home-directory file, credential, or shared state. Do not load skills or call MCP/Apps. Do not use network tools. Do not git commit. You own exactly one deliverable: ./nemotron_probe.py. Build a Python 3.11 standard-library-only command-line program with this exact behavior: read one JSON value from stdin; require it to be an array of strings; for every string trim surrounding whitespace and lowercase it; discard empty results; deduplicate; sort ascending; then write one compact JSON object to stdout with keys count and items, where count equals the number of normalized items. For malformed JSON or any non-array/non-string member, print a clear error to stderr containing the phrase 'expected a JSON array' and exit with status 2. On valid input exit 0 and print no prose outside the JSON. Do not create any other file. After writing the script, run it once locally with a representative valid input, then stop.",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/auditions/nemotron-ultra/check_probe.py nemotron_probe.py",
+      "expect_files": [
+        "nemotron_probe.py"
+      ],
+      "timeout_s": 300,
+      "verified": "the generated Python program passes deterministic valid-input and invalid-input execution checks and creates no extra task files"
+    }
+  ]
+}

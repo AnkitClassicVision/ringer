@@ -1,0 +1,45 @@
+{
+  "agent": "codex-contrarian",
+  "recommendation": "Reject all four options as stated. Keep patient-visible progress copy, avoid a prompt-wide filler deletion and a rushed gateway latest-first mode, and only ship a narrowly scoped explicit latest/late/end-of-day route into the existing late-search path after a platform-equivalent replay proves edge priority and a rendered terminal response. If that proof cannot finish before opening, leave v94 unchanged and require the owner to explicitly accept the known abandonment risk.",
+  "confidence": 0.88,
+  "evidence": [
+    "The 10:50 live trace records the latest-time patient turn, a filler response, raw_resolve=None, date_source=fallback, POST /availability -> 409, and final node n_miss_unread; the turn therefore reached search and failed after routing.",
+    "The earlier trace shows the same fallback-plus-409 signature but n_miss_unread emitted both a check message and an office referral, demonstrating unstable prompt-level recovery behavior across similar runs.",
+    "The v94 graph routes n_offer 'wants later in the day' to n_page_2 but also routes the broader 'wants a different day or time' to n_negotiate, whose successful exit goes to n_search; these labels overlap for a latest-time question.",
+    "n_miss_unread has only three exits: a newly named day/date/week/weekend to n_search, gives-up to decline, and timeout. A time-only answer or nudge has no explicit productive recovery edge.",
+    "The structure report counts 20 duplicated filler blocks, four availability webhook variants, seven recovery nodes, and nine extraction configurations, so prompt-wide edits have broad blast radius.",
+    "The gateway availability envelope pads to two slot objects specifically because absent JSON paths leave stale Bland variables; any new result ordering must preserve count and clearing semantics.",
+    "No supplied artifact documents Bland behavior for an empty generation or defines a gateway latest-first request/response contract."
+  ],
+  "assumptions": [
+    "The owner's term D5 catch-all refers to the broad n_offer edge labeled 'wants a different day or time'; no literal D5 identifier appears in the supplied graph.",
+    "The diagnostic node and gateway timestamps reflect the same patient turn and the 409 routes through an ok != true edge to n_miss_unread.",
+    "Latest should mean latest available on the already selected date unless the patient explicitly changes the date; this needs owner confirmation before gateway implementation.",
+    "No undocumented Bland edge-priority mechanism guarantees that a newly worded specific edge wins over a broad competing edge."
+  ],
+  "unique_catches": [
+    "The claim that the message did not route to search is contradicted by the observed availability POST; the missing-edge theory confuses successful webhook invocation with successful rendered completion.",
+    "Removing the filler sentence may leave a syntactically and behaviorally broken shared instruction that still says to 'say' removed copy and run a search.",
+    "n_miss_unread's escalation rule based on how many times it has asked competes with its global nudge filler rule, explaining office-punt versus promise-and-ghost without any graph change.",
+    "At least six other recovery nodes share n_miss_unread's narrow date-only productive exit: n_miss_empty, n_miss_thin, n_miss_unbookable, n_clarify, n_miss_time, plus the closely related n_date_conflict class.",
+    "A naive latest-first reversal can change slot numbering and therefore which appointment a patient's reply 1 or 2 selects, not merely presentation order.",
+    "The graph's day_part extractor already maps latest/end of day to late, so the missing capability is not simply vocabulary recognition; routing, date preservation, gateway result semantics, and rendering must agree."
+  ],
+  "risks_or_failure_modes": [
+    "Prompt-wide filler removal causes empty or suppressed generations, prevents transition, or removes the only patient-visible progress response on synchronous n_negotiate/n_recheck webhook turns.",
+    "New latest edges overlap broad different-time edges and produce model-dependent routing, especially for negation, history, date-plus-time, typos, and multilingual phrasing.",
+    "A gateway latest-first shortcut reverses ordinary offer order, breaks relaxed/near or alternate-office selection, or mismaps slot 1/2 while preserving stale Bland variables.",
+    "Leaving v94 unchanged causes promise-and-ghost abandonment for common phrasings such as latest appointment, last appointment of the day, anything later, end of day, near closing, after work, and as late as possible.",
+    "Prompt-only changes cannot make n_miss_unread deterministic because its ask-again, filler-on-nudge, and escalate-after-two rules conflict and the model chooses among them from conversation context.",
+    "A route-only fix still fails if the gateway treats the latest-time turn as date-less fallback and returns 409, or if Bland never renders the webhook result.",
+    "A rushed fix at one offer node leaves equivalent behavior inconsistent at n_offer_2, n_offer_3, n_offer_near, and the six sibling recovery nodes."
+  ],
+  "proof_slots": [
+    "Repeated route matrix at every offer node for latest/last/end-of-day/anything-later/after-work/date-plus-latest/negated/historical/typo/Chinese variants, recording exact node path.",
+    "One-node Bland empty-generation canary proving whether non-empty output is required and whether the following webhook/edge still executes.",
+    "End-to-end replay proving latest-on-selected-date returns a rendered offer or explicit no-match response, never filler-only, office-punt, or 409 parking.",
+    "Gateway fixtures proving count 0/1/2 clearing, stable slot numbering, selected-date preservation, latest ordering, relaxation behavior, and alternate-office provenance.",
+    "Nudge replay after failure proving 'Hello?' reaches a bounded recovery response instead of repeating the promise indefinitely."
+  ],
+  "needs_human_or_owner_gate": true
+}

@@ -1,0 +1,68 @@
+--- /home/ankit114/repos/gw-diag-snap/container/bland_gateway.py	2026-08-03 23:07:45.114541841 -0400
++++ bland_gateway_fixed.py	2026-08-04 08:36:23.193797630 -0400
+@@ -2311,8 +2311,46 @@
+     return picks + rest
+ 
+ 
+-def availability_envelope(result):
++def _order_availability_slots(slots, time_pref=""):
++    """Apply an opt-in presentation order without changing the CLI query."""
++    pref = str(time_pref or "").strip().lower()
++    if pref in {"latest", "last"}:
++        def start_key(slot):
++            start = str(slot.get("start", "")) if isinstance(slot, dict) else ""
++            for fmt in ("%m/%d/%Y %I:%M %p", "%m/%d/%Y %H:%M", "%Y-%m-%d %H:%M"):
++                try:
++                    return (1, datetime.strptime(start, fmt))
++                except ValueError:
++                    pass
++            return (0, datetime.min)
++
++        return sorted(
++            slots,
++            key=start_key,
++            reverse=True,
++        )
++    anchor = re.fullmatch(r"anchor=([01]\d|2[0-3]):([0-5]\d)", pref)
++    if anchor:
++        anchor_minutes = int(anchor.group(1)) * 60 + int(anchor.group(2))
++
++        def anchor_distance(slot):
++            start = str(slot.get("start", "")) if isinstance(slot, dict) else ""
++            match = re.search(r"(?:^|\s)([01]?\d|2[0-3]):([0-5]\d)(?::\d\d)?(?:\s*([ap]m))?", start, re.I)
++            if not match:
++                return (float("inf"), start)
++            hour, minute = int(match.group(1)), int(match.group(2))
++            meridiem = (match.group(3) or "").lower()
++            if meridiem:
++                hour = hour % 12 + (12 if meridiem == "pm" else 0)
++            return (abs(hour * 60 + minute - anchor_minutes), start)
++
++        return sorted(slots, key=anchor_distance)
++    return slots
++
++
++def availability_envelope(result, time_pref=""):
+     slots = result if isinstance(result, list) else []
++    slots = _order_availability_slots(slots, time_pref)
+     first = slots[0] if slots else {}
+ 
+     def day_name(slot):
+@@ -3157,7 +3195,7 @@
+                 if self.path == "/availability":
+                     if either_days_signal and isinstance(result, list):
+                         result = _either_day_slots(result, either_days_signal)
+-                    result = availability_envelope(result)
++                    result = availability_envelope(result, body.get("time_pref", ""))
+                     # Sticky-preference dead-end (live 2026-07-21): a morning
+                     # pref carried over from an earlier turn filtered a
+                     # Saturday with only afternoon slots down to zero and the
+@@ -3193,7 +3231,7 @@
+                             # 2026-07-29): same per-day filter as the primary.
+                             if either_days_signal and isinstance(alt_raw, list):
+                                 alt_raw = _either_day_slots(alt_raw, either_days_signal)
+-                            alt_res = availability_envelope(alt_raw)
++                            alt_res = availability_envelope(alt_raw, body.get("time_pref", ""))
+                             result.update(
+                                 {
+                                     "alt_store": alt,

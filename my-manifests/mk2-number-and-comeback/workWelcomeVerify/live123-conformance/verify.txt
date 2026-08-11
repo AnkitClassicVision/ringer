@@ -1,0 +1,15 @@
+FETCHED live v123: 42 nodes, 122 edges
+=== NODE DIFF (draft vs live) ===
+NODE n_goal_ask differs: data-fields=['prompt', 'userWait'] top-level=[]
+NODE n_post_booking differs: data-fields=['active'] top-level=['height', 'position', 'width']
+DIFF_NODES=2
+DIFF_EDGES=0
+DIFF_DONE
+=== ROUND-26 VALIDATOR AGAINST LIVE v123 ===
+FAIL: assertion 6: edge n_goal_ask -> n_goal_search originates from a Default with userWait false or a non-permitted type
+FAIL: assertion 6: edge n_goal_ask -> n_goal_search_latest originates from a Default with userWait false or a non-permitted type
+FAIL: assertion 6: edge n_goal_ask -> n_goal_search_anchor originates from a Default with userWait false or a non-permitted type
+FAIL: assertion 12: n_goal_ask must be a user-wait Default
+FAIL: assertion 12: n_goal_ask prompt length is 2211, maximum is 2200
+FAIL: 5 of 548 assertions failed
+VALIDATOR_EXIT=1

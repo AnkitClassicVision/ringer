@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "change": "Render pending -> Rendered internal candidate",
+  "files": [
+    {
+      "file": "onepager.html",
+      "before_sha256": "6e399bb4aeb003b4611da605877f1a39b1cf214d20abe604b313a1ed7ef3984d",
+      "after_sha256": "76da2188089990d0cea6488c59bb18be2c33928dc0147988535cad8a5fa71094",
+      "replacements": 1
+    },
+    {
+      "file": "number-explainer.md",
+      "before_sha256": "91e41842bba654ded9e4cddd79a4e329ae380d09af681f24a5dc674054978cb2",
+      "after_sha256": "7b514851cb1ccfb7661d11f9693605ef405267a96ed2b0b87be8176229628d40",
+      "replacements": 1
+    },
+    {
+      "file": "number-explainer.html",
+      "before_sha256": "6c149ff1de6a25544cf3c5a81b82e38312c0b5c159e7960f3666e990a6ebda48",
+      "after_sha256": "84bd9cb4fdb9adb9dba60842af20eae50098d44017a50f7557cc23a3344277a9",
+      "replacements": 1
+    }
+  ],
+  "external_actions_taken": "none",
+  "other_report_files_modified": []
+}

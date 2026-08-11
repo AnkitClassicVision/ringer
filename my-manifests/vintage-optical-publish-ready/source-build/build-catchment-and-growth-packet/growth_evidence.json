@@ -1,0 +1,109 @@
+{
+  "subject": {
+    "name": "Vintage Optical",
+    "community": "Morton village, Illinois"
+  },
+  "population": {
+    "geography": "Morton village, Illinois",
+    "records": [
+      {
+        "year": 2020,
+        "population": 17172
+      },
+      {
+        "year": 2021,
+        "population": 17196
+      },
+      {
+        "year": 2022,
+        "population": 17361
+      },
+      {
+        "year": 2023,
+        "population": 17552
+      },
+      {
+        "year": 2024,
+        "population": 17555
+      },
+      {
+        "year": 2025,
+        "population": 17565
+      }
+    ],
+    "source_id": "CENSUS_PEP_2025",
+    "growth_metrics": [
+      {
+        "start_label": "2020",
+        "end_label": "2025",
+        "start_value": 17172,
+        "end_value": 17565,
+        "absolute_change": 393,
+        "percent_change": 2.2886093640810623,
+        "percent_change_display": 2.29,
+        "source_id": "CENSUS_PEP_2025",
+        "interpretation": "Observed public Morton village population change from 2020 to 2025."
+      },
+      {
+        "start_label": "2024",
+        "end_label": "2025",
+        "start_value": 17555,
+        "end_value": 17565,
+        "absolute_change": 10,
+        "percent_change": 0.05696382796923954,
+        "percent_change_display": 0.06,
+        "source_id": "CENSUS_PEP_2025",
+        "interpretation": "Observed public Morton village population change from 2024 to 2025."
+      }
+    ]
+  },
+  "school_enrollment": {
+    "district": "Morton CUSD 709",
+    "records": [
+      {
+        "school_year": "2022-2023",
+        "enrollment": 3238,
+        "receipt": "morton709-archive-20240117.html"
+      },
+      {
+        "school_year": "2024-25",
+        "enrollment": 3299,
+        "receipt": "morton709-archive-20250912.html"
+      },
+      {
+        "school_year": "2025-26",
+        "enrollment": 3365,
+        "receipt": "morton709-live-20260730.html"
+      }
+    ],
+    "missing_years_not_interpolated": [
+      "2023-24"
+    ],
+    "source_id": "MORTON709_FIRST_PARTY_ARCHIVE",
+    "growth_metrics": [
+      {
+        "start_label": "2022-2023",
+        "end_label": "2025-26",
+        "start_value": 3238,
+        "end_value": 3365,
+        "absolute_change": 127,
+        "percent_change": 3.9221741815935762,
+        "percent_change_display": 3.92,
+        "source_id": "MORTON709_FIRST_PARTY_ARCHIVE",
+        "interpretation": "Observed public Morton CUSD 709 enrollment change from 2022-2023 to 2025-26."
+      },
+      {
+        "start_label": "2024-25",
+        "end_label": "2025-26",
+        "start_value": 3299,
+        "end_value": 3365,
+        "absolute_change": 66,
+        "percent_change": 2.00060624431646,
+        "percent_change_display": 2.0,
+        "source_id": "MORTON709_FIRST_PARTY_ARCHIVE",
+        "interpretation": "Observed public Morton CUSD 709 enrollment change from 2024-25 to 2025-26."
+      }
+    ]
+  },
+  "interpretation_boundary": "These are observed public changes only. They are not forecasts, patient counts, or score inputs."
+}

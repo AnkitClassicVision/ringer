@@ -1,0 +1,32 @@
+{
+  "verdict": "PASS",
+  "readiness": "REVIEWED_PATCH_READY_TO_APPLY",
+  "changed_files": [
+    "RUNBOOK_COMPETITIVE_ANALYSIS.md"
+  ],
+  "scoring_formulas_changed": false,
+  "external_action_authority_changed": false,
+  "fatal_issues": [],
+  "material_issues": [],
+  "minor_issues": [],
+  "checks": {
+    "contract_traceability": "PASS",
+    "source_hierarchy": "PASS",
+    "dataforseo_preflight": "PASS",
+    "fallbacks": "PASS",
+    "discovery_evidence_separation": "PASS",
+    "local_seo_context": "PASS",
+    "review_handling": "PASS",
+    "catchment_completeness": "PASS",
+    "supply_census": "PASS",
+    "vdu_gate": "PASS",
+    "gap_register": "PASS",
+    "number_explainer": "PASS",
+    "release_qa": "PASS",
+    "ringer_lanes": "PASS",
+    "human_boundary": "PASS",
+    "formula_preservation": "PASS",
+    "one_file_scope": "PASS",
+    "style": "PASS"
+  }
+}

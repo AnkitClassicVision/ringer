@@ -1,0 +1,957 @@
+{
+  "review_type": "numeric",
+  "verdict": "PASS",
+  "external_actions_taken": "none",
+  "blocking_findings": [],
+  "reviewed_artifact_hashes": {
+    "onepager_pdf": "e72e6ba5d230e70ad831d0e6d27e1cf4bdc7e1a22f89785b82969375b19e4d70",
+    "template_framed_onepager_pdf": "ecd9f8c1725b1fafc203cc9c334bdb0102a1cc9775256f060d568048e39856a3",
+    "number_explainer_pdf": "1e98ba54b64aa0d1042d006dd87458b318320ac9c1333f3219337349ec079b0f",
+    "scores_json": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c"
+  },
+  "validator_checks": {
+    "build_source_validator": "PASS",
+    "render_validator": "PASS"
+  },
+  "substantive_lineage_coverage_percent": 100,
+  "unexplained_substantive_number_count": 0,
+  "cross_document_consistency": "PASS",
+  "score_checks": [
+    {
+      "score_name": "Market Demand-Supply",
+      "display_score": 61,
+      "full_precision_total": 60.5,
+      "arithmetic": {
+        "components": [
+          {
+            "component": "Demand Strength",
+            "value": 65,
+            "weight": 0.25,
+            "calculated_contribution": 16.25,
+            "recorded_contribution": 16.25,
+            "result": "PASS"
+          },
+          {
+            "component": "Supply Balance",
+            "value": 50,
+            "weight": 0.2,
+            "calculated_contribution": 10.0,
+            "recorded_contribution": 10.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Payer / Income Fit",
+            "value": 65,
+            "weight": 0.15,
+            "calculated_contribution": 9.75,
+            "recorded_contribution": 9.75,
+            "result": "PASS"
+          },
+          {
+            "component": "Growth / Future Demand",
+            "value": 65,
+            "weight": 0.15,
+            "calculated_contribution": 9.75,
+            "recorded_contribution": 9.75,
+            "result": "PASS"
+          },
+          {
+            "component": "Specialty Demand Load",
+            "value": 65,
+            "weight": 0.15,
+            "calculated_contribution": 9.75,
+            "recorded_contribution": 9.75,
+            "result": "PASS"
+          },
+          {
+            "component": "Market Data Confidence",
+            "value": 50,
+            "weight": 0.1,
+            "calculated_contribution": 5.0,
+            "recorded_contribution": 5.0,
+            "result": "PASS"
+          }
+        ],
+        "weight_total": 1.0,
+        "contribution_total": 60.5,
+        "result": "PASS"
+      },
+      "rounding": {
+        "method": "ROUND_HALF_UP",
+        "input": 60.5,
+        "output": 61,
+        "result": "PASS"
+      },
+      "source_ids": [
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025",
+        "CENSUS_PEP_2025",
+        "MORTON709_FIRST_PARTY_ARCHIVE",
+        "NPPES_CURRENT_20260730",
+        "CENSUS_GEOCODER_20260730"
+      ],
+      "result": "PASS"
+    },
+    {
+      "score_name": "Competitive Pressure Index",
+      "display_score": 57,
+      "full_precision_total": 56.75,
+      "arithmetic": {
+        "components": [
+          {
+            "component": "Supply Saturation",
+            "value": 50,
+            "weight": 0.4,
+            "calculated_contribution": 20.0,
+            "recorded_contribution": 20.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Patient Choice Pressure",
+            "value": 65,
+            "weight": 0.25,
+            "calculated_contribution": 16.25,
+            "recorded_contribution": 16.25,
+            "result": "PASS"
+          },
+          {
+            "component": "Competitor Strength",
+            "value": 65,
+            "weight": 0.2,
+            "calculated_contribution": 13.0,
+            "recorded_contribution": 13.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Access / Differentiation Pressure",
+            "value": 50,
+            "weight": 0.15,
+            "calculated_contribution": 7.5,
+            "recorded_contribution": 7.5,
+            "result": "PASS"
+          }
+        ],
+        "weight_total": 1.0,
+        "contribution_total": 56.75,
+        "result": "PASS"
+      },
+      "rounding": {
+        "method": "ROUND_HALF_UP",
+        "input": 56.75,
+        "output": 57,
+        "result": "PASS"
+      },
+      "source_ids": [
+        "OSRM_FOCUS_GOOGLE_PINS_20260730",
+        "NPPES_CURRENT_20260730",
+        "CENSUS_GEOCODER_20260730",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "S07",
+        "S08",
+        "S09",
+        "S10",
+        "S11",
+        "S12"
+      ],
+      "result": "PASS"
+    },
+    {
+      "score_name": "Room to Win",
+      "display_score": 43,
+      "full_precision_total": 43.0,
+      "arithmetic": {
+        "formula": "100 - Competitive Pressure Index display score",
+        "calculation": "100 - 57 = 43",
+        "weight_total": null,
+        "contribution_total": 43.0,
+        "result": "PASS"
+      },
+      "rounding": {
+        "method": "Exact integer inversion after the Competitive Pressure Index display is rounded",
+        "input": 43.0,
+        "output": 43,
+        "result": "PASS"
+      },
+      "source_ids": [
+        "OSRM_FOCUS_GOOGLE_PINS_20260730",
+        "NPPES_CURRENT_20260730",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+      ],
+      "result": "PASS"
+    },
+    {
+      "score_name": "Practice Competitiveness",
+      "display_score": 61,
+      "full_precision_total": 60.5,
+      "arithmetic": {
+        "components": [
+          {
+            "component": "Visibility vs Peers",
+            "value": 50,
+            "weight": 0.2,
+            "calculated_contribution": 10.0,
+            "recorded_contribution": 10.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Access / Booking vs Peers",
+            "value": 65,
+            "weight": 0.2,
+            "calculated_contribution": 13.0,
+            "recorded_contribution": 13.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Review Trust vs Peers",
+            "value": 65,
+            "weight": 0.2,
+            "calculated_contribution": 13.0,
+            "recorded_contribution": 13.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Service-Line Differentiation",
+            "value": 65,
+            "weight": 0.15,
+            "calculated_contribution": 9.75,
+            "recorded_contribution": 9.75,
+            "result": "PASS"
+          },
+          {
+            "component": "Website / Conversion Clarity",
+            "value": 65,
+            "weight": 0.15,
+            "calculated_contribution": 9.75,
+            "recorded_contribution": 9.75,
+            "result": "PASS"
+          },
+          {
+            "component": "Location Convenience",
+            "value": 50,
+            "weight": 0.1,
+            "calculated_contribution": 5.0,
+            "recorded_contribution": 5.0,
+            "result": "PASS"
+          }
+        ],
+        "weight_total": 1.0,
+        "contribution_total": 60.5,
+        "result": "PASS"
+      },
+      "rounding": {
+        "method": "ROUND_HALF_UP",
+        "input": 60.5,
+        "output": 61,
+        "result": "PASS"
+      },
+      "source_ids": [
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "BIRDEYE_AGGREGATOR_20260730",
+        "DATAFORSEO_PREFLIGHT_20260730",
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S08",
+        "S09",
+        "S10",
+        "OSRM_FOCUS_GOOGLE_PINS_20260730"
+      ],
+      "result": "PASS"
+    },
+    {
+      "score_name": "Client Opportunity",
+      "display_score": 54,
+      "full_precision_total": 54.45,
+      "arithmetic": {
+        "components": [
+          {
+            "component": "Computed Market Demand-Supply",
+            "value": 61,
+            "weight": 0.2,
+            "calculated_contribution": 12.2,
+            "recorded_contribution": 12.2,
+            "result": "PASS"
+          },
+          {
+            "component": "Competitive Pressure Opportunity",
+            "value": 50,
+            "weight": 0.2,
+            "calculated_contribution": 10.0,
+            "recorded_contribution": 10.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Practice Differentiation Upside",
+            "value": 50,
+            "weight": 0.2,
+            "calculated_contribution": 10.0,
+            "recorded_contribution": 10.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Access Fixability",
+            "value": 50,
+            "weight": 0.15,
+            "calculated_contribution": 7.5,
+            "recorded_contribution": 7.5,
+            "result": "PASS"
+          },
+          {
+            "component": "Digital Visibility Fixability",
+            "value": 65,
+            "weight": 0.15,
+            "calculated_contribution": 9.75,
+            "recorded_contribution": 9.75,
+            "result": "PASS"
+          },
+          {
+            "component": "Execution Simplicity",
+            "value": 50,
+            "weight": 0.1,
+            "calculated_contribution": 5.0,
+            "recorded_contribution": 5.0,
+            "result": "PASS"
+          }
+        ],
+        "weight_total": 1.0,
+        "contribution_total": 54.45,
+        "result": "PASS"
+      },
+      "rounding": {
+        "method": "ROUND_HALF_UP",
+        "input": 54.45,
+        "output": 54,
+        "result": "PASS"
+      },
+      "source_ids": [
+        "VALHALLA_20260730",
+        "ACS2024_BG",
+        "CDC_PLACES_2025",
+        "CENSUS_PEP_2025",
+        "MORTON709_FIRST_PARTY_ARCHIVE",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06"
+      ],
+      "result": "PASS"
+    },
+    {
+      "score_name": "Digital Presence",
+      "display_score": 60,
+      "full_precision_total": 59.75,
+      "arithmetic": {
+        "components": [
+          {
+            "component": "Findability",
+            "value": 50,
+            "weight": 0.25,
+            "calculated_contribution": 12.5,
+            "recorded_contribution": 12.5,
+            "result": "PASS"
+          },
+          {
+            "component": "Reputation",
+            "value": 65,
+            "weight": 0.2,
+            "calculated_contribution": 13.0,
+            "recorded_contribution": 13.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Bookability",
+            "value": 65,
+            "weight": 0.2,
+            "calculated_contribution": 13.0,
+            "recorded_contribution": 13.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Site Quality",
+            "value": 65,
+            "weight": 0.15,
+            "calculated_contribution": 9.75,
+            "recorded_contribution": 9.75,
+            "result": "PASS"
+          },
+          {
+            "component": "Content / Specialty Signal",
+            "value": 65,
+            "weight": 0.1,
+            "calculated_contribution": 6.5,
+            "recorded_contribution": 6.5,
+            "result": "PASS"
+          },
+          {
+            "component": "Social / Local Proof",
+            "value": 50,
+            "weight": 0.1,
+            "calculated_contribution": 5.0,
+            "recorded_contribution": 5.0,
+            "result": "PASS"
+          }
+        ],
+        "weight_total": 1.0,
+        "contribution_total": 59.75,
+        "result": "PASS"
+      },
+      "rounding": {
+        "method": "ROUND_HALF_UP",
+        "input": 59.75,
+        "output": 60,
+        "result": "PASS"
+      },
+      "source_ids": [
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "BIRDEYE_AGGREGATOR_20260730",
+        "DATAFORSEO_PREFLIGHT_20260730",
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S08",
+        "S09",
+        "S10"
+      ],
+      "result": "PASS"
+    },
+    {
+      "score_name": "Dry eye / ocular surface",
+      "display_score": 53,
+      "full_precision_total": 53.0,
+      "arithmetic": {
+        "components": [
+          {
+            "component": "Local Demand Fit",
+            "value": 65,
+            "weight": 0.2,
+            "calculated_contribution": 13.0,
+            "recorded_contribution": 13.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Competitive Gap",
+            "value": 35,
+            "weight": 0.15,
+            "calculated_contribution": 5.25,
+            "recorded_contribution": 5.25,
+            "result": "PASS"
+          },
+          {
+            "component": "Current Capability",
+            "value": 65,
+            "weight": 0.15,
+            "calculated_contribution": 9.75,
+            "recorded_contribution": 9.75,
+            "result": "PASS"
+          },
+          {
+            "component": "Access / Capacity Fit",
+            "value": 50,
+            "weight": 0.15,
+            "calculated_contribution": 7.5,
+            "recorded_contribution": 7.5,
+            "result": "PASS"
+          },
+          {
+            "component": "Revenue / Reimbursement Potential",
+            "value": 50,
+            "weight": 0.15,
+            "calculated_contribution": 7.5,
+            "recorded_contribution": 7.5,
+            "result": "PASS"
+          },
+          {
+            "component": "Referral Ecosystem Fit",
+            "value": 50,
+            "weight": 0.1,
+            "calculated_contribution": 5.0,
+            "recorded_contribution": 5.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Evidence Confidence",
+            "value": 50,
+            "weight": 0.1,
+            "calculated_contribution": 5.0,
+            "recorded_contribution": 5.0,
+            "result": "PASS"
+          }
+        ],
+        "weight_total": 1.0,
+        "contribution_total": 53.0,
+        "result": "PASS"
+      },
+      "rounding": {
+        "method": "ROUND_HALF_UP",
+        "input": 53.0,
+        "output": 53,
+        "result": "PASS"
+      },
+      "source_ids": [
+        "ACS2024_BG",
+        "CDC_PLACES_2025",
+        "S03",
+        "S08",
+        "S09",
+        "S06"
+      ],
+      "result": "PASS"
+    },
+    {
+      "score_name": "Myopia management",
+      "display_score": 53,
+      "full_precision_total": 53.0,
+      "arithmetic": {
+        "components": [
+          {
+            "component": "Local Demand Fit",
+            "value": 65,
+            "weight": 0.2,
+            "calculated_contribution": 13.0,
+            "recorded_contribution": 13.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Competitive Gap",
+            "value": 35,
+            "weight": 0.15,
+            "calculated_contribution": 5.25,
+            "recorded_contribution": 5.25,
+            "result": "PASS"
+          },
+          {
+            "component": "Current Capability",
+            "value": 65,
+            "weight": 0.15,
+            "calculated_contribution": 9.75,
+            "recorded_contribution": 9.75,
+            "result": "PASS"
+          },
+          {
+            "component": "Access / Capacity Fit",
+            "value": 50,
+            "weight": 0.15,
+            "calculated_contribution": 7.5,
+            "recorded_contribution": 7.5,
+            "result": "PASS"
+          },
+          {
+            "component": "Revenue / Reimbursement Potential",
+            "value": 50,
+            "weight": 0.15,
+            "calculated_contribution": 7.5,
+            "recorded_contribution": 7.5,
+            "result": "PASS"
+          },
+          {
+            "component": "Referral Ecosystem Fit",
+            "value": 50,
+            "weight": 0.1,
+            "calculated_contribution": 5.0,
+            "recorded_contribution": 5.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Evidence Confidence",
+            "value": 50,
+            "weight": 0.1,
+            "calculated_contribution": 5.0,
+            "recorded_contribution": 5.0,
+            "result": "PASS"
+          }
+        ],
+        "weight_total": 1.0,
+        "contribution_total": 53.0,
+        "result": "PASS"
+      },
+      "rounding": {
+        "method": "ROUND_HALF_UP",
+        "input": 53.0,
+        "output": 53,
+        "result": "PASS"
+      },
+      "source_ids": [
+        "ACS2024_BG",
+        "MORTON709_FIRST_PARTY_ARCHIVE",
+        "S04",
+        "S09",
+        "S10",
+        "S06"
+      ],
+      "result": "PASS"
+    },
+    {
+      "score_name": "Specialty contact lenses",
+      "display_score": 51,
+      "full_precision_total": 50.75,
+      "arithmetic": {
+        "components": [
+          {
+            "component": "Local Demand Fit",
+            "value": 50,
+            "weight": 0.2,
+            "calculated_contribution": 10.0,
+            "recorded_contribution": 10.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Competitive Gap",
+            "value": 50,
+            "weight": 0.15,
+            "calculated_contribution": 7.5,
+            "recorded_contribution": 7.5,
+            "result": "PASS"
+          },
+          {
+            "component": "Current Capability",
+            "value": 65,
+            "weight": 0.15,
+            "calculated_contribution": 9.75,
+            "recorded_contribution": 9.75,
+            "result": "PASS"
+          },
+          {
+            "component": "Access / Capacity Fit",
+            "value": 50,
+            "weight": 0.15,
+            "calculated_contribution": 7.5,
+            "recorded_contribution": 7.5,
+            "result": "PASS"
+          },
+          {
+            "component": "Revenue / Reimbursement Potential",
+            "value": 50,
+            "weight": 0.15,
+            "calculated_contribution": 7.5,
+            "recorded_contribution": 7.5,
+            "result": "PASS"
+          },
+          {
+            "component": "Referral Ecosystem Fit",
+            "value": 50,
+            "weight": 0.1,
+            "calculated_contribution": 5.0,
+            "recorded_contribution": 5.0,
+            "result": "PASS"
+          },
+          {
+            "component": "Evidence Confidence",
+            "value": 35,
+            "weight": 0.1,
+            "calculated_contribution": 3.5,
+            "recorded_contribution": 3.5,
+            "result": "PASS"
+          }
+        ],
+        "weight_total": 1.0,
+        "contribution_total": 50.75,
+        "result": "PASS"
+      },
+      "rounding": {
+        "method": "ROUND_HALF_UP",
+        "input": 50.75,
+        "output": 51,
+        "result": "PASS"
+      },
+      "source_ids": [
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S12",
+        "ACS2024_BG",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "fact_checks": [
+    {
+      "fact_group": "five_window_catchment",
+      "rows": [
+        {
+          "minutes": 5,
+          "population": 6624,
+          "households": 2722,
+          "under_18": 1712,
+          "age_40_64": 1811,
+          "age_65_plus": 1311,
+          "diabetes_percent": 9.6
+        },
+        {
+          "minutes": 10,
+          "population": 19322,
+          "households": 7873,
+          "under_18": 4571,
+          "age_40_64": 5843,
+          "age_65_plus": 4291,
+          "diabetes_percent": 10.9
+        },
+        {
+          "minutes": 15,
+          "population": 54768,
+          "households": 23793,
+          "under_18": 11707,
+          "age_40_64": 17431,
+          "age_65_plus": 10939,
+          "diabetes_percent": 12.4
+        },
+        {
+          "minutes": 20,
+          "population": 173058,
+          "households": 75244,
+          "under_18": 38652,
+          "age_40_64": 53102,
+          "age_65_plus": 32473,
+          "diabetes_percent": 13.2
+        },
+        {
+          "minutes": 30,
+          "population": 283661,
+          "households": 120940,
+          "under_18": 64831,
+          "age_40_64": 86558,
+          "age_65_plus": 53258,
+          "diabetes_percent": 12.3
+        }
+      ],
+      "source_ids": [
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025"
+      ],
+      "result": "PASS"
+    },
+    {
+      "fact_group": "population_growth",
+      "series": [
+        {
+          "year": 2020,
+          "population": 17172
+        },
+        {
+          "year": 2021,
+          "population": 17196
+        },
+        {
+          "year": 2022,
+          "population": 17361
+        },
+        {
+          "year": 2023,
+          "population": 17552
+        },
+        {
+          "year": 2024,
+          "population": 17555
+        },
+        {
+          "year": 2025,
+          "population": 17565
+        }
+      ],
+      "arithmetic": "(17,565 - 17,172) / 17,172 x 100 = 2.2886093641%, displayed 2.29%",
+      "absolute_change": 393,
+      "source_ids": [
+        "CENSUS_PEP_2025"
+      ],
+      "result": "PASS"
+    },
+    {
+      "fact_group": "school_enrollment_growth",
+      "series": [
+        {
+          "school_year": "2022-2023",
+          "enrollment": 3238,
+          "status": "observed"
+        },
+        {
+          "school_year": "2023-24",
+          "enrollment": null,
+          "status": "missing_not_interpolated"
+        },
+        {
+          "school_year": "2024-25",
+          "enrollment": 3299,
+          "status": "observed"
+        },
+        {
+          "school_year": "2025-26",
+          "enrollment": 3365,
+          "status": "observed"
+        }
+      ],
+      "arithmetic": "(3,365 - 3,238) / 3,238 x 100 = 3.9221741816%, displayed 3.92%",
+      "absolute_change": 127,
+      "source_ids": [
+        "MORTON709_FIRST_PARTY_ARCHIVE"
+      ],
+      "result": "PASS"
+    },
+    {
+      "fact_group": "focus_route",
+      "duration_seconds": 233.4,
+      "distance_meters": 2466.8,
+      "arithmetic": {
+        "minutes": "233.4 / 60 = 3.89",
+        "miles": "2,466.8 / 1,609.344 = 1.5327984570, displayed 1.53"
+      },
+      "display_minutes": 3.89,
+      "display_miles": 1.53,
+      "endpoint_basis": "direct Google listing pins",
+      "source_ids": [
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "OSRM_FOCUS_GOOGLE_PINS_20260730"
+      ],
+      "result": "PASS"
+    },
+    {
+      "fact_group": "google_review_sample",
+      "rows": [
+        {
+          "entity": "Vintage Optical",
+          "rating": 4.9,
+          "reviews": 348
+        },
+        {
+          "entity": "Focus On Eyes",
+          "rating": 4.8,
+          "reviews": 182
+        },
+        {
+          "entity": "Tri-County Eye Center",
+          "rating": 4.9,
+          "reviews": 271
+        },
+        {
+          "entity": "Walmart Vision & Glasses",
+          "rating": 3.5,
+          "reviews": 8
+        }
+      ],
+      "scope": "one dated same-page direct Google observation",
+      "source_ids": [
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+      ],
+      "result": "PASS"
+    },
+    {
+      "fact_group": "birdeye_discrepancies",
+      "rows": [
+        {
+          "entity": "Vintage Optical",
+          "birdeye_google_component": 398,
+          "direct_google": 348,
+          "difference": 50,
+          "arithmetic": "398 - 348 = 50"
+        },
+        {
+          "entity": "Focus On Eyes",
+          "birdeye_google_component": 210,
+          "direct_google": 182,
+          "difference": 28,
+          "arithmetic": "210 - 182 = 28"
+        }
+      ],
+      "source_ids": [
+        "BIRDEYE_AGGREGATOR_20260730",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+      ],
+      "result": "PASS"
+    },
+    {
+      "fact_group": "candidate_supply_counts",
+      "nppes_reported_results": 40,
+      "nppes_materialized_records": 39,
+      "location_candidates": 24,
+      "geocoder_matches": 21,
+      "geocoder_no_matches": 3,
+      "window_candidate_locations": [
+        4,
+        4,
+        8,
+        16,
+        20
+      ],
+      "window_competitor_candidates": [
+        2,
+        2,
+        6,
+        14,
+        18
+      ],
+      "canonical_office_count": null,
+      "source_ids": [
+        "NPPES_CURRENT_20260730",
+        "CENSUS_GEOCODER_20260730"
+      ],
+      "result": "PASS"
+    },
+    {
+      "fact_group": "null_denominators",
+      "preserved_nulls": [
+        "canonical_full_vdu",
+        "canonical_office_count",
+        "rank_grid",
+        "complete_provider_entity_dedupe",
+        "patient_origin_choice",
+        "live_traffic",
+        "conversion",
+        "capacity",
+        "outcomes",
+        "economics",
+        "cross_platform_review_total"
+      ],
+      "unknown_not_zero": true,
+      "source_ids": [
+        "CATCHMENT_DEMOGRAPHICS_20260730",
+        "CDC_PLACES_2025",
+        "ACS2024_BG",
+        "NPPES_CURRENT_20260730",
+        "CENSUS_GEOCODER_20260730",
+        "DATAFORSEO_PREFLIGHT_20260730",
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "VALHALLA_20260730",
+        "OSRM_TABLE_20260730",
+        "OSRM_FOCUS_GOOGLE_PINS_20260730",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "BIRDEYE_AGGREGATOR_20260730"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "rendered_document_checks": {
+    "html_markdown_pdf_numeric_consistency": "PASS",
+    "both_onepager_pdfs_numeric_consistency": "PASS",
+    "template_framed_numeric_tokens_outside_approved_inventory": 0,
+    "template_framed_dollar_projection_count": 0,
+    "stale_route_value_count": 0,
+    "substantive_source_ids_resolved_to_source_dictionary_and_receipts": "PASS"
+  },
+  "nonblocking_observations": [
+    {
+      "observation": "The template-framed page labels four proof-to-unlock rows, while its First 30 Days footer lists three immediate actions.",
+      "assessment": "The scopes are explicitly distinct. The count difference does not alter any approved score, fact, arithmetic result, or lineage claim."
+    }
+  ],
+  "internal_only": true,
+  "human_project_room_approval_required": true
+}

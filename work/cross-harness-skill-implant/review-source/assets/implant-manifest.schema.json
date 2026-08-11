@@ -1,0 +1,425 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://clean-my-ai-harness.local/schemas/implant-manifest.schema.json",
+  "title": "Cross-Harness Skill Implant v1 Manifest",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "plan",
+    "plan_hash",
+    "status",
+    "receipts",
+    "events"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "plan": {
+      "$ref": "#/$defs/plan"
+    },
+    "plan_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "status": {
+      "enum": [
+        "INSPECTED",
+        "APPLIED",
+        "VERIFIED",
+        "VERIFY_FAILED",
+        "ROLLED_BACK"
+      ]
+    },
+    "receipts": {
+      "type": "object"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "$defs": {
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pathState": {
+      "type": "object",
+      "required": [
+        "path",
+        "exists",
+        "kind"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exists": {
+          "type": "boolean"
+        },
+        "kind": {
+          "enum": [
+            "absent",
+            "link",
+            "directory",
+            "file",
+            "other"
+          ]
+        },
+        "link_target": {
+          "type": "string"
+        },
+        "tree_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "link"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "link_target"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "directory"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "tree_sha256"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "file"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "sha256"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "adapter": {
+      "type": "object",
+      "required": [
+        "level",
+        "version_command",
+        "version_regex",
+        "command",
+        "success_regex",
+        "timeout_seconds"
+      ],
+      "properties": {
+        "level": {
+          "enum": [
+            "indexed",
+            "loaded",
+            "invoked"
+          ]
+        },
+        "version_command": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "version_regex": {
+          "type": "string",
+          "minLength": 1
+        },
+        "command": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "success_regex": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timeout_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 300
+        }
+      },
+      "additionalProperties": false
+    },
+    "target": {
+      "type": "object",
+      "required": [
+        "surface",
+        "root",
+        "destination_name",
+        "destination",
+        "effective_destination",
+        "ownership",
+        "method",
+        "collision_action",
+        "collision_classification",
+        "rename_to",
+        "minimum_discovery_level",
+        "discovery_adapters",
+        "prior_state",
+        "alternate_prior_state"
+      ],
+      "properties": {
+        "surface": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "root": {
+          "type": "string",
+          "minLength": 1
+        },
+        "destination_name": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "destination": {
+          "type": "string",
+          "minLength": 1
+        },
+        "effective_destination": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ownership": {
+          "type": "string",
+          "minLength": 1
+        },
+        "method": {
+          "enum": [
+            "link",
+            "copy"
+          ]
+        },
+        "collision_action": {
+          "enum": [
+            "BLOCK",
+            "KEEP",
+            "MERGE",
+            "REPLACE",
+            "RENAME"
+          ]
+        },
+        "collision_classification": {
+          "enum": [
+            "BLOCK",
+            "KEEP",
+            "MERGE",
+            "REPLACE",
+            "RENAME"
+          ]
+        },
+        "rename_to": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "minimum_discovery_level": {
+          "enum": [
+            "present",
+            "indexed",
+            "loaded",
+            "invoked"
+          ]
+        },
+        "discovery_adapters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/adapter"
+          }
+        },
+        "prior_state": {
+          "$ref": "#/$defs/pathState"
+        },
+        "alternate_prior_state": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/pathState"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "plan": {
+      "type": "object",
+      "required": [
+        "implant_id",
+        "source",
+        "scope",
+        "compatibility",
+        "targets",
+        "rollback"
+      ],
+      "properties": {
+        "implant_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "source": {
+          "type": "object",
+          "required": [
+            "path",
+            "uri",
+            "expected_skill_name",
+            "frontmatter_name",
+            "tree_sha256"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uri": {
+              "type": "string",
+              "minLength": 1
+            },
+            "expected_skill_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "frontmatter_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tree_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "scope": {
+          "type": "object",
+          "required": [
+            "goal",
+            "allowed_actions",
+            "excluded_expansions"
+          ],
+          "properties": {
+            "goal": {
+              "type": "string",
+              "minLength": 1
+            },
+            "allowed_actions": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "excluded_expansions": {
+              "$ref": "#/$defs/stringArray"
+            }
+          },
+          "additionalProperties": false
+        },
+        "compatibility": {
+          "type": "object",
+          "required": [
+            "status",
+            "blocking_reasons"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "compatible",
+                "incompatible"
+              ]
+            },
+            "blocking_reasons": {
+              "$ref": "#/$defs/stringArray"
+            }
+          },
+          "additionalProperties": false
+        },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/target"
+          }
+        },
+        "rollback": {
+          "type": "object",
+          "required": [
+            "required",
+            "backup_root_required_for_replace",
+            "backup_root",
+            "removes_only_manifest_created_targets",
+            "keeps_existing_keep_targets"
+          ],
+          "properties": {
+            "required": {
+              "const": true
+            },
+            "backup_root_required_for_replace": {
+              "type": "boolean"
+            },
+            "backup_root": {
+              "type": "string",
+              "pattern": "^/"
+            },
+            "removes_only_manifest_created_targets": {
+              "const": true
+            },
+            "keeps_existing_keep_targets": {
+              "const": true
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

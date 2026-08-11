@@ -1,0 +1,5 @@
+scenario: clock time with no day at all turns: ['hi', 'after 3pm works for me']
+ITER=1 ok=True
+ITER=2 ok=True
+ITER=3 ok=True
+VERDICT: PASS-ALL - the regression failure was nondeterministic extraction, not a v93 defect

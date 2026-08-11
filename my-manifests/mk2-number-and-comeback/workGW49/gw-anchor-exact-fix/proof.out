@@ -1,0 +1,4 @@
+CASE=exact ANCHOR_EXACT=true FIRST=10:45 am
+CASE=offgrid ANCHOR_EXACT=false
+CASE=latest ANCHOR_EXACT=false
+CASE=none ANCHOR_EXACT=false

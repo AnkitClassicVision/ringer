@@ -1,0 +1,13 @@
+{
+  "schema_version": "mott-outbound-recall-manifest.v1",
+  "pathway_name": "Mott Optical recall (SMS)",
+  "pathway_id": "94abad8b-fbe2-4e67-9c64-d9b586dd2653",
+  "version": 55,
+  "voice_source_pathway_id": "",
+  "voice_source_version": 0,
+  "start_node_id": "n_identity",
+  "time_out_hours": 72,
+  "restart_after_end_call": false,
+  "structural_sha256": "c5a40620b926e34a052262c5c325673f44cae02ae06a96760c38f45d2295c5d3",
+  "created_utc": "2026-07-26T00:00:00Z"
+}

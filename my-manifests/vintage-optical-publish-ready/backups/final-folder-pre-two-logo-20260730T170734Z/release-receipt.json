@@ -1,0 +1,87 @@
+{
+  "created_at_utc": "2026-07-30T16:20:05Z",
+  "folder": "/home/ankit114/Vintage-Optical-Competitive-Analysis-2026-07-30",
+  "status": "RENDERED_QA_PASSED_HUMAN_PROJECT_ROOM_REQUIRED",
+  "external_delivery_authorized": false,
+  "design": {
+    "template": "MyBCAT sample one-pager gauge and color system",
+    "main_gauge": "Client Opportunity 54 / 100",
+    "features": [
+      "dark navy hero",
+      "circular SVG score gauge",
+      "aqua teal gold palette",
+      "numbered evidence zones",
+      "colored score meters",
+      "three Fix Card strip",
+      "internal Project Room footer",
+      "0.18-inch white bottom safety gutter"
+    ]
+  },
+  "bottom_cutoff_correction": {
+    "status": "PASS",
+    "pdf_text_margin_points": 25.70,
+    "raster_margin_pixels_at_150dpi": 27,
+    "complete_null_line": true,
+    "complete_fix_cards": 3,
+    "complete_footer": true,
+    "blocking_findings": 0
+  },
+  "deliverables": [
+    {
+      "file": "Vintage-Optical-One-Pager.pdf",
+      "pages": 1,
+      "page_size": "Letter",
+      "sha256": "61cabbce74d5f60547260c98cc3ae37800167af3a4d32e16b4354853edf7e3e6"
+    },
+    {
+      "file": "Vintage-Optical-Number-Explainer.pdf",
+      "pages": 25,
+      "page_size": "Letter",
+      "sha256": "45245d76fc48d1e2218544b98719650c832083c5b288ed93f0915a7ec85e5172"
+    }
+  ],
+  "source_hashes": {
+    "Vintage-Optical-One-Pager.html": "8abdd10aec39ba5acf148e6ed94ec8baa1d15b6da82a1d36aaac35b7bd61c42e",
+    "Vintage-Optical-Number-Explainer.html": "84bd9cb4fdb9adb9dba60842af20eae50098d44017a50f7557cc23a3344277a9",
+    "Vintage-Optical-Number-Explainer.md": "7b514851cb1ccfb7661d11f9693605ef405267a96ed2b0b87be8176229628d40",
+    "scores.json": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c",
+    "sources.json": "c54beaa3f81ad905bc70bb34d82baefaf3a43d63dbf58d519f912165190d9135"
+  },
+  "review_hashes": {
+    "Visual-QA.json": "dcf5f49a588794db1195767240825ee028585b0b9549433d77afea684c565931",
+    "Numeric-Review.json": "dbe28d2ec9ee5f96884b207b17e49a76a581275f134ae60f0652b11a92d38252",
+    "Logic-Review.json": "e85dc0ed7d26f21601ebeed004f64ece8d0ec8cfaec19cb9b0610c74ee660df4",
+    "Technical-Review.json": "6db66ad1aa7c0a6acd8cd9d92a6d3cf01d1761287d7478feaa1dec323fc91653"
+  },
+  "gates": {
+    "gauge_template_source": "PASS",
+    "source_and_scoring": "PASS",
+    "chrome_render": "PASS",
+    "bottom_edge_geometry": "PASS",
+    "visual_qa_26_pages_and_bottom_crop": "PASS",
+    "fresh_numeric_review": "PASS",
+    "fresh_logic_review": "PASS",
+    "fresh_technical_review": "PASS",
+    "human_project_room": "REQUIRED"
+  },
+  "quality_evidence": {
+    "substantive_number_lineage_percent": 100,
+    "unexplained_substantive_numbers": 0,
+    "blocking_findings": 0,
+    "internal_path_leaks": 0,
+    "stale_route_values": 0,
+    "fix_card_count": 3
+  },
+  "score_displays": {
+    "market_demand_supply": 61,
+    "competitive_pressure_index": 57,
+    "room_to_win": 43,
+    "practice_competitiveness": 61,
+    "client_opportunity": 54,
+    "digital_presence": 60,
+    "dry_eye": 53,
+    "myopia_management": 53,
+    "specialty_contact_lenses": 51
+  },
+  "external_actions_taken": "none"
+}

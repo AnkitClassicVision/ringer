@@ -1,0 +1,281 @@
+{
+  "audit_type": "disconfirming_source_and_logic_audit",
+  "audited_at": "2026-07-29 America/New_York (2026-07-30 UTC run)",
+  "report_packet": "vintage-optical-morton/2026-07-30",
+  "report_visibility": "internal_only_unroomed",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "source_id": "S01",
+      "claim": "Vintage Optical's official site supports the subject identity, broad routine and medical eye-care offer, dry-eye and myopia links, optical and on-site lab claims, three named optometrists, and a public appointment path.",
+      "value": {
+        "subject": "Vintage Optical",
+        "published_lanes": [
+          "comprehensive and pediatric eye care",
+          "medical eye care",
+          "dry eye treatment",
+          "myopia management",
+          "specialty contact lenses",
+          "optical"
+        ],
+        "named_optometrists": 3,
+        "appointment_path_present": true
+      },
+      "source_url": "https://www.vintageopt.com/",
+      "retrieval": {
+        "date": "2026-07-29",
+        "method": "Direct public web fetch of the official subject homepage; inspected navigation, service, optical, provider, and appointment content.",
+        "live_access": "successful"
+      },
+      "result": "The current official page still exposes the appointment link; comprehensive, pediatric, medical, dry-eye, myopia, contact-lens, and optical content; the on-site lab statement; and three named optometrists. This supports the packet's offer and positioning claims.",
+      "limitations": "Practice-controlled content proves only what the practice publishes. It does not prove utilization, conversion, appointment completion, capacity, outcomes, patient draw, or economics.",
+      "status": "PASS"
+    },
+    {
+      "source_id": "S07",
+      "claim": "Focus On Eyes is a current Morton optometry peer with the registered address, comprehensive examinations, disease care, lenses, frames, contacts, posted weekday and Saturday hours, and an appointment path.",
+      "value": {
+        "entity": "Focus On Eyes, P.C.",
+        "address": "829 W. Jackson Plaza, Morton, IL 61550",
+        "published_access": "Monday-Friday 9:00am-6:00pm; Saturday 9:00am-1:00pm",
+        "appointment_path_present": true
+      },
+      "source_url": "https://visionsource-focusoneyes.com/",
+      "retrieval": {
+        "date": "2026-07-29",
+        "method": "Direct public web fetch of the official peer homepage; inspected entity, address, service navigation, hours, and appointment content.",
+        "live_access": "successful"
+      },
+      "result": "The current page confirms the Morton entity and address, comprehensive examinations and disease-care positioning, contact/lens/frame navigation, six posted service days, and an appointment link. It remains adequate for bounded peer identity and stated-service overlap.",
+      "limitations": "The page is peer-controlled and does not provide an independent review export, live slots, utilization, capacity, outcomes, or evidence that Morton patients choose this peer.",
+      "status": "PASS"
+    },
+    {
+      "source_id": "S08",
+      "claim": "Tri-County Eye Center's official site supports the Washington entity and address plus examinations, disease treatment, dry-eye, contact-lens, macular-health, emergency-care, and eyewear overlap.",
+      "value": {
+        "entity": "Tri-County Eye Center",
+        "address": "100 Hillcrest Drive, Washington, IL 61571",
+        "published_overlap": [
+          "eye examinations",
+          "disease treatment",
+          "dry eye clinic",
+          "contact lenses",
+          "center for macular health",
+          "emergency care",
+          "eyewear"
+        ]
+      },
+      "source_url": "https://www.tricountyeyecenter.com/",
+      "retrieval": {
+        "date": "2026-07-29",
+        "method": "Direct public web fetch of the official peer homepage; inspected location, service navigation, appointment, and featured-service content.",
+        "live_access": "successful"
+      },
+      "result": "The current site confirms the Washington address, eye examinations, dry-eye clinic, macular-health center, and navigation for disease treatment, contacts, emergency care, and eyewear. The saved official-source receipt remains current for public overlap claims.",
+      "limitations": "The page proves published services only, not patient draw from Morton, service volume, capacity, clinical quality, outcomes, or economics.",
+      "status": "PASS"
+    },
+    {
+      "source_id": "S10",
+      "claim": "Vision Care Center publicly offers myopia-control approaches including atropine, multifocal contacts, multifocal glasses, and Ortho-K in Peoria and Washington.",
+      "value": {
+        "published_methods": [
+          "low-dose atropine drops",
+          "multifocal contacts",
+          "multifocal glasses",
+          "Ortho-K"
+        ],
+        "locations_named": [
+          "Peoria",
+          "Washington"
+        ]
+      },
+      "source_url": "https://vcc2020.com/service/myopia-control/",
+      "retrieval": {
+        "date": "2026-07-29",
+        "method": "Direct public web fetch of the official myopia-control service page; inspected service title, location references, booking links, and method descriptions.",
+        "live_access": "successful"
+      },
+      "result": "The current page names Peoria and Washington and explicitly lists atropine, multifocal contacts, multifocal glasses, and Ortho-K. This disproves an uncontested-myopia-lane claim and supports the report's constrained competitive-gap band and research-next treatment.",
+      "limitations": "The page confirms public positioning and offered methods, not starts, retention, treatment outcomes, capacity, patient origin, or economics.",
+      "status": "PASS"
+    },
+    {
+      "source_id": "S11",
+      "claim": "Bard Optical East Peoria is a current retail eye-care and optical substitute at the registered address with an appointment path and published routine, pediatric, contact-lens, disease-management, and eyewear services.",
+      "value": {
+        "entity": "Bard Optical - East Peoria",
+        "address": "412 Riverside Dr, East Peoria, IL 61611",
+        "published_access": "Monday-Friday 9:00am-6:00pm; Saturday 9:00am-1:00pm",
+        "appointment_path_present": true
+      },
+      "source_url": "https://www.bardoptical.com/eye-doctor-peoria-east/",
+      "retrieval": {
+        "date": "2026-07-29",
+        "method": "Direct public web fetch of the official East Peoria location page; inspected entity, address, hours, appointment, medical-approach, and service content.",
+        "live_access": "successful"
+      },
+      "result": "The page confirms the East Peoria entity and address, appointment request, posted hours, comprehensive and pediatric exams, contact-lens exams, disease management, and eyewear. The Tier 2 substitute description is supported.",
+      "limitations": "The official page does not establish Morton-origin demand, independent reputation, realized access, patient volume, outcomes, or economics.",
+      "status": "PASS"
+    },
+    {
+      "source_id": "S12",
+      "claim": "Illinois Eye Center has a current Washington location at 93 Eastgate Drive with routine, medical, contact-lens, and optical breadth.",
+      "value": {
+        "entity": "Illinois Eye Center Washington Office",
+        "address": "93 Eastgate Drive, Washington, IL 61571",
+        "published_overlap": [
+          "routine eye care",
+          "medical condition diagnosis and treatment",
+          "contact lens fittings",
+          "eyeglass frames",
+          "lenses and accessories"
+        ]
+      },
+      "source_url": "https://www.illinoiseyecenter.com/location/washington/",
+      "retrieval": {
+        "date": "2026-07-29",
+        "method": "Direct public web fetch of the official Washington location page; inspected office identity, address, conditions, services, hours, and contact content.",
+        "live_access": "successful"
+      },
+      "result": "The current page confirms the Washington office, exact address, routine and medical care, contact-lens fittings, frames, lenses, and optical-department hours. It supports entity and Tier 2 substitution claims even though route relevance remains unknown.",
+      "limitations": "The official page does not cure the failed Nominatim match or create an OSRM route. It also does not prove patient draw, utilization, capacity, outcomes, or economics.",
+      "status": "PASS"
+    },
+    {
+      "source_id": "S14",
+      "claim": "Census QuickFacts supports Morton village city context, including the report's explicitly vintaged 2024 population estimate and the displayed 2020-2024 age shares, income, density, and commute facts.",
+      "value": {
+        "report_value_population_estimate_2024": 17557,
+        "current_live_population_estimate_2025": 17565,
+        "under_18_percent_2020_2024": 25.9,
+        "age_65_plus_percent_2020_2024": 23.1,
+        "median_household_income_2020_2024_usd": 94402,
+        "population_density_2020_per_square_mile": 1336.4,
+        "mean_commute_minutes_2020_2024": 16.6
+      },
+      "source_url": "https://www.census.gov/quickfacts/fact/table/mortonvillageillinois/PST045224",
+      "retrieval": {
+        "date": "2026-07-29",
+        "method": "Direct public web fetch of Census QuickFacts plus a search of the indexed official Census QuickFacts V2024 result for the retained historical estimate.",
+        "live_access": "successful_with_vintage_change"
+      },
+      "result": "The live QuickFacts page now defaults to the newer July 1, 2025 estimate of 17,565. It still confirms 25.9% under 18, 23.1% age 65+, $94,402 median household income, 1,336.4 people per square mile, and a 16.6-minute commute. An indexed official Census QuickFacts V2024 result confirms 17,557 for July 1, 2024. The report labels that number as a 2024 city estimate, so the vintage difference does not contradict the report.",
+      "limitations": "The live endpoint is mutable and no frozen Census payload is stored in the packet. The 2024 estimate is historical rather than the current default. All values are city-boundary context, not drive-time catchment measurements.",
+      "status": "PASS_WITH_LIMITATION"
+    },
+    {
+      "source_id": "S15",
+      "claim": "The Census API documentation establishes the 2024 ACS 5-year detailed-table vintage and its availability for places and block groups; it does not establish a completed block-group-to-isochrone join.",
+      "value": {
+        "dataset": "2024 ACS 5-Year Detailed Tables",
+        "geographies_documented": [
+          "places",
+          "tracts",
+          "block groups"
+        ],
+        "packet_hidden_city_values": {
+          "population_acs_2024_5_year": 16595,
+          "median_age_acs_2024_5_year": 41.4
+        },
+        "drive_time_intersection_completed": false
+      },
+      "source_url": "https://api.census.gov/data/2024/acs/acs5.html",
+      "retrieval": {
+        "date": "2026-07-29",
+        "method": "Direct public web fetch of the official Census dataset documentation. A parameterized value query could not be retrieved through the audit tool; a current Census-derived public profile was used only as corroboration, not as an official live value receipt.",
+        "live_access": "documentation_successful_value_query_unavailable"
+      },
+      "result": "The official page confirms the 2024 ACS 5-year detailed-table vintage and availability for places and block groups. It supports S15's registered claim_use and the report's statement that no isochrone intersection was completed. The hidden 16,595 population and 41.4 median-age values were corroborated but not live-verified from a parameterized official API row in this audit.",
+      "limitations": "The registered URL is a dataset catalog, not a frozen parameterized Morton value response. It is adequate for the dataset-authority and no-join claims used visibly, but external disclosure of the hidden ACS values should use a stored official query receipt.",
+      "status": "PASS_WITH_LIMITATION"
+    },
+    {
+      "source_id": "R01",
+      "claim": "The stored OSRM point-to-point receipt supports a 4.07-minute, 1.56-mile route from Vintage Optical to Focus On Eyes.",
+      "value": {
+        "stored_duration_seconds": 244.3,
+        "stored_distance_meters": 2504.2,
+        "recomputed_minutes": 4.07,
+        "recomputed_miles": 1.56,
+        "route_code": "Ok"
+      },
+      "source_url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4680865,40.6196077?overview=false&steps=false&alternatives=false",
+      "retrieval": {
+        "date": "2026-07-29",
+        "method": "Attempted direct public web fetch of the OSRM route URL; the retrieval layer returned an internal error. Audited the saved raw OSRM JSON receipt collected 2026-07-30 UTC and independently recomputed its displayed units.",
+        "live_access": "blocked_by_retrieval_layer_not_claimed_live"
+      },
+      "result": "No live route verification is claimed. The saved response has code Ok, duration 244.3 seconds, and distance 2504.2 meters; these independently round to 4.07 minutes and 1.56 miles. The stored official-provider receipt is adequate for this internal point-route claim.",
+      "limitations": "The current endpoint response was not retrieved live. OSRM public routing has no live traffic or time-of-day model, routes can change, and this practice-origin point route is neither an isochrone nor a patient-origin choice set.",
+      "status": "PASS_WITH_LIMITATION"
+    }
+  ],
+  "logic_checks": {
+    "city_context_not_catchment": "PASS",
+    "routes_not_complete_supply": "PASS",
+    "unknowns_neutral_not_measured": "PASS",
+    "all_visible_scores_high_good": "PASS",
+    "raw_pressure_hidden": "PASS",
+    "no_operating_forecasts": "PASS",
+    "specialty_reads_research_next": "PASS",
+    "fix_card_math_not_forecast": "PASS",
+    "peer_tiers_bounded": "PASS",
+    "claims_resolve_to_registry": "PASS"
+  },
+  "logic_check_details": [
+    {
+      "check": "city_context_not_catchment",
+      "evidence": "All 5, 10, 15, 20, and 30-minute population, household, age, VDU, office, provider, and ratio fields are null. The PDF says city values do not describe the 20-minute catchment and labels 17,557 as city context."
+    },
+    {
+      "check": "routes_not_complete_supply",
+      "evidence": "Every fixed window sets known_routed_alternatives_is_complete_supply_count to false. The PDF calls the routes a bounded peer set, not a complete supply census or patient-origin choice set."
+    },
+    {
+      "check": "unknowns_neutral_not_measured",
+      "evidence": "All 22 score components marked neutral_unknown_no_directional_claim equal 50. The report does not call 50 average, benchmark, or measured performance."
+    },
+    {
+      "check": "all_visible_scores_high_good",
+      "evidence": "The extracted PDF has nine higher = better cues covering all visible score blocks. Room to Win is 100 minus hidden raw pressure."
+    },
+    {
+      "check": "raw_pressure_hidden",
+      "evidence": "Competitive Pressure Index 57 exists only in scores.json/internal metadata. Neither Competitive Pressure nor Pressure Index appears in extracted PDF text."
+    },
+    {
+      "check": "no_operating_forecasts",
+      "evidence": "The PDF says public pages verify offers and access paths, not starts, visits, throughput, outcomes, or financial performance. No patient, revenue, or dollar forecast appears."
+    },
+    {
+      "check": "specialty_reads_research_next",
+      "evidence": "Dry eye, myopia, and specialty contacts are each labeled RESEARCH NEXT in the PDF and read research_next in scores.json."
+    },
+    {
+      "check": "fix_card_math_not_forecast",
+      "evidence": "All three cards define ratios or counts populated after 30-day measurement. Impact fields explicitly reject patient/revenue forecasts and assumed leakage."
+    },
+    {
+      "check": "peer_tiers_bounded",
+      "evidence": "The set contains three named Tier 1 peers and three named Tier 2 substitutes with match bases and limitations; Tier 3 is excluded, completeness flags are false, and the page does not call the set exhaustive."
+    },
+    {
+      "check": "claims_resolve_to_registry",
+      "evidence": "The registry has 23 unique IDs. Scores, market inputs, competitor set, and all 20 unique visible IDs resolve with no unknown IDs. All 75 HTML citation occurrences match the URL registered for their displayed source ID."
+    }
+  ],
+  "source_freshness_limits": [
+    "S14 is a mutable QuickFacts page and now defaults to Vintage 2025; the report's 17,557 remains explicitly labeled Vintage 2024.",
+    "S15 documents the correct official dataset but is not a frozen parameterized Morton API response.",
+    "R01 could not be fetched live through the audit retrieval layer; the saved raw provider response was recomputed instead."
+  ],
+  "minor_observations": [
+    "If Fix Card ratios are implemented, zero denominators should remain null or undefined rather than being coerced to zero.",
+    "Before external use, freeze the exact Census value receipts and refresh the point routes because the current packet is intentionally internal and unroomed."
+  ],
+  "fatal_issues": [],
+  "material_issues": []
+}

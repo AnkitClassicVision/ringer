@@ -1,0 +1,8 @@
+LAYER_EXISTS sha256:1d37a1f8b9cc
+LAYER_EXISTS sha256:8457e753cc05
+PUSHED mott-lane-38 (already existed with identical digest - deterministic build)
+VERIFY_IDENTICAL=1
+NEW_REVISION=55
+STABLE taskdef=mott-booking-gateway:55 running=1
+ROLLBACK_CMD=aws ecs update-service --cluster stack2 --service mott-booking-gateway --task-definition mott-booking-gateway:52
+DEPLOY_DONE

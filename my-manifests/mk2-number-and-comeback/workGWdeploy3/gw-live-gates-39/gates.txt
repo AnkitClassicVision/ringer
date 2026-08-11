@@ -1,0 +1,5 @@
+GATE=relative STATUS=200 first=08/18/2026 10:30 am count=28 err=
+GATE=datetime STATUS=200 first=08/06/2026 04:45 pm count=24 err=
+GATE=latest-reg STATUS=200 first=08/06/2026 04:45 pm count=24 err=
+GATE=baseline STATUS=200 first=08/06/2026 10:30 am count=24 err=
+EXPECT_RELATIVE_DATE=08/18/2026

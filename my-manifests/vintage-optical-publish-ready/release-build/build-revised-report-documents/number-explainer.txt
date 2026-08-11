@@ -1,0 +1,4067 @@
+INTERNAL-ONLY | Human Project Room approval required
+
+Vintage Optical Number Explainer
+Internal-only. Human Project Room approval is required before external use.
+Evidence-reviewed rebuild dated 2026-07-30. Public-only confidence grade: C. Rendered internal candidate.
+This document explains every score, fact, arithmetic step, source ID, and boundary used in the one-page report. All score displays are higher =
+better except Competitive Pressure Index, where higher = more pressure.
+Room to Win = 100 - Competitive Pressure Index
+The approved manual bands are 20, 35, 50, 65, and 80. Each weighted score keeps its original weights, sums full-precision contributions, and
+uses one final ROUND_HALF_UP step. Unknown values stay null.
+
+Vintage Optical number explainer
+
+Internal-only | Page 1
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Market Demand-Supply: 61 / 100
+Direction: Higher means better for the client.
+Full precision: 16.25 + 10.00 + 9.75 + 9.75 + 9.75 + 5.00 = 60.50. One final ROUND_HALF_UP step produces 61.
+Component
+
+Band/value Weight Contribution
+
+Source IDs
+
+Confidence
+
+Demand Strength
+
+65
+
+0.25
+
+65 x 0.25 =
+16.25
+
+VALHALLA_20260730, TIGER2024_BG, ACS2024_BG
+
+medium
+
+Supply Balance
+
+50
+
+0.20
+
+50 x 0.20 =
+10.00
+
+NPPES_CURRENT_20260730, CENSUS_GEOCODER_20260730,
+CATCHMENT_DEMOGRAPHICS_20260730
+
+medium
+
+Payer / Income Fit
+
+65
+
+0.15
+
+65 x 0.15 =
+9.75
+
+ACS2024_BG
+
+medium
+
+Growth / Future
+Demand
+
+65
+
+0.15
+
+65 x 0.15 =
+9.75
+
+CENSUS_PEP_2025, MORTON709_FIRST_PARTY_ARCHIVE
+
+medium
+
+Specialty Demand
+Load
+
+65
+
+0.15
+
+65 x 0.15 =
+9.75
+
+ACS2024_BG, CDC_PLACES_2025, MORTON709_FIRST_PARTY_ARCHIVE
+
+medium
+
+Market Data
+Confidence
+
+50
+
+0.10
+
+50 x 0.10 =
+5.00
+
+VALHALLA_20260730, TIGER2024_BG, ACS2024_BG, CDC_PLACES_2025, CENSUS_PEP_2025,
+MORTON709_FIRST_PARTY_ARCHIVE, NPPES_CURRENT_20260730
+
+medium
+
+The display changed from 57 to 61. Observed positive population and school-enrollment change moves Growth / Future Demand from 50 to 65.
+Complete fixed-window demographics move Market Data Confidence from 35 to 50. Demand Strength, Payer / Income Fit, and Specialty
+Demand Load remain at 65 because the new evidence confirms their supportive state but does not justify an 80 band. Supply Balance remains
+neutral 50 because canonical full VDU and canonical office count are still null.
+Component
+
+Why this band changed or stayed
+
+Limitation
+
+Demand
+Strength
+
+All five windows now have population, household, and age-band estimates, but no
+benchmark or realized-demand evidence supports an 80 band.
+
+Growth is observed village and district context, not a forecast. Supply balance,
+canonical VDU, payer mix, and realized demand remain unknown. The recommended
+61 stays in the rubric's Mixed market range.
+
+Supply Balance
+
+The NPPES locations are coverage candidates only. Canonical office count and full Growth is observed village and district context, not a forecast. Supply balance,
+VDU remain null, so no VDU-per-office state exists.
+canonical VDU, payer mix, and realized demand remain unknown. The recommended
+61 stays in the rubric's Mixed market range.
+
+Payer / Income
+Fit
+
+The catchment packet supplies approximate income context but not actual payer
+mix. The existing supportive band is preserved.
+
+Growth is observed village and district context, not a forecast. Supply balance,
+canonical VDU, payer mix, and realized demand remain unknown. The recommended
+61 stays in the rubric's Mixed market range.
+
+Growth / Future
+Demand
+
+Two direct observed series show positive change. The evidence supports a
+directional growth proxy, not a forecast or top band.
+
+Growth is observed village and district context, not a forecast. Supply balance,
+canonical VDU, payer mix, and realized demand remain unknown. The recommended
+61 stays in the rubric's Mixed market range.
+
+Specialty
+Demand Load
+
+Exact catchment age bands, diabetes context, and enrollment growth strengthen
+the existing pediatric, senior, and chronic-care support but do not establish search,
+referral, or realized specialty demand.
+
+Growth is observed village and district context, not a forecast. Supply balance,
+canonical VDU, payer mix, and realized demand remain unknown. The recommended
+61 stays in the rubric's Mixed market range.
+
+Market Data
+Confidence
+
+Direct, recent demographic and growth evidence resolves major gaps, but
+incomplete supply, full VDU, provider dedupe, and patient choice keep the
+aggregate market evidence mixed.
+
+Growth is observed village and district context, not a forecast. Supply balance,
+canonical VDU, payer mix, and realized demand remain unknown. The recommended
+61 stays in the rubric's Mixed market range.
+
+What would move it: replace the named nulls or bounded samples with complete, reproducible evidence that crosses an approved 20 / 35 / 50 /
+65 / 80 band. Weights and formulas do not change during this report.
+Confidence: C: public-only directional evidence
+Limitation: Growth is observed village and district context, not a forecast. Supply balance, canonical VDU, payer mix, and realized demand
+remain unknown. The recommended 61 stays in the rubric's Mixed market range.
+
+Vintage Optical number explainer
+
+Internal-only | Page 2
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Competitive Pressure Index: 57 / 100
+Direction: Higher means more competitive pressure; this is the internal diagnostic exception.
+Full precision: 20.00 + 16.25 + 13.00 + 7.50 = 56.75. One final ROUND_HALF_UP step produces 57.
+Component
+
+Band/value
+
+Weight
+
+Contribution
+
+Source IDs
+
+Confidence
+
+Supply Saturation
+
+50
+
+0.40
+
+50 x 0.40 = 20.00
+
+NPPES_CURRENT_20260730, CENSUS_GEOCODER_20260730
+
+medium
+
+Patient Choice Pressure
+
+65
+
+0.25
+
+65 x 0.25 = 16.25
+
+OSRM_FOCUS_GOOGLE_PINS_20260730, OSRM_TABLE_20260730
+
+medium
+
+Competitor Strength
+
+65
+
+0.20
+
+65 x 0.20 = 13.00
+
+GOOGLE_MAPS_FOCUS_SAMPLE_20260730, S07, S08, S09, S10, S11, S12
+
+medium
+
+Access / Differentiation Pressure
+
+50
+
+0.15
+
+50 x 0.15 = 7.50
+
+S02, S06, S07, S08, S11
+
+medium
+
+The display stays 57. The corrected Focus route preserves the nearby-peer state. NPPES candidate locations cannot change Supply Saturation
+or Patient Choice Pressure because the roster is incomplete and not a canonical office census. The direct Google comparison reinforces the
+existing competitor-strength direction but does not justify a new band.
+Component
+
+Why this band changed or stayed
+
+Limitation
+
+Supply Saturation
+
+Canonical offices, provider entities, full VDU, and supply denominators remain
+null.
+
+Canonical supply, patient-origin choice, complete peer reputation, live access, and
+live traffic remain unknown. The result remains in the High pressure band.
+
+Patient Choice
+Pressure
+
+Nearby routed alternatives remain directionally relevant, but candidate routes are
+not a complete, population-weighted patient-choice set.
+
+Canonical supply, patient-origin choice, complete peer reputation, live access, and
+live traffic remain unknown. The result remains in the High pressure band.
+
+Competitor Strength
+
+Public service overlap and a bounded direct review comparison support a
+directional strength state, but not severe pressure or complete peer
+normalization.
+
+Canonical supply, patient-origin choice, complete peer reputation, live access, and
+live traffic remain unknown. The result remains in the High pressure band.
+
+Access /
+Differentiation
+Pressure
+
+Published access and overlap remain mixed; live slots, conversion, and
+comparable peer friction are unmeasured.
+
+Canonical supply, patient-origin choice, complete peer reputation, live access, and
+live traffic remain unknown. The result remains in the High pressure band.
+
+What would move it: replace the named nulls or bounded samples with complete, reproducible evidence that crosses an approved 20 / 35 / 50 /
+65 / 80 band. Weights and formulas do not change during this report.
+Confidence: C: public-only directional evidence
+Limitation: Canonical supply, patient-origin choice, complete peer reputation, live access, and live traffic remain unknown. The result remains in
+the High pressure band.
+
+Vintage Optical number explainer
+
+Internal-only | Page 3
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Room to Win: 43 / 100
+Direction: Higher means more room to win; exact inverse of Competitive Pressure Index.
+Room to Win = 100 - Competitive Pressure Index = 100 - 57 = 43. Full precision is 43.00. It is not assigned an independent manual band.
+Input
+
+Value
+
+Rule
+
+Competitive Pressure Index
+
+57
+
+Exact display inversion
+
+The display stays 43. Room to Win is the exact inversion of the unchanged Competitive Pressure Index: 100 - 57 = 43. It is not independently
+banded.
+What would move it: replace the named nulls or bounded samples with complete, reproducible evidence that crosses an approved 20 / 35 / 50 /
+65 / 80 band. Weights and formulas do not change during this report.
+Confidence: C: public-only directional evidence
+Limitation: Any future change to Competitive Pressure must produce an equal and opposite change here.
+
+Vintage Optical number explainer
+
+Internal-only | Page 4
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Practice Competitiveness: 61 / 100
+Direction: Higher means better for the client.
+Full precision: 10.00 + 13.00 + 13.00 + 9.75 + 9.75 + 5.00 = 60.50. One final ROUND_HALF_UP step produces 61.
+Component
+
+Band/value
+
+Weight
+
+Contribution
+
+Source IDs
+
+Confidence
+
+Visibility vs Peers
+
+50
+
+0.20
+
+50 x 0.20 = 10.00
+
+DATAFORSEO_PREFLIGHT_20260730, GOOGLE_MAPS_FOCUS_SAMPLE_20260730
+
+medium
+
+Access / Booking vs Peers
+
+65
+
+0.20
+
+65 x 0.20 = 13.00
+
+S02, S06, GOOGLE_MAPS_SAMPLE_20260730
+
+medium
+
+Review Trust vs Peers
+
+65
+
+0.20
+
+65 x 0.20 = 13.00
+
+GOOGLE_MAPS_FOCUS_SAMPLE_20260730, BIRDEYE_AGGREGATOR_20260730
+
+medium
+
+Service-Line Differentiation
+
+65
+
+0.15
+
+65 x 0.15 = 9.75
+
+S01, S03, S04, S05, S08, S09, S10
+
+medium
+
+Website / Conversion Clarity
+
+65
+
+0.15
+
+65 x 0.15 = 9.75
+
+S01, S02, S03, S04, S05, S06
+
+medium
+
+Location Convenience
+
+50
+
+0.10
+
+50 x 0.10 = 5.00
+
+S02, OSRM_FOCUS_GOOGLE_PINS_20260730
+
+medium
+
+The display changed from 58 to 61. The one dated same-page Google comparison moves Review Trust vs Peers from neutral 50 to boundedsupportive 65. Vintage shows 4.9 and 348 reviews on the peer card versus Focus at 4.8 and 182, Tri-County at 4.9 and 271, and Walmart Vision
+& Glasses at 3.5 and 8. All other bands remain unchanged. The sample is insufficient for an 80 band or a complete peer claim.
+Component
+
+Why this band changed or stayed
+
+Limitation
+
+Visibility vs Peers
+
+No rank grid or complete stable query set exists.
+
+The review observation is one dated page, not a complete export, text/theme analysis, response
+analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain
+unknown. The recommended 61 remains in the Mixed band.
+
+Access / Booking
+vs Peers
+
+The public hours, emergency access, CTA, and booking path
+remain supportive, while live completion and equivalent peer
+friction are unknown.
+
+The review observation is one dated page, not a complete export, text/theme analysis, response
+analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain
+unknown. The recommended 61 remains in the Mixed band.
+
+Review Trust vs
+Peers
+
+The direct same-page comparison supports a bounded positive
+volume-and-rating read. The Birdeye discrepancy prevents
+treating aggregator counts as direct truth.
+
+The review observation is one dated page, not a complete export, text/theme analysis, response
+analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain
+unknown. The recommended 61 remains in the Mixed band.
+
+Service-Line
+Differentiation
+
+Vintage publishes broad services and peers publish overlapping
+lanes. No new evidence changes this band.
+
+The review observation is one dated page, not a complete export, text/theme analysis, response
+analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain
+unknown. The recommended 61 remains in the Mixed band.
+
+Website /
+Public service, provider, location, hours, and booking paths remain
+Conversion Clarity visible. Conversion remains unmeasured.
+
+The review observation is one dated page, not a complete export, text/theme analysis, response
+analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain
+unknown. The recommended 61 remains in the Mixed band.
+
+Location
+Convenience
+
+The review observation is one dated page, not a complete export, text/theme analysis, response
+analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain
+unknown. The recommended 61 remains in the Mixed band.
+
+The corrected route confirms a nearby peer but does not measure
+patient origins or trip tolerance.
+
+What would move it: replace the named nulls or bounded samples with complete, reproducible evidence that crosses an approved 20 / 35 / 50 /
+65 / 80 band. Weights and formulas do not change during this report.
+Confidence: C: public-only directional evidence
+Limitation: The review observation is one dated page, not a complete export, text/theme analysis, response analysis, or outcome measure. Rank,
+live access, conversion, and patient-origin convenience remain unknown. The recommended 61 remains in the Mixed band.
+
+Vintage Optical number explainer
+
+Internal-only | Page 5
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Client Opportunity: 54 / 100
+Direction: Higher means better for the client.
+Full precision: 12.20 + 10.00 + 10.00 + 7.50 + 9.75 + 5.00 = 54.45. One final ROUND_HALF_UP step produces 54.
+Component
+
+Band/value Weight Contribution
+
+Source IDs
+
+Confidence
+
+Computed Market DemandSupply
+
+61
+
+0.20
+
+61 x 0.20 =
+12.20
+
+VALHALLA_20260730, ACS2024_BG, CDC_PLACES_2025, CENSUS_PEP_2025,
+MORTON709_FIRST_PARTY_ARCHIVE
+
+medium
+
+Competitive Pressure
+Opportunity
+
+50
+
+0.20
+
+50 x 0.20 =
+10.00
+
+GOOGLE_MAPS_FOCUS_SAMPLE_20260730, S07, S08, S09, S10, S11, S12
+
+medium
+
+Practice Differentiation
+Upside
+
+50
+
+0.20
+
+50 x 0.20 =
+10.00
+
+S01, S03, S04, S05, S08, S09, S10
+
+medium
+
+Access Fixability
+
+50
+
+0.15
+
+50 x 0.15 = 7.50
+
+S02, S06
+
+medium
+
+Digital Visibility Fixability
+
+65
+
+0.15
+
+65 x 0.15 = 9.75
+
+S01, S02, S03, S04, S05, S06, GOOGLE_MAPS_FOCUS_SAMPLE_20260730
+
+medium
+
+Execution Simplicity
+
+50
+
+0.10
+
+50 x 0.10 = 5.00
+
+S01, S02, S06
+
+medium
+
+The display stays 54. The required computed Market Demand-Supply input changes from 57 to 61, raising the full-precision total from 53.65 to
+54.45. The rounded score remains 54 because 54.45 does not reach the .50 half-up threshold. Review evidence does not prove competitor
+weakness, leakage, capacity, conversion, or execution ownership, so the other component bands stay fixed.
+Component
+
+Why this band changed or stayed
+
+Limitation
+
+Computed Market
+Demand-Supply
+
+The canonical formula uses the recomputed market result rather than a
+manual band.
+
+Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and
+execution capacity remain unknown. The score stays in the At Risk band.
+
+Competitive Pressure
+Opportunity
+
+Pressure exists, but no complete weakness cluster, leakage, or
+capacity-supported wedge is proven.
+
+Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and
+execution capacity remain unknown. The score stays in the At Risk band.
+
+Practice Differentiation
+Upside
+
+The offer is broad and lanes overlap. No new evidence establishes
+defensible ownership or unmet need.
+
+Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and
+execution capacity remain unknown. The score stays in the At Risk band.
+
+Access Fixability
+
+Public access exists, but access failure and recoverability remain
+unmeasured.
+
+Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and
+execution capacity remain unknown. The score stays in the At Risk band.
+
+Digital Visibility
+Fixability
+
+Existing surfaces and source discrepancies make measurement and
+reconciliation bounded actions, but no result is yet proven.
+
+Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and
+execution capacity remain unknown. The score stays in the At Risk band.
+
+Execution Simplicity
+
+The first actions remain bounded, but ownership and staff capacity are
+unknown.
+
+Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and
+execution capacity remain unknown. The score stays in the At Risk band.
+
+What would move it: replace the named nulls or bounded samples with complete, reproducible evidence that crosses an approved 20 / 35 / 50 /
+65 / 80 band. Weights and formulas do not change during this report.
+Confidence: C: public-only directional evidence
+Limitation: Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and execution capacity remain unknown. The
+score stays in the At Risk band.
+
+Vintage Optical number explainer
+
+Internal-only | Page 6
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Digital Presence: 60 / 100
+Direction: Higher means better for the client.
+Full precision: 12.50 + 13.00 + 13.00 + 9.75 + 6.50 + 5.00 = 59.75. One final ROUND_HALF_UP step produces 60.
+Component
+
+Band/value
+
+Weight
+
+Contribution
+
+Source IDs
+
+Confidence
+
+Findability
+
+50
+
+0.25
+
+50 x 0.25 = 12.50
+
+DATAFORSEO_PREFLIGHT_20260730, GOOGLE_MAPS_FOCUS_SAMPLE_20260730
+
+medium
+
+Reputation
+
+65
+
+0.20
+
+65 x 0.20 = 13.00
+
+GOOGLE_MAPS_FOCUS_SAMPLE_20260730, BIRDEYE_AGGREGATOR_20260730
+
+medium
+
+Bookability
+
+65
+
+0.20
+
+65 x 0.20 = 13.00
+
+S06, GOOGLE_MAPS_SAMPLE_20260730
+
+medium
+
+Site Quality
+
+65
+
+0.15
+
+65 x 0.15 = 9.75
+
+S01, S02, S03, S04, S05
+
+medium
+
+Content / Specialty Signal
+
+65
+
+0.10
+
+65 x 0.10 = 6.50
+
+S03, S04, S05, S08, S09, S10
+
+medium
+
+Social / Local Proof
+
+50
+
+0.10
+
+50 x 0.10 = 5.00
+
+S01, GOOGLE_MAPS_FOCUS_SAMPLE_20260730
+
+medium
+
+The display changed from 57 to 60. The direct same-page Google comparison moves Reputation from neutral 50 to bounded-supportive 65.
+Findability remains 50 because DataForSEO was unavailable and no rank grid ran. Bookability, Site Quality, Content / Specialty Signal, and
+Social / Local Proof remain unchanged.
+Component
+
+Why this band changed or stayed
+
+Limitation
+
+Findability
+
+A dated Google observation is not a rank grid or complete
+query-coverage measure.
+
+The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and
+themes, responses, booking completion, performance testing, directory coverage, and local proof remain
+unknown. The recommended 60 remains Mixed.
+
+Reputation
+
+The same-page direct comparison supports a bounded
+positive read, while source discrepancies block a stronger
+or cross-platform claim.
+
+The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and
+themes, responses, booking completion, performance testing, directory coverage, and local proof remain
+unknown. The recommended 60 remains Mixed.
+
+Bookability
+
+The public CTA and Book online path remain visible.
+Completion and conversion are unmeasured.
+
+The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and
+themes, responses, booking completion, performance testing, directory coverage, and local proof remain
+unknown. The recommended 60 remains Mixed.
+
+Site Quality
+
+The site exposes services, providers, location, and hours.
+No new performance or conversion testing changes the
+band.
+
+The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and
+themes, responses, booking completion, performance testing, directory coverage, and local proof remain
+unknown. The recommended 60 remains Mixed.
+
+Content /
+Specialty Signal
+
+Dedicated specialty pages remain present, and peer
+overlap prevents a stronger ownership state.
+
+The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and
+themes, responses, booking completion, performance testing, directory coverage, and local proof remain
+unknown. The recommended 60 remains Mixed.
+
+Social / Local
+Proof
+
+No complete social activity, local links, community
+mentions, or directory comparison was collected.
+
+The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and
+themes, responses, booking completion, performance testing, directory coverage, and local proof remain
+unknown. The recommended 60 remains Mixed.
+
+What would move it: replace the named nulls or bounded samples with complete, reproducible evidence that crosses an approved 20 / 35 / 50 /
+65 / 80 band. Weights and formulas do not change during this report.
+Confidence: C: public-only directional evidence
+Limitation: The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and themes, responses,
+booking completion, performance testing, directory coverage, and local proof remain unknown. The recommended 60 remains Mixed.
+
+Vintage Optical number explainer
+
+Internal-only | Page 7
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Dry eye / ocular surface: 53 / 100
+Direction: Higher means better for the client.
+Full precision: 13.00 + 5.25 + 9.75 + 7.50 + 7.50 + 5.00 + 5.00 = 53.00. One final ROUND_HALF_UP step produces 53.
+Component
+
+Band/value
+
+Weight
+
+Contribution
+
+Source IDs
+
+Confidence
+
+Local Demand Fit
+
+65
+
+0.20
+
+65 x 0.20 = 13.00
+
+ACS2024_BG, CDC_PLACES_2025
+
+medium
+
+Competitive Gap
+
+35
+
+0.15
+
+35 x 0.15 = 5.25
+
+S08, S09
+
+medium
+
+Current Capability
+
+65
+
+0.15
+
+65 x 0.15 = 9.75
+
+S03
+
+medium
+
+Access / Capacity Fit
+
+50
+
+0.15
+
+50 x 0.15 = 7.50
+
+S03, S06
+
+medium
+
+Revenue / Reimbursement Potential
+
+50
+
+0.15
+
+50 x 0.15 = 7.50
+
+S03
+
+medium
+
+Referral Ecosystem Fit
+
+50
+
+0.10
+
+50 x 0.10 = 5.00
+
+S03
+
+medium
+
+Evidence Confidence
+
+50
+
+0.10
+
+50 x 0.10 = 5.00
+
+ACS2024_BG, CDC_PLACES_2025, S03, S08, S09
+
+medium
+
+The display changed from 52 to 53. Exact 5- through 30-minute 40-64, 65-plus, and diabetes context strengthens Evidence Confidence from 35
+to 50. Local Demand Fit stays 65 because the evidence confirms a supportive demand proxy but does not establish search demand, referral
+density, conversion, or lane economics. The competitive, capability, capacity, revenue, and referral bands do not change.
+Component
+
+Why this band changed or stayed
+
+Limitation
+
+Local Demand Fit
+
+Exact catchment age and diabetes proxies support the existing
+directional band, but do not establish realized lane demand.
+
+No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or
+margin evidence exists. The recommended 53 remains Research next.
+
+Competitive Gap
+
+Peers publish overlapping dry-eye offers, and no new complete lane
+audit changes the contested state.
+
+No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or
+margin evidence exists. The recommended 53 remains Research next.
+
+Current Capability
+
+Vintage publishes a dedicated service and modalities, while operating
+proof remains absent.
+
+No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or
+margin evidence exists. The recommended 53 remains Research next.
+
+Access / Capacity Fit
+
+Slots, staff, rooms, chair time, and follow-up capacity remain unknown.
+
+No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or
+margin evidence exists. The recommended 53 remains Research next.
+
+Revenue /
+Reimbursement
+Potential
+
+Price, payer, collections, and margin remain unknown.
+
+No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or
+margin evidence exists. The recommended 53 remains Research next.
+
+Referral Ecosystem Fit
+
+Relationships and referral density remain unknown.
+
+No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or
+margin evidence exists. The recommended 53 remains Research next.
+
+Evidence Confidence
+
+Direct recent catchment demand proxies resolve the prior city-only
+limitation, but market and operating proof remain incomplete.
+
+No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or
+margin evidence exists. The recommended 53 remains Research next.
+
+What would move it: replace the named nulls or bounded samples with complete, reproducible evidence that crosses an approved 20 / 35 / 50 /
+65 / 80 band. Weights and formulas do not change during this report.
+Confidence: C: public-only directional evidence
+Limitation: No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or margin evidence exists. The recommended 53
+remains Research next.
+
+Vintage Optical number explainer
+
+Internal-only | Page 8
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Myopia management: 53 / 100
+Direction: Higher means better for the client.
+Full precision: 13.00 + 5.25 + 9.75 + 7.50 + 7.50 + 5.00 + 5.00 = 53.00. One final ROUND_HALF_UP step produces 53.
+Component
+
+Band/value
+
+Weight
+
+Contribution
+
+Source IDs
+
+Confidence
+
+Local Demand Fit
+
+65
+
+0.20
+
+65 x 0.20 = 13.00
+
+ACS2024_BG, MORTON709_FIRST_PARTY_ARCHIVE
+
+medium
+
+Competitive Gap
+
+35
+
+0.15
+
+35 x 0.15 = 5.25
+
+S09, S10
+
+medium
+
+Current Capability
+
+65
+
+0.15
+
+65 x 0.15 = 9.75
+
+S04
+
+medium
+
+Access / Capacity Fit
+
+50
+
+0.15
+
+50 x 0.15 = 7.50
+
+S04, S06
+
+medium
+
+Revenue / Reimbursement Potential
+
+50
+
+0.15
+
+50 x 0.15 = 7.50
+
+S04
+
+medium
+
+Referral Ecosystem Fit
+
+50
+
+0.10
+
+50 x 0.10 = 5.00
+
+S04
+
+medium
+
+Evidence Confidence
+
+50
+
+0.10
+
+50 x 0.10 = 5.00
+
+ACS2024_BG, MORTON709_FIRST_PARTY_ARCHIVE, S04, S09, S10
+
+medium
+
+The display changed from 52 to 53. Exact catchment child counts and observed Morton CUSD 709 enrollment growth strengthen Evidence
+Confidence from 35 to 50. Local Demand Fit stays 65 because the new evidence confirms family-demand support but does not establish search
+demand, willingness to pay, referrals, conversion, or follow-up capacity. All other component bands stay fixed.
+Component
+
+Why this band changed or stayed
+
+Limitation
+
+Local Demand Fit
+
+Exact child counts and positive observed enrollment change
+support the existing family-demand band without proving
+realized myopia demand.
+
+The school series has no observed 2023-24 value. Search demand, parent willingness to pay,
+capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The
+recommended 53 remains Research next.
+
+Competitive Gap
+
+A peer publishes several myopia-control approaches, and no
+new lane-depth audit changes the contested state.
+
+The school series has no observed 2023-24 value. Search demand, parent willingness to pay,
+capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The
+recommended 53 remains Research next.
+
+Current Capability
+
+Vintage publishes a dedicated service. Starts, retention,
+outcomes, and capacity remain unknown.
+
+The school series has no observed 2023-24 value. Search demand, parent willingness to pay,
+capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The
+recommended 53 remains Research next.
+
+Access / Capacity Fit
+
+Follow-up capacity, chair time, staff skill, and protocols remain
+unknown.
+
+The school series has no observed 2023-24 value. Search demand, parent willingness to pay,
+capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The
+recommended 53 remains Research next.
+
+Revenue /
+Reimbursement
+Potential
+
+Price, payment, retention, collections, and margin remain
+unknown.
+
+The school series has no observed 2023-24 value. Search demand, parent willingness to pay,
+capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The
+recommended 53 remains Research next.
+
+Referral Ecosystem
+Fit
+
+School, pediatric, parent, and provider referral relationships
+remain unknown.
+
+The school series has no observed 2023-24 value. Search demand, parent willingness to pay,
+capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The
+recommended 53 remains Research next.
+
+Evidence Confidence
+
+Direct catchment and first-party school evidence resolve the
+prior city-only family proxy, while operating and referral proof
+remain incomplete.
+
+The school series has no observed 2023-24 value. Search demand, parent willingness to pay,
+capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The
+recommended 53 remains Research next.
+
+What would move it: replace the named nulls or bounded samples with complete, reproducible evidence that crosses an approved 20 / 35 / 50 /
+65 / 80 band. Weights and formulas do not change during this report.
+Confidence: C: public-only directional evidence
+Limitation: The school series has no observed 2023-24 value. Search demand, parent willingness to pay, capacity, referrals, outcomes, retention,
+conversion, and economics remain unknown. The recommended 53 remains Research next.
+
+Vintage Optical number explainer
+
+Internal-only | Page 9
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Specialty contact lenses: 51 / 100
+Direction: Higher means better for the client.
+Full precision: 10.00 + 7.50 + 9.75 + 7.50 + 7.50 + 5.00 + 3.50 = 50.75. One final ROUND_HALF_UP step produces 51.
+Component
+
+Band/value
+
+Weight
+
+Contribution
+
+Source IDs
+
+Confidence
+
+Local Demand Fit
+
+50
+
+0.20
+
+50 x 0.20 = 10.00
+
+S05, ACS2024_BG
+
+medium
+
+Competitive Gap
+
+50
+
+0.15
+
+50 x 0.15 = 7.50
+
+S07, S08, S12
+
+medium
+
+Current Capability
+
+65
+
+0.15
+
+65 x 0.15 = 9.75
+
+S05
+
+medium
+
+Access / Capacity Fit
+
+50
+
+0.15
+
+50 x 0.15 = 7.50
+
+S05, S06
+
+medium
+
+Revenue / Reimbursement Potential
+
+50
+
+0.15
+
+50 x 0.15 = 7.50
+
+S05
+
+medium
+
+Referral Ecosystem Fit
+
+50
+
+0.10
+
+50 x 0.10 = 5.00
+
+S05
+
+medium
+
+Evidence Confidence
+
+35
+
+0.10
+
+35 x 0.10 = 3.50
+
+S05, S07, S08, S12
+
+medium
+
+The display stays 51. The new catchment, growth, routing, and review evidence does not establish contact-lens population, keratoconus burden,
+search demand, referral demand, complete specialty-depth competition, fitting capacity, outcomes, or economics. No component crosses a rubric
+band.
+Component
+
+Why this band changed or stayed
+
+Limitation
+
+Local Demand Fit
+
+General demographics do not establish contact-lens or keratoconus
+demand.
+
+Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing,
+remakes, payer mix, and margin remain unknown. The score remains Research next.
+
+Competitive Gap
+
+Peers publish contact-lens services, but equivalent specialty depth
+remains unknown.
+
+Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing,
+remakes, payer mix, and margin remain unknown. The score remains Research next.
+
+Current Capability
+
+Vintage publishes specialty lens types and an offer, but operating proof
+remains absent.
+
+Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing,
+remakes, payer mix, and margin remain unknown. The score remains Research next.
+
+Access / Capacity Fit
+
+Fitting availability, doctor time, staff skill, and room capacity remain
+unknown.
+
+Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing,
+remakes, payer mix, and margin remain unknown. The score remains Research next.
+
+Revenue /
+Reimbursement
+Potential
+
+Pricing, payer, remakes, chair-time cost, and margin remain unknown.
+
+Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing,
+remakes, payer mix, and margin remain unknown. The score remains Research next.
+
+Referral Ecosystem Fit
+
+Ophthalmology, optometry, and keratoconus referral flows remain
+unknown.
+
+Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing,
+remakes, payer mix, and margin remain unknown. The score remains Research next.
+
+Evidence Confidence
+
+The public offer and general overlap remain the only lane-specific
+evidence. The new packets do not resolve lane demand or operations.
+
+Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing,
+remakes, payer mix, and margin remain unknown. The score remains Research next.
+
+What would move it: replace the named nulls or bounded samples with complete, reproducible evidence that crosses an approved 20 / 35 / 50 /
+65 / 80 band. Weights and formulas do not change during this report.
+Confidence: C: public-only directional evidence
+Limitation: Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing, remakes, payer mix, and margin remain
+unknown. The score remains Research next.
+
+Vintage Optical number explainer
+
+Internal-only | Page 10
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Catchment values and method
+Window
+
+Population
+
+Households
+
+Under 18
+
+Age 40-64
+
+Age 65+
+
+Diabetes
+
+5 minutes
+
+6,624
+
+2,722
+
+1,712
+
+1,811
+
+1,311
+
+9.6%
+
+10 minutes
+
+19,322
+
+7,873
+
+4,571
+
+5,843
+
+4,291
+
+10.9%
+
+15 minutes
+
+54,768
+
+23,793
+
+11,707
+
+17,431
+
+10,939
+
+12.4%
+
+20 minutes
+
+173,058
+
+75,244
+
+38,652
+
+53,102
+
+32,473
+
+13.2%
+
+30 minutes
+
+283,661
+
+120,940
+
+64,831
+
+86,558
+
+53,258
+
+12.3%
+
+These are area-weighted modeled catchment estimates, not patient counts and not a full VDU. Full VDU remains null.
+Method: the origin is the direct Google listing pin for Vintage Optical. Corrected Valhalla auto-profile polygons define the 5, 10, 15, 20, and 30minute windows. The polygons were intersected with 2024 TIGER Illinois block groups in EPSG:5070. Population, households, and age bands
+use 2024 ACS 5-year block-group estimates allocated by intersection area. Negative ACS sentinels remain null.
+Income context uses a household-weighted mean of valid block-group median household incomes. It is an approximation, not a true catchment
+median and not actual payer mix. Diabetes context uses adult-population and tract-area weighted crude prevalence from the CDC PLACES 2025
+release, 2023 data year.
+The model has no live traffic or patient-origin evidence. Patient willingness to travel is unmeasured. The canonical six-term VDU also requires
+diabetes-prevalence-indexed population and commercial-pay-indexed population with complete frozen lineage. Those terms are incomplete, so
+canonical full VDU is null.
+Source IDs: GOOGLE_MAPS_SAMPLE_20260730, VALHALLA_20260730, TIGER2024_BG, ACS2024_BG, CDC_PLACES_2025, and
+CATCHMENT_DEMOGRAPHICS_20260730.
+
+Vintage Optical number explainer
+
+Internal-only | Page 11
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Observed population and school series
+Morton village population
+Year
+
+Morton village population
+
+2020
+
+17,172
+
+2021
+
+17,196
+
+2022
+
+17,361
+
+2023
+
+17,552
+
+2024
+
+17,555
+
+2025
+
+17,565
+
+Derivation: 17,565 - 17,172 = 393. Then 393 / 17,172 x 100 = 2.2886093641%, displayed as 2.29%.
+This is observed Morton village population change from 2020 to 2025. It is not catchment growth, forecast growth, patient growth, or realized
+demand. Source ID: CENSUS_PEP_2025.
+
+Morton CUSD 709 enrollment
+School year
+
+Enrollment
+
+Status
+
+2022-2023
+
+3,238
+
+Observed
+
+2023-24
+
+missing
+
+Not interpolated
+
+2024-25
+
+3,299
+
+Observed
+
+2025-26
+
+3,365
+
+Observed
+
+Derivation: 3,365 - 3,238 = 127. Then 127 / 3,238 x 100 = 3.9221741816%, displayed as 3.92%.
+The 2023-24 value is missing and not interpolated. Enrollment is an observed district proxy, not catchment population, forecast growth, patient
+growth, myopia starts, or realized demand. Source ID: MORTON709_FIRST_PARTY_ARCHIVE.
+
+Vintage Optical number explainer
+
+Internal-only | Page 12
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Candidate supply reconciliation
+The NPPES city-and-taxonomy queries reported 40 results, while 39 provider candidate records materialized. Deterministic grouping produced 24
+location candidates. The Census batch geocoder matched 21 and returned 3 no-match rows.
+Window
+
+Candidate locations
+
+Competitor candidates
+
+Canonical offices
+
+5 minutes
+
+4
+
+2
+
+null
+
+10 minutes
+
+4
+
+2
+
+null
+
+15 minutes
+
+8
+
+6
+
+null
+
+20 minutes
+
+16
+
+14
+
+null
+
+30 minutes
+
+20
+
+18
+
+null
+
+Candidate counts are 4 / 4 / 8 / 16 / 20 across the five windows. Competitor-candidate counts are 2 / 2 / 6 / 14 / 18 after the directly supported
+subject-address exclusions.
+These are coverage and contradiction counts. NPPES is a provider registry, not proof of active distinct offices. Repeated addresses,
+organizations, individual providers, ownership, current status, and service type are not completely resolved. One reported result did not
+materialize, three locations did not geocode, and the collection is not a complete 30-minute active-office sweep.
+The canonical office count remains null. Population per office, full VDU per office, Supply Balance, Supply Saturation, and patient-choice
+denominators cannot be calculated from these candidates. Source IDs: NPPES_CURRENT_20260730 and CENSUS_GEOCODER_20260730.
+
+Vintage Optical number explainer
+
+Internal-only | Page 13
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Route, reputation, and visibility lineage
+Corrected Focus route
+The current route uses direct Google listing pins for Vintage Optical and Focus On Eyes. The frozen OSRM result is 233.4 seconds and 2,466.8
+meters. The report displays 233.4 / 60 = 3.89 minutes and 1.53 miles.
+The direct-pin route supersedes the earlier candidate-geocoder lineage without repeating the stale values. The peer remains nearby, so no
+approved score band changes. The route has no live traffic, time-of-day adjustment, patient origins, patient choice, capacity, or draw evidence.
+Source IDs: GOOGLE_MAPS_SAMPLE_20260730, GOOGLE_MAPS_FOCUS_SAMPLE_20260730, and
+OSRM_FOCUS_GOOGLE_PINS_20260730.
+
+One bounded direct Google comparison
+Entity
+
+Direct Google rating
+
+Direct Google reviews
+
+Observation role
+
+Vintage Optical
+
+4.9
+
+348
+
+Peer card
+
+Focus On Eyes
+
+4.8
+
+182
+
+Direct listing
+
+Tri-County Eye Center
+
+4.9
+
+271
+
+Peer card
+
+Walmart Vision & Glasses
+
+3.5
+
+8
+
+Peer card
+
+This is one dated same-page direct Google observation. The rank grid did not run, and this is not a complete peer export. No review text, themes,
+recency distribution, owner-response rate, conversion, outcomes, or clinical-quality inference is included.
+
+Source-separated Birdeye discrepancies
+Entity
+
+Birdeye Google component
+
+Direct Google
+
+Difference
+
+Vintage Optical
+
+398
+
+348
+
+50
+
+Focus On Eyes
+
+210
+
+182
+
+28
+
+Arithmetic: 398 - 348 = 50 for Vintage Optical. 210 - 182 = 28 for Focus On Eyes. Birdeye components are aggregator observations, not direct
+current Google counts. Aggregation dates and methods may differ. Ratings are not averaged, counts are not summed, and the cross-platform
+review total remains null.
+DataForSEO status is unavailable_missing_credentials. request_sent is false. cost is 0. The rank grid status is not_run. Direct Google samples,
+Exa discovery, and Perplexity discovery are not equivalent to a rank grid.
+Source IDs: GOOGLE_MAPS_FOCUS_SAMPLE_20260730, BIRDEYE_AGGREGATOR_20260730, and
+DATAFORSEO_PREFLIGHT_20260730.
+
+Vintage Optical number explainer
+
+Internal-only | Page 14
+
+INTERNAL-ONLY | Human Project Room approval required
+
+What we do not know
+The canonical office count remains null because provider-registry and candidate-location records are not a complete, current, classified,
+geocoded, and deduplicated active-office census.
+Full VDU remains null because the six-term canonical formula lacks complete diabetes-indexed and commercial-pay-indexed inputs with
+validated lineage.
+Complete provider entity dedupe remains null. The rank grid remains null and not run. Patient-origin choice, live traffic, conversion, capacity,
+outcomes, economics, actual payer mix, realized specialty demand, and a defensible cross-platform review total remain unknown.
+These unknowns do not mean zero, average, normal, no demand, no competition, or no problem. They block office ratios, patient-choice claims,
+forecasts, revenue claims, capacity claims, outcome claims, and investment conclusions.
+The report remains internal-only. External delivery, publishing, upload, CRM write, outreach, or any other external action requires human Project
+Room approval of the exact rendered package.
+
+Vintage Optical number explainer
+
+Internal-only | Page 15
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Source dictionary
+Every substantive source ID maps to a direct public URL and a bounded use. Exa and Perplexity are discovery coverage only and are never
+publication authority.
+Source ID
+
+Source
+
+ACS2024_BG
+
+Authority/type
+
+Observed/vintage
+
+Claim use
+
+Confidence
+
+Limitation
+
+2024 ACS 5https://api.census.gov/dat
+year block-group a/2024/acs/acs5
+detailed tables
+
+Accepted public source
+
+2026-07-30
+
+Population,
+households, age
+bands, and
+household-weighted
+income
+approximation.
+
+high
+
+Survey estimates have sampling
+error; negative sentinels are null.
+
+BIRDEYE_AG
+GREGATOR_
+20260730
+
+Birdeye sourceseparated
+aggregator
+observations
+
+https://reviews.birdeye.co
+m/focus-on-eyes-pc155729242849867
+
+aggregator_observation
+_not_direct_platform_co
+unt
+
+2026-07-30
+
+Birdeye-displayed
+components and
+discrepancies, kept
+separate from direct
+Google.
+
+medium within
+the stated
+bounded use
+
+The displayed 217 total and its
+platform components are Birdeye
+observations with unknown crossentity recency and collectionmethod comparability.
+
+CATCHMENT
+_DEMOGRAP
+HICS_202607
+30
+
+Accepted
+derived
+catchment
+demographics
+
+https://api.census.gov/dat
+a/2024/acs/acs5
+
+Immediate derived ACS,
+TIGER, CDC PLACES,
+and Valhalla packet
+
+2026-07-30
+
+Accepted derived
+five-window values
+and full-VDU null
+gate.
+
+high
+
+Canonical full VDU remains null
+because required terms are
+incomplete.
+
+CDC_PLACE
+S_2025
+
+CDC PLACES
+2025 release,
+2023 data year
+
+https://www.cdc.gov/place
+s/
+
+Accepted public source
+
+2026-07-30
+
+Tract-level modeled
+diabetes prevalence
+context.
+
+high
+
+Modeled tract crude prevalence,
+not patient-level clinical data.
+
+CENSUS_GE
+OCODER_20
+260730
+
+United States
+Census batch
+geocoder results
+
+https://geocoding.geo.cen United States Census
+sus.gov/geocoder/geograp Bureau batch geocoder
+hies/addressbatch
+
+2026-07-30
+
+Matched and nomatch candidateaddress
+reconciliation.
+
+medium within
+the stated
+bounded use
+
+Three rows returned No_Match
+and retain null coordinates.
+
+CENSUS_PE
+P_2025
+
+Census Vintage
+2025 Population
+Estimates
+
+https://www2.census.gov/
+programssurveys/popest/datasets/2
+020-2025/cities/totals/subest2025.csv
+
+Accepted public source
+
+2026-07-30
+
+Observed Morton
+village population
+series and growth
+derivation.
+
+high
+
+Annual estimates may be revised
+in later Census vintages.
+
+DATAFORSE
+O_PREFLIGH
+T_20260730
+
+DataForSEO
+availability
+preflight
+
+https://api.dataforseo.com/
+v3/appendix/user_data
+
+authoritative_for_this_pr
+eflight_state_only
+
+2026-0730T11:54:00Z
+
+Unavailable
+credentials, no
+request, zero cost,
+and rank grid not
+run.
+
+high
+
+DataForSEO credentials were not
+configured in the active
+environment, so no paid API
+request or rank grid ran.
+
+GOOGLE_MA
+PS_FOCUS_
+SAMPLE_202
+60730
+
+Direct Google
+Maps samepage Focus
+comparison
+
+https://www.google.com/m Direct public Google
+aps/place/Focus+On+Eye Maps listing and peer
+s,+P.C.+Member+Of+Visio cards
+n+Source/@40.6196994,89.4680886,17z/
+
+2026-0730T13:18:44.578Z
+
+Bounded samepage Google rating
+and review-count
+comparison plus
+Focus listing pin.
+
+medium within
+the stated
+bounded use
+
+One dated page observation, not a
+complete peer export or rank grid.
+
+GOOGLE_MA
+PS_SAMPLE_
+20260730
+
+Direct Google
+Maps
+observation:
+Vintage Optical
+
+https://www.google.com/m
+aps/place/Vintage+Optical
+/@40.6049094,-89.46702
+4,17z/
+
+Accepted public source
+
+2026-0730T12:54:08.602Z
+
+Subject identity,
+current listing pin,
+address, and public
+booking-link
+observation.
+
+high
+
+One dated public listing
+observation; not patient-origin
+evidence.
+
+MORTON709
+_FIRST_PAR
+TY_ARCHIVE
+
+Morton CUSD
+709 first-party
+and archived
+enrollment
+pages
+
+https://www.morton709.or
+g/our-district/aboutmorton-709
+
+Accepted public source
+
+2024-01-17
+
+Observed Morton
+CUSD 709
+enrollment series
+and missing-year
+boundary.
+
+high
+
+Archived first-party page snapshot.
+
+Vintage Optical number explainer
+
+Direct public URL
+
+Internal-only | Page 16
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Source dictionary, continued
+Every substantive source ID maps to a direct public URL and a bounded use. Exa and Perplexity are discovery coverage only and are never
+publication authority.
+Source ID
+
+Source
+
+Direct public
+URL
+
+NPPES_CU
+RRENT_202
+60730
+
+NPPES
+sanitized
+provider
+candidate
+roster
+
+OSRM_FOC
+US_GOOGL
+E_PINS_20
+260730
+
+Observed/vintage Claim use
+
+Confidence
+
+Limitation
+
+https://npiregist authoritative public
+ry.cms.hhs.gov registry for represented
+/api/
+provider registration
+fields only
+
+2026-07-30
+
+Candidate provider coverage
+and source-result deficit only;
+not office count.
+
+medium within
+the stated
+bounded use
+
+Public NPPES queries by named city and
+taxonomy. NPPES is a provider registry, not
+proof of active office capacity, patient draw, or
+a complete drive-time catchment supply
+census. Raw NPI and phone identifiers are
+intentionally omitted from this sanitized
+receipt.
+
+OSRM
+direct-pin
+route from
+Vintage to
+Focus
+
+https://router.pr OSRM public routing
+ojectservice
+osrm.org/route/
+v1/driving
+
+2026-07-30
+
+Corrected Focus route
+duration and distance.
+
+high
+
+No live traffic.
+
+OSRM_TAB
+LE_2026073
+0
+
+OSRM
+candidate
+route table
+
+https://router.pr
+ojectosrm.org/table/
+v1/driving
+
+OSRM public routing
+service
+
+2026-07-30
+
+Candidate route coverage
+only; not patient choice.
+
+medium within
+the stated
+bounded use
+
+No live traffic and no patient-origin choice
+evidence.
+
+S01
+
+Official
+Subject
+Website
+
+https://www.vin
+tageopt.com/
+
+official_subject_website 2026-07-29
+
+Subject identity, routine and
+medical eye-care breadth,
+dry-eye and myopia links,
+optical, on-site lab, three
+named optometrists, and
+public appointment CTA.
+
+high
+
+Practice-controlled claims do not prove
+utilization, outcomes, capacity, conversion, or
+economics.
+
+S02
+
+Official
+Subject
+Website
+
+https://www.vin
+tageopt.com/h
+ours-location/
+
+official_subject_website 2026-07-29
+
+Current address, posted
+hours, parking statement,
+same-day emergency claim,
+and appointment link.
+
+high
+
+Posted access does not prove live
+appointment availability, phone performance,
+or realized demand.
+
+S03
+
+Official
+Subject
+Service
+Page
+
+https://www.vin
+tageopt.com/m
+edical-eyecare/dry-eyetreatment/
+
+official_subject_service
+_page
+
+2026-07-29
+
+Public dry-eye service and
+modality evidence.
+
+high
+
+Confirms the public offer only, not case
+volume, clinical outcomes, capacity, or
+contribution margin.
+
+S04
+
+Official
+Subject
+Service
+Page
+
+https://www.vin
+tageopt.com/m
+edical-eyecare/myopiamanagement/
+
+official_subject_service
+_page
+
+2026-07-29
+
+Public myopia-management
+service and treatment-option
+evidence.
+
+high
+
+Confirms the public offer only, not starts,
+retention, outcomes, or economics.
+
+S05
+
+Official
+Subject
+Service
+Page
+
+https://www.vin
+tageopt.com/c
+ontactlenses/specialt
+y-contactlenses/
+
+official_subject_service
+_page
+
+2026-07-29
+
+Public specialty-contact
+service and lens-type
+evidence.
+
+high
+
+Does not establish referral volume, chair time,
+fit success, capacity, or economics.
+
+S06
+
+Subject
+Linked
+Public
+Booking
+Vendor
+
+https://schedul subject_linked_public_
+eyourexam.co booking_vendor
+m/v3/index.php
+/5788
+
+2026-07-29
+
+Public booking path reached
+a service and provider
+selection flow.
+
+high
+
+No service, provider, slot, appointment, or
+form was selected or submitted. Slot depth
+and completion rate remain unknown.
+
+S07
+
+Official Peer
+Website
+
+https://visionso
+urcefocusoneyes.c
+om/
+
+2026-07-29
+
+Focus On Eyes entity, Morton high
+address, comprehensive
+examinations, disease care,
+lenses, frames, contacts,
+posted weekday and
+Saturday hours, and
+appointment request.
+
+Vintage Optical number explainer
+
+Authority/type
+
+official_peer_website
+
+Peer-controlled content. No independent
+review export, live slot inventory, utilization, or
+capacity evidence was collected.
+
+Internal-only | Page 17
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Source dictionary, continued
+Every substantive source ID maps to a direct public URL and a bounded use. Exa and Perplexity are discovery coverage only and are never
+publication authority.
+Source ID
+
+Source
+
+Direct public URL
+
+Authority/type
+
+Observed/vintage Claim use
+
+Confidence Limitation
+
+S08
+
+Official Peer
+Website
+
+https://www.tricounty
+eyecenter.com/
+
+official_peer_web
+site
+
+2026-07-29
+
+Washington entity and address plus eye
+examinations, disease treatment, dryeye clinic, contact lenses, macularhealth center, emergency care, and
+eyewear.
+
+high
+
+Peer-controlled service claims do not
+prove capacity, volume, outcomes, or
+patient draw from Morton.
+
+S09
+
+Official Peer
+Website
+
+https://vcc2020.com/
+
+official_peer_web
+site
+
+2026-07-29
+
+Vision Care Center entity and specialty
+overlap, including dry-eye diagnostics
+and therapy.
+
+high
+
+Peer-controlled content. No
+independent review export, utilization,
+outcomes, capacity, or Morton patientorigin evidence was collected.
+
+S10
+
+Official Peer
+Service Page
+
+https://vcc2020.com/
+service/myopiacontrol/
+
+official_peer_servi 2026-07-29
+ce_page
+
+Vision Care Center myopia-control
+options including atropine, multifocal
+contacts and glasses, and Ortho-K.
+
+high
+
+Confirms public positioning, not starts,
+outcomes, capacity, or economics.
+
+S11
+
+Official Peer
+Location Page
+
+https://www.bardopti
+cal.com/eye-doctorpeoria-east/
+
+official_peer_locat 2026-07-29
+ion_page
+
+Bard Optical East Peoria entity, exact
+address, eye-care and optical model,
+appointment request, and public access
+information.
+
+high
+
+Official page does not prove how
+much demand originates in Morton or
+provide independent review
+normalization.
+
+S12
+
+Official Peer
+Location Page
+
+https://www.illinoisey
+ecenter.com/location
+/washington/
+
+official_peer_locat 2026-07-29
+ion_page
+
+Current Washington location at 93
+Eastgate Drive and routine, medical,
+contact-lens, and optical service
+breadth.
+
+high
+
+The official entity is current, but the
+supplied Nominatim attempt returned
+no match and no OSRM route was
+produced.
+
+TIGER202
+4_BG
+
+2024
+TIGER/Line
+Illinois block
+groups
+
+https://www2.census
+.gov/geo/tiger/TIGE
+R2024/BG/tl_2024_
+17_bg.zip
+
+Accepted public
+source
+
+2026-07-30
+
+Geographic allocation boundaries for
+modeled catchment estimates.
+
+high
+
+Boundaries allocate aggregate
+estimates; they do not locate people.
+
+VALHALL
+A_202607
+30
+
+Valhalla
+corrected
+drive-time
+isochrones
+
+https://valhalla.githu
+b.io/valhalla/api/isoc
+hrone/api-reference/
+
+Accepted public
+source
+
+2026-07-30
+
+Corrected 5, 10, 15, 20, and 30-minute
+drive-time polygon boundaries.
+
+high
+
+Modeled auto drive times with no live
+traffic.
+
+Vintage Optical number explainer
+
+Internal-only | Page 18
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Receipt manifest
+Receipt paths below are package-relative audit references. They do not authorize external delivery.
+Source ID
+
+Package-relative receipt
+
+SHA-256
+
+Captured/vintage Authority/method
+
+Claim use
+
+Limitation
+
+ACCEPTED_PU
+BLIC_SOURCE
+_DICTIONARY_
+20260730
+
+data/source_receipts/ACCEP
+TED_PUBLIC_SOURCE_DI
+CTIONARY_20260730__70e
+21a80ef25__updatedsources.json
+
+70e21a80ef25a73
+7bdc4edc21b256
+bcf6622e3dd6237
+ff5d624a3ea6fa78
+e3db
+
+2026-07-30
+
+Accepted public-source lineage
+dictionary used by the approved
+scoring review; Accepted immediate
+derived packet copied byte-for-byte
+
+Accepted publicsource lineage
+dictionary used by
+the approved
+scoring review
+
+This derived dictionary preserves
+accepted page lineage; it is not a
+fresh page capture.
+
+ACS2024_BG
+
+data/source_receipts/ACS20 1637b18a96881b
+24_BG__1637b18a9688__ac 81e050df1cd3d5a
+sdt5y2024-b01001.dat
+c38a33208b9b69
+b40e1dbeb3c4e1
+3718f0e
+
+2026-07-30
+
+Accepted public source; Frozen
+upstream receipt
+
+Population,
+households, age
+bands, and
+householdweighted income
+approximation.
+
+Survey estimates have sampling
+error; negative sentinels are null.
+
+ACS2024_BG
+
+data/source_receipts/ACS20
+24_BG__77200c3d9c0d__ac
+sdt5y2024-b11001.dat
+
+77200c3d9c0d99
+773bc7f78208bc9
+6f25170e5d4d175
+a5de320620b478
+ceaff5
+
+2026-07-30
+
+Accepted public source; Frozen
+upstream receipt
+
+Population,
+households, age
+bands, and
+householdweighted income
+approximation.
+
+Survey estimates have sampling
+error; negative sentinels are null.
+
+ACS2024_BG
+
+data/source_receipts/ACS20
+24_BG__b25a176b0e6c__ac
+sdt5y2024-b19013.dat
+
+b25a176b0e6c33
+9b6f3a2a0d3d844
+6bf06f5f080b4395
+993ec9a8313efb1
+c229
+
+2026-07-30
+
+Accepted public source; Frozen
+upstream receipt
+
+Population,
+households, age
+bands, and
+householdweighted income
+approximation.
+
+Block-group medians support only
+an approximate weighted context.
+
+BIRDEYE_AGG
+REGATOR_202
+60730
+
+data/source_receipts/BIRDE
+YE_AGGREGATOR_202607
+30__4fc44053abac__birdeye
+-focus-on-eyes.json
+
+4fc44053abac59f
+875bf6cf6e541e6
+9beba44079f28cf
+c9207aab6354eb
+4985c
+
+2026-07-30
+
+aggregator_observation_not_direct_pla
+tform_count;
+third_party_review_aggregator_page_c
+apture
+
+Birdeye-displayed
+components and
+discrepancies, kept
+separate from
+direct Google.
+
+The displayed 217 total and its
+platform components are Birdeye
+observations with unknown crossentity recency and collectionmethod comparability.
+
+BIRDEYE_AGG
+REGATOR_202
+60730
+
+data/source_receipts/BIRDE
+YE_AGGREGATOR_202607
+30__d365aad9b4ba__birdey
+e-vintage.json
+
+d365aad9b4ba5fd
+3314402c86c73cf
+1a1296cebb7bf45
+f7289d90f874ad1
+ee34
+
+2026-07-30
+
+aggregator_observation_not_direct_pla
+tform_count;
+third_party_review_aggregator_page_c
+apture
+
+Birdeye-displayed
+components and
+discrepancies, kept
+separate from
+direct Google.
+
+The displayed 413 total and
+Google 398 component are
+Birdeye observations, not a direct
+current Google count.
+
+CATCHMENT_
+DEMOGRAPHI
+CS_20260730
+
+data/source_receipts/CATCH
+MENT_DEMOGRAPHICS_2
+0260730__5ba62163d5f3__c
+atchment_demographics.json
+
+5ba62163d5f3cd1
+316c8f9b39ab278
+18e1ec208d277d
+d05210f1453d2f5
+5885f
+
+2026-07-30
+
+Immediate derived ACS, TIGER, CDC
+PLACES, and Valhalla packet; Frozen
+catchment demographic calculations
+
+Accepted derived
+five-window values
+and full-VDU null
+gate.
+
+Canonical full VDU remains null
+because required terms are
+incomplete.
+
+CATCHMENT_
+DEMOGRAPHI
+CS_20260730
+
+data/source_receipts/CATCH
+MENT_DEMOGRAPHICS_2
+0260730__5ba62163d5f3__c
+atchment_demographics.json
+
+5ba62163d5f3cd1
+316c8f9b39ab278
+18e1ec208d277d
+d05210f1453d2f5
+5885f
+
+2026-07-30
+
+Accepted derived ACS, TIGER, CDC
+PLACES, and Valhalla catchment
+packet; Accepted immediate derived
+packet copied byte-for-byte
+
+Accepted derived
+five-window values
+and full-VDU null
+gate.
+
+Area-weighted modeled estimates;
+canonical full VDU remains null.
+
+Vintage Optical number explainer
+
+Internal-only | Page 19
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Receipt manifest, continued
+Receipt paths below are package-relative audit references. They do not authorize external delivery.
+Source ID
+
+Package-relative
+receipt
+
+SHA-256
+
+Captured/vintage
+
+Authority/method
+
+Claim use
+
+Limitation
+
+CDC_PLAC
+ES_2025
+
+data/source_receipts/CD
+C_PLACES_2025__626
+1efb3665d__cdc-places2025-five-countiesdiabetes.json
+
+6261efb3665d
+058dfd250693
+b9071539a06f
+b6d10ed9c41d
+09de599be9dd
+0d6b
+
+2026-07-30
+
+Accepted public source;
+Frozen upstream receipt
+
+Tract-level
+modeled
+diabetes
+prevalence
+context.
+
+Modeled tract crude prevalence, not patient-level clinical
+data.
+
+CENSUS_G
+EOCODER_
+20260730
+
+data/source_receipts/CE
+NSUS_GEOCODER_20
+260730__18a6593c071f
+__census-geocoderresults.csv
+
+18a6593c071f
+7a879e1df835
+64db1fba84c0
+42882565f5b1
+b788fef4faba1
+1d2
+
+2026-07-30
+
+United States Census
+Bureau batch geocoder;
+Frozen batch geocoding
+result
+
+Matched and nomatch
+candidateaddress
+reconciliation.
+
+Three rows returned No_Match and retain null coordinates.
+
+CENSUS_G
+EOCODER_
+BATCH_202
+60730
+
+data/source_receipts/CE
+NSUS_GEOCODER_BA
+TCH_20260730__e54c0
+ef1c85e__censusgeocoder-batch.csv
+
+e54c0ef1c85e3 2026-07-30
+b5d85fbcd98d
+359a81a077d2
+14b393bcbbdc
+7cfab12ffb62a
+a0
+
+United States Census
+Bureau batch geocoder;
+Immediate derived 24-row
+batch input
+
+Evidence lineage Input addresses contain no returned coordinates.
+and bounded
+audit support.
+
+CENSUS_P
+EP_2025
+
+data/source_receipts/CE
+NSUS_PEP_2025__e35
+08f520146__subest2025.csv
+
+e3508f520146
+5913476d4ddf
+91740f191f797
+7c9f2614a2a7
+e30b5fd22027
+934
+
+Accepted public source;
+Frozen upstream receipt
+
+Observed
+Morton village
+population series
+and growth
+derivation.
+
+Annual estimates may be revised in later Census vintages.
+
+DATAFORS
+EO_PREFLI
+GHT_20260
+730
+
+data/source_receipts/DA
+TAFORSEO_PREFLIGH
+T_20260730__2a1bcc85
+2acd__dataforseopreflight-20260730.json
+
+2a1bcc852acd 2026-0743a0a5f2cb3c9 30T11:54:00Z
+24c5defb9c2ee
+ab293c37a2cf3
+cfb1c4e31dcab
+
+authoritative_for_this_prefli
+ght_state_only;
+local_api_availability_preflig
+ht_receipt
+
+Unavailable
+credentials, no
+request, zero
+cost, and rank
+grid not run.
+
+DataForSEO credentials were not configured in the active
+environment, so no paid API request or rank grid ran.
+
+GOOGLE_M
+APS_FOCU
+S_SAMPLE_
+20260730
+
+data/source_receipts/GO
+OGLE_MAPS_FOCUS_
+SAMPLE_20260730__aa
+bf66762ddb__googlemaps-focus20260730.json
+
+aabf66762ddb
+1ac51c3eb42a
+e53f25700ce5
+e98af682b275f
+c0a3238e030b
+dbb
+
+2026-0730T13:18:44.578Z
+
+Direct public Google Maps
+listing and peer cards;
+Browser DOM observation
+
+Bounded samepage Google
+rating and
+review-count
+comparison plus
+Focus listing pin.
+
+One dated page observation, not a complete peer export
+or rank grid.
+
+GOOGLE_M
+APS_SAMP
+LE_2026073
+0
+
+data/source_receipts/GO
+OGLE_MAPS_SAMPLE
+_20260730__ff0b01b464
+25__google-mapsvintage-20260730.json
+
+ff0b01b464253
+5487a7d3fcf49
+4b151b8490d5
+64a517e4e5c5
+8da007ec4496
+16
+
+2026-0730T12:54:08.602Z
+
+Accepted public source;
+Frozen upstream receipt
+
+Subject identity,
+current listing
+pin, address,
+and public
+booking-link
+observation.
+
+One dated public listing observation; not patient-origin
+evidence.
+
+GOOGLE_M
+APS_SAMP
+LE_2026073
+0
+
+data/source_receipts/GO
+OGLE_MAPS_SAMPLE
+_20260730__ff0b01b464
+25__google-mapsvintage-20260730.json
+
+ff0b01b464253
+5487a7d3fcf49
+4b151b8490d5
+64a517e4e5c5
+8da007ec4496
+16
+
+2026-0730T12:54:08.602Z
+
+direct_platform_observation
+;
+direct_public_google_maps
+_observation
+
+Subject identity,
+current listing
+pin, address,
+and public
+booking-link
+observation.
+
+Google displayed a limited public view without a review
+count. This is one dated direct observation, not a rank grid
+or complete query set. The rating is platform-specific and
+cannot be combined with aggregator counts without a
+documented deduplication method. The map pin is used as
+the public routing origin for the listed street address, not as
+patient-origin evidence.
+
+Vintage Optical number explainer
+
+2026-07-30
+
+Internal-only | Page 20
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Receipt manifest, continued
+Receipt paths below are package-relative audit references. They do not authorize external delivery.
+Source ID
+
+Package-relative receipt
+
+SHA-256
+
+Authority/method
+
+Claim use
+
+Limitation
+
+GOOGLE_MAP
+S_SAMPLE_20
+260730
+
+data/source_receipts/GOOGLE_
+MAPS_SAMPLE_20260730__ff
+0b01b46425__google-mapsvintage-20260730.json
+
+ff0b01b4642535487 2026-07a7d3fcf494b151b849 30T12:54:08.602Z
+0d564a517e4e5c58d
+a007ec449616
+
+Direct public Google Maps listing;
+Browser DOM observation
+
+Subject identity,
+current listing pin,
+address, and public
+booking-link
+observation.
+
+Limited dated view with
+no displayed review
+count.
+
+GROWTH_EVI
+DENCE_20260
+730
+
+data/source_receipts/GROWTH
+_EVIDENCE_20260730__76c9c
+e4068b4__growth_evidence.jso
+n
+
+76c9ce4068b42c10a 2026-07-30
+127132e2a2a0753d
+46249aaca227025d7
+e2969b06d2d4d8
+
+Accepted derived observed-growth
+packet; Accepted immediate derived
+packet copied byte-for-byte
+
+Accepted derived
+observed-growth
+packet
+
+Village and district
+observations are
+context, not forecasts or
+patient growth.
+
+LOCAL_VISIBIL
+ITY_REPUTATI
+ON_20260730
+
+data/source_receipts/LOCAL_VI
+SIBILITY_REPUTATION_20260
+730__1a56d2092b07__local_vis
+ibility_reputation.json
+
+1a56d2092b07279c8 2026-07-30
+2b9416faf30c97ca47
+6b2ba73f7e898e7ab
+81c1b6510c76
+
+Immediate derived direct and aggregator
+observation packet; Frozen sourceseparated visibility and reputation
+observations
+
+Evidence lineage and Dated observations are
+bounded audit
+not a rank grid or
+support.
+complete peer export.
+
+MISSING_EVID
+ENCE_RECON
+CILED_202607
+30
+
+data/source_receipts/MISSING_
+EVIDENCE_RECONCILED_202
+60730__0334e77fba10__missin
+g_evidence.json
+
+0334e77fba1059c73 2026-07-30
+c39ac1320c05d2e91
+72ecf581a444dcf938
+c561854acb1d
+
+Accepted seven-gap evidence register;
+Accepted immediate derived packet
+copied byte-for-byte
+
+Accepted seven-gap
+evidence register
+
+Unknown states are
+preserved and never
+converted to zero.
+
+MORTON709_F data/source_receipts/MORTON
+IRST_PARTY_A 709_FIRST_PARTY_ARCHIVE_
+RCHIVE
+_3a2e38c98bbf__morton709archive-20240117.html
+
+3a2e38c98bbf1e993
+cc530cab7656da213
+33c0ec75c3a1163a4
+5780f140d73eb
+
+2024-01-17
+
+Accepted public source; Frozen
+upstream receipt
+
+Observed Morton
+CUSD 709
+enrollment series and
+missing-year
+boundary.
+
+Archived first-party page
+snapshot.
+
+MORTON709_F data/source_receipts/MORTON
+IRST_PARTY_A 709_FIRST_PARTY_ARCHIVE_
+RCHIVE
+_62b2380a6735__morton709enrollment-series.json
+
+62b2380a67352c20d 2026-07-30
+2a3f544e06cad75e5
+5388140065bbc3788
+816cc9b5694dd
+
+Accepted public source; Frozen
+upstream receipt
+
+Observed Morton
+CUSD 709
+enrollment series and
+missing-year
+boundary.
+
+The district did not
+provide an observed
+2023-24 value here.
+
+MORTON709_F data/source_receipts/MORTON
+IRST_PARTY_A 709_FIRST_PARTY_ARCHIVE_
+RCHIVE
+_a88d1b7df912__morton709archive-20250912.html
+
+a88d1b7df912bb681 2025-09-12
+1bd84ed7b721cc636
+6fa5b59b4755dce70
+329bb9e0a35f0
+
+Accepted public source; Frozen
+upstream receipt
+
+Observed Morton
+CUSD 709
+enrollment series and
+missing-year
+boundary.
+
+Archived first-party page
+snapshot.
+
+MORTON709_F data/source_receipts/MORTON
+IRST_PARTY_A 709_FIRST_PARTY_ARCHIVE_
+RCHIVE
+_dc59e4c7ed17__morton709live-20260730.html
+
+dc59e4c7ed1790348 2026-07-30
+ca84d150d196b0e3a
+523070032f7b4d2f8
+1e89e4ca5d9b7
+
+Accepted public source; Frozen
+upstream receipt
+
+Observed Morton
+CUSD 709
+enrollment series and
+missing-year
+boundary.
+
+Dated capture of a live
+first-party page.
+
+Vintage Optical number explainer
+
+Captured/vintage
+
+Internal-only | Page 21
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Receipt manifest, continued
+Receipt paths below are package-relative audit references. They do not authorize external delivery.
+Source ID
+
+Package-relative
+receipt
+
+SHA-256
+
+Captured/vintage Authority/method
+
+Claim use
+
+Limitation
+
+NPPES_CU data/source_receipts/NP
+RRENT_202 PES_CURRENT_202607
+60730
+30__c53c847d05ff__npp
+es-provider-rostersanitized.json
+
+c53c847d05ff9
+9fb673aa8bafd
+e18e3e6ee31d
+19bb834c8f79
+a8ec1778a53e
+23
+
+2026-07-30
+
+authoritative public registry for
+represented provider registration
+fields only;
+sanitized_public_provider_registr
+y_query_receipt
+
+Candidate provider
+coverage and sourceresult deficit only; not
+office count.
+
+Public NPPES queries by named city and
+taxonomy. NPPES is a provider registry, not
+proof of active office capacity, patient draw,
+or a complete drive-time catchment supply
+census. Raw NPI and phone identifiers are
+intentionally omitted from this sanitized
+receipt.
+
+NPPES_CU data/source_receipts/NP
+RRENT_202 PES_CURRENT_202607
+60730
+30__c53c847d05ff__npp
+es-provider-rostersanitized.json
+
+c53c847d05ff9
+9fb673aa8bafd
+e18e3e6ee31d
+19bb834c8f79
+a8ec1778a53e
+23
+
+2026-07-30
+
+NPPES public registry; Sanitized
+frozen city and taxonomy query
+roster
+
+Candidate provider
+coverage and sourceresult deficit only; not
+office count.
+
+Provider records are not office counts; one
+reported row did not materialize.
+
+OSRM_FOC
+US_GOOGL
+E_PINS_20
+260730
+
+data/source_receipts/OS
+RM_FOCUS_GOOGLE_
+PINS_20260730__13292
+62f989c__osrm-vintageto-focus-google-pins.json
+
+1329262f989c
+e7d7a8f6c935f
+22cadfebd699
+b7a51fca9120
+8e52a8399412
+35f
+
+2026-07-30
+
+OSRM public routing service;
+Frozen route between two direct
+Google listing pins
+
+Corrected Focus route
+duration and distance.
+
+No live traffic.
+
+OSRM_TAB data/source_receipts/OS
+LE_2026073 RM_TABLE_20260730__
+0
+053bacdf7034__osrmtable-results.json
+
+053bacdf7034
+bd52df37c923
+291e1cf0af137
+231b50beed7a
+c20ce1ad766a
+801
+
+2026-07-30
+
+OSRM public routing service;
+Frozen one-to-many driving table
+
+Candidate route coverage
+only; not patient choice.
+
+No live traffic and no patient-origin choice
+evidence.
+
+OSRM_TAB
+LE_INDEX_
+20260730
+
+data/source_receipts/OS
+RM_TABLE_INDEX_202
+60730__aadc4efd95d8__
+osrm-table-inputindex.json
+
+aadc4efd95d8
+3ca438c2b870
+635d78412e8b
+a27e8f7fd3565
+37b45176f134
+8f8
+
+2026-07-30
+
+OSRM input lineage; Immediate
+derived origin and destination
+index
+
+Evidence lineage and
+bounded audit support.
+
+Destinations use Census geocoder candidate
+points.
+
+ROUTING_
+CORRECTE
+D_2026073
+0
+
+data/source_receipts/RO
+UTING_CORRECTED_2
+0260730__e00bfe8ff708_
+_routing_corrected.json
+
+e00bfe8ff7088
+76b6c3d16ae4
+e03d7a408150
+7e33ac12d61a
+8befe636dc75
+0e8
+
+2026-07-30
+
+Accepted corrected route-lineage
+packet; Accepted immediate
+derived packet copied byte-forbyte
+
+Accepted corrected routelineage packet
+
+No live traffic, patient origins, choice,
+capacity, or draw.
+
+S01
+
+data/source_receipts/AC
+CEPTED_PUBLIC_SOU
+RCE_DICTIONARY_202
+60730__70e21a80ef25__
+updated-sources.json
+
+70e21a80ef25
+a737bdc4edc2
+1b256bcf6622
+e3dd6237ff5d6
+24a3ea6fa78e
+3db
+
+2026-07-29
+
+official_subject_website;
+Accepted source dictionary
+lineage from the reviewed report
+scaffold
+
+Subject identity, routine
+and medical eye-care
+breadth, dry-eye and
+myopia links, optical, onsite lab, three named
+optometrists, and public
+appointment CTA.
+
+Practice-controlled claims do not prove
+utilization, outcomes, capacity, conversion, or
+economics. Underlying page captures were
+not listed in the three accepted receipt
+manifests.
+
+S02
+
+data/source_receipts/AC
+CEPTED_PUBLIC_SOU
+RCE_DICTIONARY_202
+60730__70e21a80ef25__
+updated-sources.json
+
+70e21a80ef25
+a737bdc4edc2
+1b256bcf6622
+e3dd6237ff5d6
+24a3ea6fa78e
+3db
+
+2026-07-29
+
+official_subject_website;
+Accepted source dictionary
+lineage from the reviewed report
+scaffold
+
+Current address, posted
+hours, parking statement,
+same-day emergency
+claim, and appointment
+link.
+
+Posted access does not prove live
+appointment availability, phone performance,
+or realized demand. Underlying page
+captures were not listed in the three
+accepted receipt manifests.
+
+Vintage Optical number explainer
+
+Internal-only | Page 22
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Receipt manifest, continued
+Receipt paths below are package-relative audit references. They do not authorize external delivery.
+Source
+ID
+
+Package-relative receipt
+
+SHA-256
+
+Captured/vintage Authority/method
+
+Claim use
+
+Limitation
+
+S03
+
+data/source_receipts/ACC
+EPTED_PUBLIC_SOURC
+E_DICTIONARY_2026073
+0__70e21a80ef25__updat
+ed-sources.json
+
+70e21a80ef25a
+737bdc4edc21b
+256bcf6622e3d
+d6237ff5d624a3
+ea6fa78e3db
+
+2026-07-29
+
+official_subject_service_page;
+Accepted source dictionary
+lineage from the reviewed report
+scaffold
+
+Public dry-eye service and
+modality evidence.
+
+Confirms the public offer only, not case
+volume, clinical outcomes, capacity, or
+contribution margin. Underlying page
+captures were not listed in the three
+accepted receipt manifests.
+
+S04
+
+data/source_receipts/ACC
+EPTED_PUBLIC_SOURC
+E_DICTIONARY_2026073
+0__70e21a80ef25__updat
+ed-sources.json
+
+70e21a80ef25a
+737bdc4edc21b
+256bcf6622e3d
+d6237ff5d624a3
+ea6fa78e3db
+
+2026-07-29
+
+official_subject_service_page;
+Accepted source dictionary
+lineage from the reviewed report
+scaffold
+
+Public myopia-management
+service and treatment-option
+evidence.
+
+Confirms the public offer only, not starts,
+retention, outcomes, or economics.
+Underlying page captures were not listed
+in the three accepted receipt manifests.
+
+S05
+
+data/source_receipts/ACC
+EPTED_PUBLIC_SOURC
+E_DICTIONARY_2026073
+0__70e21a80ef25__updat
+ed-sources.json
+
+70e21a80ef25a
+737bdc4edc21b
+256bcf6622e3d
+d6237ff5d624a3
+ea6fa78e3db
+
+2026-07-29
+
+official_subject_service_page;
+Accepted source dictionary
+lineage from the reviewed report
+scaffold
+
+Public specialty-contact service
+and lens-type evidence.
+
+Does not establish referral volume, chair
+time, fit success, capacity, or economics.
+Underlying page captures were not listed
+in the three accepted receipt manifests.
+
+S06
+
+data/source_receipts/ACC
+EPTED_PUBLIC_SOURC
+E_DICTIONARY_2026073
+0__70e21a80ef25__updat
+ed-sources.json
+
+70e21a80ef25a
+737bdc4edc21b
+256bcf6622e3d
+d6237ff5d624a3
+ea6fa78e3db
+
+2026-07-29
+
+subject_linked_public_booking_
+vendor; Accepted source
+dictionary lineage from the
+reviewed report scaffold
+
+Public booking path reached a
+service and provider selection
+flow.
+
+No service, provider, slot, appointment, or
+form was selected or submitted. Slot depth
+and completion rate remain unknown.
+Underlying page captures were not listed
+in the three accepted receipt manifests.
+
+S07
+
+data/source_receipts/ACC
+EPTED_PUBLIC_SOURC
+E_DICTIONARY_2026073
+0__70e21a80ef25__updat
+ed-sources.json
+
+70e21a80ef25a
+737bdc4edc21b
+256bcf6622e3d
+d6237ff5d624a3
+ea6fa78e3db
+
+2026-07-29
+
+official_peer_website; Accepted
+source dictionary lineage from
+the reviewed report scaffold
+
+Focus On Eyes entity, Morton
+address, comprehensive
+examinations, disease care,
+lenses, frames, contacts,
+posted weekday and Saturday
+hours, and appointment
+request.
+
+Peer-controlled content. No independent
+review export, live slot inventory,
+utilization, or capacity evidence was
+collected. Underlying page captures were
+not listed in the three accepted receipt
+manifests.
+
+S08
+
+data/source_receipts/ACC
+EPTED_PUBLIC_SOURC
+E_DICTIONARY_2026073
+0__70e21a80ef25__updat
+ed-sources.json
+
+70e21a80ef25a
+737bdc4edc21b
+256bcf6622e3d
+d6237ff5d624a3
+ea6fa78e3db
+
+2026-07-29
+
+official_peer_website; Accepted
+source dictionary lineage from
+the reviewed report scaffold
+
+Washington entity and address
+plus eye examinations, disease
+treatment, dry-eye clinic,
+contact lenses, macular-health
+center, emergency care, and
+eyewear.
+
+Peer-controlled service claims do not
+prove capacity, volume, outcomes, or
+patient draw from Morton. Underlying
+page captures were not listed in the three
+accepted receipt manifests.
+
+S09
+
+data/source_receipts/ACC
+EPTED_PUBLIC_SOURC
+E_DICTIONARY_2026073
+0__70e21a80ef25__updat
+ed-sources.json
+
+70e21a80ef25a
+737bdc4edc21b
+256bcf6622e3d
+d6237ff5d624a3
+ea6fa78e3db
+
+2026-07-29
+
+official_peer_website; Accepted
+source dictionary lineage from
+the reviewed report scaffold
+
+Vision Care Center entity and
+specialty overlap, including dryeye diagnostics and therapy.
+
+Peer-controlled content. No independent
+review export, utilization, outcomes,
+capacity, or Morton patient-origin evidence
+was collected. Underlying page captures
+were not listed in the three accepted
+receipt manifests.
+
+S10
+
+data/source_receipts/ACC
+EPTED_PUBLIC_SOURC
+E_DICTIONARY_2026073
+0__70e21a80ef25__updat
+ed-sources.json
+
+70e21a80ef25a
+737bdc4edc21b
+256bcf6622e3d
+d6237ff5d624a3
+ea6fa78e3db
+
+2026-07-29
+
+official_peer_service_page;
+Accepted source dictionary
+lineage from the reviewed report
+scaffold
+
+Vision Care Center myopiacontrol options including
+atropine, multifocal contacts
+and glasses, and Ortho-K.
+
+Confirms public positioning, not starts,
+outcomes, capacity, or economics.
+Underlying page captures were not listed
+in the three accepted receipt manifests.
+
+Vintage Optical number explainer
+
+Internal-only | Page 23
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Receipt manifest, continued
+Receipt paths below are package-relative audit references. They do not authorize external delivery.
+Source ID
+
+Package-relative receipt
+
+SHA-256
+
+Captured/vintage Authority/method
+
+Claim use
+
+Limitation
+
+S11
+
+data/source_receipts/ACCE
+PTED_PUBLIC_SOURCE_
+DICTIONARY_20260730__
+70e21a80ef25__updatedsources.json
+
+70e21a80ef25a7
+37bdc4edc21b2
+56bcf6622e3dd6
+237ff5d624a3ea
+6fa78e3db
+
+2026-07-29
+
+official_peer_location_page;
+Accepted source dictionary
+lineage from the reviewed report
+scaffold
+
+Bard Optical East Peoria
+entity, exact address,
+eye-care and optical
+model, appointment
+request, and public
+access information.
+
+Official page does not prove how much
+demand originates in Morton or provide
+independent review normalization.
+Underlying page captures were not
+listed in the three accepted receipt
+manifests.
+
+S12
+
+data/source_receipts/ACCE
+PTED_PUBLIC_SOURCE_
+DICTIONARY_20260730__
+70e21a80ef25__updatedsources.json
+
+70e21a80ef25a7
+37bdc4edc21b2
+56bcf6622e3dd6
+237ff5d624a3ea
+6fa78e3db
+
+2026-07-29
+
+official_peer_location_page;
+Accepted source dictionary
+lineage from the reviewed report
+scaffold
+
+Current Washington
+location at 93 Eastgate
+Drive and routine,
+medical, contact-lens,
+and optical service
+breadth.
+
+The official entity is current, but the
+supplied Nominatim attempt returned no
+match and no OSRM route was
+produced. Underlying page captures
+were not listed in the three accepted
+receipt manifests.
+
+SUPPLY_CA
+NDIDATES_2
+0260730
+
+data/source_receipts/SUPP
+LY_CANDIDATES_2026073
+0__f4cbeaa09c24__supply_
+candidates.json
+
+f4cbeaa09c24b3
+637b4e7e00964
+c0cd479fe94436
+22a135d8f798ca
+85f8f63ee
+
+2026-07-30
+
+NPPES public registry plus
+deterministic local grouping;
+Immediate derived candidate
+packet
+
+Evidence lineage and
+bounded audit support.
+
+Location groups are candidates, not
+active-office counts.
+
+SUPPLY_GE
+OCODED_CA
+NDIDATES_2
+0260730
+
+data/source_receipts/SUPP
+LY_GEOCODED_CANDID
+ATES_20260730__a77d981
+ed8a6__supply_geocoded_
+candidates.json
+
+a77d981ed8a64
+ec23cb01d3e6e
+b52dc07826799
+e4b5b3775f9ec0
+d935419034c
+
+2026-07-30
+
+Accepted derived candidatesupply reconciliation packet;
+Accepted immediate derived
+packet copied byte-for-byte
+
+Accepted derived
+candidate-supply
+reconciliation packet
+
+Candidate locations are not a canonical
+office census.
+
+TIGER2024_
+BG
+
+data/source_receipts/TIGE
+R2024_BG__38e970b3df85
+__tiger2024-il-blockgroups.zip
+
+38e970b3df85f4 2026-07-30
+ce93375d46749
+cccd14e451d6ba
+0c894d641be23
+8d02eea4ec
+
+Accepted public source; Frozen
+upstream receipt
+
+Geographic allocation
+boundaries for modeled
+catchment estimates.
+
+Boundaries allocate aggregate
+estimates; they do not locate people.
+
+VALHALLA_2
+0260730
+
+data/source_receipts/VALH
+ALLA_20260730__3920744
+be5dc__valhalla-isochrone30.geojson
+
+3920744be5dc0
+9d15c81bf077a8
+b78bbc67096a7
+a7e6fdbf658ebf9
+12294dbca
+
+2026-07-30
+
+Accepted public source; Frozen
+upstream receipt
+
+Corrected 5, 10, 15, 20,
+and 30-minute drive-time
+polygon boundaries.
+
+Modeled auto drive times with no live
+traffic.
+
+VALHALLA_2
+0260730
+
+data/source_receipts/VALH
+ALLA_20260730__7f733db
+ece1a__catchment_window
+s.geojson
+
+7f733dbece1a21
+7e2a45854731e
+b823754b0abd7
+069c3eb2760ee
+5e6b2b57368
+
+2026-07-30
+
+Accepted corrected five-window
+polygon packet; Accepted
+immediate derived packet copied
+byte-for-byte
+
+Corrected 5, 10, 15, 20,
+and 30-minute drive-time
+polygon boundaries.
+
+Modeled drive time without live traffic.
+
+VALHALLA_2
+0260730
+
+data/source_receipts/VALH
+ALLA_20260730__7f733db
+ece1a__catchment_window
+s.geojson
+
+7f733dbece1a21
+7e2a45854731e
+b823754b0abd7
+069c3eb2760ee
+5e6b2b57368
+
+2026-07-30
+
+Valhalla modeled drive-time
+isochrones; Corrected frozen 5,
+10, 15, 20, and 30-minute
+polygons
+
+Corrected 5, 10, 15, 20,
+and 30-minute drive-time
+polygon boundaries.
+
+Modeled driving time with no live traffic.
+
+Vintage Optical number explainer
+
+Internal-only | Page 24
+
+INTERNAL-ONLY | Human Project Room approval required
+
+Receipt manifest, continued
+Receipt paths below are package-relative audit references. They do not authorize external delivery.
+Source ID
+
+Package-relative receipt
+
+SHA-256
+
+Captured/vintage Authority/method
+
+Claim use
+
+Limitation
+
+VALHALLA_2026
+0730
+
+data/source_receipts/VALHALLA_20
+260730__9d4389ba52c6__valhallaisochrones-05-20.geojson
+
+9d4389ba52c69364c
+1fcc20a86510a5b008
+d3330c0001aa91219
+95b06912f1cd
+
+2026-07-30
+
+Accepted public source; Frozen
+upstream receipt
+
+Corrected 5, 10, 15,
+20, and 30-minute
+drive-time polygon
+boundaries.
+
+Modeled auto drive
+times with no live
+traffic.
+
+VISIBILITY_REP
+UTATION_RECO
+NCILED_202607
+30
+
+data/source_receipts/VISIBILITY_RE
+PUTATION_RECONCILED_2026073
+0__80af7ed153da__visibility_reputat
+ion_reconciled.json
+
+80af7ed153dab8f3c9
+3cdce1ce334f392a49
+e19176a3a3490beb8
+be9c223fac5
+
+2026-07-30
+
+Accepted source-separated visibility and
+reputation packet; Accepted immediate
+derived packet copied byte-for-byte
+
+Accepted sourceseparated visibility
+and reputation
+packet
+
+Dated sample, not a
+rank grid or
+complete peer
+export.
+
+Vintage Optical number explainer
+
+Internal-only | Page 25
+
+

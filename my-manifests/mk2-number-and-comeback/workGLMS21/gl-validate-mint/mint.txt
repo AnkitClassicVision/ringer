@@ -1,0 +1,6 @@
+FAIL: assertion 12: n_goal_search_offered_anchor pathway ('anchor_exact', '==', 'true AND slot_count >= 1') does not target n_gate_1
+FAIL: assertion 12: n_goal_search_offered_anchor pathway ('anchor_exact', '!=', 'true AND slot_count >= 1') does not target n_time_pick_offer
+FAIL: assertion 20: n_goal_search_offered_anchor pathway ('anchor_exact', '==', 'true AND slot_count >= 1') does not target n_gate_1
+FAIL: assertion 20: n_goal_search_offered_anchor pathway ('anchor_exact', '!=', 'true AND slot_count >= 1') does not target n_time_pick_offer
+FAIL: 4 of 469 assertions failed
+REFUSED: validation failed - not minting

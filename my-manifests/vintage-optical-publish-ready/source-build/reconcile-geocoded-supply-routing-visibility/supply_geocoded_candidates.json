@@ -1,0 +1,1269 @@
+{
+  "packet_date": "2026-07-30",
+  "status": "candidate_geocode_complete_canonical_office_census_incomplete",
+  "source_reported_result_count_total": 40,
+  "materialized_provider_candidate_count": 39,
+  "office_candidate_count": 24,
+  "geocoder_matched_count": 21,
+  "geocoder_no_match_count": 3,
+  "canonical_office_count": null,
+  "candidate_count_definition": "NPPES-derived exact practice-location groups retained as unresolved location candidates. They are not canonical office counts.",
+  "subject_address_resolutions": [
+    {
+      "address": "605 S Main St, Morton, IL 61550",
+      "status": "current_subject_location_excluded_from_competitor_counts",
+      "basis": "current direct Google Vintage listing observation"
+    },
+    {
+      "address": "417 W Jefferson St, Morton, IL 61550",
+      "status": "legacy_subject_address_excluded_from_competitor_counts",
+      "basis": "current-versus-legacy citation conflict between the direct Google Vintage listing and Birdeye"
+    }
+  ],
+  "location_candidates": [
+    {
+      "batch_id": "VO-04a8eacc79154ed0",
+      "input_address": "829 W JACKSON ST, MORTON, IL, 61550",
+      "source_address": {
+        "street": "829 W JACKSON ST",
+        "city": "MORTON",
+        "state": "IL",
+        "postal_code": "61550",
+        "address_variants": [
+          "829 W JACKSON ST"
+        ]
+      },
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optical_goods",
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 2,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "829 W JACKSON ST, MORTON, IL, 61550",
+        "tiger_line_id": "608213858",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "021603",
+        "block": "2045",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.618477755603,
+      "longitude": -89.469452078133,
+      "containing_catchment_windows_minutes": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-0664ecb12223d94d",
+      "input_address": "3287 COURT ST, PEKIN, IL, 61554",
+      "source_address": {
+        "street": "3287 COURT ST",
+        "city": "PEKIN",
+        "state": "IL",
+        "postal_code": "61554",
+        "address_variants": [
+          "3287 COURT ST"
+        ]
+      },
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "durable_medical_equipment",
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 3,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "3287 COURT ST, PEKIN, IL, 61554",
+        "tiger_line_id": "608223262",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "021702",
+        "block": "2027",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.54673311119,
+      "longitude": -89.603970003133,
+      "containing_catchment_windows_minutes": [
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-1fdc0d9b6fa66d54",
+      "input_address": "2650 RIDGE AVE., SKOKIE, IL, 60077",
+      "source_address": {
+        "street": "2650 RIDGE AVE.",
+        "city": "SKOKIE",
+        "state": "IL",
+        "postal_code": "60077",
+        "address_variants": [
+          "2650 RIDGE AVE."
+        ]
+      },
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "No_Match",
+      "census_match": null,
+      "latitude": null,
+      "longitude": null,
+      "containing_catchment_windows_minutes": [],
+      "within_30_minute_window": false,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-2a9028f0cfd51aae",
+      "input_address": "6800 N KNOXVILLE AVE, PEORIA, IL, 61614",
+      "source_address": {
+        "street": "6800 N KNOXVILLE AVE",
+        "city": "PEORIA",
+        "state": "IL",
+        "postal_code": "61614",
+        "address_variants": [
+          "6800 N KNOXVILLE AVE"
+        ]
+      },
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "6800 N KNOXVILLE AVE, PEORIA, IL, 61614",
+        "tiger_line_id": "656433912",
+        "side": "R",
+        "state_fips": "17",
+        "county_fips": "143",
+        "tract": "003300",
+        "block": "2029",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.770032638222,
+      "longitude": -89.60227079541,
+      "containing_catchment_windows_minutes": [
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-2bb876a25071bef4",
+      "input_address": "93 EASTGATE DR, WASHINGTON, IL, 61571",
+      "source_address": {
+        "street": "93 EASTGATE DR",
+        "city": "WASHINGTON",
+        "state": "IL",
+        "postal_code": "61571",
+        "address_variants": [
+          "93 EASTGATE DR"
+        ]
+      },
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 2,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "93 EASTGATE DR, WASHINGTON, IL, 61571",
+        "tiger_line_id": "22519806",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "021201",
+        "block": "1025",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.716312330511,
+      "longitude": -89.506382689529,
+      "containing_catchment_windows_minutes": [
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-2ebfdf1ae7643a2e",
+      "input_address": "8921 N WOOD SAGE RD, PEORIA, IL, 61615",
+      "source_address": {
+        "street": "8921 N WOOD SAGE RD",
+        "city": "PEORIA",
+        "state": "IL",
+        "postal_code": "61615",
+        "address_variants": [
+          "8921 N WOOD SAGE RD"
+        ]
+      },
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "ophthalmology",
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "materialized_provider_candidate_count": 2,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Non_Exact",
+        "matched_address": "8921 WOOD SAGE RD, PEORIA, IL, 61615",
+        "tiger_line_id": "8734008",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "143",
+        "tract": "003900",
+        "block": "2072",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.79576274215,
+      "longitude": -89.668617582701,
+      "containing_catchment_windows_minutes": [
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-332356e82ee38e84",
+      "input_address": "401 RIVER RD, EAST PEORIA, IL, 61611",
+      "source_address": {
+        "street": "401 RIVER RD",
+        "city": "EAST PEORIA",
+        "state": "IL",
+        "postal_code": "61611",
+        "address_variants": [
+          "401 RIVER RD"
+        ]
+      },
+      "candidate_classification": "organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "401 RIVER RD, EAST PEORIA, IL, 61611",
+        "tiger_line_id": "645621433",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "020100",
+        "block": "3023",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.682510474091,
+      "longitude": -89.586291009883,
+      "containing_catchment_windows_minutes": [
+        15,
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-3c4f5c9f59bfc188",
+      "input_address": "605 S MAIN ST, MORTON, IL, 61550",
+      "source_address": {
+        "street": "605 S MAIN ST",
+        "city": "MORTON",
+        "state": "IL",
+        "postal_code": "61550",
+        "address_variants": [
+          "605 S MAIN ST"
+        ]
+      },
+      "candidate_classification": "organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "605 S MAIN ST, MORTON, IL, 61550",
+        "tiger_line_id": "608214784",
+        "side": "R",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "021604",
+        "block": "1057",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.60447486451,
+      "longitude": -89.466600801652,
+      "containing_catchment_windows_minutes": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "current_subject_location_excluded_from_competitor_counts",
+      "competitor_count_eligible": false,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-449ba7a75c5641a2",
+      "input_address": "8 CHERRY TREE CENTER, WASHINGTON, IL, 61571",
+      "source_address": {
+        "street": "8 CHERRY TREE CENTER",
+        "city": "WASHINGTON",
+        "state": "IL",
+        "postal_code": "61571",
+        "address_variants": [
+          "8 CHERRY TREE CENTER"
+        ]
+      },
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Non_Exact",
+        "matched_address": "8 CHERRY TREE SHOPPING CENTER, WASHINGTON, IL, 61571",
+        "tiger_line_id": "608196588",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "022300",
+        "block": "2020",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.706044153812,
+      "longitude": -89.445722803876,
+      "containing_catchment_windows_minutes": [
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-605f3b4bd4e778ef",
+      "input_address": "4727 N SHERIDAN RD, PEORIA, IL, 61614",
+      "source_address": {
+        "street": "4727 N SHERIDAN RD",
+        "city": "PEORIA",
+        "state": "IL",
+        "postal_code": "61614",
+        "address_variants": [
+          "4727 N SHERIDAN RD"
+        ]
+      },
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "4727 N SHERIDAN RD, PEORIA, IL, 61614",
+        "tiger_line_id": "8715137",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "143",
+        "tract": "002900",
+        "block": "3021",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.744448846161,
+      "longitude": -89.603081805522,
+      "containing_catchment_windows_minutes": [
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-62bdb46919a41bce",
+      "input_address": "725 S 14TH ST, PEKIN, IL, 61554",
+      "source_address": {
+        "street": "725 S 14TH ST",
+        "city": "PEKIN",
+        "state": "IL",
+        "postal_code": "61554",
+        "address_variants": [
+          "725 S 14TH ST"
+        ]
+      },
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "ophthalmology",
+        "optical_goods",
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 5,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "725 S 14TH ST, PEKIN, IL, 61554",
+        "tiger_line_id": "608221847",
+        "side": "R",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "021000",
+        "block": "2006",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.561550947645,
+      "longitude": -89.631418275212,
+      "containing_catchment_windows_minutes": [
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-6e0eb045beac6510",
+      "input_address": "3320 VETERANS DR, PEKIN, IL, 61554",
+      "source_address": {
+        "street": "3320 VETERANS DR",
+        "city": "PEKIN",
+        "state": "IL",
+        "postal_code": "61554",
+        "address_variants": [
+          "3320 VETERANS DR"
+        ]
+      },
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 2,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "No_Match",
+      "census_match": null,
+      "latitude": null,
+      "longitude": null,
+      "containing_catchment_windows_minutes": [],
+      "within_30_minute_window": false,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-876c77b70cd2b760",
+      "input_address": "8 CHERRY TREE SHOPPING CTR, WASHINGTON, IL, 61571",
+      "source_address": {
+        "street": "8 CHERRY TREE SHOPPING CTR",
+        "city": "WASHINGTON",
+        "state": "IL",
+        "postal_code": "61571",
+        "address_variants": [
+          "8 CHERRY TREE SHOPPING CTR"
+        ]
+      },
+      "candidate_classification": "organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "durable_medical_equipment",
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "8 CHERRY TREE SHOPPING CENTER, WASHINGTON, IL, 61571",
+        "tiger_line_id": "608196588",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "022300",
+        "block": "2020",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.706044153812,
+      "longitude": -89.445722803876,
+      "containing_catchment_windows_minutes": [
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-8772bf50f87de0a2",
+      "input_address": "301 W WASHINGTON, 20/20 EYECARE SOLUTIONS, INC., EAST PEORIA, IL, 61611",
+      "source_address": {
+        "street": "301 W WASHINGTON, 20/20 EYECARE SOLUTIONS, INC.",
+        "city": "EAST PEORIA",
+        "state": "IL",
+        "postal_code": "61611",
+        "address_variants": [
+          "301 W WASHINGTON, 20/20 EYECARE SOLUTIONS, INC."
+        ]
+      },
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "No_Match",
+      "census_match": null,
+      "latitude": null,
+      "longitude": null,
+      "containing_catchment_windows_minutes": [],
+      "within_30_minute_window": false,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-a0e1bbc847e8735f",
+      "input_address": "412 RIVERSIDE DR, EAST PEORIA, IL, 61611",
+      "source_address": {
+        "street": "412 RIVERSIDE DR",
+        "city": "EAST PEORIA",
+        "state": "IL",
+        "postal_code": "61611",
+        "address_variants": [
+          "412 RIVERSIDE DR"
+        ]
+      },
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "durable_medical_equipment",
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 2,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "412 RIVERSIDE DR, EAST PEORIA, IL, 61611",
+        "tiger_line_id": "22519809",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "020100",
+        "block": "3023",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.682164141521,
+      "longitude": -89.585827378909,
+      "containing_catchment_windows_minutes": [
+        15,
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-b496827d89be0a37",
+      "input_address": "1009 N CUMMINGS LN, WASHINGTON, IL, 61571",
+      "source_address": {
+        "street": "1009 N CUMMINGS LN",
+        "city": "WASHINGTON",
+        "state": "IL",
+        "postal_code": "61571",
+        "address_variants": [
+          "1009 N CUMMINGS LN"
+        ]
+      },
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 2,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "1009 N CUMMINGS LN, WASHINGTON, IL, 61571",
+        "tiger_line_id": "640373785",
+        "side": "R",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "022300",
+        "block": "2016",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.714554500141,
+      "longitude": -89.44558914993,
+      "containing_catchment_windows_minutes": [
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-b71a82c99cfe1f6a",
+      "input_address": "111 W WASHINGTON ST, SUITE 410, EAST PEORIA, IL, 61611",
+      "source_address": {
+        "street": "111 W WASHINGTON ST, SUITE 410",
+        "city": "EAST PEORIA",
+        "state": "IL",
+        "postal_code": "61611",
+        "address_variants": [
+          "111 W WASHINGTON ST, SUITE 410"
+        ]
+      },
+      "candidate_classification": "organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "111 W WASHINGTON ST, EAST PEORIA, IL, 61611",
+        "tiger_line_id": "22499286",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "020100",
+        "block": "3090",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.666411924471,
+      "longitude": -89.580305249514,
+      "containing_catchment_windows_minutes": [
+        15,
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-baf5b45383e71013",
+      "input_address": "100 HILLCREST DR STE B, WASHINGTON, IL, 61571",
+      "source_address": {
+        "street": "100 HILLCREST DR STE B",
+        "city": "WASHINGTON",
+        "state": "IL",
+        "postal_code": "61571",
+        "address_variants": [
+          "100 HILLCREST DR STE B"
+        ]
+      },
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Non_Exact",
+        "matched_address": "100 HILLCREST DR, WASHINGTON, IL, 61571",
+        "tiger_line_id": "651095444",
+        "side": "R",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "022200",
+        "block": "1004",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.704146005233,
+      "longitude": -89.432588430081,
+      "containing_catchment_windows_minutes": [
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-c4321b180047c8f8",
+      "input_address": "101 N PARKWAY DR, PEKIN, IL, 61554",
+      "source_address": {
+        "street": "101 N PARKWAY DR",
+        "city": "PEKIN",
+        "state": "IL",
+        "postal_code": "61554",
+        "address_variants": [
+          "101 N PARKWAY DR"
+        ]
+      },
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "ophthalmology"
+      ],
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 2,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "101 N PARKWAY DR, PEKIN, IL, 61554",
+        "tiger_line_id": "22498825",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "021101",
+        "block": "4018",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.567874134398,
+      "longitude": -89.618140254783,
+      "containing_catchment_windows_minutes": [
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-e0e55998f0343717",
+      "input_address": "155 E COURTLAND ST, MORTON, IL, 61550",
+      "source_address": {
+        "street": "155 E COURTLAND ST",
+        "city": "MORTON",
+        "state": "IL",
+        "postal_code": "61550",
+        "address_variants": [
+          "155 E COURTLAND ST"
+        ]
+      },
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Non_Exact",
+        "matched_address": "155 COURTLAND ST, MORTON, IL, 61550",
+        "tiger_line_id": "642125603",
+        "side": "R",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "021603",
+        "block": "2010",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.628495488901,
+      "longitude": -89.460882368211,
+      "containing_catchment_windows_minutes": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-e54d74b5478aa8a5",
+      "input_address": "1201 S DIRKSEN PKWY, SPRINGFIELD, IL, 62703",
+      "source_address": {
+        "street": "1201 S DIRKSEN PKWY",
+        "city": "SPRINGFIELD",
+        "state": "IL",
+        "postal_code": "62703",
+        "address_variants": [
+          "1201 S DIRKSEN PKWY"
+        ]
+      },
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "1201 S DIRKSEN PKWY, SPRINGFIELD, IL, 62703",
+        "tiger_line_id": "638095867",
+        "side": "R",
+        "state_fips": "17",
+        "county_fips": "167",
+        "tract": "001600",
+        "block": "3023",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 39.789209406776,
+      "longitude": -89.605972246191,
+      "containing_catchment_windows_minutes": [],
+      "within_30_minute_window": false,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-ee7e0924cf17ea62",
+      "input_address": "2611 BROADWAY ST, PEKIN, IL, 61554",
+      "source_address": {
+        "street": "2611 BROADWAY ST",
+        "city": "PEKIN",
+        "state": "IL",
+        "postal_code": "61554",
+        "address_variants": [
+          "2611 BROADWAY ST"
+        ]
+      },
+      "candidate_classification": "mixed_individual_organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1",
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 2,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "2611 BROADWAY ST, PEKIN, IL, 61554",
+        "tiger_line_id": "639844446",
+        "side": "L",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "021500",
+        "block": "2058",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.56798835614,
+      "longitude": -89.582204988641,
+      "containing_catchment_windows_minutes": [
+        15,
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-f98fd44b1ff3cca8",
+      "input_address": "417 W JEFFERSON ST, MORTON, IL, 61550",
+      "source_address": {
+        "street": "417 W JEFFERSON ST",
+        "city": "MORTON",
+        "state": "IL",
+        "postal_code": "61550",
+        "address_variants": [
+          "417 W JEFFERSON ST"
+        ]
+      },
+      "candidate_classification": "individual_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-1"
+      ],
+      "materialized_provider_candidate_count": 2,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "417 W JEFFERSON ST, MORTON, IL, 61550",
+        "tiger_line_id": "22503267",
+        "side": "R",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "021604",
+        "block": "1045",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.613347408958,
+      "longitude": -89.465650124039,
+      "containing_catchment_windows_minutes": [
+        5,
+        10,
+        15,
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "legacy_subject_address_excluded_from_competitor_counts",
+      "competitor_count_eligible": false,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    },
+    {
+      "batch_id": "VO-fb07ec23570e5873",
+      "input_address": "100 HILLCREST DR, WASHINGTON, IL, 61571",
+      "source_address": {
+        "street": "100 HILLCREST DR",
+        "city": "WASHINGTON",
+        "state": "IL",
+        "postal_code": "61571",
+        "address_variants": [
+          "100 HILLCREST DR"
+        ]
+      },
+      "candidate_classification": "organization_provider_registry_location_candidate",
+      "linked_taxonomy_families": [
+        "optometry"
+      ],
+      "enumeration_types": [
+        "NPI-2"
+      ],
+      "materialized_provider_candidate_count": 1,
+      "candidate_match_basis": "exact_high_confidence_normalized_practice_location_address_city_state_zip",
+      "geocode_status": "Match",
+      "census_match": {
+        "match_type": "Exact",
+        "matched_address": "100 HILLCREST DR, WASHINGTON, IL, 61571",
+        "tiger_line_id": "651095444",
+        "side": "R",
+        "state_fips": "17",
+        "county_fips": "179",
+        "tract": "022200",
+        "block": "1004",
+        "source_id": "CENSUS_GEOCODER_20260730"
+      },
+      "latitude": 40.704146005233,
+      "longitude": -89.432588430081,
+      "containing_catchment_windows_minutes": [
+        20,
+        30
+      ],
+      "within_30_minute_window": true,
+      "entity_resolution_status": "unresolved_provider_registry_location_candidate",
+      "competitor_count_eligible": true,
+      "limitation": "Provider-registry location candidate only. The row is not a canonical active office, capacity, or patient-origin claim."
+    }
+  ],
+  "catchment_candidate_counts": [
+    {
+      "minutes": 5,
+      "nppes_candidate_location_count": 4,
+      "competitor_candidate_location_count": 2,
+      "canonical_office_count": null,
+      "counting_note": "Counts are matched NPPES-derived location candidates, not a complete or deduplicated office census."
+    },
+    {
+      "minutes": 10,
+      "nppes_candidate_location_count": 4,
+      "competitor_candidate_location_count": 2,
+      "canonical_office_count": null,
+      "counting_note": "Counts are matched NPPES-derived location candidates, not a complete or deduplicated office census."
+    },
+    {
+      "minutes": 15,
+      "nppes_candidate_location_count": 8,
+      "competitor_candidate_location_count": 6,
+      "canonical_office_count": null,
+      "counting_note": "Counts are matched NPPES-derived location candidates, not a complete or deduplicated office census."
+    },
+    {
+      "minutes": 20,
+      "nppes_candidate_location_count": 16,
+      "competitor_candidate_location_count": 14,
+      "canonical_office_count": null,
+      "counting_note": "Counts are matched NPPES-derived location candidates, not a complete or deduplicated office census."
+    },
+    {
+      "minutes": 30,
+      "nppes_candidate_location_count": 20,
+      "competitor_candidate_location_count": 18,
+      "canonical_office_count": null,
+      "counting_note": "Counts are matched NPPES-derived location candidates, not a complete or deduplicated office census."
+    }
+  ],
+  "reject_and_limitation_collections": {
+    "matched_outside_30_minute_window": [
+      {
+        "batch_id": "VO-e54d74b5478aa8a5",
+        "input_address": "1201 S DIRKSEN PKWY, SPRINGFIELD, IL, 62703",
+        "geocode_status": "Match",
+        "reason": "matched_point_outside_corrected_30_minute_polygon",
+        "entity_resolution_status": "unresolved_provider_registry_location_candidate"
+      }
+    ],
+    "census_geocoder_no_matches": [
+      {
+        "batch_id": "VO-1fdc0d9b6fa66d54",
+        "input_address": "2650 RIDGE AVE., SKOKIE, IL, 60077",
+        "geocode_status": "No_Match",
+        "latitude": null,
+        "longitude": null,
+        "reason": "census_batch_geocoder_no_match_coordinates_not_inferred",
+        "entity_resolution_status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-6e0eb045beac6510",
+        "input_address": "3320 VETERANS DR, PEKIN, IL, 61554",
+        "geocode_status": "No_Match",
+        "latitude": null,
+        "longitude": null,
+        "reason": "census_batch_geocoder_no_match_coordinates_not_inferred",
+        "entity_resolution_status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-8772bf50f87de0a2",
+        "input_address": "301 W WASHINGTON, 20/20 EYECARE SOLUTIONS, INC., EAST PEORIA, IL, 61611",
+        "geocode_status": "No_Match",
+        "latitude": null,
+        "longitude": null,
+        "reason": "census_batch_geocoder_no_match_coordinates_not_inferred",
+        "entity_resolution_status": "unresolved_provider_registry_location_candidate"
+      }
+    ],
+    "unresolved_entity_resolution": [
+      {
+        "batch_id": "VO-04a8eacc79154ed0",
+        "input_address": "829 W JACKSON ST, MORTON, IL, 61550",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-0664ecb12223d94d",
+        "input_address": "3287 COURT ST, PEKIN, IL, 61554",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-1fdc0d9b6fa66d54",
+        "input_address": "2650 RIDGE AVE., SKOKIE, IL, 60077",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-2a9028f0cfd51aae",
+        "input_address": "6800 N KNOXVILLE AVE, PEORIA, IL, 61614",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-2bb876a25071bef4",
+        "input_address": "93 EASTGATE DR, WASHINGTON, IL, 61571",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-2ebfdf1ae7643a2e",
+        "input_address": "8921 N WOOD SAGE RD, PEORIA, IL, 61615",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-332356e82ee38e84",
+        "input_address": "401 RIVER RD, EAST PEORIA, IL, 61611",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-449ba7a75c5641a2",
+        "input_address": "8 CHERRY TREE CENTER, WASHINGTON, IL, 61571",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-605f3b4bd4e778ef",
+        "input_address": "4727 N SHERIDAN RD, PEORIA, IL, 61614",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-62bdb46919a41bce",
+        "input_address": "725 S 14TH ST, PEKIN, IL, 61554",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-6e0eb045beac6510",
+        "input_address": "3320 VETERANS DR, PEKIN, IL, 61554",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-876c77b70cd2b760",
+        "input_address": "8 CHERRY TREE SHOPPING CTR, WASHINGTON, IL, 61571",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-8772bf50f87de0a2",
+        "input_address": "301 W WASHINGTON, 20/20 EYECARE SOLUTIONS, INC., EAST PEORIA, IL, 61611",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-a0e1bbc847e8735f",
+        "input_address": "412 RIVERSIDE DR, EAST PEORIA, IL, 61611",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-b496827d89be0a37",
+        "input_address": "1009 N CUMMINGS LN, WASHINGTON, IL, 61571",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-b71a82c99cfe1f6a",
+        "input_address": "111 W WASHINGTON ST, SUITE 410, EAST PEORIA, IL, 61611",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-baf5b45383e71013",
+        "input_address": "100 HILLCREST DR STE B, WASHINGTON, IL, 61571",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-c4321b180047c8f8",
+        "input_address": "101 N PARKWAY DR, PEKIN, IL, 61554",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-e0e55998f0343717",
+        "input_address": "155 E COURTLAND ST, MORTON, IL, 61550",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-e54d74b5478aa8a5",
+        "input_address": "1201 S DIRKSEN PKWY, SPRINGFIELD, IL, 62703",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-ee7e0924cf17ea62",
+        "input_address": "2611 BROADWAY ST, PEKIN, IL, 61554",
+        "status": "unresolved_provider_registry_location_candidate"
+      },
+      {
+        "batch_id": "VO-fb07ec23570e5873",
+        "input_address": "100 HILLCREST DR, WASHINGTON, IL, 61571",
+        "status": "unresolved_provider_registry_location_candidate"
+      }
+    ]
+  },
+  "limitations": [
+    "Candidate counts are not a complete active-office census.",
+    "Only the two subject-address cases have an entity resolution.",
+    "No-match coordinates remain null and are excluded from polygon tests.",
+    "Repeated or related registry addresses are not merged without direct entity evidence."
+  ],
+  "source_ids": [
+    "NPPES_CURRENT_20260730",
+    "CENSUS_GEOCODER_20260730",
+    "VALHALLA_20260730",
+    "GOOGLE_MAPS_SAMPLE_20260730",
+    "BIRDEYE_AGGREGATOR_20260730"
+  ]
+}

@@ -1,0 +1,13 @@
+........................................................ [ 74%]
+...................                                                      [100%]
+=============================== warnings summary ===============================
+tests/test_bland_gateway.py: 21 warnings
+  /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW41/gw-default-window-hours-fix/gwtest/container/bland_gateway.py:760: DeprecationWarning: Parsing dates involving a day of month without a year specified is ambiguous
+  and fails to parse leap day. The default behavior will change in Python 3.15
+  to either always raise an exception or to use a different default year (TBD).
+  To avoid trouble, add a specific year to the input & format.
+  See https://github.com/python/cpython/issues/70647.
+    d = datetime.strptime(t, fmt).date().replace(year=today.year)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+75 passed, 21 warnings, 16 subtests passed in 0.56s

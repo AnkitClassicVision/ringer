@@ -1,0 +1,1846 @@
+Reading additional input from stdin...
+OpenAI Codex v0.145.0
+--------
+workdir: /home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: medium
+reasoning summaries: none
+session id: 019fa510-f5e2-76c1-8655-024ac56c4ab3
+--------
+user
+DO NOT modify any files. Analyze only, output text only. Role: CONTRARIAN / failure-mode reviewer. Read ./DESIGN.md (a date-handling design for an SMS booking agent) and ./source/bland_gateway.py (the real gateway resolver resolve_relative_date). The design splits work into a MODEL layer (copies the patient's literal date phrase, including whole compounds like 'tomorrow july 28th', into preference_from; never computes a weekday) and a GATEWAY layer (new front-end that strips ordinals, parses explicit month+day, TOKENIZES COMPOUNDS into independent cues, applies an explicit-date-wins conflict rule, fails closed on ambiguity). Attack it. Your single most important question: is putting COMPOUND TOKENIZATION and multi-cue conflict resolution INTO the shared production gateway over-engineered versus a simpler safe design where the MODEL copies only the single most-explicit date token (prefer an explicit month+day over a relative word) and the gateway only needs ordinal-stripping plus explicit-date acceptance? Weigh: added parsing surface on a PHI-adjacent gateway shared with another client (CVC), the real value of gateway-side conflict detection, and whether the model can reliably pick 'most explicit' without computing anything. Also find any correctness hole in the conflict rule or the Kenneth walkthrough. Return a packet: recommendation, confidence 0-1, evidence (cite design sections / gateway line behavior), unique_catches, risks_or_failure_modes, simpler_alternative (describe it or say none), needs_human_or_owner_gate.
+warning: Skill descriptions were shortened to fit the 2% skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+codex
+Ankit — I’ll review both files read-only, trace the proposed behavior against the actual resolver, and return the contrarian packet. I’m using the Codex Operating Card because this is repo/design review work; no files will be changed.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '1,240p' /home/ankit114/.claude/skills/codex-operating-card/SKILL.md && sed -n '241,520p' /home/ankit114/.claude/skills/codex-operating-card/SKILL.md" in /home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+ succeeded in 0ms:
+---
+name: codex-operating-card
+description: "Operate Codex with Nate-style project induction, read-only-first task starts, one-thread-one-outcome discipline, UI/browser evidence, self-review gates, and durable-rule extraction. Use when working in Codex on a repo, starting a new Codex thread, doing project induction, implementing or reviewing code, doing frontend/UI QA, or deciding whether to promote a prompt pattern into AGENTS.md or a skill."
+---
+
+# Codex Operating Card
+
+Purpose: make Codex behave like a repo worker with a tight work contract, not a wandering owner. These prompts are operating defaults, not safety gates. For production writes, deploys, PHI/PII, secrets, CRM/EHR/finance writes, external sends, or autonomy changes, follow the relevant deterministic gate and human approval rules.
+
+## Default behavior
+
+Use this operating card unless the user explicitly overrides it:
+
+1. Read first. Do not edit until you can explain the current project shape.
+2. One thread = one outcome. If a new goal appears, propose a new thread.
+3. Prefer read-only or sandbox mode unless write access is explicitly intended.
+4. Before changes, state likely files, risk, test plan, and rollback path.
+5. Treat AGENTS.md and project docs as local law. If missing, infer lightly and flag gaps.
+6. For UI work, use browser or visual evidence rather than guessing.
+7. Verify with actual command output, visual check, or a named source before claiming done.
+8. End with: Changed, Verified by, Risks left, Next action.
+9. If the task reveals a reusable rule, propose AGENTS.md or skill capture, but do not write it without approval.
+
+## Prompt pack
+
+For exact copy/paste prompts, read `references/prompt-pack.md` and choose the smallest prompt that matches the work:
+
+- Project induction prompt: first pass on a repo.
+- Task starter prompt: normal implementation.
+- UI/browser evidence prompt: frontend or visual QA.
+- Review gate prompt: before accepting Codex output.
+- Durable-rule extraction prompt: after a repeated pattern appears.
+
+## Output contract
+
+For routine work, keep the final terse:
+
+- Changed: files/behavior changed.
+- Verified by: real command, screenshot/visual check, or source.
+- Risks left: only what matters.
+- Next action: one step.
+
+Do not call work complete if verification did not run. Say `Partial` or `Blocked` instead.
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+The review scope is narrow: [DESIGN.md](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/DESIGN.md) versus the live resolver in [bland_gateway.py](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/source/bland_gateway.py). Main risk is shared-gateway complexity and silent date misresolution; verification will be source-to-design behavioral tracing only.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc 'nl -ba DESIGN.md && nl -ba source/bland_gateway.py' in /home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+ exited 1 in 0ms:
+     1	# Date Handling Architecture
+     2	
+     3	## Summary
+     4	
+     5	- The model is a transport layer for patient-literal date text, not a calendar: it copies date cues into `preference_from` / `preference_to` and never derives or substitutes a weekday.
+     6	- `resolve_relative_date` becomes the deterministic calendar layer: it normalizes ordinals, recognizes explicit dates, and evaluates every cue in a compound phrase while preserving the deployed Monday-anchored week behavior.
+     7	- An explicit calendar date wins a disagreement with a relative cue; agreement is accepted, while unresolved ambiguity fails closed for clarification rather than searching a guessed day.
+     8	
+     9	## Model Layer
+    10	
+    11	The extraction guidance in `build_v62.py` should impose one rule: **copy the patient's date phrase; never calculate, translate, correct, or enrich it.** In particular, a weekday may appear in an extracted value only if that weekday token appeared in the patient's message. The model must not derive a weekday from a month/day, from `tomorrow`, from `next week`, or from conversation time.
+    12	
+    13	For a single requested date or period, put the copied phrase in `preference_from` and leave `preference_to` empty. Use `preference_to` only when the patient explicitly supplies a second endpoint, such as “July 28th through July 30th”; each endpoint is copied literally. Do not manufacture a range endpoint.
+    14	
+    15	| Patient wording | `preference_from` | `preference_to` |
+    16	|---|---|---|
+    17	| “july 28th” | `july 28th` | empty |
+    18	| “tomorrow” | `tomorrow` | empty |
+    19	| “next week” | `next week` | empty |
+    20	| “tuesday” | `tuesday` | empty |
+    21	| “tomorrow july 28th” | `tomorrow july 28th` | empty |
+    22	
+    23	Keeping the whole compound in one variable is required because Bland exposes no raw-message variable. Dropping either cue would prevent deterministic conflict detection. The model may trim surrounding conversational words and whitespace, but it must preserve the explicit date tokens and their order. `day_part` remains only the patient's stated time-of-day preference, such as `morning`; it must not carry or reinterpret a date.
+    24	
+    25	## Gateway Layer
+    26	
+    27	`resolve_relative_date` remains the sole calendar authority. Its existing clean single-phrase grammar, including relative words, bare weekdays, and Monday-anchored week resolution, remains intact. Add a normalization and compound-parsing front end before that existing logic:
+    28	
+    29	1. Lowercase and collapse whitespace without changing meaning.
+    30	2. Strip English ordinal suffixes only when attached to a numeric day token: `1st`, `2nd`, `3rd`, `4th` … `31st` become `1`, `2`, `3`, `4` … `31`. Conceptually, match a word-boundary day number followed by `st|nd|rd|th`, case-insensitively. Thus `july 28th` becomes `july 28`, and `28th` becomes `28`.
+    31	3. Recognize explicit month-plus-day and bare-day tokens in addition to the currently accepted single phrases. Resolve a month/day to the next non-past occurrence using the gateway's business timezone and reference date. Resolve a bare day only when the surrounding booking context supplies an unambiguous month; otherwise return a clarification error, not a guess.
+    32	4. Tokenize a compound into independently resolvable cues, for example `tomorrow` and `july 28`. Run the existing resolver semantics on each cue, then apply the conflict rule below.
+    33	
+    34	The parser must validate real calendar dates and reject values such as February 30. This extension must wrap, not replace, the existing `next week` / week-family branch so the deployed Monday anchor is unchanged.
+    35	
+    36	## Conflict Rule
+    37	
+    38	If all cues resolve to the same calendar date, accept that date. On Monday July 27, both `tomorrow` and `july 28th` resolve to July 28, so the compound is corroborated.
+    39	
+    40	If an explicit calendar cue and a relative cue resolve differently, the explicit month/day wins. It is the patient's higher-precision statement and does not depend on the message timestamp or timezone interpretation. The gateway should record a non-sensitive conflict reason for observability and the agent should confirm the selected explicit date before booking.
+    41	
+    42	If two equally precise explicit cues disagree, or a cue cannot be resolved safely, do not search either guessed date. Return a structured clarification outcome. A bare weekday is not allowed to override an explicit month/day merely because the model placed it in the variable.
+    43	
+    44	## Kenneth Walkthrough
+    45	
+    46	Assume the gateway's local reference date is Monday July 27.
+    47	
+    48	1. Kenneth says, “Tomorrow july 28th.”
+    49	2. The extraction guidance in `build_v62.py` copies `tomorrow july 28th` into `preference_from`; `preference_to` is empty and `day_part` is unchanged/empty. No weekday is generated.
+    50	3. `resolve_relative_date` normalizes the value to `tomorrow july 28`.
+    51	4. It resolves `tomorrow` from July 27 to July 28 and resolves `july 28` to July 28.
+    52	5. The cues agree, so the resolver returns 07/28. The gateway searches 07/28, never the invented Thursday 07/30.
+    53	
+    54	## Migration
+    55	
+    56	Deploy gateway support first. Add ordinal, explicit-date, and compound handling to `resolve_relative_date`, while regression-testing every currently accepted phrase and the Monday-anchored week cases. This is backward compatible with the current model output.
+    57	
+    58	After that deployment is verified, independently deploy the `build_v62.py` extraction-guidance change that sends patient-literal phrases. Gateway-first avoids a window where the model emits `july 28th` or a compound but the old gateway returns 409. During rollback, revert the model guidance first; the expanded gateway can continue accepting the old clean phrases safely.
+    59	
+    60	## What This Still Cannot Do
+    61	
+    62	This design cannot recover date words the extraction model omits or alters because Bland provides no raw message. It cannot safely resolve a bare ordinal without month context, locale-ambiguous numeric dates, contradictory explicit dates, or timezone uncertainty without clarification. It also does not prove the model copied exactly; production monitoring should count 409s, clarification outcomes, and cue conflicts, with tests covering literal-copy failures and date-boundary cases.
+nl: source/bland_gateway.py: No such file or directory
+
+hook: PostToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc 'rg -n -i "bland|cvc|date|gateway|relative|kenneth|booking" /home/ankit114/.codex/memories/MEMORY.md | head -80' in /home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+ succeeded in 0ms:
+10:- rollout_summaries/2026-07-26T15-04-40-WlDe-orca_websocket_firewall_and_codex_sqlite_lock_recovery.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/26/rollout-2026-07-26T11-04-40-019f9ef4-f083-7351-9c92-1348c9a31f44.jsonl, updated_at=2026-07-26T17:58:22+00:00, thread_id=019f9ef4-f083-7351-9c92-1348c9a31f44, runtime restart plus local-only QR pairing verified)
+22:- rollout_summaries/2026-07-26T15-04-40-WlDe-orca_websocket_firewall_and_codex_sqlite_lock_recovery.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/26/rollout-2026-07-26T11-04-40-019f9ef4-f083-7351-9c92-1348c9a31f44.jsonl, updated_at=2026-07-26T17:58:22+00:00, thread_id=019f9ef4-f083-7351-9c92-1348c9a31f44, runtime and permanent firewalld proof)
+34:- rollout_summaries/2026-07-26T15-04-40-WlDe-orca_websocket_firewall_and_codex_sqlite_lock_recovery.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/26/rollout-2026-07-26T11-04-40-019f9ef4-f083-7351-9c92-1348c9a31f44.jsonl, updated_at=2026-07-26T17:58:22+00:00, thread_id=019f9ef4-f083-7351-9c92-1348c9a31f44, all zombie-held databases checkpointed, restored, and terminal verified)
+49:- For Orca's isolated Codex home, map database-lock owners with `lslocks -o PID,COMMAND,TYPE,MODE,PATH`, `/proc/locks`, and `stat -c '%i'`. Copy each locked DB plus WAL, run `PRAGMA quick_check`, `PRAGMA wal_checkpoint(TRUNCATE)`, validate again, preserve originals in rollback storage, restore clean copies, and validate all affected DBs before relaunching [Task 3]
+58:# Task Group: Bland CVC phone rescheduling live goal
+60:scope: Goal-setting and guarded implementation planning for a live CVC Bland phone reschedule path; use when the user wants same-office phone rescheduling made real, not left as staff-message fallback or analysis-only.
+61:applies_to: cwd=/mnt/d_drive/repos/bland; reuse_rule=safe for this CVC Bland / EyeCloud / conductor lane, but treat live rollout state, Project Room freshness, and provider/write authorization as time-specific
+63:## Task 1: Define the CVC phone reschedule live goal, partial
+67:- rollout_summaries/2026-07-21T21-21-04-Hc9Y-cvc_phone_reschedule_live_goal.md (cwd=/mnt/d_drive/repos/bland, rollout_path=/home/ankit114/.codex/sessions/2026/07/21/rollout-2026-07-21T17-21-09-019f868d-bf4e-7c51-9630-a18dc09d53e2.jsonl, updated_at=2026-07-22T00:33:48+00:00, thread_id=019f868d-bf4e-7c51-9630-a18dc09d53e2, planning/spec boundary only; live deploy goal recorded without deployment authorization)
+71:- bland, eyecloud, cvc, reschedule, same-day, live, conductor, appt.reschedule, project-room, staff-confirmed cancellation, verify-after-write
+82:- The safer write boundary is the conductor `appt.reschedule` path in `internal/cli/gateway_dispatch_prod.go`, not the older Python `/reschedule` path [Task 1]
+84:- The route allowlist already includes `/v1/appt/reschedule`, and the focused gateway/conductor test slice was the right proof lane even though the broader CLI suite had an unrelated PracticeCanopy fail-closed gate [Task 1]
+85:- Related planning note: `extensions/ad_hoc/notes/2026-07-21T2025-cvc-live-reschedule-goal.md` captures the live-goal boundary, fallback cases, definition of done, and authorization boundary for this lane [Task 1]
+89:- symptom: rollout ends in planning even though the user wants it live -> cause: the Bland Project Room is stale, so readiness/build claims are not trustworthy yet -> fix: refresh the Project Room before claiming implementation complete or promotion-ready [Task 1]
+102:- rollout_summaries/2026-07-21T16-12-27-ZZF3-zoom_linux_screen_share_crash_wayland_xwayland.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/21/rollout-2026-07-21T12-12-27-019f8573-33da-7e01-b24a-6ce2ac9fe72d.jsonl, updated_at=2026-07-21T16:22:00+00:00, thread_id=019f8573-33da-7e01-b24a-6ce2ac9fe72d, diagnostic-only; root cause pointed to old Zoom Linux build on X11/XWayland path)
+134:- rollout_summaries/2026-07-20T12-01-25-ul0c-optosystem_staging_activation_and_final_readiness_review.md (cwd=/mnt/d_drive/repos/opto_system_software, rollout_path=/home/ankit114/.codex/sessions/2026/07/20/rollout-2026-07-20T08-01-25-019f7f67-0359-7fc3-abda-91bd0be16d40.jsonl, updated_at=2026-07-21T04:19:06+00:00, thread_id=019f7f67-0359-7fc3-abda-91bd0be16d40, staging verified for synthetic-data testing; live-patient use still gated)
+163:applies_to: cwd=/mnt/d_drive/repos/cvc_grow/cvc-new with live state in `/home/ankit114/.config/orca` and Fedora firewall/Tailscale runtime; reuse_rule=safe for this machine's Orca desktop/mobile pairing workflow, but treat IPs, peer IDs, and live socket state as time-specific
+169:- rollout_summaries/2026-07-21T01-06-22-D4mR-orca_mobile_websocket_closed_tailscale_firewall_pairing.md (cwd=/mnt/d_drive/repos/cvc_grow/cvc-new, rollout_path=/home/ankit114/.codex/sessions/2026/07/20/rollout-2026-07-20T21-06-22-019f8235-a993-71c0-b346-460284aa6ec1.jsonl, updated_at=2026-07-21T01:49:09+00:00, thread_id=019f8235-a993-71c0-b346-460284aa6ec1, local-only pairing regenerated for Tailscale with stable WebSocket proof)
+179:- rollout_summaries/2026-07-21T01-06-22-D4mR-orca_mobile_websocket_closed_tailscale_firewall_pairing.md (cwd=/mnt/d_drive/repos/cvc_grow/cvc-new, rollout_path=/home/ankit114/.codex/sessions/2026/07/20/rollout-2026-07-20T21-06-22-019f8235-a993-71c0-b346-460284aa6ec1.jsonl, updated_at=2026-07-21T01:49:09+00:00, thread_id=019f8235-a993-71c0-b346-460284aa6ec1, temporary Tailscale-scoped Fedora firewall rule with runtime-only verification)
+208:applies_to: cwd family=/mnt/d_drive/repos and /home/ankit114 with user-home launchers `~/.local/bin/ai-herdr`, `~/.local/bin/ai-agents-run`, and `~/.local/bin/ai-agents-ensure.sh`; reuse_rule=safe for this machine's HERDR/Toolbx setup, but treat container names, versions, pane IDs, updater services, and recovery-container timestamps as environment-specific
+214:- rollout_summaries/2026-07-16T16-47-08-1t2U-herdr_ai_shortcut_same_pane_registration.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/16/rollout-2026-07-16T12-47-08-019f6bd3-282d-7f41-8f1c-859867f2ae80.jsonl, updated_at=2026-07-16T20:03:55+00:00, thread_id=019f6bd3-282d-7f41-8f1c-859867f2ae80, same-pane `ai` registration and detached-session relaunch guidance)
+226:- rollout_summaries/2026-07-20T11-57-34-A2Ax-herdr_claude_toolbx_persistence_rebuild.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/20/rollout-2026-07-20T07-57-34-019f7f63-7be6-7df1-93ab-a6d92bab0cd1.jsonl, updated_at=2026-07-20T13:24:16+00:00, thread_id=019f7f63-7be6-7df1-93ab-a6d92bab0cd1, Toolbx/HERDR repair plus real post-update rebuild with quarantine and live smoke proof)
+238:- rollout_summaries/2026-07-21T12-20-04-plxC-orca_herdr_ai_shortcut_routing_and_reuse.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/21/rollout-2026-07-21T08-20-04-019f849e-7441-72c1-b9a5-c28da7b34990.jsonl, updated_at=2026-07-21T12:40:49+00:00, thread_id=019f849e-7441-72c1-b9a5-c28da7b34990, reuse/focus fixed and Orca path patched; visible Orca result verified in-tool but not user-confirmed)
+250:- rollout_summaries/2026-07-26T12-02-44-PiXK-fix_ai_toolbx_sunday_update_repair_race.md (cwd=/home/ankit114, rollout_path=/home/ankit114/.codex/sessions/2026/07/26/rollout-2026-07-26T08-02-44-019f9e4e-613c-7af2-a46e-f759db26e3a8.jsonl, updated_at=2026-07-26T12:13:46+00:00, thread_id=019f9e4e-613c-7af2-a46e-f759db26e3a8, Sunday repair race eliminated; 12/12 regressions and live verification passed)
+254:- ai-agents, ai-agents-ensure.sh, fullupgrade, Toolbx, Podman, flock, Sunday update, podman system prune, podman image prune, rollback, ai --resume
+263:- when the user asks how to make it "persistant" or says "do teh post update rebuild" -> repair the rebuild/recovery path itself and exercise the real destructive path with rollback safety and live verification [Task 2]
+267:- when the user asks to fix the shortcut "permenantly" so it does not break during weekly updates -> repair the updater/recovery system, not only recreate the present container; verify the supplied `ai --resume` route through Toolbx/HERDR [Task 4]
+283:- Validate with `bash -n`, the `test-rebuild-persistence.sh` regression suite, live lock contention, `ai-agents-ensure.sh --verify`, and the actual `ai --resume`/`ai-herdr` contract. This run passed 12/12 and live verification with the container running [Task 4]
+293:- symptom: `ai --resume` fails during Sunday updates after a repair/rebuild -> cause: interactive repair and `fullupgrade` raced on `ai-agents`, then `podman system prune -f` deleted the quarantined recovery container -> fix: one shared `flock` around recovery and image-only pruning; do not force a destructive test while healthy—the next natural Sunday run is remaining environmental confirmation [Task 4]
+305:- rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md (cwd=/home/ankit114/projects/mybcat-fit-battery, rollout_path=/home/ankit114/.codex/sessions/2026/07/17/rollout-2026-07-17T15-55-34-019f71a6-0749-70d3-ae61-4c503a9fb0d5.jsonl, updated_at=2026-07-18T02:27:47+00:00, thread_id=019f71a6-0749-70d3-ae61-4c503a9fb0d5, local-only proof closure with strict receipts and corpus merge)
+309:- automation-discovery, ringer, corpus.db, BUILD_RECEIPT.md, evidence-bundle, allow-review, receipts, sources=21 events_checked=2120 candidates=14 offers=5 receipts=20
+315:- rollout_summaries/2026-07-17T19-55-34-yQJf-automation_discovery_stack_build_and_pause_hiring_loop.md (cwd=/home/ankit114/projects/mybcat-fit-battery, rollout_path=/home/ankit114/.codex/sessions/2026/07/17/rollout-2026-07-17T15-55-34-019f71a6-0749-70d3-ae61-4c503a9fb0d5.jsonl, updated_at=2026-07-18T02:27:47+00:00, thread_id=019f71a6-0749-70d3-ae61-4c503a9fb0d5, exact PGID pause with stopped-state verification)
+325:- when the user asks "status" during long proof work -> provide concise progress plus blocked/unblocked updates without waiting to be asked repeatedly [Task 1]
+332:- Final validated local state was five built offers and 20 receipts, with corpus validation `sources=21 events_checked=2120 candidates=14 offers=5 receipts=20`; no external send/deploy/commit/schedule action happened [Task 1]
+352:- rollout_summaries/2026-07-16T17-09-48-DDUT-fedora_dropbox_carbonite_btrfs_storage_backup_planning.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/16/rollout-2026-07-16T13-09-48-019f6be7-ea4c-7711-a92a-ba5fa9aa372b.jsonl, updated_at=2026-07-16T17:35:07+00:00, thread_id=019f6be7-ea4c-7711-a92a-ba5fa9aa372b, read-only Dropbox safety proof for a specific local folder)
+362:- rollout_summaries/2026-07-16T17-09-48-DDUT-fedora_dropbox_carbonite_btrfs_storage_backup_planning.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/16/rollout-2026-07-16T13-09-48-019f6be7-ea4c-7711-a92a-ba5fa9aa372b.jsonl, updated_at=2026-07-16T17:35:07+00:00, thread_id=019f6be7-ea4c-7711-a92a-ba5fa9aa372b, selective sync, Carbonite support, Restic/Rescuezilla, partition reuse, Steam layout)
+363:- rollout_summaries/2026-07-16T16-54-23-tHLz-mac_linux_shared_backup_drive_reliability.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/16/rollout-2026-07-16T12-54-23-019f6bd9-ca8e-7352-9479-16048b942129.jsonl, updated_at=2026-07-16T18:28:19+00:00, thread_id=019f6bd9-ca8e-7352-9479-16048b942129, cross-platform backup-drive answer with redundancy-first recommendation)
+373:- rollout_summaries/2026-07-21T21-25-58-L8f4-fedora_home_drive_space_cleanup_dropbox_selective_sync.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/21/rollout-2026-07-21T17-25-58-019f8692-3c0f-7880-9a71-233515cea8ce.jsonl, updated_at=2026-07-21T23:44:57+00:00, thread_id=019f8692-3c0f-7880-9a71-233515cea8ce, safe cleanup executed; final free space reached 109 GB)
+401:- Flatpak Dropbox is managed with `flatpak run --command=dropbox com.dropbox.Client status|exclude add|exclude list|stop`; wait for `Up to date` before applying selective sync or deleting synced caches [Task 3]
+405:- The duplicate workspace archive proof path for this cleanup was `/mnt/d_drive/cleanup-quarantine/publish-gateway-incident-20260721.tar`, and the final verified filesystem state was `/dev/nvme0n1p6 372G 252G 109G 70% /` [Task 3]
+412:- symptom: direct recursive delete is blocked or feels too risky -> cause: environment/path safety rules or missing proof that the archive finished writing -> fix: use `gio trash` plus validated archive/remove steps, and do not delete the source until the archive verifies cleanly [Task 3]
+413:- symptom: selective sync or cleanup produces confusing partial results -> cause: Dropbox was not yet fully synced -> fix: wait for Dropbox `Up to date` before excluding large folders or deleting synced cache paths [Task 3]
+425:- rollout_summaries/2026-07-16T22-18-54-srpr-steam_arc_raiders_diagnosis_and_restart_ntfs3_kernel_fault.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/16/rollout-2026-07-16T18-18-54-019f6d02-e7a0-78b0-ae23-348737e3faa5.jsonl, updated_at=2026-07-16T22:24:06+00:00, thread_id=019f6d02-e7a0-78b0-ae23-348737e3faa5, root cause was NTFS3 kernel fault on `/mnt/d_drive`)
+435:- rollout_summaries/2026-07-16T22-18-54-srpr-steam_arc_raiders_diagnosis_and_restart_ntfs3_kernel_fault.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/16/rollout-2026-07-16T18-18-54-019f6d02-e7a0-78b0-ae23-348737e3faa5.jsonl, updated_at=2026-07-16T22:24:06+00:00, thread_id=019f6d02-e7a0-78b0-ae23-348737e3faa5, stale `steam.pid`/`steam.pipe` quarantined and client relaunched)
+468:- rollout_summaries/2026-07-14T14-42-32-KQHp-rb2b_one_url_webhook_deployment_lightsail.md (cwd=/mnt/d_drive/repos/thanks.io-rb2b-one-url, rollout_path=/home/ankit114/.codex/sessions/2026/07/14/rollout-2026-07-14T10-42-32-019f6114-5c0e-7520-8cf4-d9afd6af5713.jsonl, updated_at=2026-07-14T15:32:51+00:00, thread_id=019f6114-5c0e-7520-8cf4-d9afd6af5713, query-secret fallback, payload normalization, redaction, live deploy, secure URL generator)
+478:- rollout_summaries/2026-07-14T16-33-51-7xT8-rb2b_webhook_tomas_quijada_lightsail_verification.md (cwd=/mnt/d_drive/repos/thanks.io_2, rollout_path=/home/ankit114/.codex/sessions/2026/07/14/rollout-2026-07-14T12-33-52-019f617a-4861-79a2-b72c-5619b4a89676.jsonl, updated_at=2026-07-14T16:36:58+00:00, thread_id=019f617a-4861-79a2-b72c-5619b4a89676, proved receipt plus no external outreach beyond internal notification)
+497:- Caddy log redaction used `format filter` to replace query secrets and delete sensitive headers such as `X-Webhook-Secret`, `X-Webhook-Signature`, `X-Bland-Token`, and `X-Admin-Key` [Task 1]
+508:# Task Group: Bland CVC emergency / hours correction
+510:scope: Crash recovery, narrow v31-derived CVC emergency/hours correction, and documented pause points in the Bland repo; use when resuming this lane or re-checking what was already proven locally versus what still needs provider/live proof.
+511:applies_to: cwd=/mnt/d_drive/repos/bland; reuse_rule=safe for this exact CVC v31-derived lane in this checkout, but treat provider/live rollout status and blocked review conditions as lane-specific
+513:## Task 1: Recover the crashed lane and identify the active CVC work, success
+517:- rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md (cwd=/mnt/d_drive/repos/bland, rollout_path=/home/ankit114/.codex/sessions/2026/07/10/rollout-2026-07-10T16-55-39-019f4dd0-8703-7562-b8c4-bd12ab5a5162.jsonl, updated_at=2026-07-14T13:57:16+00:00, thread_id=019f4dd0-8703-7562-b8c4-bd12ab5a5162, crash-recovery lane reconstruction)
+521:- bland, cvc, v31, crash recovery, smooth-delta, review-gate, handoff, scripts/build_v31_smooth_delta.py
+527:- rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md (cwd=/mnt/d_drive/repos/bland, rollout_path=/home/ankit114/.codex/sessions/2026/07/10/rollout-2026-07-10T16-55-39-019f4dd0-8703-7562-b8c4-bd12ab5a5162.jsonl, updated_at=2026-07-14T13:57:16+00:00, thread_id=019f4dd0-8703-7562-b8c4-bd12ab5a5162, 88-node/146-edge correction with local verification and builder proof)
+531:- n_hours, urgent_slot_mode, book_success, callback_number_confirmed, now_utc, pytest, ruff, py_compile, 1115 passed, CVC_V31_SMOOTH_DELTA_PASS
+537:- rollout_summaries/2026-07-10T20-55-39-ysN4-bland_cvc_emergency_hours_correction_and_handoff.md (cwd=/mnt/d_drive/repos/bland, rollout_path=/home/ankit114/.codex/sessions/2026/07/10/rollout-2026-07-10T16-55-39-019f4dd0-8703-7562-b8c4-bd12ab5a5162.jsonl, updated_at=2026-07-14T13:57:16+00:00, thread_id=019f4dd0-8703-7562-b8c4-bd12ab5a5162, concise handoff and intentional pause at the remaining review/provider gates)
+541:- document what you've done and pause here, provider-proof gate, fresh review, live voice proof, docs/superpowers/_qa/cvc_emergency_hours_handoff_20260714.md
+550:- The active lane was the v31-derived CVC emergency/hours correction, not older unrelated work-ledger items [Task 1]
+552:- Enforced behaviors from the local proof: `n_hours` authoritative for `open` / `about_to_close` / `after_hours`; `{{now_utc}}` labeled UTC; open urgent flow uses `urgent_slot_mode=same_day`; closed or unconfirmed-hours flow uses `urgent_slot_mode=first_am`; ER/911 language is gated on explicit severe/worsening symptoms and is non-repeating; booking claims require `book_success == true`; booking failure says nothing is booked, confirms callback readback, then promises one callback [Task 2]
+554:- The handoff state was intentionally paused after local verification and documentation, before provider version creation, attachment, call, booking, message, alert, or live voice proof [Task 3]
+559:- symptom: final fresh review comes back `REVISE` without code evidence -> cause: worker file-access allowlist blocked `/mnt/d_drive/repos/bland` -> fix: record it as an environmental blocker, not a code defect [Task 1][Task 2]
+571:- rollout_summaries/2026-07-15T01-08-37-kYFo-orca_screen_reader_crash_loop_fedora_a11y.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/14/rollout-2026-07-14T21-08-37-019f6351-8fab-7ce0-8c2c-d7f479d702f6.jsonl, updated_at=2026-07-15T19:08:26+00:00, thread_id=019f6351-8fab-7ce0-8c2c-d7f479d702f6, Orca restart storm identified as the cause)
+581:- rollout_summaries/2026-07-15T01-08-37-kYFo-orca_screen_reader_crash_loop_fedora_a11y.md (cwd=/mnt/d_drive/repos, rollout_path=/home/ankit114/.codex/sessions/2026/07/14/rollout-2026-07-14T21-08-37-019f6351-8fab-7ce0-8c2c-d7f479d702f6.jsonl, updated_at=2026-07-15T19:08:26+00:00, thread_id=019f6351-8fab-7ce0-8c2c-d7f479d702f6, practical remediation path if the user does not need a screen reader)
+613:- rollout_summaries/2026-07-15T21-51-03-SgjU-modern_image_atlanta_analytics_tracking_check.md (cwd=/home/ankit114/projects/personal-finance-os, rollout_path=/home/ankit114/.codex/sessions/2026/07/15/rollout-2026-07-15T17-51-04-019f67c3-0c3d-7f00-97a9-5c9a313620d2.jsonl, updated_at=2026-07-15T22:07:56+00:00, thread_id=019f67c3-0c3d-7f00-97a9-5c9a313620d2, GA4 present but conversion proof not established)
+640:## Task 1: Consolidate Nick/Allendale deliverables into one clean folder, success
+644:- rollout_summaries/2026-07-10T20-56-10-CBJB-podcast_media_delivery_folder_consolidation.md (cwd=/mnt/d_drive/repos/podcast, rollout_path=/home/ankit114/.codex/sessions/2026/07/10/rollout-2026-07-10T16-56-11-019f4dd1-01ce-7eb3-a070-f1d3f9cc211f.jsonl, updated_at=2026-07-13T23:30:27+00:00, thread_id=019f4dd1-01ce-7eb3-a070-f1d3f9cc211f, flat user-facing delivery folder with rejected outputs removed)
+662:- symptom: handoff feels sloppy or hard to navigate -> cause: final masters, review clips, and scratch/rejected artifacts are scattered -> fix: consolidate early into one obvious delivery folder before presenting it [Task 1]
+674:- rollout_summaries/2026-07-13T20-55-29-xFLi-install_claude_video_plus_skill_globally.md (cwd=/mnt/d_drive/repos/podcast, rollout_path=/home/ankit114/.codex/sessions/2026/07/13/rollout-2026-07-13T16-55-30-019f5d43-7505-7a53-ba4e-7bba5a504b70.jsonl, updated_at=2026-07-13T20:56:51+00:00, thread_id=019f5d43-7505-7a53-ba4e-7bba5a504b70, `watch` skill installed globally despite a non-blocking PromptScript warning)
+
+hook: PostToolUse
+exec
+/bin/bash -lc "sed -n '1,260p' /home/ankit114/.agents/skills/compound-engineering-primitives/SKILL.md && sed -n '261,520p' /home/ankit114/.agents/skills/compound-engineering-primitives/SKILL.md" in /home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+ succeeded in 0ms:
+---
+name: compound-engineering-primitives
+description: Use for serious non-PHI code/repo/agentic engineering tasks, repo-agent run cards, code-agent standards, Cross-Review QA, completion claims, or when applying the Every/Compound Engineering GO-now pattern. Requires plan/spec yardsticks, unitized proof, report-only fresh review, durable artifacts, user-directive precedence, behavior verification before done, and post-solve learning capture. Do not use for tiny edits, PHI/client-sensitive raw plugin use, or installing the Every plugin.
+---
+
+# Compound Engineering Primitives
+
+Use this as Ankit's owned version of the Compound Engineering GO-now. It is a standards implant, not a third-party plugin adoption.
+
+## Fire conditions
+
+Apply for serious non-PHI code/repo/agentic engineering work when any of these are true:
+- a task involves implementation across multiple files, repo changes, tests, PRs, deployment prep, or agent-generated code;
+- a worker is about to claim fixed/done/complete/ready;
+- a fresh-context review, Cross-Review QA, or Hermes Kanban review-required handoff is needed;
+- a reusable lesson appears that should compound into a skill, runbook, solution note, or sanitized OB/Work Ledger capture.
+
+Skip for tiny one-line edits, routine lookups, disposable scratch scripts, or any raw PHI/client-sensitive workflow. This skill does not authorize external sends, CRM/EHR/finance writes, deploys, merges, public uploads, or autonomous commit/push/PR loops.
+
+## Core loop
+
+Run: **Plan -> Work -> Review -> Compound -> Repeat**.
+
+### 1. Plan
+
+Before implementation, create or identify a durable yardstick:
+- product/requirements contract separated from implementation plan;
+- implementation units with stable IDs (`U1`, `U2`, ...);
+- expected proof/test for each unit;
+- acceptance criteria and explicit non-goals;
+- the three decision-residue questions:
+  1. What was the hardest decision made?
+  2. What alternatives were rejected?
+  3. What assumption is least confident?
+
+If no yardstick exists for serious work, make one before changing code.
+
+### 2. Work
+
+Implement against unit IDs. Keep each proof attached to the unit it validates. Prefer the smallest safe diff that satisfies the yardstick.
+
+### 3. Review
+
+Run report-only review by default:
+- fresh context when possible;
+- reviewer findings cite the original plan/spec/unit, not the builder's narrative;
+- reviewer/subagent outputs land in durable artifacts or run comments, not chat-only prose;
+- user directives outrank reviewer best judgment; if a reviewer disagrees, it must flag rather than override;
+- no auto-apply, merge, deploy, external send, or public upload from review alone.
+
+### 4. Compound
+
+Before saying done, classify the highest true state reached and attach evidence:
+- local artifact only / tests passed / committed / pushed / PR opened / merged / deployed / live action taken / blocked / review-required;
+- exact commands/tests/evidence;
+- missing proof or skipped checks;
+- changed files/artifacts;
+- reusable lesson, if any.
+
+If the lesson is reusable, update the smallest durable surface: skill patch, run-card line, solution note, or sanitized Work Ledger/OB capture. Do not capture raw secrets, PHI, client-sensitive details, raw IDs, or raw message bodies.
+
+## Hard no's
+
+- Do not raw-install the Every Compound Engineering plugin by default.
+- Do not use `bunx @every-env/compound-plugin` unless version parity with the current repo/release is proven.
+- Do not trust stale article/install claims without checking the repo/package state.
+- Do not use side-effect-heavy flows such as autonomous commit/push/PR/CI as defaults.
+- Do not use in PHI/client-sensitive contexts without explicit HIPAA/BAA/data-flow review.
+- Do not upload proof/demo artifacts publicly without explicit user approval.
+
+## Required handoff block for serious work
+
+End serious code/repo work with:
+
+```text
+Compound proof:
+- Plan/spec yardstick: <path/ref or none + why acceptable>
+- Units proved: <U-IDs + proof>
+- Review: <fresh/report-only review artifact or why skipped>
+- Highest true state: <local/tested/committed/pushed/PR/merged/deployed/blocked/review-required>
+- Behavior verification: <command/output/ref>
+- Decision residue: hardest decision / alternatives rejected / least-confident assumption
+- Compound capture: <skill/runbook/OB/none + reason>
+```
+
+## See also
+
+Read `references/ce-addendum.md` for the compact run-card checklist to paste into project-local standards.
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: ob_mybcat/search_thoughts started
+mcp: ob_mybcat/search_thoughts (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "pwd; rg --files -g 'bland_gateway.py' -g 'AGENTS.md' -g '.ai/fable-proof-run.md' . .. /home/ankit114/repos/ringer 2>/dev/null | head -80; ls -la; find . -maxdepth 3 -type f -o -type l" in /home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+ succeeded in 0ms:
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py
+/home/ankit114/repos/ringer/my-manifests/mott-harness-audit/work7/suppression-truth/source/bland_gateway.py
+total 120
+drwxr-xr-x. 1 ankit114 ankit114     38 Jul 27 15:29 .
+drwxr-xr-x. 1 ankit114 ankit114     22 Jul 27 15:27 ..
+-rw-r--r--. 1 ankit114 ankit114   6089 Jul 27 15:29 DESIGN.md
+-rw-r--r--. 1 ankit114 ankit114 112555 Jul 27 15:29 worker.log
+./worker.log
+./DESIGN.md
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "rg -n \"def resolve_relative_date|resolve_relative_date\\(\" /home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py; nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py | sed -n '1,260p'; nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py | sed -n '260,560p'" in /home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+ succeeded in 0ms:
+475:def resolve_relative_date(raw) -> str | None:
+626:    resolved = resolve_relative_date(body.get("from"))
+631:    to_resolved = resolve_relative_date(body.get("to"))
+     1	#!/usr/bin/env python3
+     2	"""CVC Bland-facing shim for the five locked EyeCloud appointment endpoints."""
+     3	
+     4	from __future__ import annotations
+     5	
+     6	import errno
+     7	import fcntl
+     8	import hmac
+     9	import json
+    10	import logging
+    11	import os
+    12	import re
+    13	import secrets
+    14	import subprocess
+    15	import sys
+    16	import threading
+    17	import time
+    18	from contextlib import contextmanager
+    19	from datetime import datetime, timedelta
+    20	from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+    21	from pathlib import Path
+    22	from typing import NamedTuple
+    23	from zoneinfo import ZoneInfo
+    24	
+    25	sys.path.insert(0, str(Path(__file__).resolve().parent))
+    26	from capability_registry import QueryError, load_manifest, prepare_query, render_query_result
+    27	
+    28	try:  # boto3 is optional so the gateway and offline tests import without it.
+    29	    import boto3
+    30	except ImportError:  # pragma: no cover - exercised only where boto3 is absent
+    31	    boto3 = None
+    32	
+    33	CLI = os.environ.get("ECP_CLI", "/usr/local/bin/eyecloud-pro-pp-cli")
+    34	AWS_ENV_WRAPPER = os.environ.get("ECP_AWS_ENV_WRAPPER", str(Path.home() / ".local/bin/eyecloud-pro-aws-env"))
+    35	HOST = os.environ.get("ECP_SHIM_HOST", "127.0.0.1")
+    36	PORT = int(os.environ.get("ECP_SHIM_PORT", "8431"))
+    37	TIMEOUT_S = int(os.environ.get("ECP_CLI_TIMEOUT_S", "90"))
+    38	MAX_BODY = 16 * 1024
+    39	MAX_VALUE_LEN = 200
+    40	
+    41	TEST_MODE = os.environ.get("ECP_SHIM_TEST_MODE", "0") == "1"
+    42	ECP_QUERY_RELEASE_GATE = os.environ.get("ECP_QUERY_RELEASE_GATE", "BLOCK")
+    43	TEST_LAST_PREFIX = os.environ.get("ECP_SHIM_TEST_LAST_PREFIX", "ZZTEST")
+    44	TEST_PATIENT_IDS = {
+    45	    p.strip()
+    46	    for p in os.environ.get("ECP_SHIM_TEST_PATIENTS", "4274030798").split(",")
+    47	    if p.strip()
+    48	}
+    49	
+    50	API_KEY = os.environ.get("ECP_SHIM_BEARER", "")
+    51	READ_PRINCIPAL = os.environ.get("ECP_READ_PRINCIPAL", "bland-read")
+    52	TENANT_ID = os.environ.get("ECP_TENANT_ID", "cvc")
+    53	
+    54	
+    55	def load_query_credential_record(raw: str) -> dict:
+    56	    """Parse the deployment-bound /query credential without logging its value."""
+    57	    try:
+    58	        record = json.loads(raw)
+    59	    except (TypeError, json.JSONDecodeError):
+    60	        return {}
+    61	    if not isinstance(record, dict) or set(record) != {"token", "tenant", "principal"}:
+    62	        return {}
+    63	    if not all(isinstance(record[key], str) and record[key].strip() for key in record):
+    64	        return {}
+    65	    return {key: record[key].strip() for key in record}
+    66	
+    67	
+    68	CONSUMER_CREDENTIAL_FIELDS = {
+    69	    "consumer_id",
+    70	    "token",
+    71	    "tenant",
+    72	    "principal",
+    73	    "enabled",
+    74	    "routes",
+    75	    "rate_per_minute",
+    76	}
+    77	
+    78	
+    79	def load_consumer_credential_set(raw: str) -> tuple[list[dict], bool]:
+    80	    """Parse all consumer credentials atomically without logging their values."""
+    81	    if not isinstance(raw, str) or not raw.strip():
+    82	        return [], False
+    83	    try:
+    84	        document = json.loads(raw)
+    85	    except (TypeError, json.JSONDecodeError):
+    86	        return [], True
+    87	    if (
+    88	        not isinstance(document, dict)
+    89	        or set(document) != {"version", "consumers"}
+    90	        or not isinstance(document["version"], int)
+    91	        or isinstance(document["version"], bool)
+    92	        or not isinstance(document["consumers"], list)
+    93	    ):
+    94	        return [], True
+    95	
+    96	    consumers = []
+    97	    consumer_ids = set()
+    98	    tokens = []
+    99	    for record in document["consumers"]:
+   100	        if not isinstance(record, dict) or set(record) != CONSUMER_CREDENTIAL_FIELDS:
+   101	            return [], True
+   102	        if not all(
+   103	            isinstance(record[key], str) and record[key].strip()
+   104	            for key in ("consumer_id", "token", "tenant", "principal")
+   105	        ):
+   106	            return [], True
+   107	        if not isinstance(record["enabled"], bool):
+   108	            return [], True
+   109	        if (
+   110	            not isinstance(record["routes"], list)
+   111	            or not all(isinstance(route, str) and route.strip() for route in record["routes"])
+   112	        ):
+   113	            return [], True
+   114	        if (
+   115	            not isinstance(record["rate_per_minute"], int)
+   116	            or isinstance(record["rate_per_minute"], bool)
+   117	        ):
+   118	            return [], True
+   119	
+   120	        consumer_id = record["consumer_id"].strip()
+   121	        token = record["token"].strip()
+   122	        if consumer_id in consumer_ids or any(
+   123	            hmac.compare_digest(token, existing_token) for existing_token in tokens
+   124	        ):
+   125	            return [], True
+   126	        consumer_ids.add(consumer_id)
+   127	        tokens.append(token)
+   128	        consumers.append(
+   129	            {
+   130	                **record,
+   131	                "consumer_id": consumer_id,
+   132	                "token": token,
+   133	                "tenant": record["tenant"].strip(),
+   134	                "principal": record["principal"].strip(),
+   135	                "routes": [route.strip() for route in record["routes"]],
+   136	            }
+   137	        )
+   138	    return consumers, False
+   139	
+   140	
+   141	def _env_bool(name: str, default: bool) -> bool:
+   142	    raw = os.environ.get(name)
+   143	    if raw is None:
+   144	        return default
+   145	    return raw.strip().lower() in {"1", "true", "yes", "on"}
+   146	
+   147	
+   148	QUERY_CREDENTIAL = load_query_credential_record(
+   149	    os.environ.get("ECP_QUERY_CREDENTIAL_RECORD", "")
+   150	)
+   151	if QUERY_CREDENTIAL:
+   152	    API_KEY = API_KEY or QUERY_CREDENTIAL["token"]
+   153	_CONSUMER_CREDENTIALS_RAW = os.environ.get("ECP_CONSUMER_CREDENTIALS", "")
+   154	CONSUMER_CREDENTIALS_CONFIGURED = bool(_CONSUMER_CREDENTIALS_RAW.strip())
+   155	CONSUMER_CREDENTIALS, CONSUMER_CREDENTIALS_LOAD_FAILED = load_consumer_credential_set(
+   156	    _CONSUMER_CREDENTIALS_RAW
+   157	)
+   158	CONSUMER_ACCEPT_LEGACY = _env_bool("ECP_CONSUMER_ACCEPT_LEGACY", True)
+   159	CAPABILITY_MANIFEST = load_manifest()
+   160	
+   161	logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+   162	log = logging.getLogger("cvc-booking-gateway")
+   163	
+   164	ENDPOINTS = {
+   165	    "/availability": (
+   166	        "availability",
+   167	        {
+   168	            "store": "--store",
+   169	            "from": "--from",
+   170	            "to": "--to",
+   171	            "doctor": "--doctor",
+   172	            "min_minutes": "--min-minutes",
+   173	            "slot_minutes": "--slot-minutes",
+   174	            "after": "--after",
+   175	            "before": "--before",
+   176	        },
+   177	        False,
+   178	    ),
+   179	    "/conflict-check": (
+   180	        "conflict-check",
+   181	        {"store": "--store", "doctor": "--doctor", "start": "--start", "end": "--end"},
+   182	        False,
+   183	    ),
+   184	    "/patient-search": (
+   185	        "patient-search",
+   186	        {"last": "--last", "first": "--first", "phone": "--phone", "dob": "--dob"},
+   187	        False,
+   188	    ),
+   189	    "/book": (
+   190	        "book",
+   191	        {
+   192	            "patient_id": "--patient",
+   193	            "store": "--store",
+   194	            "doctor": "--doctor",
+   195	            "start": "--start",
+   196	            "end": "--end",
+   197	            "type": "--type",
+   198	            "notes": "--notes",
+   199	        },
+   200	        True,
+   201	    ),
+   202	    "/book-new-patient": (
+   203	        "book-new-patient",
+   204	        {
+   205	            "first": "--first",
+   206	            "last": "--last",
+   207	            "dob": "--dob",
+   208	            "phone": "--phone",
+   209	            "email": "--email",
+   210	            "gender": "--gender",
+   211	            "addr": "--addr",
+   212	            "city": "--city",
+   213	            "state": "--state",
+   214	            "zip": "--zip",
+   215	            "ssn_last4": "--ssn-last4",
+   216	            "store": "--store",
+   217	            "doctor": "--doctor",
+   218	            "start": "--start",
+   219	            "end": "--end",
+   220	            "type": "--type",
+   221	            "notes": "--notes",
+   222	        },
+   223	        True,
+   224	    ),
+   225	    "/cancel": (
+   226	        "cancel",
+   227	        {
+   228	            "store": "--store",
+   229	            "appt_id": "--appt-id",
+   230	            "day": "--day",
+   231	        },
+   232	        True,
+   233	    ),
+   234	    "/reschedule": (
+   235	        "reschedule",
+   236	        {
+   237	            "store": "--store",
+   238	            "appt_id": "--appt-id",
+   239	            "day": "--day",
+   240	            "start": "--new-start",
+   241	            "end": "--new-end",
+   242	        },
+   243	        True,
+   244	    ),
+   245	    # Read-only: a caller's upcoming appointments, for the reschedule/cancel lane.
+   246	    # patient_id is required (the caller is already resolved in the identity lane);
+   247	    # never allow an unfiltered list.
+   248	    "/appt-list": (
+   249	        "list",
+   250	        {
+   251	            "patient_id": "--patient",
+   252	            "last": "--last",
+   253	            "dob": "--dob",
+   254	            "store": "--store",
+   255	            "from": "--from",
+   256	            "to": "--to",
+   257	            "include_past": "--include-past",
+   258	        },
+   259	        False,
+   260	    ),
+   260	    ),
+   261	}
+   262	
+   263	_DEFAULT_STORE_REGISTRY = {
+   264	    # Mott rotates providers by weekday, so the safe default does not force one.
+   265	    "711": {"name": "MS", "doctor": "", "alt": ""},
+   266	    "956": {"name": "Kennesaw", "doctor": "3281237823", "alt": "East Cobb"},
+   267	    "958": {"name": "East Cobb", "doctor": "1006898359", "alt": "Kennesaw"},
+   268	}
+   269	
+   270	
+   271	def _store_registry() -> dict:
+   272	    try:
+   273	        configured = json.loads(os.environ.get("ECP_STORE_REGISTRY", "{}") or "{}")
+   274	    except (TypeError, json.JSONDecodeError):
+   275	        return dict(_DEFAULT_STORE_REGISTRY)
+   276	    if not isinstance(configured, dict):
+   277	        return dict(_DEFAULT_STORE_REGISTRY)
+   278	    return {**_DEFAULT_STORE_REGISTRY, **configured}
+   279	
+   280	
+   281	STORE_ID_NAMES = {}
+   282	STORE_DOCTORS = {}
+   283	ALT_STORES = {}
+   284	for _store_id, _store in _store_registry().items():
+   285	    if not isinstance(_store, dict):
+   286	        continue
+   287	    _store_id = str(_store_id).strip()
+   288	    _store_name = str(_store.get("name", "")).strip()
+   289	    _store_doctor = str(_store.get("doctor", "")).strip()
+   290	    _store_alt = str(_store.get("alt", "")).strip()
+   291	    if not _store_id or not _store_name:
+   292	        continue
+   293	    STORE_ID_NAMES[_store_id] = _store_name
+   294	    STORE_DOCTORS[_store_id] = _store_doctor
+   295	    STORE_DOCTORS[_store_name.lower()] = _store_doctor
+   296	    if _store_alt:
+   297	        ALT_STORES[_store_id] = _store_alt
+   298	        ALT_STORES[_store_name.lower()] = _store_alt
+   299	
+   300	TIME_PREFS = {
+   301	    "morning": [("--before", "12:00 pm")],
+   302	    "afternoon": [("--after", "12:00 pm")],
+   303	    "evening": [("--after", "04:00 pm")],
+   304	}
+   305	DAYKEYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+   306	
+   307	# Availability and booking are FORCED to the store's registered provider so
+   308	# phantom scheduler columns (e.g. 2895935197) are never offered or booked. Any
+   309	# caller-supplied doctor is ignored. (owner-confirmed 2026-07-01)
+   310	def normalize_phone(val) -> str:
+   311	    # EyeCloud phone_search matches 10-digit / (xxx) xxx-xxxx forms but NOT
+   312	    # E.164 (+1XXXXXXXXXX), which is what Bland's {{from}} sends — that mismatch
+   313	    # made real callers hit the "no match" lane (live probe 2026-07-01). Reduce
+   314	    # to the bare 10 digits; pass anything else through unchanged.
+   315	    digits = re.sub(r"\D", "", str(val))
+   316	    if len(digits) == 11 and digits.startswith("1"):
+   317	        digits = digits[1:]
+   318	    return digits if len(digits) == 10 else str(val).strip()
+   319	
+   320	
+   321	def _eastern_today():
+   322	    from datetime import datetime, timedelta, timezone
+   323	    try:
+   324	        from zoneinfo import ZoneInfo
+   325	        return datetime.now(ZoneInfo("America/New_York"))
+   326	    except Exception:
+   327	        return datetime.now(timezone(timedelta(hours=-5)))
+   328	
+   329	
+   330	def _hours_cfg() -> dict:
+   331	    return json.loads(os.environ.get("CVC_HOURS_JSON", "{}") or "{}")
+   332	
+   333	
+   334	def _day_window(cfg, store_cfg, d):
+   335	    if d.strftime("%Y-%m-%d") in set(cfg.get("holidays", [])):
+   336	        return None
+   337	    win = store_cfg.get(DAYKEYS[d.weekday()])
+   338	    if not win:
+   339	        return None
+   340	    o_h, o_m = map(int, win[0].split(":"))
+   341	    c_h, c_m = map(int, win[1].split(":"))
+   342	    return (
+   343	        d.replace(hour=o_h, minute=o_m, second=0, microsecond=0),
+   344	        d.replace(hour=c_h, minute=c_m, second=0, microsecond=0),
+   345	    )
+   346	
+   347	
+   348	def _fmt(dt):
+   349	    # Zero-padded hour (%I, not %-I): the EyeCloud scheduler CLI rejects
+   350	    # unpadded times ('bad --start: unrecognized scheduler time "07/14/2026
+   351	    # 4:00 pm"', proven live 2026-07-14 on the urgent double-book lane), and
+   352	    # the CLI's own availability output is padded, so padded is canonical.
+   353	    return dt.strftime("%m/%d/%Y %I:%M %p").lower()
+   354	
+   355	
+   356	def normalize_sched_time(sval: str) -> str:
+   357	    """Re-emit a scheduler timestamp with a zero-padded hour.
+   358	
+   359	    Callers (including older pathway versions and cached variables) may send
+   360	    '07/14/2026 4:00 pm'; the EyeCloud CLI only accepts '07/14/2026 04:00 pm'.
+   361	    Unparseable values pass through unchanged so the CLI still reports them.
+   362	    """
+   363	    try:
+   364	        dt = datetime.strptime(str(sval).strip().lower(), "%m/%d/%Y %I:%M %p")
+   365	    except ValueError:
+   366	        return sval
+   367	    return dt.strftime("%m/%d/%Y %I:%M %p").lower()
+   368	
+   369	
+   370	def hours_state(store: str, now) -> dict:
+   371	    cfg = _hours_cfg()
+   372	    store_cfg = (cfg.get("stores") or {}).get(str(store).strip().lower())
+   373	    if not store_cfg:
+   374	        raise ValueError("unknown store")
+   375	    buf = int(cfg.get("about_to_close_minutes", 30))
+   376	    win = _day_window(cfg, store_cfg, now)
+   377	    state, closes_at = "after_hours", ""
+   378	    if win and win[0] <= now < win[1]:
+   379	        closes_at = _fmt(win[1])
+   380	        state = "about_to_close" if (win[1] - now).total_seconds() <= buf * 60 else "open"
+   381	    probe = now
+   382	    if not (win and now < win[0]):
+   383	        probe = probe + timedelta(days=1)
+   384	    for _ in range(14):
+   385	        w = _day_window(cfg, store_cfg, probe.replace(hour=0, minute=0))
+   386	        if w:
+   387	            first_am = w[0]
+   388	            break
+   389	        probe = probe + timedelta(days=1)
+   390	    else:
+   391	        raise ValueError("no open day within 14 days")
+   392	    return {"state": state, "closes_at": closes_at, "first_am_start": _fmt(first_am)}
+   393	
+   394	
+   395	def _next_open_dt(cfg, store_cfg, now):
+   396	    probe = now
+   397	    if not (_day_window(cfg, store_cfg, now) and now < _day_window(cfg, store_cfg, now)[0]):
+   398	        probe = probe + timedelta(days=1)
+   399	    for _ in range(14):
+   400	        w = _day_window(cfg, store_cfg, probe.replace(hour=0, minute=0))
+   401	        if w:
+   402	            return w[0]
+   403	        probe = probe + timedelta(days=1)
+   404	    raise ValueError("no open day within 14 days")
+   405	
+   406	
+   407	def _next_boundary(now):
+   408	    # Strictly-next :00 / :30 boundary at or after now+ (never now itself).
+   409	    add = (30 - now.minute % 30) % 30 or 30
+   410	    return now.replace(second=0, microsecond=0) + timedelta(minutes=add)
+   411	
+   412	
+   413	def urgent_window(store: str, slot_mode: str, now) -> dict:
+   414	    """Resolve the concrete availability window + double-book target for an urgent
+   415	    booking. same_day only holds while the office is open/about-to-close; anything
+   416	    else (or an after-hours same_day request) falls back to first_am. Pure function
+   417	    of (store, mode, now) so the pathway never does date math."""
+   418	    cfg = _hours_cfg()
+   419	    store_cfg = (cfg.get("stores") or {}).get(str(store).strip().lower())
+   420	    if not store_cfg:
+   421	        raise ValueError("unknown store")
+   422	    mode = str(slot_mode).strip().lower()
+   423	    win = _day_window(cfg, store_cfg, now)
+   424	    open_now = bool(win and win[0] <= now < win[1])
+   425	    if mode == "same_day" and open_now:
+   426	        book_start = _next_boundary(now)
+   427	        last = win[1] - timedelta(minutes=30)
+   428	        if book_start > last:
+   429	            book_start = last
+   430	        return {"mode": "same_day", "avail_from": _fmt(now), "avail_to": _fmt(win[1]),
+   431	                "book_start": _fmt(book_start), "book_end": _fmt(book_start + timedelta(minutes=30))}
+   432	    first_am = _next_open_dt(cfg, store_cfg, now)
+   433	    return {"mode": "first_am", "avail_from": _fmt(first_am),
+   434	            "avail_to": _fmt(first_am + timedelta(hours=4)),
+   435	            "book_start": _fmt(first_am), "book_end": _fmt(first_am + timedelta(minutes=30))}
+   436	
+   437	
+   438	def verify_booking(book_pid: str, new_id: str, run_list_fn) -> bool:
+   439	    """BOOK-PROOF read-after-write. Returns True only when the freshly-created
+   440	    appointment id is actually present in a re-read of the patient's appointment
+   441	    list. run_list_fn(patient_id) -> parsed CLI 'appt list' result (or None on
+   442	    failure). Any failure, missing id, or unparseable read -> False (never a
+   443	    false 'booked')."""
+   444	    new_id = str(new_id or "").strip()
+   445	    if len(new_id) < 4 or not book_pid:
+   446	        return False
+   447	    try:
+   448	        listing = run_list_fn(book_pid)
+   449	    except Exception:
+   450	        return False
+   451	    if listing is None:
+   452	        return False
+   453	    return new_id in json.dumps(listing)
+   454	
+   455	
+   456	def alert_sms_recipients(state: str) -> list:
+   457	    """Hours-conditional SMS ping recipients. Open/about-to-close -> front desk;
+   458	    after-hours -> on-call doctor. Falls back to the flat list when the split
+   459	    envs are unset."""
+   460	    flat = os.environ.get("CVC_ALERT_SMS_TO", "").strip()
+   461	    if state in ("open", "about_to_close"):
+   462	        picked = os.environ.get("CVC_ALERT_SMS_TO_OPEN", "").strip() or flat
+   463	    else:
+   464	        picked = os.environ.get("CVC_ALERT_SMS_TO_AFTERHOURS", "").strip() or flat
+   465	    return [n.strip() for n in picked.split(",") if n.strip()]
+   466	
+   467	
+   468	_WEEKDAYS = {
+   469	    "monday": 0, "mon": 0, "tuesday": 1, "tue": 1, "tues": 1,
+   470	    "wednesday": 2, "wed": 2, "thursday": 3, "thu": 3, "thur": 3, "thurs": 3,
+   471	    "friday": 4, "fri": 4, "saturday": 5, "sat": 5, "sunday": 6, "sun": 6,
+   472	}
+   473	
+   474	
+   475	def resolve_relative_date(raw) -> str | None:
+   476	    # Dates reach us from LLM-extracted variables; the CLI only accepts
+   477	    # MM/DD/YYYY or YYYY-MM-DD, so anything else must be resolved here, not
+   478	    # left for the model to format (live failure 2026-07-21: "Friday" reached
+   479	    # the CLI verbatim -> 409). Bare/this/next weekday means the next future
+   480	    # occurrence (Eastern, never today). "Next week" means the next calendar
+   481	    # week's Monday. English and Chinese weekday-plus-week phrases use that
+   482	    # weekday in the next/second-next Monday-anchored calendar week.
+   483	    # Explicit-year dates pass through unmodified; rewriting a year the caller
+   484	    # stated would surprise them.
+   485	    from datetime import datetime, timedelta
+   486	
+   487	    today = _eastern_today().date()
+   488	    t = re.sub(r"[.,!?]", "", str(raw or "").strip().lower())
+   489	    t = re.sub(r"\s+", " ", t)
+   490	    if not t:
+   491	        return None
+   492	
+   493	    def emit(day):
+   494	        return day.strftime("%m/%d/%Y")
+   495	
+   496	    def next_weekday(weekday):
+   497	        ahead = (weekday - today.weekday()) % 7 or 7
+   498	        return today + timedelta(days=ahead)
+   499	
+   500	    def calendar_weekday(weekday, weeks_ahead):
+   501	        monday = today - timedelta(days=today.weekday())
+   502	        return monday + timedelta(weeks=weeks_ahead, days=weekday)
+   503	
+   504	    simple_days = {
+   505	        "today": 0, "tomorrow": 1, "tmrw": 1, "tmr": 1,
+   506	        "day after tomorrow": 2,
+   507	        "今天": 0, "明天": 1, "后天": 2, "大后天": 3,
+   508	    }
+   509	    if t in simple_days:
+   510	        return emit(today + timedelta(days=simple_days[t]))
+   511	
+   512	    if t in ("next week", "下周"):
+   513	        return emit(calendar_weekday(0, 1))
+   514	
+   515	    # "Coming weekend" follows the existing bare-weekday rule: it is always
+   516	    # the next future Saturday, even when today is Saturday.
+   517	    if t in ("weekend", "this weekend", "周末", "这周末"):
+   518	        return emit(next_weekday(5))
+   519	    if t == "next weekend":
+   520	        return emit(next_weekday(5) + timedelta(days=7))
+   521	    if t == "下周末":
+   522	        return emit(calendar_weekday(5, 1))
+   523	
+   524	    match = re.fullmatch(r"(?:in )?(\d+) days(?: from now)?", t)
+   525	    if not match:
+   526	        match = re.fullmatch(r"(\d+) days from now", t)
+   527	    if match:
+   528	        return emit(today + timedelta(days=int(match.group(1))))
+   529	
+   530	    number_words = {
+   531	        "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+   532	        "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+   533	        "couple": 2,
+   534	    }
+   535	    match = re.fullmatch(r"in (?:a|a (couple)|(\d+|one|two|three|four|five|six|seven|eight|nine|ten|couple)) weeks?", t)
+   536	    if match:
+   537	        count_text = match.group(1) or match.group(2)
+   538	        count = 1 if count_text is None else number_words.get(
+   539	            count_text, int(count_text) if count_text.isdigit() else None
+   540	        )
+   541	        return emit(today + timedelta(days=7 * count))
+   542	    match = re.fullmatch(r"(\d+) weeks (?:from now|out)", t)
+   543	    if match:
+   544	        return emit(today + timedelta(days=7 * int(match.group(1))))
+   545	
+   546	    zh_numbers = {
+   547	        "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5,
+   548	        "六": 6, "七": 7, "八": 8, "九": 9, "十": 10,
+   549	    }
+   550	    match = re.fullmatch(r"(\d+|[一二两三四五六七八九十])天后", t)
+   551	    if match:
+   552	        count = int(match.group(1)) if match.group(1).isdigit() else zh_numbers[match.group(1)]
+   553	        return emit(today + timedelta(days=count))
+   554	    match = re.fullmatch(r"(\d+|[一二两三四五六七八九十])(?:周|个星期)后", t)
+   555	    if match:
+   556	        count = int(match.group(1)) if match.group(1).isdigit() else zh_numbers[match.group(1)]
+   557	        return emit(today + timedelta(days=7 * count))
+   558	
+   559	    zh_weekdays = {"一": 0, "二": 1, "三": 2, "四": 3, "五": 4, "六": 5, "日": 6, "天": 6}
+   560	    match = re.fullmatch(r"(下下|下|这|本)?(?:周|星期|礼拜)([一二三四五六日天])", t)
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py | sed -n '555,680p'; rg -n \"preference_from|Kenneth|tomorrow july|july 28|resolve_relative_date\" . /home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design -g '*.md' -g '*.py' -g '*.json' -g '*.log' | head -200" in /home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+ succeeded in 0ms:
+   555	    if match:
+   556	        count = int(match.group(1)) if match.group(1).isdigit() else zh_numbers[match.group(1)]
+   557	        return emit(today + timedelta(days=7 * count))
+   558	
+   559	    zh_weekdays = {"一": 0, "二": 1, "三": 2, "四": 3, "五": 4, "六": 5, "日": 6, "天": 6}
+   560	    match = re.fullmatch(r"(下下|下|这|本)?(?:周|星期|礼拜)([一二三四五六日天])", t)
+   561	    if match:
+   562	        prefix, day_text = match.groups()
+   563	        weekday = zh_weekdays[day_text]
+   564	        if prefix == "下":
+   565	            return emit(calendar_weekday(weekday, 1))
+   566	        if prefix == "下下":
+   567	            return emit(calendar_weekday(weekday, 2))
+   568	        return emit(next_weekday(weekday))
+   569	
+   570	    weekday_pattern = "|".join(sorted(_WEEKDAYS, key=len, reverse=True))
+   571	    match = re.fullmatch(rf"(?:day after next|the day after) ({weekday_pattern})", t)
+   572	    if match:
+   573	        return emit(next_weekday(_WEEKDAYS[match.group(1)]) + timedelta(days=1))
+   574	    match = re.fullmatch(rf"({weekday_pattern}) after next", t)
+   575	    if match:
+   576	        return emit(calendar_weekday(_WEEKDAYS[match.group(1)], 2))
+   577	    match = re.fullmatch(rf"(?:a week from ({weekday_pattern})|({weekday_pattern}) next week)", t)
+   578	    if match:
+   579	        weekday_text = match.group(1) or match.group(2)
+   580	        return emit(calendar_weekday(_WEEKDAYS[weekday_text], 1))
+   581	
+   582	    weekday_text = re.sub(r"^(this|next|on|coming)\s+", "", t)
+   583	    if weekday_text in _WEEKDAYS:
+   584	        return emit(next_weekday(_WEEKDAYS[weekday_text]))
+   585	    for fmt in ("%m/%d/%Y", "%Y-%m-%d", "%m-%d-%Y", "%B %d %Y", "%b %d %Y"):
+   586	        try:
+   587	            return datetime.strptime(t, fmt).date().strftime("%m/%d/%Y")
+   588	        except ValueError:
+   589	            continue
+   590	    # Yearless dates: the year is ours to pick, so a day that already passed
+   591	    # this year means the next occurrence.
+   592	    for fmt in ("%m/%d", "%B %d", "%b %d"):
+   593	        try:
+   594	            d = datetime.strptime(t, fmt).date().replace(year=today.year)
+   595	        except ValueError:
+   596	            continue
+   597	        if d < today:
+   598	            try:
+   599	                d = d.replace(year=d.year + 1)
+   600	            except ValueError:  # Feb 29
+   601	                d = d.replace(month=2, day=28, year=d.year + 1)
+   602	        return d.strftime("%m/%d/%Y")
+   603	    return None
+   604	
+   605	
+   606	def clamp_availability_range(body: dict) -> None:
+   607	    # first_available=1 replaces from/to with tomorrow..+6 days (Eastern) —
+   608	    # closed days simply return no slots, so no business-day logic is needed.
+   609	    # Otherwise from/to go through resolve_relative_date; bad/inverted "to"
+   610	    # collapses to same-day; spans are capped at 14 days.
+   611	    from datetime import datetime, timedelta
+   612	
+   613	    first = str(body.pop("first_available", "")).strip().lower()
+   614	    if first in ("1", "true", "yes"):
+   615	        start = _eastern_today() + timedelta(days=1)
+   616	        body["from"] = start.strftime("%m/%d/%Y")
+   617	        body["to"] = (start + timedelta(days=6)).strftime("%m/%d/%Y")
+   618	        return
+   619	
+   620	    def parse(v):
+   621	        try:
+   622	            return datetime.strptime(str(v).strip(), "%m/%d/%Y")
+   623	        except ValueError:
+   624	            return None
+   625	
+   626	    resolved = resolve_relative_date(body.get("from"))
+   627	    if resolved is None:
+   628	        return
+   629	    body["from"] = resolved
+   630	    frm = parse(resolved)
+   631	    to_resolved = resolve_relative_date(body.get("to"))
+   632	    to = parse(to_resolved) if to_resolved else None
+   633	    if to is None or to < frm:
+   634	        to = frm
+   635	    if (to - frm).days > 13:
+   636	        to = frm + timedelta(days=13)
+   637	    body["to"] = to.strftime("%m/%d/%Y")
+   638	
+   639	
+   640	def sanitize_patient_search(body: dict):
+   641	    # Identity safety (live chat-test finding 2026-07-01): an unresolved Bland
+   642	    # variable like "{{from}}" reached EyeCloud as a phone filter, EyeCloud
+   643	    # ignored it, and the search returned an unfiltered patient list; a
+   644	    # DOB-only follow-up then matched the WRONG real patient. Rules:
+   645	    #   - a phone that doesn't normalize to 10 digits is dropped
+   646	    #   - dob without last/first/phone is never searched (wrong-person risk)
+   647	    #   - if nothing usable remains, short-circuit to a clean 0-match so the
+   648	    #     pathway falls into its ask-for-last-name-and-DOB lane
+   649	    phone = str(body.get("phone", "")).strip()
+   650	    if phone and not re.fullmatch(r"\d{10}", normalize_phone(phone)):
+   651	        body.pop("phone", None)
+   652	    has = {k: str(body.get(k, "")).strip() for k in ("last", "first", "phone", "dob")}
+   653	    if has["dob"] and not (has["last"] or has["phone"]):
+   654	        body.pop("dob", None)
+   655	        has["dob"] = ""
+   656	    if not (has["last"] or has["phone"]):
+   657	        return {"count": 0, "capped": False, "patients": []}
+   658	    return None
+   659	
+   660	
+   661	def prepare_patient_search(body: dict, include_recall_context: bool = False):
+   662	    """Remove gateway-only campaign fields before sanitizing the CLI request.
+   663	
+   664	    ``include_recall_context`` preserves the historical two-value return for
+   665	    existing internal callers while letting the HTTP flow receive the recall
+   666	    token and batch id alongside ``(short, patient_id)``.
+   667	    """
+   668	    requested_patient_id = str(body.pop("patient_id", "") or "").strip()
+   669	    patient_id = requested_patient_id if requested_patient_id and "{{" not in requested_patient_id else ""
+   670	    requested_recall_token = str(body.pop("recall_token", "") or "").strip()
+   671	    recall_token = (requested_recall_token
+   672	                    if requested_recall_token and "{{" not in requested_recall_token else "")
+   673	    requested_recall_batch_id = str(body.pop("recall_batch_id", "") or "").strip()
+   674	    recall_batch_id = (requested_recall_batch_id
+   675	                       if requested_recall_batch_id and "{{" not in requested_recall_batch_id else "")
+   676	    short = sanitize_patient_search(body) if not patient_id else None
+   677	    if include_recall_context:
+   678	        return short, patient_id, recall_token, recall_batch_id
+   679	    return short, patient_id
+   680	
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md:4:A real patient texted "Tomorrow july 28th". The small node model extracted
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md:5:preference_from = preference_to = "thursday". The next Thursday from Mon 07/27 is 07/30,
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md:15:now_utc, ok, patient_first, patient_id, preference_from, preference_to, recall_cell,
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md:21:Measured against the live gateway resolver (resolve_relative_date in bland_gateway.py):
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md:22:- "Tomorrow july 28th" -> 409 bad --from: unrecognized
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md:23:- "tomorrow july 28"   -> 409
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md:24:- "july 28th"          -> 409  (ordinal suffix rejected)
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md:29:- "july 28" / "aug 5" / "08/05/2026" / "2026-08-03" -> OK
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md:30:The resolver's accepted grammar is in source/bland_gateway.py resolve_relative_date.
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md:43:- The GATEWAY resolver (bland_gateway.py resolve_relative_date): what it must additionally
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md:45:  ordinal suffix ("28th" -> "28"), accept "july 28th", and a rule for a compound carrying
+./DESIGN.md:5:- The model is a transport layer for patient-literal date text, not a calendar: it copies date cues into `preference_from` / `preference_to` and never derives or substitutes a weekday.
+./DESIGN.md:6:- `resolve_relative_date` becomes the deterministic calendar layer: it normalizes ordinals, recognizes explicit dates, and evaluates every cue in a compound phrase while preserving the deployed Monday-anchored week behavior.
+./DESIGN.md:13:For a single requested date or period, put the copied phrase in `preference_from` and leave `preference_to` empty. Use `preference_to` only when the patient explicitly supplies a second endpoint, such as “July 28th through July 30th”; each endpoint is copied literally. Do not manufacture a range endpoint.
+./DESIGN.md:15:| Patient wording | `preference_from` | `preference_to` |
+./DESIGN.md:17:| “july 28th” | `july 28th` | empty |
+./DESIGN.md:21:| “tomorrow july 28th” | `tomorrow july 28th` | empty |
+./DESIGN.md:27:`resolve_relative_date` remains the sole calendar authority. Its existing clean single-phrase grammar, including relative words, bare weekdays, and Monday-anchored week resolution, remains intact. Add a normalization and compound-parsing front end before that existing logic:
+./DESIGN.md:30:2. Strip English ordinal suffixes only when attached to a numeric day token: `1st`, `2nd`, `3rd`, `4th` … `31st` become `1`, `2`, `3`, `4` … `31`. Conceptually, match a word-boundary day number followed by `st|nd|rd|th`, case-insensitively. Thus `july 28th` becomes `july 28`, and `28th` becomes `28`.
+./DESIGN.md:32:4. Tokenize a compound into independently resolvable cues, for example `tomorrow` and `july 28`. Run the existing resolver semantics on each cue, then apply the conflict rule below.
+./DESIGN.md:38:If all cues resolve to the same calendar date, accept that date. On Monday July 27, both `tomorrow` and `july 28th` resolve to July 28, so the compound is corroborated.
+./DESIGN.md:44:## Kenneth Walkthrough
+./DESIGN.md:48:1. Kenneth says, “Tomorrow july 28th.”
+./DESIGN.md:49:2. The extraction guidance in `build_v62.py` copies `tomorrow july 28th` into `preference_from`; `preference_to` is empty and `day_part` is unchanged/empty. No weekday is generated.
+./DESIGN.md:50:3. `resolve_relative_date` normalizes the value to `tomorrow july 28`.
+./DESIGN.md:51:4. It resolves `tomorrow` from July 27 to July 28 and resolves `july 28` to July 28.
+./DESIGN.md:56:Deploy gateway support first. Add ordinal, explicit-date, and compound handling to `resolve_relative_date`, while regression-testing every currently accepted phrase and the Monday-anchored week cases. This is backward compatible with the current model output.
+./DESIGN.md:58:After that deployment is verified, independently deploy the `build_v62.py` extraction-guidance change that sends patient-literal phrases. Gateway-first avoids a window where the model emits `july 28th` or a compound but the old gateway returns 409. During rollback, revert the model guidance first; the expanded gateway can continue accepting the old clean phrases safely.
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:475:def resolve_relative_date(raw) -> str | None:
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:609:    # Otherwise from/to go through resolve_relative_date; bad/inverted "to"
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:626:    resolved = resolve_relative_date(body.get("from"))
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:631:    to_resolved = resolve_relative_date(body.get("to"))
+./worker.log:6:READ ./source/CONSTRAINTS.md COMPLETELY FIRST. It has the failure, the three hard constraints (measured), and what is wanted. ./source/bland_gateway.py contains the gateway resolver resolve_relative_date (read its accepted grammar). ./source/build_v62.py contains the current model extraction guidance for preference_from / preference_to / day_part.
+./worker.log:8:THE PROBLEM. A real patient said '"'"'Tomorrow july 28th'"'"' and the small extraction model wrote '"'"'thursday'"'"' (wrong: 07/28 is a Tuesday), so the gateway searched 07/30. The model cannot be trusted to compute a weekday. But (1) Bland exposes NO raw-message variable, so something must pass through a model-extracted variable, and (2) the gateway resolver rejects raw/compound/ordinal phrasing (409 on '"'"'tomorrow july 28th'"'"', '"'"'july 28th'"'"', '"'"'28th'"'"') and only accepts clean single phrases. Design the split so real patient phrasing reliably resolves to the correct date.
+./worker.log:11:1. MODEL LAYER: the minimal, safe extraction rule that CANNOT invent a weekday. What exactly does the model put in preference_from / preference_to for: an explicit month+day ('"'"'july 28th'"'"'), a relative word ('"'"'tomorrow'"'"', '"'"'next week'"'"'), a bare weekday the patient actually said ('"'"'tuesday'"'"'), and a compound ('"'"'tomorrow july 28th'"'"')? The rule must forbid deriving a weekday from a date or from '"'"'tomorrow'"'"'. Prefer copying the patient'"'"'s explicit token verbatim.
+./worker.log:12:2. GATEWAY LAYER: what resolve_relative_date must additionally accept so the model can pass patient-literal tokens through -- at minimum strip ordinal suffixes so '"'"'july 28th'"'"' and '"'"'28th'"'"' resolve, and say how. Do NOT undo the deployed Monday-anchored week fix.
+./worker.log:13:3. CONFLICT RULE: when the patient gives two date cues (relative + explicit) that AGREE (tomorrow + july 28th on a Monday), and when they DISAGREE, which wins and why.
+./worker.log:14:4. KENNETH WALKTHROUGH: trace '"'"'Tomorrow july 28th'"'"' through your design end to end and show it lands on 07/28.
+./worker.log:17:OUTPUT CONTRACT for ./DESIGN.md. Start with '"'"'# Date Handling Architecture'"'"'. Include '"'"'## Summary'"'"' (max 3 bullets), '"'"'## Model Layer'"'"', '"'"'## Gateway Layer'"'"', '"'"'## Conflict Rule'"'"', '"'"'## Kenneth Walkthrough'"'"', '"'"'## Migration'"'"', '"'"'## What This Still Cannot Do'"'"'. Cite real function names and variables. Under 1100 words.' < /dev/null
+./worker.log:33:READ ./source/CONSTRAINTS.md COMPLETELY FIRST. It has the failure, the three hard constraints (measured), and what is wanted. ./source/bland_gateway.py contains the gateway resolver resolve_relative_date (read its accepted grammar). ./source/build_v62.py contains the current model extraction guidance for preference_from / preference_to / day_part.
+./worker.log:35:THE PROBLEM. A real patient said 'Tomorrow july 28th' and the small extraction model wrote 'thursday' (wrong: 07/28 is a Tuesday), so the gateway searched 07/30. The model cannot be trusted to compute a weekday. But (1) Bland exposes NO raw-message variable, so something must pass through a model-extracted variable, and (2) the gateway resolver rejects raw/compound/ordinal phrasing (409 on 'tomorrow july 28th', 'july 28th', '28th') and only accepts clean single phrases. Design the split so real patient phrasing reliably resolves to the correct date.
+./worker.log:38:1. MODEL LAYER: the minimal, safe extraction rule that CANNOT invent a weekday. What exactly does the model put in preference_from / preference_to for: an explicit month+day ('july 28th'), a relative word ('tomorrow', 'next week'), a bare weekday the patient actually said ('tuesday'), and a compound ('tomorrow july 28th')? The rule must forbid deriving a weekday from a date or from 'tomorrow'. Prefer copying the patient's explicit token verbatim.
+./worker.log:39:2. GATEWAY LAYER: what resolve_relative_date must additionally accept so the model can pass patient-literal tokens through -- at minimum strip ordinal suffixes so 'july 28th' and '28th' resolve, and say how. Do NOT undo the deployed Monday-anchored week fix.
+./worker.log:40:3. CONFLICT RULE: when the patient gives two date cues (relative + explicit) that AGREE (tomorrow + july 28th on a Monday), and when they DISAGREE, which wins and why.
+./worker.log:41:4. KENNETH WALKTHROUGH: trace 'Tomorrow july 28th' through your design end to end and show it lands on 07/28.
+./worker.log:44:OUTPUT CONTRACT for ./DESIGN.md. Start with '# Date Handling Architecture'. Include '## Summary' (max 3 bullets), '## Model Layer', '## Gateway Layer', '## Conflict Rule', '## Kenneth Walkthrough', '## Migration', '## What This Still Cannot Do'. Cite real function names and variables. Under 1100 words.
+./worker.log:121:READ ./source/CONSTRAINTS.md COMPLETELY FIRST. It has the failure, the three hard constraints (measured), and what is wanted. ./source/bland_gateway.py contains the gateway resolver resolve_relative_date (read its accepted grammar). ./source/build_v62.py contains the current model extraction guidance for preference_from / preference_to / day_part.
+./worker.log:123:THE PROBLEM. A real patient said '"'"'Tomorrow july 28th'"'"' and the small extraction model wrote '"'"'thursday'"'"' (wrong: 07/28 is a Tuesday), so the gateway searched 07/30. The model cannot be trusted to compute a weekday. But (1) Bland exposes NO raw-message variable, so something must pass through a model-extracted variable, and (2) the gateway resolver rejects raw/compound/ordinal phrasing (409 on '"'"'tomorrow july 28th'"'"', '"'"'july 28th'"'"', '"'"'28th'"'"') and only accepts clean single phrases. Design the split so real patient phrasing reliably resolves to the correct date.
+./worker.log:126:1. MODEL LAYER: the minimal, safe extraction rule that CANNOT invent a weekday. What exactly does the model put in preference_from / preference_to for: an explicit month+day ('"'"'july 28th'"'"'), a relative word ('"'"'tomorrow'"'"', '"'"'next week'"'"'), a bare weekday the patient actually said ('"'"'tuesday'"'"'), and a compound ('"'"'tomorrow july 28th'"'"')? The rule must forbid deriving a weekday from a date or from '"'"'tomorrow'"'"'. Prefer copying the patient'"'"'s explicit token verbatim.
+./worker.log:127:2. GATEWAY LAYER: what resolve_relative_date must additionally accept so the model can pass patient-literal tokens through -- at minimum strip ordinal suffixes so '"'"'july 28th'"'"' and '"'"'28th'"'"' resolve, and say how. Do NOT undo the deployed Monday-anchored week fix.
+./worker.log:128:3. CONFLICT RULE: when the patient gives two date cues (relative + explicit) that AGREE (tomorrow + july 28th on a Monday), and when they DISAGREE, which wins and why.
+./worker.log:129:4. KENNETH WALKTHROUGH: trace '"'"'Tomorrow july 28th'"'"' through your design end to end and show it lands on 07/28.
+./worker.log:132:OUTPUT CONTRACT for ./DESIGN.md. Start with '"'"'# Date Handling Architecture'"'"'. Include '"'"'## Summary'"'"' (max 3 bullets), '"'"'## Model Layer'"'"', '"'"'## Gateway Layer'"'"', '"'"'## Conflict Rule'"'"', '"'"'## Kenneth Walkthrough'"'"', '"'"'## Migration'"'"', '"'"'## What This Still Cannot Do'"'"'. Cite real function names and variables. Under 1100 words.
+./worker.log:192:READ ./source/CONSTRAINTS.md COMPLETELY FIRST. It has the failure, the three hard constraints (measured), and what is wanted. ./source/bland_gateway.py contains the gateway resolver resolve_relative_date (read its accepted grammar). ./source/build_v62.py contains the current model extraction guidance for preference_from / preference_to / day_part.
+./worker.log:194:THE PROBLEM. A real patient said 'Tomorrow july 28th' and the small extraction model wrote 'thursday' (wrong: 07/28 is a Tuesday), so the gateway searched 07/30. The model cannot be trusted to compute a weekday. But (1) Bland exposes NO raw-message variable, so something must pass through a model-extracted variable, and (2) the gateway resolver rejects raw/compound/ordinal phrasing (409 on 'tomorrow july 28th', 'july 28th', '28th') and only accepts clean single phrases. Design the split so real patient phrasing reliably resolves to the correct date.
+./worker.log:197:1. MODEL LAYER: the minimal, safe extraction rule that CANNOT invent a weekday. What exactly does the model put in preference_from / preference_to for: an explicit month+day ('july 28th'), a relative word ('tomorrow', 'next week'), a bare weekday the patient actually said ('tuesday'), and a compound ('tomorrow july 28th')? The rule must forbid deriving a weekday from a date or from 'tomorrow'. Prefer copying the patient's explicit token verbatim.
+./worker.log:198:2. GATEWAY LAYER: what resolve_relative_date must additionally accept so the model can pass patient-literal tokens through -- at minimum strip ordinal suffixes so 'july 28th' and '28th' resolve, and say how. Do NOT undo the deployed Monday-anchored week fix.
+./worker.log:199:3. CONFLICT RULE: when the patient gives two date cues (relative + explicit) that AGREE (tomorrow + july 28th on a Monday), and when they DISAGREE, which wins and why.
+./worker.log:200:4. KENNETH WALKTHROUGH: trace 'Tomorrow july 28th' through your design end to end and show it lands on 07/28.
+./worker.log:203:OUTPUT CONTRACT for ./DESIGN.md. Start with '# Date Handling Architecture'. Include '## Summary' (max 3 bullets), '## Model Layer', '## Gateway Layer', '## Conflict Rule', '## Kenneth Walkthrough', '## Migration', '## What This Still Cannot Do'. Cite real function names and variables. Under 1100 words.
+./worker.log:566:Likely file: `DESIGN.md` only. Main risks: changing the model before the gateway accepts literal dates, accidentally preserving weekday derivation, or changing Monday-anchored week behavior. Verification will check the required headings, word limit, exact source grammar, all four extraction cases, conflict handling, Kenneth’s 07/28 path, and gateway-first migration. Rollback is deleting the single new design file. The Ringer HUD/run actions are skipped because your explicit boundary permits only `DESIGN.md` and no other changes or external actions.
+./worker.log:775:READ ./source/CONSTRAINTS.md COMPLETELY FIRST. It has the failure, the three hard constraints (measured), and what is wanted. ./source/bland_gateway.py contains the gateway resolver resolve_relative_date (read its accepted grammar). ./source/build_v62.py contains the current model extraction guidance for preference_from / preference_to / day_part.
+./worker.log:777:THE PROBLEM. A real patient said '"'"'Tomorrow july 28th'"'"' and the small extraction model wrote '"'"'thursday'"'"' (wrong: 07/28 is a Tuesday), so the gateway searched 07/30. The model cannot be trusted to compute a weekday. But (1) Bland exposes NO raw-message variable, so something must pass through a model-extracted variable, and (2) the gateway resolver rejects raw/compound/ordinal phrasing (409 on '"'"'tomorrow july 28th'"'"', '"'"'july 28th'"'"', '"'"'28th'"'"') and only accepts clean single phrases. Design the split so real patient phrasing reliably resolves to the correct date.
+./worker.log:780:1. MODEL LAYER: the minimal, safe extraction rule that CANNOT invent a weekday. What exactly does the model put in preference_from / preference_to for: an explicit month+day ('"'"'july 28th'"'"'), a relative word ('"'"'tomorrow'"'"', '"'"'next week'"'"'), a bare weekday the patient actually said ('"'"'tuesday'"'"'), and a compound ('"'"'tomorrow july 28th'"'"')? The rule must forbid deriving a weekday from a date or from '"'"'tomorrow'"'"'. Prefer copying the patient'"'"'s explicit token verbatim.
+./worker.log:781:2. GATEWAY LAYER: what resolve_relative_date must additionally accept so the model can pass patient-literal tokens through -- at minimum strip ordinal suffixes so '"'"'july 28th'"'"' and '"'"'28th'"'"' resolve, and say how. Do NOT undo the deployed Monday-anchored week fix.
+./worker.log:782:3. CONFLICT RULE: when the patient gives two date cues (relative + explicit) that AGREE (tomorrow + july 28th on a Monday), and when they DISAGREE, which wins and why.
+./worker.log:783:4. KENNETH WALKTHROUGH: trace '"'"'Tomorrow july 28th'"'"' through your design end to end and show it lands on 07/28.
+./worker.log:786:OUTPUT CONTRACT for ./DESIGN.md. Start with '"'"'# Date Handling Architecture'"'"'. Include '"'"'## Summary'"'"' (max 3 bullets), '"'"'## Model Layer'"'"', '"'"'## Gateway Layer'"'"', '"'"'## Conflict Rule'"'"', '"'"'## Kenneth Walkthrough'"'"', '"'"'## Migration'"'"', '"'"'## What This Still Cannot Do'"'"'. Cite real function names and variables. Under 1100 words.' < /dev/null
+./worker.log:802:READ ./source/CONSTRAINTS.md COMPLETELY FIRST. It has the failure, the three hard constraints (measured), and what is wanted. ./source/bland_gateway.py contains the gateway resolver resolve_relative_date (read its accepted grammar). ./source/build_v62.py contains the current model extraction guidance for preference_from / preference_to / day_part.
+./worker.log:804:THE PROBLEM. A real patient said 'Tomorrow july 28th' and the small extraction model wrote 'thursday' (wrong: 07/28 is a Tuesday), so the gateway searched 07/30. The model cannot be trusted to compute a weekday. But (1) Bland exposes NO raw-message variable, so something must pass through a model-extracted variable, and (2) the gateway resolver rejects raw/compound/ordinal phrasing (409 on 'tomorrow july 28th', 'july 28th', '28th') and only accepts clean single phrases. Design the split so real patient phrasing reliably resolves to the correct date.
+./worker.log:807:1. MODEL LAYER: the minimal, safe extraction rule that CANNOT invent a weekday. What exactly does the model put in preference_from / preference_to for: an explicit month+day ('july 28th'), a relative word ('tomorrow', 'next week'), a bare weekday the patient actually said ('tuesday'), and a compound ('tomorrow july 28th')? The rule must forbid deriving a weekday from a date or from 'tomorrow'. Prefer copying the patient's explicit token verbatim.
+./worker.log:808:2. GATEWAY LAYER: what resolve_relative_date must additionally accept so the model can pass patient-literal tokens through -- at minimum strip ordinal suffixes so 'july 28th' and '28th' resolve, and say how. Do NOT undo the deployed Monday-anchored week fix.
+./worker.log:809:3. CONFLICT RULE: when the patient gives two date cues (relative + explicit) that AGREE (tomorrow + july 28th on a Monday), and when they DISAGREE, which wins and why.
+./worker.log:810:4. KENNETH WALKTHROUGH: trace 'Tomorrow july 28th' through your design end to end and show it lands on 07/28.
+./worker.log:813:OUTPUT CONTRACT for ./DESIGN.md. Start with '# Date Handling Architecture'. Include '## Summary' (max 3 bullets), '## Model Layer', '## Gateway Layer', '## Conflict Rule', '## Kenneth Walkthrough', '## Migration', '## What This Still Cannot Do'. Cite real function names and variables. Under 1100 words.
+./worker.log:890:READ ./source/CONSTRAINTS.md COMPLETELY FIRST. It has the failure, the three hard constraints (measured), and what is wanted. ./source/bland_gateway.py contains the gateway resolver resolve_relative_date (read its accepted grammar). ./source/build_v62.py contains the current model extraction guidance for preference_from / preference_to / day_part.
+./worker.log:892:THE PROBLEM. A real patient said '"'"'Tomorrow july 28th'"'"' and the small extraction model wrote '"'"'thursday'"'"' (wrong: 07/28 is a Tuesday), so the gateway searched 07/30. The model cannot be trusted to compute a weekday. But (1) Bland exposes NO raw-message variable, so something must pass through a model-extracted variable, and (2) the gateway resolver rejects raw/compound/ordinal phrasing (409 on '"'"'tomorrow july 28th'"'"', '"'"'july 28th'"'"', '"'"'28th'"'"') and only accepts clean single phrases. Design the split so real patient phrasing reliably resolves to the correct date.
+./worker.log:895:1. MODEL LAYER: the minimal, safe extraction rule that CANNOT invent a weekday. What exactly does the model put in preference_from / preference_to for: an explicit month+day ('"'"'july 28th'"'"'), a relative word ('"'"'tomorrow'"'"', '"'"'next week'"'"'), a bare weekday the patient actually said ('"'"'tuesday'"'"'), and a compound ('"'"'tomorrow july 28th'"'"')? The rule must forbid deriving a weekday from a date or from '"'"'tomorrow'"'"'. Prefer copying the patient'"'"'s explicit token verbatim.
+./worker.log:896:2. GATEWAY LAYER: what resolve_relative_date must additionally accept so the model can pass patient-literal tokens through -- at minimum strip ordinal suffixes so '"'"'july 28th'"'"' and '"'"'28th'"'"' resolve, and say how. Do NOT undo the deployed Monday-anchored week fix.
+./worker.log:897:3. CONFLICT RULE: when the patient gives two date cues (relative + explicit) that AGREE (tomorrow + july 28th on a Monday), and when they DISAGREE, which wins and why.
+./worker.log:898:4. KENNETH WALKTHROUGH: trace '"'"'Tomorrow july 28th'"'"' through your design end to end and show it lands on 07/28.
+./worker.log:901:OUTPUT CONTRACT for ./DESIGN.md. Start with '"'"'# Date Handling Architecture'"'"'. Include '"'"'## Summary'"'"' (max 3 bullets), '"'"'## Model Layer'"'"', '"'"'## Gateway Layer'"'"', '"'"'## Conflict Rule'"'"', '"'"'## Kenneth Walkthrough'"'"', '"'"'## Migration'"'"', '"'"'## What This Still Cannot Do'"'"'. Cite real function names and variables. Under 1100 words.
+./worker.log:961:READ ./source/CONSTRAINTS.md COMPLETELY FIRST. It has the failure, the three hard constraints (measured), and what is wanted. ./source/bland_gateway.py contains the gateway resolver resolve_relative_date (read its accepted grammar). ./source/build_v62.py contains the current model extraction guidance for preference_from / preference_to / day_part.
+./worker.log:963:THE PROBLEM. A real patient said 'Tomorrow july 28th' and the small extraction model wrote 'thursday' (wrong: 07/28 is a Tuesday), so the gateway searched 07/30. The model cannot be trusted to compute a weekday. But (1) Bland exposes NO raw-message variable, so something must pass through a model-extracted variable, and (2) the gateway resolver rejects raw/compound/ordinal phrasing (409 on 'tomorrow july 28th', 'july 28th', '28th') and only accepts clean single phrases. Design the split so real patient phrasing reliably resolves to the correct date.
+./worker.log:966:1. MODEL LAYER: the minimal, safe extraction rule that CANNOT invent a weekday. What exactly does the model put in preference_from / preference_to for: an explicit month+day ('july 28th'), a relative word ('tomorrow', 'next week'), a bare weekday the patient actually said ('tuesday'), and a compound ('tomorrow july 28th')? The rule must forbid deriving a weekday from a date or from 'tomorrow'. Prefer copying the patient's explicit token verbatim.
+./worker.log:967:2. GATEWAY LAYER: what resolve_relative_date must additionally accept so the model can pass patient-literal tokens through -- at minimum strip ordinal suffixes so 'july 28th' and '28th' resolve, and say how. Do NOT undo the deployed Monday-anchored week fix.
+./worker.log:968:3. CONFLICT RULE: when the patient gives two date cues (relative + explicit) that AGREE (tomorrow + july 28th on a Monday), and when they DISAGREE, which wins and why.
+./worker.log:969:4. KENNETH WALKTHROUGH: trace 'Tomorrow july 28th' through your design end to end and show it lands on 07/28.
+./worker.log:972:OUTPUT CONTRACT for ./DESIGN.md. Start with '# Date Handling Architecture'. Include '## Summary' (max 3 bullets), '## Model Layer', '## Gateway Layer', '## Conflict Rule', '## Kenneth Walkthrough', '## Migration', '## What This Still Cannot Do'. Cite real function names and variables. Under 1100 words.
+./worker.log:1032:The source packet was not staged into this Ringer task, including in its Git objects. I will still produce the requested design from the measured constraints embedded in the task prompt, while clearly limiting claims about unobserved implementation details. The design keeps the model as a literal copier and moves ordinal, compound, and conflict semantics into `resolve_relative_date`.
+./worker.log:1046:+- The model is a transport layer for patient-literal date text, not a calendar: it copies date cues into `preference_from` / `preference_to` and never derives or substitutes a weekday.
+./worker.log:1047:+- `resolve_relative_date` becomes the deterministic calendar layer: it normalizes ordinals, recognizes explicit dates, and evaluates every cue in a compound phrase while preserving the deployed Monday-anchored week behavior.
+./worker.log:1054:+For a single requested date or period, put the copied phrase in `preference_from` and leave `preference_to` empty. Use `preference_to` only when the patient explicitly supplies a second endpoint, such as “July 28th through July 30th”; each endpoint is copied literally. Do not manufacture a range endpoint.
+./worker.log:1056:+| Patient wording | `preference_from` | `preference_to` |
+./worker.log:1058:+| “july 28th” | `july 28th` | empty |
+./worker.log:1062:+| “tomorrow july 28th” | `tomorrow july 28th` | empty |
+./worker.log:1068:+`resolve_relative_date` remains the sole calendar authority. Its existing clean single-phrase grammar, including relative words, bare weekdays, and Monday-anchored week resolution, remains intact. Add a normalization and compound-parsing front end before that existing logic:
+./worker.log:1071:+2. Strip English ordinal suffixes only when attached to a numeric day token: `1st`, `2nd`, `3rd`, `4th` … `31st` become `1`, `2`, `3`, `4` … `31`. Conceptually, match a word-boundary day number followed by `st|nd|rd|th`, case-insensitively. Thus `july 28th` becomes `july 28`, and `28th` becomes `28`.
+./worker.log:1073:+4. Tokenize a compound into independently resolvable cues, for example `tomorrow` and `july 28`. Run the existing resolver semantics on each cue, then apply the conflict rule below.
+./worker.log:1079:+If all cues resolve to the same calendar date, accept that date. On Monday July 27, both `tomorrow` and `july 28th` resolve to July 28, so the compound is corroborated.
+./worker.log:1085:+## Kenneth Walkthrough
+./worker.log:1089:+1. Kenneth says, “Tomorrow july 28th.”
+./worker.log:1090:+2. The extraction guidance in `build_v62.py` copies `tomorrow july 28th` into `preference_from`; `preference_to` is empty and `day_part` is unchanged/empty. No weekday is generated.
+./worker.log:1091:+3. `resolve_relative_date` normalizes the value to `tomorrow july 28`.
+./worker.log:1092:+4. It resolves `tomorrow` from July 27 to July 28 and resolves `july 28` to July 28.
+./worker.log:1097:+Deploy gateway support first. Add ordinal, explicit-date, and compound handling to `resolve_relative_date`, while regression-testing every currently accepted phrase and the Monday-anchored week cases. This is backward compatible with the current model output.
+./worker.log:1099:+After that deployment is verified, independently deploy the `build_v62.py` extraction-guidance change that sends patient-literal phrases. Gateway-first avoids a window where the model emits `july 28th` or a compound but the old gateway returns 409. During rollback, revert the model guidance first; the expanded gateway can continue accepting the old clean phrases safely.
+./worker.log:1115:+- The model is a transport layer for patient-literal date text, not a calendar: it copies date cues into `preference_from` / `preference_to` and never derives or substitutes a weekday.
+./worker.log:1116:+- `resolve_relative_date` becomes the deterministic calendar layer: it normalizes ordinals, recognizes explicit dates, and evaluates every cue in a compound phrase while preserving the deployed Monday-anchored week behavior.
+./worker.log:1123:+For a single requested date or period, put the copied phrase in `preference_from` and leave `preference_to` empty. Use `preference_to` only when the patient explicitly supplies a second endpoint, such as “July 28th through July 30th”; each endpoint is copied literally. Do not manufacture a range endpoint.
+./worker.log:1125:+| Patient wording | `preference_from` | `preference_to` |
+./worker.log:1127:+| “july 28th” | `july 28th` | empty |
+./worker.log:1131:+| “tomorrow july 28th” | `tomorrow july 28th` | empty |
+./worker.log:1137:+`resolve_relative_date` remains the sole calendar authority. Its existing clean single-phrase grammar, including relative words, bare weekdays, and Monday-anchored week resolution, remains intact. Add a normalization and compound-parsing front end before that existing logic:
+./worker.log:1140:+2. Strip English ordinal suffixes only when attached to a numeric day token: `1st`, `2nd`, `3rd`, `4th` … `31st` become `1`, `2`, `3`, `4` … `31`. Conceptually, match a word-boundary day number followed by `st|nd|rd|th`, case-insensitively. Thus `july 28th` becomes `july 28`, and `28th` becomes `28`.
+./worker.log:1142:+4. Tokenize a compound into independently resolvable cues, for example `tomorrow` and `july 28`. Run the existing resolver semantics on each cue, then apply the conflict rule below.
+./worker.log:1148:+If all cues resolve to the same calendar date, accept that date. On Monday July 27, both `tomorrow` and `july 28th` resolve to July 28, so the compound is corroborated.
+./worker.log:1154:+## Kenneth Walkthrough
+./worker.log:1158:+1. Kenneth says, “Tomorrow july 28th.”
+./worker.log:1159:+2. The extraction guidance in `build_v62.py` copies `tomorrow july 28th` into `preference_from`; `preference_to` is empty and `day_part` is unchanged/empty. No weekday is generated.
+./worker.log:1160:+3. `resolve_relative_date` normalizes the value to `tomorrow july 28`.
+./worker.log:1161:+4. It resolves `tomorrow` from July 27 to July 28 and resolves `july 28` to July 28.
+./worker.log:1166:+Deploy gateway support first. Add ordinal, explicit-date, and compound handling to `resolve_relative_date`, while regression-testing every currently accepted phrase and the Monday-anchored week cases. This is backward compatible with the current model output.
+./worker.log:1168:+After that deployment is verified, independently deploy the `build_v62.py` extraction-guidance change that sends patient-literal phrases. Gateway-first avoids a window where the model emits `july 28th` or a compound but the old gateway returns 409. During rollback, revert the model guidance first; the expanded gateway can continue accepting the old clean phrases safely.
+./worker.log:1179:required=['# Date Handling Architecture','## Summary','## Model Layer','## Gateway Layer','## Conflict Rule','## Kenneth Walkthrough','## Migration','## What This Still Cannot Do','resolve_relative_date','preference_from','preference_to','day_part','07/28']
+./worker.log:1192:- The model is a transport layer for patient-literal date text, not a calendar: it copies date cues into `preference_from` / `preference_to` and never derives or substitutes a weekday.
+./worker.log:1193:- `resolve_relative_date` becomes the deterministic calendar layer: it normalizes ordinals, recognizes explicit dates, and evaluates every cue in a compound phrase while preserving the deployed Monday-anchored week behavior.
+./worker.log:1200:For a single requested date or period, put the copied phrase in `preference_from` and leave `preference_to` empty. Use `preference_to` only when the patient explicitly supplies a second endpoint, such as “July 28th through July 30th”; each endpoint is copied literally. Do not manufacture a range endpoint.
+./worker.log:1202:| Patient wording | `preference_from` | `preference_to` |
+./worker.log:1204:| “july 28th” | `july 28th` | empty |
+./worker.log:1208:| “tomorrow july 28th” | `tomorrow july 28th` | empty |
+./worker.log:1214:`resolve_relative_date` remains the sole calendar authority. Its existing clean single-phrase grammar, including relative words, bare weekdays, and Monday-anchored week resolution, remains intact. Add a normalization and compound-parsing front end before that existing logic:
+./worker.log:1217:2. Strip English ordinal suffixes only when attached to a numeric day token: `1st`, `2nd`, `3rd`, `4th` … `31st` become `1`, `2`, `3`, `4` … `31`. Conceptually, match a word-boundary day number followed by `st|nd|rd|th`, case-insensitively. Thus `july 28th` becomes `july 28`, and `28th` becomes `28`.
+./worker.log:1219:4. Tokenize a compound into independently resolvable cues, for example `tomorrow` and `july 28`. Run the existing resolver semantics on each cue, then apply the conflict rule below.
+./worker.log:1225:If all cues resolve to the same calendar date, accept that date. On Monday July 27, both `tomorrow` and `july 28th` resolve to July 28, so the compound is corroborated.
+./worker.log:1231:## Kenneth Walkthrough
+./worker.log:1235:1. Kenneth says, “Tomorrow july 28th.”
+./worker.log:1236:2. The extraction guidance in `build_v62.py` copies `tomorrow july 28th` into `preference_from`; `preference_to` is empty and `day_part` is unchanged/empty. No weekday is generated.
+./worker.log:1237:3. `resolve_relative_date` normalizes the value to `tomorrow july 28`.
+./worker.log:1238:4. It resolves `tomorrow` from July 27 to July 28 and resolves `july 28` to July 28.
+./worker.log:1243:Deploy gateway support first. Add ordinal, explicit-date, and compound handling to `resolve_relative_date`, while regression-testing every currently accepted phrase and the Monday-anchored week cases. This is backward compatible with the current model output.
+./worker.log:1245:After that deployment is verified, independently deploy the `build_v62.py` extraction-guidance change that sends patient-literal phrases. Gateway-first avoids a window where the model emits `july 28th` or a compound but the old gateway returns 409. During rollback, revert the model guidance first; the expanded gateway can continue accepting the old clean phrases safely.
+./worker.log:1264:+- The model is a transport layer for patient-literal date text, not a calendar: it copies date cues into `preference_from` / `preference_to` and never derives or substitutes a weekday.
+./worker.log:1265:+- `resolve_relative_date` becomes the deterministic calendar layer: it normalizes ordinals, recognizes explicit dates, and evaluates every cue in a compound phrase while preserving the deployed Monday-anchored week behavior.
+./worker.log:1272:+For a single requested date or period, put the copied phrase in `preference_from` and leave `preference_to` empty. Use `preference_to` only when the patient explicitly supplies a second endpoint, such as “July 28th through July 30th”; each endpoint is copied literally. Do not manufacture a range endpoint.
+./worker.log:1274:+| Patient wording | `preference_from` | `preference_to` |
+./worker.log:1276:+| “july 28th” | `july 28th` | empty |
+./worker.log:1280:+| “tomorrow july 28th” | `tomorrow july 28th` | empty |
+./worker.log:1286:+`resolve_relative_date` remains the sole calendar authority. Its existing clean single-phrase grammar, including relative words, bare weekdays, and Monday-anchored week resolution, remains intact. Add a normalization and compound-parsing front end before that existing logic:
+./worker.log:1289:+2. Strip English ordinal suffixes only when attached to a numeric day token: `1st`, `2nd`, `3rd`, `4th` … `31st` become `1`, `2`, `3`, `4` … `31`. Conceptually, match a word-boundary day number followed by `st|nd|rd|th`, case-insensitively. Thus `july 28th` becomes `july 28`, and `28th` becomes `28`.
+./worker.log:1291:+4. Tokenize a compound into independently resolvable cues, for example `tomorrow` and `july 28`. Run the existing resolver semantics on each cue, then apply the conflict rule below.
+./worker.log:1297:+If all cues resolve to the same calendar date, accept that date. On Monday July 27, both `tomorrow` and `july 28th` resolve to July 28, so the compound is corroborated.
+./worker.log:1303:+## Kenneth Walkthrough
+./worker.log:1307:+1. Kenneth says, “Tomorrow july 28th.”
+./worker.log:1308:+2. The extraction guidance in `build_v62.py` copies `tomorrow july 28th` into `preference_from`; `preference_to` is empty and `day_part` is unchanged/empty. No weekday is generated.
+./worker.log:1309:+3. `resolve_relative_date` normalizes the value to `tomorrow july 28`.
+./worker.log:1310:+4. It resolves `tomorrow` from July 27 to July 28 and resolves `july 28` to July 28.
+./worker.log:1315:+Deploy gateway support first. Add ordinal, explicit-date, and compound handling to `resolve_relative_date`, while regression-testing every currently accepted phrase and the Monday-anchored week cases. This is backward compatible with the current model output.
+./worker.log:1317:+After that deployment is verified, independently deploy the `build_v62.py` extraction-guidance change that sends patient-literal phrases. Gateway-first avoids a window where the model emits `july 28th` or a compound but the old gateway returns 409. During rollback, revert the model guidance first; the expanded gateway can continue accepting the old clean phrases safely.
+./worker.log:1328:Verified by: Required headings, three summary bullets, named functions/variables, Kenneth’s 07/28 walkthrough, gateway-first migration, and under-1,100-word limit all passed.
+./worker.log:1354:+- The model is a transport layer for patient-literal date text, not a calendar: it copies date cues into `preference_from` / `preference_to` and never derives or substitutes a weekday.
+./worker.log:1355:+- `resolve_relative_date` becomes the deterministic calendar layer: it normalizes ordinals, recognizes explicit dates, and evaluates every cue in a compound phrase while preserving the deployed Monday-anchored week behavior.
+./worker.log:1362:+For a single requested date or period, put the copied phrase in `preference_from` and leave `preference_to` empty. Use `preference_to` only when the patient explicitly supplies a second endpoint, such as “July 28th through July 30th”; each endpoint is copied literally. Do not manufacture a range endpoint.
+./worker.log:1364:+| Patient wording | `preference_from` | `preference_to` |
+./worker.log:1366:+| “july 28th” | `july 28th` | empty |
+./worker.log:1370:+| “tomorrow july 28th” | `tomorrow july 28th` | empty |
+./worker.log:1376:+`resolve_relative_date` remains the sole calendar authority. Its existing clean single-phrase grammar, including relative words, bare weekdays, and Monday-anchored week resolution, remains intact. Add a normalization and compound-parsing front end before that existing logic:
+./worker.log:1379:+2. Strip English ordinal suffixes only when attached to a numeric day token: `1st`, `2nd`, `3rd`, `4th` … `31st` become `1`, `2`, `3`, `4` … `31`. Conceptually, match a word-boundary day number followed by `st|nd|rd|th`, case-insensitively. Thus `july 28th` becomes `july 28`, and `28th` becomes `28`.
+./worker.log:1381:+4. Tokenize a compound into independently resolvable cues, for example `tomorrow` and `july 28`. Run the existing resolver semantics on each cue, then apply the conflict rule below.
+./worker.log:1387:+If all cues resolve to the same calendar date, accept that date. On Monday July 27, both `tomorrow` and `july 28th` resolve to July 28, so the compound is corroborated.
+./worker.log:1393:+## Kenneth Walkthrough
+./worker.log:1397:+1. Kenneth says, “Tomorrow july 28th.”
+./worker.log:1398:+2. The extraction guidance in `build_v62.py` copies `tomorrow july 28th` into `preference_from`; `preference_to` is empty and `day_part` is unchanged/empty. No weekday is generated.
+./worker.log:1399:+3. `resolve_relative_date` normalizes the value to `tomorrow july 28`.
+./worker.log:1400:+4. It resolves `tomorrow` from July 27 to July 28 and resolves `july 28` to July 28.
+./worker.log:1405:+Deploy gateway support first. Add ordinal, explicit-date, and compound handling to `resolve_relative_date`, while regression-testing every currently accepted phrase and the Monday-anchored week cases. This is backward compatible with the current model output.
+./worker.log:1407:+After that deployment is verified, independently deploy the `build_v62.py` extraction-guidance change that sends patient-literal phrases. Gateway-first avoids a window where the model emits `july 28th` or a compound but the old gateway returns 409. During rollback, revert the model guidance first; the expanded gateway can continue accepting the old clean phrases safely.
+./worker.log:1419:Verified by: Required headings, three summary bullets, named functions/variables, Kenneth’s 07/28 walkthrough, gateway-first migration, and under-1,100-word limit all passed.
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/build_v62.py:51:# A live patient was shown "preference_from: monday / preference_to: monday" because the
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/build_v62.py:76:    ("preference_from",
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/build_v62.py:111:     "The last day the patient will accept, in exactly the same forms as preference_from. If "
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/build_v62.py:114:     "preference_from; never pass abbreviations such as tues, nxt or wk through verbatim. If they "
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/build_v62.py:116:     "friday next week. When the patient names a week qualifier but no weekday, preference_from "
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/build_v62.py:122:     "left blank: whenever preference_from is unclear, write unclear here too."),
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/build_v62.py:202:SEARCH_BODY = ('{"store":"{{store}}","from":"{{preference_from}}","to":"{{preference_to}}",'
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/build_v62.py:586:       [["preference_from", "==", "unclear", {"id": "n_clarify", "name": "Could not read the week they meant"}],
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/CONSTRAINTS.md; nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/build_v62.py | sed -n '45,130p'; rg -n \"clamp_availability_range|bad --from|409|conflict reason|clarif\" /home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py | head -100" in /home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+ succeeded in 0ms:
+     1	# Date-handling architecture: the real constraints (measured 2026-07-27)
+     2	
+     3	## The failure that triggered this
+     4	A real patient texted "Tomorrow july 28th". The small node model extracted
+     5	preference_from = preference_to = "thursday". The next Thursday from Mon 07/27 is 07/30,
+     6	so the gateway correctly resolved "thursday" and offered 07/30 -- two days off. The model
+     7	COMPUTED a weekday (and got it wrong: 07/28 is a Tuesday, not Thursday) instead of
+     8	passing the patient's words through. Prompt rules already say "never work out a calendar
+     9	date yourself" and the model disobeyed. Four prior reviews called this the extraction
+    10	model's reliability ceiling; prompt-tightening is documented-insufficient.
+    11	
+    12	## Hard constraint 1: Bland exposes NO raw-message variable
+    13	The full pathway variable set available to a webhook body is exactly:
+    14	BlandStatusCode, callID, campaign, channel, count, day_part, exam_type_id, from, now,
+    15	now_utc, ok, patient_first, patient_id, preference_from, preference_to, recall_cell,
+    16	recall_patient_id, recall_ref, slot_1_*, slot_2_*, slot_count, store, timezone, to, today.
+    17	There is NO variable holding the raw inbound patient text. Whatever reaches the gateway
+    18	MUST pass through a model-extracted variable. We cannot bypass the model.
+    19	
+    20	## Hard constraint 2: the gateway resolver rejects raw / compound / ordinal phrasing
+    21	Measured against the live gateway resolver (resolve_relative_date in bland_gateway.py):
+    22	- "Tomorrow july 28th" -> 409 bad --from: unrecognized
+    23	- "tomorrow july 28"   -> 409
+    24	- "july 28th"          -> 409  (ordinal suffix rejected)
+    25	- "28th"               -> 409
+    26	- "tomorrow"           -> OK (07/28)
+    27	- "tuesday"            -> OK (07/28, next occurrence)
+    28	- "next tuesday"       -> OK (07/28)
+    29	- "july 28" / "aug 5" / "08/05/2026" / "2026-08-03" -> OK
+    30	The resolver's accepted grammar is in source/bland_gateway.py resolve_relative_date.
+    31	
+    32	## Hard constraint 3: the model computes weekdays WRONG
+    33	The model must never infer or compute a weekday from a date. It rendered 07/28 as
+    34	"thursday". It cannot be trusted to derive a weekday.
+    35	
+    36	## What is wanted
+    37	A design for how "any real patient date phrasing" reliably becomes the correct gateway
+    38	date, given the three constraints. It spans TWO layers and must say exactly what each does:
+    39	- The MODEL (extraction on n_ask / n_negotiate etc): the smallest, safest transformation
+    40	  that cannot invent a weekday. For example: copy the patient's most explicit date token
+    41	  verbatim; only emit a weekday word if the patient literally said that weekday; never
+    42	  derive one from a date or from "tomorrow".
+    43	- The GATEWAY resolver (bland_gateway.py resolve_relative_date): what it must additionally
+    44	  accept so the model can pass patient-literal phrasing through -- for example strip an
+    45	  ordinal suffix ("28th" -> "28"), accept "july 28th", and a rule for a compound carrying
+    46	  two date cues (prefer the explicit month-day; define conflict handling).
+    47	Also state where "tomorrow" is handled (the gateway already does it) and the rule when the
+    48	patient gives BOTH a relative word and an explicit date that agree, and when they disagree.
+    49	Note the Monday-anchored week fix already deployed; do not undo it.
+    45	        "never a decline. Only an explicit no ends this; if it is unclear whether they still want an "
+    46	        "appointment, ask them plainly to confirm.")
+    47	
+    48	NO_PRICE = (" Never say free. Never mention a discount, a package, or saving money. Never state "
+    49	            "what any specific plan covers and never quote a price or a dollar amount.")
+    50	
+    51	# A live patient was shown "preference_from: monday / preference_to: monday" because the
+    52	# node's task described what to CAPTURE. Capture is the extraction config's job and happens
+    53	# automatically; the prompt must only ever describe what to SAY.
+    54	NO_LEAK = (" The message you send is read by a patient on their phone. Write only ordinary "
+    55	           "conversational English or Chinese. Never write an internal field name, a variable "
+    56	           "name, an underscore_name, a colon-and-value line, a list of captured values, a "
+    57	           "record id, or any note about what you are storing or doing internally.")
+    58	
+    59	# Measured against the live gateway on 2026-07-25, not assumed:
+    60	#   accepted -> monday, next monday, mon, tuesday, tomorrow, august 3, 08/03/2026, 2026-08-03
+    61	#   REJECTED -> next week, this week, in 2 weeks, next month
+    62	# A weekday word resolves to the next occurrence of that weekday server-side, and a range of
+    63	# two weekday words works (monday..friday returned 126 openings across Mon-Fri). So a vague
+    64	# next-week request becomes next week..friday next week and the SERVER does the date
+    65	# arithmetic. The model is never asked to work out a calendar date, which is the failure mode
+    66	# this design avoids.
+    67	# EVERY field must always receive a value. An unfilled variable is substituted as a real
+    68	# JSON null, which drops the quotes out of the body template and makes the gateway answer
+    69	# 400 "field 'after' must be a string". Measured: the literal word none is accepted and
+    70	# ignored, so it is the sentinel for "the patient did not say". Never leave one blank.
+    71	# Two closed-vocabulary tokens, nothing more. Every field the model used to carry beyond
+    72	# these fed a gateway parameter measured to be ignored, so they added failure modes and no
+    73	# capability. Clock times and parts of the day are deliberately NOT captured: the gateway
+    74	# cannot filter on them, so capturing them only invited values into the wrong fields.
+    75	PREFERENCE_VARS = [
+    76	    ("preference_from",
+    77	     "The first day the patient wants, written in one of these forms and nothing else. A "
+    78	     "weekday on its own, such as monday or wednesday, means the next one coming up. If they "
+    79	     "used a week qualifier, ALWAYS PRESERVE it by writing the weekday followed by its full "
+    80	     "qualifier. For example, wednesday next week stays wednesday next week. If they name "
+    81	     "a weekday in texting shorthand, expand it to the full accepted weekday: mon becomes "
+    82	     "monday, tue or tues becomes tuesday, wed becomes wednesday, thu or thurs becomes "
+    83	     "thursday, and fri becomes friday. Expand clipped week qualifiers too: `tues nxt wk` and "
+    84	     "every clipped variant become tuesday next week, never a bare weekday and never shorthand. "
+    85	     "If they asked for next week without naming a day, write next week. Bare weekdays "
+    86	     "with no week qualifier stay bare. If they name "
+    87	     "a month and a day, write the month and the number, such as august 5 or aug 12, or write "
+    88	     "08/05/2026. Never write a month on its own. Never write phrases like the week after that "
+    89	     "or in two weeks, because the schedule cannot read them. Never work out a calendar date "
+    90	     "yourself: pass the patient's own wording through in one of the forms above. Never put a "
+    91	     "clock time or a part of the day here. Write the single word unclear ONLY when the "
+    92	     "patient NAMED a timeframe you cannot write in one of the forms above: the week after "
+    93	     "that, in two weeks, in about a month, a bare month name, or any week you would have to "
+    94	     "work out for yourself. If the patient named NO day and NO week at all, whether they said "
+    95	     "nothing about timing or spoke only about a part of the day such as the latest you have, "
+    96	     "put monday: they have not asked for a week, so searching the soonest one contradicts "
+    97	     "nothing they said, and the offer they get back carries its own date. This field must "
+    98	     "NEVER be left blank. The distinction that matters: unclear means they told you a "
+    99	     "timeframe you cannot render, never that they told you nothing."),
+   100	    ("day_part",
+   101	     "Exactly one of these five words: morning, afternoon, late, outside, none. Use morning if the "
+   102	     "patient said morning. Morning clock times within opening hours map to morning. Use afternoon "
+   103	     "if they said afternoon, midday, or lunchtime. Noon to 2:59pm maps to afternoon. Use late if "
+   104	     "they said after 3, after 4, 3pm or later, late afternoon, late in the day, the latest, or end "
+   105	     "of day. All of those phrases map to late, and the 3pm boundary is exact. Use outside if they "
+   106	     "asked for an exact clock time outside normal clinic hours, such as 3am or 11pm. "
+   107	     "This is a routing token only and is never sent to the scheduler. Use none "
+   108	     "if they said nothing about what part of the day suits them. Never put a "
+   109	     "date, a weekday or a clock time in this field. This field must NEVER be left blank."),
+   110	    ("preference_to",
+   111	     "The last day the patient will accept, in exactly the same forms as preference_from. If "
+   112	     "they named one day, repeat it here unchanged, INCLUDING any next week qualifier. If they "
+   113	     "used texting shorthand, expand it to the same full accepted weekday written in "
+   114	     "preference_from; never pass abbreviations such as tues, nxt or wk through verbatim. If they "
+   115	     "gave a span, put the later day. If they asked for next week in general with no day, put "
+   116	     "friday next week. When the patient names a week qualifier but no weekday, preference_from "
+   117	     "is the week phrase alone and preference_to is friday followed by that same full week "
+   118	     "qualifier, giving the pair next week through friday next week. A part of day such as "
+   119	     "morning or afternoon is NOT a weekday and does not change this week-only range. If they "
+   120	     "named no day and no week at all, put friday. Bare weekdays with "
+   121	     "no week qualifier stay bare. Never put a clock time here. This field must NEVER be "
+   122	     "left blank: whenever preference_from is unclear, write unclear here too."),
+   123	]
+   124	
+   125	# The clarify node asks ONLY which date the patient means, so a reply there is a bare date
+   126	# and re-extracting day_part from it would come back none. A patient who said "the latest
+   127	# you have" and was then asked for a date would be shown morning slots. A variable that is
+   128	# not in a node's extractVars keeps the value it already had, so leaving day_part out here
+   129	# is the platform's own carry-forward and needs no memory the platform does not have.
+   130	WINDOW_VARS = [v for v in PREFERENCE_VARS if v[0] != "day_part"]
+479:    # the CLI verbatim -> 409). Bare/this/next weekday means the next future
+606:def clamp_availability_range(body: dict) -> None:
+1130:        clamp_availability_range(body)
+1834:                    status = 409
+1860:                            status = 409
+2078:            log.info("cli refusal 409: %s", stderr_line[:160])
+2079:            status = 409
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py | sed -n '1090,1150p'; nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py | sed -n '1790,1870p'; nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py | sed -n '2030,2090p'" in /home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+ succeeded in 0ms:
+  1090	        "-- Sent automatically by the CVC booking assistant. Reply is not monitored.",
+  1091	    ]
+  1092	    body_text = "\n".join(lines)
+  1093	    resp = _ses().send_email(
+  1094	        FromEmailAddress=CALLBACK_FROM,
+  1095	        Destination={"ToAddresses": [CALLBACK_INBOX]},
+  1096	        Content={"Simple": {
+  1097	            "Subject": {"Data": subject, "Charset": "UTF-8"},
+  1098	            "Body": {"Text": {"Data": body_text, "Charset": "UTF-8"}},
+  1099	        }},
+  1100	    )
+  1101	    gchat = post_google_chat(f"*{subject}*\n{body_text}")
+  1102	    sms = "n/a"
+  1103	    if is_urgent:
+  1104	        sms = "skipped"
+  1105	        # The alert fires before the pathway's hours check, so the gateway resolves
+  1106	        # office state itself (deterministic) to route the ping: front desk when
+  1107	        # open, on-call doctor after hours.
+  1108	        state = "after_hours"
+  1109	        try:
+  1110	            state = hours_state(store, datetime.now(ZoneInfo("America/New_York")))["state"]
+  1111	        except Exception:
+  1112	            pass
+  1113	        recipients = alert_sms_recipients(state)
+  1114	        if os.environ.get("CVC_ALERT_SMS_ENABLED") == "1" and recipients:
+  1115	            try:
+  1116	                # PHI-free: only the constant SMS_PING is ever published.
+  1117	                for num in recipients:
+  1118	                    _sns().publish(PhoneNumber=num, Message=SMS_PING)
+  1119	                sms = "sent"
+  1120	            except Exception:
+  1121	                log.warning("urgent SMS ping failed (secure-channel alert unaffected)")
+  1122	                sms = "failed"
+  1123	    return {"ok": True, "delivered": True, "email": True, "google_chat": gchat,
+  1124	            "sms": sms, "message_id": resp.get("MessageId", "")}
+  1125	
+  1126	
+  1127	def build_argv(path: str, body: dict) -> tuple[list[str], bool]:
+  1128	    verb, flagmap, is_write = ENDPOINTS[path]
+  1129	    if path == "/availability":
+  1130	        clamp_availability_range(body)
+  1131	    argv = [CLI, "appt", verb, "--agent", "--reason", f"bland-{verb}"]
+  1132	    pref = str(body.pop("time_pref", "")).strip().lower()
+  1133	    for flag, val in TIME_PREFS.get(pref, []):
+  1134	        argv += [flag, val]
+  1135	    # Force the store's real provider (ignore any caller-supplied doctor) so only
+  1136	    # Bhumi@Kennesaw / Mital@East Cobb slots are ever offered or booked.
+  1137	    forced_doctor = STORE_DOCTORS.get(str(body.get("store", "")).strip().lower()) if "doctor" in flagmap else None
+  1138	    if forced_doctor:
+  1139	        body.pop("doctor", None)
+  1140	    allow_conflict = body.pop("allow_conflict", None) if path == "/book" else None
+  1141	    status = body.pop("status", None) if path == "/book" else None
+  1142	    category = body.pop("category", None) if path in ("/book", "/book-new-patient") else None
+  1143	    # Reschedule resolves the target patient's id inside the CLI.  The gateway
+  1144	    # accepts an optional already-resolved id solely to open the CLI's per-call
+  1145	    # test-patient firebreak; it must never become a CLI flag.
+  1146	    firebreak_patient_id = body.pop("patient_id", None) if path == "/reschedule" else None
+  1147	    if firebreak_patient_id is not None and not re.fullmatch(r"\d+", str(firebreak_patient_id).strip()):
+  1148	        raise ValueError("field 'patient_id' must be numeric")
+  1149	    if status is not None:
+  1150	        status = str(status).strip().lower()
+  1790	            except (ValueError, json.JSONDecodeError) as exc:
+  1791	                log.info("rejected 400: %s", exc)
+  1792	                status = 400
+  1793	                return self._send(status, {"error": str(exc)})
+  1794	
+  1795	            env = dict(os.environ)
+  1796	            # Route ONLY the EyeCloud CLI's EyeCloud HTTPS through the trusted office
+  1797	            # exit node (PerimeterX blocks raw AWS IPs). Everything AWS must stay
+  1798	            # DIRECT: the Fargate task-role creds served from the link-local metadata
+  1799	            # endpoint (169.254.170.2) and all *.amazonaws.com calls (audit WORM ->
+  1800	            # DynamoDB/Lambda/S3, KMS, STS/Secrets via the eyecloud-pro-aws-env
+  1801	            # wrapper on writes). Without NO_PROXY those would tunnel through the exit
+  1802	            # node and credential resolution / audit writes break.
+  1803	            eyecloud_proxy = os.environ.get("ECP_EYECLOUD_PROXY", "")
+  1804	            if eyecloud_proxy:
+  1805	                no_proxy = os.environ.get(
+  1806	                    "ECP_EYECLOUD_NO_PROXY",
+  1807	                    "169.254.169.254,169.254.170.2,.amazonaws.com,localhost,127.0.0.1",
+  1808	                )
+  1809	                env["HTTPS_PROXY"] = eyecloud_proxy
+  1810	                env["HTTP_PROXY"] = eyecloud_proxy
+  1811	                env["NO_PROXY"] = no_proxy
+  1812	                env["no_proxy"] = no_proxy
+  1813	            if confirm and os.environ.get("ECP_CONFIRM_AWS_PROFILE"):
+  1814	                env["AWS_PROFILE"] = os.environ["ECP_CONFIRM_AWS_PROFILE"]
+  1815	            # Open the CLI test-patient firebreak only for the existing patient
+  1816	            # resolved by this request.  /reschedule receives that optional id from
+  1817	            # the preceding appointment-lookup lane and never sends it to the CLI.
+  1818	            book_pid = ""
+  1819	            if self.path in ("/book", "/reschedule"):
+  1820	                firebreak_pid = str(body.get("patient_id", "")).strip()
+  1821	                if firebreak_pid:
+  1822	                    env["EYECLOUD_PRO_APPT_TEST_PATIENTS"] = firebreak_pid
+  1823	                if self.path == "/book":
+  1824	                    book_pid = firebreak_pid
+  1825	            if appt_list_identity_search:
+  1826	                try:
+  1827	                    search_proc, search_result, retried = run_patient_search(
+  1828	                        {"last": cli_body["last"], "dob": cli_body["dob"]}, env
+  1829	                    )
+  1830	                except subprocess.TimeoutExpired:
+  1831	                    status = 504
+  1832	                    return self._send(status, {"error": "cli timeout"})
+  1833	                if search_proc.returncode != 0:
+  1834	                    status = 409
+  1835	                    return self._send(
+  1836	                        status,
+  1837	                        {"ok": False, "error": "upstream_refused"},
+  1838	                    )
+  1839	                search_result = filter_test_mode("/patient-search", search_result)
+  1840	                patients = search_result.get("patients", []) if isinstance(search_result, dict) else []
+  1841	                capped_records = len(patients) > 5
+  1842	                appointments = []
+  1843	                records_checked = 0
+  1844	                source_metadata = []
+  1845	                try:
+  1846	                    for patient in patients[:5]:
+  1847	                        patient_id = str(patient.get("patient_id", "")).strip() if isinstance(patient, dict) else ""
+  1848	                        if not re.fullmatch(r"\d+", patient_id):
+  1849	                            continue
+  1850	                        list_body = {
+  1851	                            key: cli_body[key]
+  1852	                            for key in ("store", "from", "to", "include_past")
+  1853	                            if key in cli_body
+  1854	                        }
+  1855	                        list_body["patient_id"] = patient_id
+  1856	                        list_argv, _ = build_argv("/appt-list", list_body)
+  1857	                        list_proc = run_cli(list_argv, env)
+  1858	                        records_checked += 1
+  1859	                        if list_proc.returncode != 0:
+  1860	                            status = 409
+  1861	                            return self._send(
+  1862	                                status,
+  1863	                                {"ok": False, "error": "upstream_refused"},
+  1864	                            )
+  1865	                        list_result = cli_json_result(list_proc)
+  1866	                        appointments.extend(appointment_items(list_result))
+  1867	                        metadata = appointment_metadata(list_result)
+  1868	                        if metadata:
+  1869	                            source_metadata.append(metadata)
+  1870	                except subprocess.TimeoutExpired:
+  2030	                        try:
+  2031	                            relax_body = {k: v for k, v in body.items() if k != "time_pref"}
+  2032	                            argv_r, _ = build_argv(self.path, relax_body)
+  2033	                            p_r = run_cli(argv_r, env)
+  2034	                            relaxed = availability_envelope(cli_json_result(p_r)) if p_r.returncode == 0 else None
+  2035	                            if relaxed and relaxed["count"]:
+  2036	                                relaxed["time_pref_relaxed"] = pref
+  2037	                                result = relaxed
+  2038	                        except Exception as exc:
+  2039	                            log.info("time-pref relax retry failed: %s", type(exc).__name__)
+  2040	                    alt = ALT_STORES.get(str(body.get("store", "")).strip().lower())
+  2041	                    result.update({"alt_store": "", "alt_count": 0, "alt_first_start": ""})
+  2042	                    if result["count"] == 0 and alt:
+  2043	                        try:
+  2044	                            argv2, _ = build_argv(self.path, {**body, "store": alt})
+  2045	                            p2 = run_cli(argv2, env)
+  2046	                            alt_res = availability_envelope(
+  2047	                                json.loads(p2.stdout.strip()) if p2.returncode == 0 and p2.stdout.strip() else []
+  2048	                            )
+  2049	                            result.update(
+  2050	                                {
+  2051	                                    "alt_store": alt,
+  2052	                                    "alt_count": alt_res["count"],
+  2053	                                    "alt_first_start": alt_res["first_start"],
+  2054	                                }
+  2055	                            )
+  2056	                        except Exception as exc:
+  2057	                            log.info("alt-store lookup failed: %s", type(exc).__name__)
+  2058	                if self.path == "/appt-list":
+  2059	                    result = normalized_appointment_result(result)
+  2060	                status = 200
+  2061	                return self._send(status, {"ok": True, "result": result})
+  2062	
+  2063	            if self.path == "/patient-search" and pinned_patient_id:
+  2064	                status = 200
+  2065	                empty = augment_search_envelope(
+  2066	                    patient_get_envelope(None, patient_profile), recall_category
+  2067	                )
+  2068	                empty = finalize_patient_search_envelope(
+  2069	                    empty, patient_query_mode, patient_profile
+  2070	                )
+  2071	                return self._send(status, {"ok": True, "result": empty})
+  2072	
+  2073	            if self.path == "/query":
+  2074	                status = 502
+  2075	                return self._send(status, {"ok": False, "error": "upstream_unavailable"})
+  2076	
+  2077	            stderr_line = (proc.stderr.strip().splitlines() or [""])[-1]
+  2078	            log.info("cli refusal 409: %s", stderr_line[:160])
+  2079	            status = 409
+  2080	            refusal = filter_test_mode(self.path, result)
+  2081	            if isinstance(refusal, dict):
+  2082	                for key in ("possible_duplicates", "patients", "matches", "ptData", "demographics", "result"):
+  2083	                    if key in refusal:
+  2084	                        value = refusal[key]
+  2085	                        refusal[key] = {"redacted": True, "count": len(value) if isinstance(value, list) else 1}
+  2086	            return self._send(status, {"ok": False, "exit_code": proc.returncode, "error": stderr_line, "result": refusal})
+  2087	        finally:
+  2088	            if self.path == "/query":
+  2089	                query_audit(
+  2090	                    query_request_id,
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+The central failure mode is now clear: gateway conflict detection is only valuable if disagreement causes a hard clarification. The design instead detects disagreement and then still chooses the explicit date, so it pays the shared-parser complexity cost without getting the strongest safety benefit. I also found two concrete contract mismatches in the proposed walkthrough/migration.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba /home/ankit114/.codex/memories/MEMORY.md | sed -n '58,86p'; git status --short 2>/dev/null || true" in /home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design
+ succeeded in 0ms:
+    58	# Task Group: Bland CVC phone rescheduling live goal
+    59	
+    60	scope: Goal-setting and guarded implementation planning for a live CVC Bland phone reschedule path; use when the user wants same-office phone rescheduling made real, not left as staff-message fallback or analysis-only.
+    61	applies_to: cwd=/mnt/d_drive/repos/bland; reuse_rule=safe for this CVC Bland / EyeCloud / conductor lane, but treat live rollout state, Project Room freshness, and provider/write authorization as time-specific
+    62	
+    63	## Task 1: Define the CVC phone reschedule live goal, partial
+    64	
+    65	### rollout_summary_files
+    66	
+    67	- rollout_summaries/2026-07-21T21-21-04-Hc9Y-cvc_phone_reschedule_live_goal.md (cwd=/mnt/d_drive/repos/bland, rollout_path=/home/ankit114/.codex/sessions/2026/07/21/rollout-2026-07-21T17-21-09-019f868d-bf4e-7c51-9630-a18dc09d53e2.jsonl, updated_at=2026-07-22T00:33:48+00:00, thread_id=019f868d-bf4e-7c51-9630-a18dc09d53e2, planning/spec boundary only; live deploy goal recorded without deployment authorization)
+    68	
+    69	### keywords
+    70	
+    71	- bland, eyecloud, cvc, reschedule, same-day, live, conductor, appt.reschedule, project-room, staff-confirmed cancellation, verify-after-write
+    72	
+    73	## User preferences
+    74	
+    75	- when the user said "set up reschdyel and wite it live" and later "atore that we need to sert up reschdyel and wite it live" -> treat the required end state as a live deployable reschedule feature, not just analysis or a staff-message fallback [Task 1]
+    76	- when the assistant asked to choose between within-24-hours and same-day and the user answered "b" -> default this lane to same-day rescheduling when EyeCloud shows a valid future slot [Task 1]
+    77	- when cancellation was recorded as staff-confirmed and not corrected by the user -> keep cancellation separate from the direct reschedule flow unless the user explicitly broadens scope [Task 1]
+    78	
+    79	## Reusable knowledge
+    80	
+    81	- Same-office rescheduling with exact patient identity, exactly one eligible appointment, explicit old-to-new readback, signed `appt.reschedule`, and EyeCloud read-after-write verification is the intended first live scope [Task 1]
+    82	- The safer write boundary is the conductor `appt.reschedule` path in `internal/cli/gateway_dispatch_prod.go`, not the older Python `/reschedule` path [Task 1]
+    83	- The conductor dispatcher resolves the target appointment and verifies the write back with `productionVerify` / `verifyWrite` [Task 1]
+    84	- The route allowlist already includes `/v1/appt/reschedule`, and the focused gateway/conductor test slice was the right proof lane even though the broader CLI suite had an unrelated PracticeCanopy fail-closed gate [Task 1]
+    85	- Related planning note: `extensions/ad_hoc/notes/2026-07-21T2025-cvc-live-reschedule-goal.md` captures the live-goal boundary, fallback cases, definition of done, and authorization boundary for this lane [Task 1]
+    86	
+ M ../../../../README.md
+ M ../../../../config.sample.toml
+ M ../../../../docs/MODEL-NOTES.md
+ M ../../../../registry/model-identity.toml
+ M ../../../../ringer.py
+ M ../../../../templates/README.md
+ M ../../../../templates/asset-swarm/README.md
+ M ../../../../tests/test_catalog.py
+ M ../../../../tests/test_model_db.py
+ M ../../../../tests/test_model_field.py
+ M ../../../../tests/test_model_log.py
+ M ../../../../tests/test_scoreboard_page.py
+?? ../../../../docs/MANIFEST-GUIDE.md
+?? ../../../../docs/MODEL-MENU.md
+?? ../../../../docs/SEEDANCE-VIDEO.md
+?? ../../../../docs/sales-ops-full-automation-plan.md
+?? ../../../../engines/claude-oauth.sh
+?? ../../../../engines/codex-oauth.sh
+?? ../../../../engines/gemini-oauth-settings.json
+?? ../../../../engines/gemini-oauth.sh
+?? ../../../../engines/opencode-auth-policy.sh
+?? ../../../../engines/opencode-xai-aws.sh
+?? ../../../../engines/openrouter-video.py
+?? ../../../../engines/test_gemini_oauth_wrapper.py
+?? ../../../../local-probes/
+?? ../../../../local-sales-ops/
+?? ../../../
+?? ../../../../swarm.json
+?? ../../../../templates/asset-swarm/checks/check_generated_video.py
+?? ../../../../templates/asset-swarm/seedance.manifest.json
+?? ../../../../templates/fable-sol-loop/
+?? ../../../../tests/test_codex_isolation.py
+?? ../../../../tests/test_oauth_routing_local.py
+?? ../../../../tests/test_oauth_wrappers.py
+?? ../../../../tests/test_openrouter_video.py
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+Ankit —
+
+CANARY: blue paperclip
+
+## Contrarian review packet
+
+recommendation: **Do not put general compound tokenization and multi-cue resolution into the shared production gateway.** For the first release, have the model copy only the single most-explicit literal date token, preferring month+day over a relative phrase. Keep the gateway change bounded to ordinal removal, explicit-date validation, and existing single-phrase resolution.
+
+The model need not calculate anything to choose `july 28th` over `tomorrow`. That is extraction and ranking, which is materially simpler than deriving a weekday. Any value that still contains multiple cues should fail closed and request clarification.
+
+confidence: **0.89**
+
+evidence:
+
+- The proposed gateway becomes a small natural-language parser: normalization, bare-day context, compound segmentation, cue classification, independent resolution, precedence, and ambiguity handling ([DESIGN.md:25](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/DESIGN.md:25)). That is a large new surface for a shared CVC gateway.
+- The real resolver currently uses exact full-string matching for deliberately bounded phrases ([bland_gateway.py:504](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:504), [bland_gateway.py:570](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:570), [bland_gateway.py:585](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:585)). Compound tokenization changes that safety model from an allowlisted grammar to substring interpretation.
+- The model’s observed failure was computing an invented weekday. Selecting and copying an already-present month+day does not require weekday or calendar computation.
+- Gateway conflict detection has limited value under the proposed rule. When cues disagree, the design detects the conflict but still selects the explicit date ([DESIGN.md:36](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/DESIGN.md:36)). If conflict detection is worth the parser risk, disagreement should fail closed. Otherwise the detection mostly adds logging and complexity.
+- The claimed confirmation safeguard is not implemented by the resolver contract. `resolve_relative_date` returns only `str | None` ([bland_gateway.py:475](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:475)); it cannot return the proposed conflict reason or enforce confirmation. `clamp_availability_range` consumes only the resolved string ([bland_gateway.py:626](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:626)).
+
+unique_catches:
+
+- **The explicit-date-wins rationale contains a factual error.** A yearless month/day does depend on the gateway reference date and timezone because the resolver chooses the next non-past occurrence using Eastern `today` ([bland_gateway.py:487](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:487), [bland_gateway.py:590](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:590)). The design says it does not depend on timestamp or timezone ([DESIGN.md:40](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/DESIGN.md:40)).
+- **Precision does not establish intent.** “July 28, no, tomorrow” and “tomorrow, not July 28” contain an explicit date but instruct the opposite. Tokenization without negation, correction, conjunction, and ordering semantics can confidently choose the wrong date.
+- **The clarification contract does not exist.** Returning `None` leaves `from` untouched ([bland_gateway.py:626](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:626)), which can become an upstream 409 rather than the structured clarification outcome promised by the design.
+- **Leap-day behavior is already unsafe.** For a past yearless February 29 whose following year is not leap, the resolver silently changes it to February 28 ([bland_gateway.py:597](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:597)). The proposed “validate real dates” language does not explicitly close this mutation.
+- **The Kenneth walkthrough proves only a stipulated happy path.** It assumes the model copies the entire compound correctly and that the tokenizer splits it correctly ([DESIGN.md:44](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/DESIGN.md:44)). It does not cover overlapping phrases such as `day after tomorrow`, negation, corrections, two explicit dates, or processing across midnight.
+- **`preference_to` is inconsistent with the existing extraction contract.** The design says to leave it empty for one date ([DESIGN.md:13](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/DESIGN.md:13)), while the current model configuration requires every field to be populated and repeats a single date into `preference_to`. That makes the migration less backward-compatible than claimed.
+
+risks_or_failure_modes:
+
+- Substring parsing can misread corrections, negations, ranges, and overlapping relative phrases.
+- A regression changes date behavior for CVC because the function is shared.
+- The model may omit the explicit token. The gateway cannot recover it because it lacks the raw message.
+- Silent explicit-date precedence can turn model extraction errors into confident searches.
+- Logging the literal compound for conflicts could expose patient-adjacent text. Only categorical reason codes should be logged.
+- A gateway-first rollout adds unused parser behavior before the corresponding model contract exists.
+
+simpler_alternative:
+
+1. Model rule: copy exactly one patient-literal cue.
+   - If a valid month+day appears, copy that token verbatim: `july 28th`.
+   - Otherwise copy one supported relative phrase or patient-spoken weekday.
+   - Never calculate, translate, or invent a weekday.
+2. Gateway rule:
+   - Strip a numeric ordinal suffix.
+   - Accept and validate the resulting single explicit date.
+   - Preserve the existing exact-match relative and Monday-anchored week grammar.
+   - Reject multi-cue strings and invalid dates with a structured clarification response.
+   - Never mutate February 29 into February 28.
+3. Patient safety: display the resolved calendar date in the slot offer and require the ordinary booking confirmation before writing.
+4. Before rollout, shadow-test the small model on compound, correction, negation, shorthand, and bilingual fixtures. If literal-token selection performs poorly, then reconsider gateway compound support, but make every disagreement fail closed.
+
+needs_human_or_owner_gate: **Yes.** The CVC/shared-gateway owner should approve the smaller grammar change and choose one product policy: select the explicit token and confirm it in the offer, or clarify every multi-cue phrase. I recommend explicit-token selection plus confirmation. Any shared production gateway change still requires regression proof for both clients.
+
+Changed: No files modified.
+
+Verified by: Read-only comparison of the design against the actual resolver and its availability call path.
+
+Risks left: Model literal-selection reliability has not been measured on a representative fixture set.
+
+Next action: Revise the design toward the bounded single-token contract, then run a fixture comparison before approving gateway implementation.
+
+Status
+- % to true goal: 100% (94%)
+- % to current goal: 100% (98%)
+- Done / ready: Contrarian design review and simpler recommendation are ready for the owner decision (98%)
+- In flight: nothing (100%)
+- Not done: Model fixture testing and implementation review have not started (99%)
+- Blocked: Production design approval depends on the shared-gateway owner’s policy choice (95%)
+- Needs you: Choose explicit-token selection plus confirmation, or clarification for every compound phrase (95%)
+
+Assumptions: Confidence rests on direct source inspection; no runtime tests or production mutations were performed.
+
+
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Completed
+tokens used
+87,350
+Ankit —
+
+CANARY: blue paperclip
+
+## Contrarian review packet
+
+recommendation: **Do not put general compound tokenization and multi-cue resolution into the shared production gateway.** For the first release, have the model copy only the single most-explicit literal date token, preferring month+day over a relative phrase. Keep the gateway change bounded to ordinal removal, explicit-date validation, and existing single-phrase resolution.
+
+The model need not calculate anything to choose `july 28th` over `tomorrow`. That is extraction and ranking, which is materially simpler than deriving a weekday. Any value that still contains multiple cues should fail closed and request clarification.
+
+confidence: **0.89**
+
+evidence:
+
+- The proposed gateway becomes a small natural-language parser: normalization, bare-day context, compound segmentation, cue classification, independent resolution, precedence, and ambiguity handling ([DESIGN.md:25](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/DESIGN.md:25)). That is a large new surface for a shared CVC gateway.
+- The real resolver currently uses exact full-string matching for deliberately bounded phrases ([bland_gateway.py:504](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:504), [bland_gateway.py:570](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:570), [bland_gateway.py:585](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:585)). Compound tokenization changes that safety model from an allowlisted grammar to substring interpretation.
+- The model’s observed failure was computing an invented weekday. Selecting and copying an already-present month+day does not require weekday or calendar computation.
+- Gateway conflict detection has limited value under the proposed rule. When cues disagree, the design detects the conflict but still selects the explicit date ([DESIGN.md:36](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/DESIGN.md:36)). If conflict detection is worth the parser risk, disagreement should fail closed. Otherwise the detection mostly adds logging and complexity.
+- The claimed confirmation safeguard is not implemented by the resolver contract. `resolve_relative_date` returns only `str | None` ([bland_gateway.py:475](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:475)); it cannot return the proposed conflict reason or enforce confirmation. `clamp_availability_range` consumes only the resolved string ([bland_gateway.py:626](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:626)).
+
+unique_catches:
+
+- **The explicit-date-wins rationale contains a factual error.** A yearless month/day does depend on the gateway reference date and timezone because the resolver chooses the next non-past occurrence using Eastern `today` ([bland_gateway.py:487](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:487), [bland_gateway.py:590](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:590)). The design says it does not depend on timestamp or timezone ([DESIGN.md:40](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/DESIGN.md:40)).
+- **Precision does not establish intent.** “July 28, no, tomorrow” and “tomorrow, not July 28” contain an explicit date but instruct the opposite. Tokenization without negation, correction, conjunction, and ordering semantics can confidently choose the wrong date.
+- **The clarification contract does not exist.** Returning `None` leaves `from` untouched ([bland_gateway.py:626](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:626)), which can become an upstream 409 rather than the structured clarification outcome promised by the design.
+- **Leap-day behavior is already unsafe.** For a past yearless February 29 whose following year is not leap, the resolver silently changes it to February 28 ([bland_gateway.py:597](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:597)). The proposed “validate real dates” language does not explicitly close this mutation.
+- **The Kenneth walkthrough proves only a stipulated happy path.** It assumes the model copies the entire compound correctly and that the tokenizer splits it correctly ([DESIGN.md:44](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/DESIGN.md:44)). It does not cover overlapping phrases such as `day after tomorrow`, negation, corrections, two explicit dates, or processing across midnight.
+- **`preference_to` is inconsistent with the existing extraction contract.** The design says to leave it empty for one date ([DESIGN.md:13](/home/ankit114/repos/ringer/my-manifests/mott-date-arch/work/date-design/DESIGN.md:13)), while the current model configuration requires every field to be populated and repeats a single date into `preference_to`. That makes the migration less backward-compatible than claimed.
+
+risks_or_failure_modes:
+
+- Substring parsing can misread corrections, negations, ranges, and overlapping relative phrases.
+- A regression changes date behavior for CVC because the function is shared.
+- The model may omit the explicit token. The gateway cannot recover it because it lacks the raw message.
+- Silent explicit-date precedence can turn model extraction errors into confident searches.
+- Logging the literal compound for conflicts could expose patient-adjacent text. Only categorical reason codes should be logged.
+- A gateway-first rollout adds unused parser behavior before the corresponding model contract exists.
+
+simpler_alternative:
+
+1. Model rule: copy exactly one patient-literal cue.
+   - If a valid month+day appears, copy that token verbatim: `july 28th`.
+   - Otherwise copy one supported relative phrase or patient-spoken weekday.
+   - Never calculate, translate, or invent a weekday.
+2. Gateway rule:
+   - Strip a numeric ordinal suffix.
+   - Accept and validate the resulting single explicit date.
+   - Preserve the existing exact-match relative and Monday-anchored week grammar.
+   - Reject multi-cue strings and invalid dates with a structured clarification response.
+   - Never mutate February 29 into February 28.
+3. Patient safety: display the resolved calendar date in the slot offer and require the ordinary booking confirmation before writing.
+4. Before rollout, shadow-test the small model on compound, correction, negation, shorthand, and bilingual fixtures. If literal-token selection performs poorly, then reconsider gateway compound support, but make every disagreement fail closed.
+
+needs_human_or_owner_gate: **Yes.** The CVC/shared-gateway owner should approve the smaller grammar change and choose one product policy: select the explicit token and confirm it in the offer, or clarify every multi-cue phrase. I recommend explicit-token selection plus confirmation. Any shared production gateway change still requires regression proof for both clients.
+
+Changed: No files modified.
+
+Verified by: Read-only comparison of the design against the actual resolver and its availability call path.
+
+Risks left: Model literal-selection reliability has not been measured on a representative fixture set.
+
+Next action: Revise the design toward the bounded single-token contract, then run a fixture comparison before approving gateway implementation.
+
+Status
+- % to true goal: 100% (94%)
+- % to current goal: 100% (98%)
+- Done / ready: Contrarian design review and simpler recommendation are ready for the owner decision (98%)
+- In flight: nothing (100%)
+- Not done: Model fixture testing and implementation review have not started (99%)
+- Blocked: Production design approval depends on the shared-gateway owner’s policy choice (95%)
+- Needs you: Choose explicit-token selection plus confirmation, or clarification for every compound phrase (95%)
+
+Assumptions: Confidence rests on direct source inspection; no runtime tests or production mutations were performed.
+
+

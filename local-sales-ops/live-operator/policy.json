@@ -1,0 +1,66 @@
+{
+  "name": "sales_ops_daily_operator_v1",
+  "owner": "AI Sales Ops Operator",
+  "mode": "approval_pilot_queue",
+  "approved_lane": {
+    "cohort": "PracticeOS stale active deals",
+    "pipeline_id": "908573340",
+    "channel": "email",
+    "daily_send_cap": 3,
+    "business_days_only": true,
+    "allow_sms": false,
+    "allow_linkedin": false,
+    "allow_postcards": false,
+    "allow_sequence_enrollment": false,
+    "allow_stage_moves": false
+  },
+  "live_actions": {
+    "send_enabled": false,
+    "hubspot_write_enabled": false,
+    "requires_sender_account": true,
+    "requires_hubspot_activity_receipt": true,
+    "stop_on_send_log_mismatch": true
+  },
+  "qa": {
+    "recent_touch_cooldown_days": 7,
+    "unknown_context_passes": false,
+    "required_context_fields": [
+      "deal_id",
+      "deal_name",
+      "pipeline",
+      "stage",
+      "days_idle",
+      "contact_id",
+      "contact_email",
+      "suppression_status",
+      "recent_touch_status"
+    ],
+    "banned_copy_phrases": [
+      "just checking in",
+      "touching base",
+      "circling back",
+      "hope you are doing well",
+      "leverage",
+      "seamless",
+      "holistic"
+    ],
+    "banned_characters": ["—"]
+  },
+  "receipts": {
+    "ledger_dir": "~/.ringer/sales-ops-ledger",
+    "require_provider_receipt_on_send": true,
+    "require_hubspot_receipt_on_send": true,
+    "ringer_receipt_required": true
+  },
+  "kill_switch": {
+    "file": "~/.ringer/sales-ops-ledger/KILL_SWITCH",
+    "stop_conditions": [
+      "send_without_ledger_row",
+      "send_without_hubspot_receipt",
+      "duplicate_send_detected",
+      "suppression_uncertain",
+      "sender_unhealthy",
+      "user_said_stop"
+    ]
+  }
+}

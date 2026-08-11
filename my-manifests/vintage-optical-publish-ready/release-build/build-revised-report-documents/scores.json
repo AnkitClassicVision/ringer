@@ -1,0 +1,1004 @@
+{
+  "schema_version": "approved-evidence-score-contract-v1",
+  "report_visibility": "internal_only_project_room_gate",
+  "directionality_guard": "Room to Win = 100 - Competitive Pressure Index",
+  "manual_band_scale": [
+    20,
+    35,
+    50,
+    65,
+    80
+  ],
+  "rounding_guard": "One final ROUND_HALF_UP step after summing full-precision contributions.",
+  "scores": {
+    "market_demand_supply": {
+      "display_name": "Market Demand-Supply",
+      "score": 61,
+      "full_precision_total": 60.5,
+      "label": "Mixed market",
+      "directionality": "Higher means better for the client.",
+      "formula": "Weighted sum of approved components",
+      "manual_band_scale": [
+        20,
+        35,
+        50,
+        65,
+        80
+      ],
+      "rounding_method": "Round once to the nearest whole point; a total ending in .50 rounds up.",
+      "changed_from_prior": true,
+      "prior_display_score": 57,
+      "decision_rationale": "Observed positive population and school-enrollment change moves Growth / Future Demand from 50 to 65. Complete fixed-window demographics move Market Data Confidence from 35 to 50. Demand Strength, Payer / Income Fit, and Specialty Demand Load remain at 65 because the new evidence confirms their supportive state but does not justify an 80 band. Supply Balance remains neutral 50 because canonical full VDU and canonical office count are still null.",
+      "source_ids": [
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025",
+        "CENSUS_PEP_2025",
+        "MORTON709_FIRST_PARTY_ARCHIVE",
+        "NPPES_CURRENT_20260730",
+        "CENSUS_GEOCODER_20260730"
+      ],
+      "confidence": "C: public-only directional evidence",
+      "limitation": "Growth is observed village and district context, not a forecast. Supply balance, canonical VDU, payer mix, and realized demand remain unknown. The recommended 61 stays in the rubric's Mixed market range.",
+      "components": [
+        {
+          "component": "Demand Strength",
+          "value": 65,
+          "weight": 0.25,
+          "contribution": 16.25,
+          "source_ids": [
+            "VALHALLA_20260730",
+            "TIGER2024_BG",
+            "ACS2024_BG"
+          ],
+          "rationale": "All five windows now have population, household, and age-band estimates, but no benchmark or realized-demand evidence supports an 80 band.",
+          "confidence": "medium",
+          "limitation": "Growth is observed village and district context, not a forecast. Supply balance, canonical VDU, payer mix, and realized demand remain unknown. The recommended 61 stays in the rubric's Mixed market range."
+        },
+        {
+          "component": "Supply Balance",
+          "value": 50,
+          "weight": 0.2,
+          "contribution": 10.0,
+          "source_ids": [
+            "NPPES_CURRENT_20260730",
+            "CENSUS_GEOCODER_20260730",
+            "CATCHMENT_DEMOGRAPHICS_20260730"
+          ],
+          "rationale": "The NPPES locations are coverage candidates only. Canonical office count and full VDU remain null, so no VDU-per-office state exists.",
+          "confidence": "medium",
+          "limitation": "Growth is observed village and district context, not a forecast. Supply balance, canonical VDU, payer mix, and realized demand remain unknown. The recommended 61 stays in the rubric's Mixed market range."
+        },
+        {
+          "component": "Payer / Income Fit",
+          "value": 65,
+          "weight": 0.15,
+          "contribution": 9.75,
+          "source_ids": [
+            "ACS2024_BG"
+          ],
+          "rationale": "The catchment packet supplies approximate income context but not actual payer mix. The existing supportive band is preserved.",
+          "confidence": "medium",
+          "limitation": "Growth is observed village and district context, not a forecast. Supply balance, canonical VDU, payer mix, and realized demand remain unknown. The recommended 61 stays in the rubric's Mixed market range."
+        },
+        {
+          "component": "Growth / Future Demand",
+          "value": 65,
+          "weight": 0.15,
+          "contribution": 9.75,
+          "source_ids": [
+            "CENSUS_PEP_2025",
+            "MORTON709_FIRST_PARTY_ARCHIVE"
+          ],
+          "rationale": "Two direct observed series show positive change. The evidence supports a directional growth proxy, not a forecast or top band.",
+          "confidence": "medium",
+          "limitation": "Growth is observed village and district context, not a forecast. Supply balance, canonical VDU, payer mix, and realized demand remain unknown. The recommended 61 stays in the rubric's Mixed market range."
+        },
+        {
+          "component": "Specialty Demand Load",
+          "value": 65,
+          "weight": 0.15,
+          "contribution": 9.75,
+          "source_ids": [
+            "ACS2024_BG",
+            "CDC_PLACES_2025",
+            "MORTON709_FIRST_PARTY_ARCHIVE"
+          ],
+          "rationale": "Exact catchment age bands, diabetes context, and enrollment growth strengthen the existing pediatric, senior, and chronic-care support but do not establish search, referral, or realized specialty demand.",
+          "confidence": "medium",
+          "limitation": "Growth is observed village and district context, not a forecast. Supply balance, canonical VDU, payer mix, and realized demand remain unknown. The recommended 61 stays in the rubric's Mixed market range."
+        },
+        {
+          "component": "Market Data Confidence",
+          "value": 50,
+          "weight": 0.1,
+          "contribution": 5.0,
+          "source_ids": [
+            "VALHALLA_20260730",
+            "TIGER2024_BG",
+            "ACS2024_BG",
+            "CDC_PLACES_2025",
+            "CENSUS_PEP_2025",
+            "MORTON709_FIRST_PARTY_ARCHIVE",
+            "NPPES_CURRENT_20260730"
+          ],
+          "rationale": "Direct, recent demographic and growth evidence resolves major gaps, but incomplete supply, full VDU, provider dedupe, and patient choice keep the aggregate market evidence mixed.",
+          "confidence": "medium",
+          "limitation": "Growth is observed village and district context, not a forecast. Supply balance, canonical VDU, payer mix, and realized demand remain unknown. The recommended 61 stays in the rubric's Mixed market range."
+        }
+      ]
+    },
+    "competitive_pressure_index": {
+      "display_name": "Competitive Pressure Index",
+      "score": 57,
+      "full_precision_total": 56.75,
+      "label": "High pressure",
+      "directionality": "Higher means more competitive pressure; this is the internal diagnostic exception.",
+      "formula": "Weighted sum of approved components",
+      "manual_band_scale": [
+        20,
+        35,
+        50,
+        65,
+        80
+      ],
+      "rounding_method": "Round once to the nearest whole point; a total ending in .50 rounds up.",
+      "changed_from_prior": false,
+      "prior_display_score": 57,
+      "decision_rationale": "The corrected Focus route preserves the nearby-peer state. NPPES candidate locations cannot change Supply Saturation or Patient Choice Pressure because the roster is incomplete and not a canonical office census. The direct Google comparison reinforces the existing competitor-strength direction but does not justify a new band.",
+      "source_ids": [
+        "OSRM_FOCUS_GOOGLE_PINS_20260730",
+        "NPPES_CURRENT_20260730",
+        "CENSUS_GEOCODER_20260730",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "S07",
+        "S08",
+        "S09",
+        "S10",
+        "S11",
+        "S12"
+      ],
+      "confidence": "C: public-only directional evidence",
+      "limitation": "Canonical supply, patient-origin choice, complete peer reputation, live access, and live traffic remain unknown. The result remains in the High pressure band.",
+      "components": [
+        {
+          "component": "Supply Saturation",
+          "value": 50,
+          "weight": 0.4,
+          "contribution": 20.0,
+          "source_ids": [
+            "NPPES_CURRENT_20260730",
+            "CENSUS_GEOCODER_20260730"
+          ],
+          "rationale": "Canonical offices, provider entities, full VDU, and supply denominators remain null.",
+          "confidence": "medium",
+          "limitation": "Canonical supply, patient-origin choice, complete peer reputation, live access, and live traffic remain unknown. The result remains in the High pressure band."
+        },
+        {
+          "component": "Patient Choice Pressure",
+          "value": 65,
+          "weight": 0.25,
+          "contribution": 16.25,
+          "source_ids": [
+            "OSRM_FOCUS_GOOGLE_PINS_20260730",
+            "OSRM_TABLE_20260730"
+          ],
+          "rationale": "Nearby routed alternatives remain directionally relevant, but candidate routes are not a complete, population-weighted patient-choice set.",
+          "confidence": "medium",
+          "limitation": "Canonical supply, patient-origin choice, complete peer reputation, live access, and live traffic remain unknown. The result remains in the High pressure band."
+        },
+        {
+          "component": "Competitor Strength",
+          "value": 65,
+          "weight": 0.2,
+          "contribution": 13.0,
+          "source_ids": [
+            "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+            "S07",
+            "S08",
+            "S09",
+            "S10",
+            "S11",
+            "S12"
+          ],
+          "rationale": "Public service overlap and a bounded direct review comparison support a directional strength state, but not severe pressure or complete peer normalization.",
+          "confidence": "medium",
+          "limitation": "Canonical supply, patient-origin choice, complete peer reputation, live access, and live traffic remain unknown. The result remains in the High pressure band."
+        },
+        {
+          "component": "Access / Differentiation Pressure",
+          "value": 50,
+          "weight": 0.15,
+          "contribution": 7.5,
+          "source_ids": [
+            "S02",
+            "S06",
+            "S07",
+            "S08",
+            "S11"
+          ],
+          "rationale": "Published access and overlap remain mixed; live slots, conversion, and comparable peer friction are unmeasured.",
+          "confidence": "medium",
+          "limitation": "Canonical supply, patient-origin choice, complete peer reputation, live access, and live traffic remain unknown. The result remains in the High pressure band."
+        }
+      ]
+    },
+    "room_to_win": {
+      "display_name": "Room to Win",
+      "score": 43,
+      "full_precision_total": 43.0,
+      "label": "Constrained room",
+      "directionality": "Higher means more room to win; exact inverse of Competitive Pressure Index.",
+      "formula": "100 - Competitive Pressure Index",
+      "manual_band_scale": [
+        20,
+        35,
+        50,
+        65,
+        80
+      ],
+      "rounding_method": "Exact integer inversion after the Competitive Pressure Index is rounded: 100 - 57 = 43.",
+      "changed_from_prior": false,
+      "prior_display_score": 43,
+      "decision_rationale": "Room to Win is the exact inversion of the unchanged Competitive Pressure Index: 100 - 57 = 43. It is not independently banded.",
+      "source_ids": [
+        "OSRM_FOCUS_GOOGLE_PINS_20260730",
+        "NPPES_CURRENT_20260730",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+      ],
+      "confidence": "C: public-only directional evidence",
+      "limitation": "Any future change to Competitive Pressure must produce an equal and opposite change here.",
+      "components": []
+    },
+    "practice_competitiveness": {
+      "display_name": "Practice Competitiveness",
+      "score": 61,
+      "full_precision_total": 60.5,
+      "label": "Mixed",
+      "directionality": "Higher means better for the client.",
+      "formula": "Weighted sum of approved components",
+      "manual_band_scale": [
+        20,
+        35,
+        50,
+        65,
+        80
+      ],
+      "rounding_method": "Round once to the nearest whole point; a total ending in .50 rounds up.",
+      "changed_from_prior": true,
+      "prior_display_score": 58,
+      "decision_rationale": "The one dated same-page Google comparison moves Review Trust vs Peers from neutral 50 to bounded-supportive 65. Vintage shows 4.9 and 348 reviews on the peer card versus Focus at 4.8 and 182, Tri-County at 4.9 and 271, and Walmart Vision & Glasses at 3.5 and 8. All other bands remain unchanged. The sample is insufficient for an 80 band or a complete peer claim.",
+      "source_ids": [
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "BIRDEYE_AGGREGATOR_20260730",
+        "DATAFORSEO_PREFLIGHT_20260730",
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S08",
+        "S09",
+        "S10",
+        "OSRM_FOCUS_GOOGLE_PINS_20260730"
+      ],
+      "confidence": "C: public-only directional evidence",
+      "limitation": "The review observation is one dated page, not a complete export, text/theme analysis, response analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain unknown. The recommended 61 remains in the Mixed band.",
+      "components": [
+        {
+          "component": "Visibility vs Peers",
+          "value": 50,
+          "weight": 0.2,
+          "contribution": 10.0,
+          "source_ids": [
+            "DATAFORSEO_PREFLIGHT_20260730",
+            "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+          ],
+          "rationale": "No rank grid or complete stable query set exists.",
+          "confidence": "medium",
+          "limitation": "The review observation is one dated page, not a complete export, text/theme analysis, response analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain unknown. The recommended 61 remains in the Mixed band."
+        },
+        {
+          "component": "Access / Booking vs Peers",
+          "value": 65,
+          "weight": 0.2,
+          "contribution": 13.0,
+          "source_ids": [
+            "S02",
+            "S06",
+            "GOOGLE_MAPS_SAMPLE_20260730"
+          ],
+          "rationale": "The public hours, emergency access, CTA, and booking path remain supportive, while live completion and equivalent peer friction are unknown.",
+          "confidence": "medium",
+          "limitation": "The review observation is one dated page, not a complete export, text/theme analysis, response analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain unknown. The recommended 61 remains in the Mixed band."
+        },
+        {
+          "component": "Review Trust vs Peers",
+          "value": 65,
+          "weight": 0.2,
+          "contribution": 13.0,
+          "source_ids": [
+            "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+            "BIRDEYE_AGGREGATOR_20260730"
+          ],
+          "rationale": "The direct same-page comparison supports a bounded positive volume-and-rating read. The Birdeye discrepancy prevents treating aggregator counts as direct truth.",
+          "confidence": "medium",
+          "limitation": "The review observation is one dated page, not a complete export, text/theme analysis, response analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain unknown. The recommended 61 remains in the Mixed band."
+        },
+        {
+          "component": "Service-Line Differentiation",
+          "value": 65,
+          "weight": 0.15,
+          "contribution": 9.75,
+          "source_ids": [
+            "S01",
+            "S03",
+            "S04",
+            "S05",
+            "S08",
+            "S09",
+            "S10"
+          ],
+          "rationale": "Vintage publishes broad services and peers publish overlapping lanes. No new evidence changes this band.",
+          "confidence": "medium",
+          "limitation": "The review observation is one dated page, not a complete export, text/theme analysis, response analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain unknown. The recommended 61 remains in the Mixed band."
+        },
+        {
+          "component": "Website / Conversion Clarity",
+          "value": 65,
+          "weight": 0.15,
+          "contribution": 9.75,
+          "source_ids": [
+            "S01",
+            "S02",
+            "S03",
+            "S04",
+            "S05",
+            "S06"
+          ],
+          "rationale": "Public service, provider, location, hours, and booking paths remain visible. Conversion remains unmeasured.",
+          "confidence": "medium",
+          "limitation": "The review observation is one dated page, not a complete export, text/theme analysis, response analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain unknown. The recommended 61 remains in the Mixed band."
+        },
+        {
+          "component": "Location Convenience",
+          "value": 50,
+          "weight": 0.1,
+          "contribution": 5.0,
+          "source_ids": [
+            "S02",
+            "OSRM_FOCUS_GOOGLE_PINS_20260730"
+          ],
+          "rationale": "The corrected route confirms a nearby peer but does not measure patient origins or trip tolerance.",
+          "confidence": "medium",
+          "limitation": "The review observation is one dated page, not a complete export, text/theme analysis, response analysis, or outcome measure. Rank, live access, conversion, and patient-origin convenience remain unknown. The recommended 61 remains in the Mixed band."
+        }
+      ]
+    },
+    "client_opportunity": {
+      "display_name": "Client Opportunity",
+      "score": 54,
+      "full_precision_total": 54.45,
+      "label": "At Risk",
+      "directionality": "Higher means better for the client.",
+      "formula": "Weighted sum of approved components",
+      "manual_band_scale": [
+        20,
+        35,
+        50,
+        65,
+        80
+      ],
+      "rounding_method": "Round once to the nearest whole point; a total ending in .50 rounds up.",
+      "changed_from_prior": false,
+      "prior_display_score": 54,
+      "decision_rationale": "The required computed Market Demand-Supply input changes from 57 to 61, raising the full-precision total from 53.65 to 54.45. The rounded score remains 54 because 54.45 does not reach the .50 half-up threshold. Review evidence does not prove competitor weakness, leakage, capacity, conversion, or execution ownership, so the other component bands stay fixed.",
+      "source_ids": [
+        "VALHALLA_20260730",
+        "ACS2024_BG",
+        "CDC_PLACES_2025",
+        "CENSUS_PEP_2025",
+        "MORTON709_FIRST_PARTY_ARCHIVE",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06"
+      ],
+      "confidence": "C: public-only directional evidence",
+      "limitation": "Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and execution capacity remain unknown. The score stays in the At Risk band.",
+      "components": [
+        {
+          "component": "Computed Market Demand-Supply",
+          "value": 61,
+          "weight": 0.2,
+          "contribution": 12.2,
+          "source_ids": [
+            "VALHALLA_20260730",
+            "ACS2024_BG",
+            "CDC_PLACES_2025",
+            "CENSUS_PEP_2025",
+            "MORTON709_FIRST_PARTY_ARCHIVE"
+          ],
+          "rationale": "The canonical formula uses the recomputed market result rather than a manual band.",
+          "confidence": "medium",
+          "limitation": "Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and execution capacity remain unknown. The score stays in the At Risk band."
+        },
+        {
+          "component": "Competitive Pressure Opportunity",
+          "value": 50,
+          "weight": 0.2,
+          "contribution": 10.0,
+          "source_ids": [
+            "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+            "S07",
+            "S08",
+            "S09",
+            "S10",
+            "S11",
+            "S12"
+          ],
+          "rationale": "Pressure exists, but no complete weakness cluster, leakage, or capacity-supported wedge is proven.",
+          "confidence": "medium",
+          "limitation": "Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and execution capacity remain unknown. The score stays in the At Risk band."
+        },
+        {
+          "component": "Practice Differentiation Upside",
+          "value": 50,
+          "weight": 0.2,
+          "contribution": 10.0,
+          "source_ids": [
+            "S01",
+            "S03",
+            "S04",
+            "S05",
+            "S08",
+            "S09",
+            "S10"
+          ],
+          "rationale": "The offer is broad and lanes overlap. No new evidence establishes defensible ownership or unmet need.",
+          "confidence": "medium",
+          "limitation": "Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and execution capacity remain unknown. The score stays in the At Risk band."
+        },
+        {
+          "component": "Access Fixability",
+          "value": 50,
+          "weight": 0.15,
+          "contribution": 7.5,
+          "source_ids": [
+            "S02",
+            "S06"
+          ],
+          "rationale": "Public access exists, but access failure and recoverability remain unmeasured.",
+          "confidence": "medium",
+          "limitation": "Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and execution capacity remain unknown. The score stays in the At Risk band."
+        },
+        {
+          "component": "Digital Visibility Fixability",
+          "value": 65,
+          "weight": 0.15,
+          "contribution": 9.75,
+          "source_ids": [
+            "S01",
+            "S02",
+            "S03",
+            "S04",
+            "S05",
+            "S06",
+            "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+          ],
+          "rationale": "Existing surfaces and source discrepancies make measurement and reconciliation bounded actions, but no result is yet proven.",
+          "confidence": "medium",
+          "limitation": "Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and execution capacity remain unknown. The score stays in the At Risk band."
+        },
+        {
+          "component": "Execution Simplicity",
+          "value": 50,
+          "weight": 0.1,
+          "contribution": 5.0,
+          "source_ids": [
+            "S01",
+            "S02",
+            "S06"
+          ],
+          "rationale": "The first actions remain bounded, but ownership and staff capacity are unknown.",
+          "confidence": "medium",
+          "limitation": "Demand leakage, fixable competitor weakness, conversion, capacity, owner cadence, and execution capacity remain unknown. The score stays in the At Risk band."
+        }
+      ]
+    },
+    "digital_presence": {
+      "display_name": "Digital Presence",
+      "score": 60,
+      "full_precision_total": 59.75,
+      "label": "Mixed",
+      "directionality": "Higher means better for the client.",
+      "formula": "Weighted sum of approved components",
+      "manual_band_scale": [
+        20,
+        35,
+        50,
+        65,
+        80
+      ],
+      "rounding_method": "Round once to the nearest whole point; a total ending in .50 rounds up.",
+      "changed_from_prior": true,
+      "prior_display_score": 57,
+      "decision_rationale": "The direct same-page Google comparison moves Reputation from neutral 50 to bounded-supportive 65. Findability remains 50 because DataForSEO was unavailable and no rank grid ran. Bookability, Site Quality, Content / Specialty Signal, and Social / Local Proof remain unchanged.",
+      "source_ids": [
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "BIRDEYE_AGGREGATOR_20260730",
+        "DATAFORSEO_PREFLIGHT_20260730",
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S08",
+        "S09",
+        "S10"
+      ],
+      "confidence": "C: public-only directional evidence",
+      "limitation": "The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and themes, responses, booking completion, performance testing, directory coverage, and local proof remain unknown. The recommended 60 remains Mixed.",
+      "components": [
+        {
+          "component": "Findability",
+          "value": 50,
+          "weight": 0.25,
+          "contribution": 12.5,
+          "source_ids": [
+            "DATAFORSEO_PREFLIGHT_20260730",
+            "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+          ],
+          "rationale": "A dated Google observation is not a rank grid or complete query-coverage measure.",
+          "confidence": "medium",
+          "limitation": "The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and themes, responses, booking completion, performance testing, directory coverage, and local proof remain unknown. The recommended 60 remains Mixed."
+        },
+        {
+          "component": "Reputation",
+          "value": 65,
+          "weight": 0.2,
+          "contribution": 13.0,
+          "source_ids": [
+            "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+            "BIRDEYE_AGGREGATOR_20260730"
+          ],
+          "rationale": "The same-page direct comparison supports a bounded positive read, while source discrepancies block a stronger or cross-platform claim.",
+          "confidence": "medium",
+          "limitation": "The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and themes, responses, booking completion, performance testing, directory coverage, and local proof remain unknown. The recommended 60 remains Mixed."
+        },
+        {
+          "component": "Bookability",
+          "value": 65,
+          "weight": 0.2,
+          "contribution": 13.0,
+          "source_ids": [
+            "S06",
+            "GOOGLE_MAPS_SAMPLE_20260730"
+          ],
+          "rationale": "The public CTA and Book online path remain visible. Completion and conversion are unmeasured.",
+          "confidence": "medium",
+          "limitation": "The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and themes, responses, booking completion, performance testing, directory coverage, and local proof remain unknown. The recommended 60 remains Mixed."
+        },
+        {
+          "component": "Site Quality",
+          "value": 65,
+          "weight": 0.15,
+          "contribution": 9.75,
+          "source_ids": [
+            "S01",
+            "S02",
+            "S03",
+            "S04",
+            "S05"
+          ],
+          "rationale": "The site exposes services, providers, location, and hours. No new performance or conversion testing changes the band.",
+          "confidence": "medium",
+          "limitation": "The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and themes, responses, booking completion, performance testing, directory coverage, and local proof remain unknown. The recommended 60 remains Mixed."
+        },
+        {
+          "component": "Content / Specialty Signal",
+          "value": 65,
+          "weight": 0.1,
+          "contribution": 6.5,
+          "source_ids": [
+            "S03",
+            "S04",
+            "S05",
+            "S08",
+            "S09",
+            "S10"
+          ],
+          "rationale": "Dedicated specialty pages remain present, and peer overlap prevents a stronger ownership state.",
+          "confidence": "medium",
+          "limitation": "The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and themes, responses, booking completion, performance testing, directory coverage, and local proof remain unknown. The recommended 60 remains Mixed."
+        },
+        {
+          "component": "Social / Local Proof",
+          "value": 50,
+          "weight": 0.1,
+          "contribution": 5.0,
+          "source_ids": [
+            "S01",
+            "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+          ],
+          "rationale": "No complete social activity, local links, community mentions, or directory comparison was collected.",
+          "confidence": "medium",
+          "limitation": "The review comparison is one dated page, not a complete peer export. Rank distribution, review recency and themes, responses, booking completion, performance testing, directory coverage, and local proof remain unknown. The recommended 60 remains Mixed."
+        }
+      ]
+    },
+    "dry_eye": {
+      "display_name": "Dry eye / ocular surface",
+      "score": 53,
+      "full_precision_total": 53.0,
+      "label": "Research next",
+      "directionality": "Higher means better for the client.",
+      "formula": "Weighted sum of approved components",
+      "manual_band_scale": [
+        20,
+        35,
+        50,
+        65,
+        80
+      ],
+      "rounding_method": "Round once to the nearest whole point; a total ending in .50 rounds up.",
+      "changed_from_prior": true,
+      "prior_display_score": 52,
+      "decision_rationale": "Exact 5- through 30-minute 40-64, 65-plus, and diabetes context strengthens Evidence Confidence from 35 to 50. Local Demand Fit stays 65 because the evidence confirms a supportive demand proxy but does not establish search demand, referral density, conversion, or lane economics. The competitive, capability, capacity, revenue, and referral bands do not change.",
+      "source_ids": [
+        "ACS2024_BG",
+        "CDC_PLACES_2025",
+        "S03",
+        "S08",
+        "S09",
+        "S06"
+      ],
+      "confidence": "C: public-only directional evidence",
+      "limitation": "No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or margin evidence exists. The recommended 53 remains Research next.",
+      "components": [
+        {
+          "component": "Local Demand Fit",
+          "value": 65,
+          "weight": 0.2,
+          "contribution": 13.0,
+          "source_ids": [
+            "ACS2024_BG",
+            "CDC_PLACES_2025"
+          ],
+          "rationale": "Exact catchment age and diabetes proxies support the existing directional band, but do not establish realized lane demand.",
+          "confidence": "medium",
+          "limitation": "No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or margin evidence exists. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Competitive Gap",
+          "value": 35,
+          "weight": 0.15,
+          "contribution": 5.25,
+          "source_ids": [
+            "S08",
+            "S09"
+          ],
+          "rationale": "Peers publish overlapping dry-eye offers, and no new complete lane audit changes the contested state.",
+          "confidence": "medium",
+          "limitation": "No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or margin evidence exists. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Current Capability",
+          "value": 65,
+          "weight": 0.15,
+          "contribution": 9.75,
+          "source_ids": [
+            "S03"
+          ],
+          "rationale": "Vintage publishes a dedicated service and modalities, while operating proof remains absent.",
+          "confidence": "medium",
+          "limitation": "No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or margin evidence exists. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Access / Capacity Fit",
+          "value": 50,
+          "weight": 0.15,
+          "contribution": 7.5,
+          "source_ids": [
+            "S03",
+            "S06"
+          ],
+          "rationale": "Slots, staff, rooms, chair time, and follow-up capacity remain unknown.",
+          "confidence": "medium",
+          "limitation": "No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or margin evidence exists. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Revenue / Reimbursement Potential",
+          "value": 50,
+          "weight": 0.15,
+          "contribution": 7.5,
+          "source_ids": [
+            "S03"
+          ],
+          "rationale": "Price, payer, collections, and margin remain unknown.",
+          "confidence": "medium",
+          "limitation": "No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or margin evidence exists. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Referral Ecosystem Fit",
+          "value": 50,
+          "weight": 0.1,
+          "contribution": 5.0,
+          "source_ids": [
+            "S03"
+          ],
+          "rationale": "Relationships and referral density remain unknown.",
+          "confidence": "medium",
+          "limitation": "No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or margin evidence exists. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Evidence Confidence",
+          "value": 50,
+          "weight": 0.1,
+          "contribution": 5.0,
+          "source_ids": [
+            "ACS2024_BG",
+            "CDC_PLACES_2025",
+            "S03",
+            "S08",
+            "S09"
+          ],
+          "rationale": "Direct recent catchment demand proxies resolve the prior city-only limitation, but market and operating proof remain incomplete.",
+          "confidence": "medium",
+          "limitation": "No search-demand, capacity, referral, outcome, conversion, price, payer, collection, or margin evidence exists. The recommended 53 remains Research next."
+        }
+      ]
+    },
+    "myopia_management": {
+      "display_name": "Myopia management",
+      "score": 53,
+      "full_precision_total": 53.0,
+      "label": "Research next",
+      "directionality": "Higher means better for the client.",
+      "formula": "Weighted sum of approved components",
+      "manual_band_scale": [
+        20,
+        35,
+        50,
+        65,
+        80
+      ],
+      "rounding_method": "Round once to the nearest whole point; a total ending in .50 rounds up.",
+      "changed_from_prior": true,
+      "prior_display_score": 52,
+      "decision_rationale": "Exact catchment child counts and observed Morton CUSD 709 enrollment growth strengthen Evidence Confidence from 35 to 50. Local Demand Fit stays 65 because the new evidence confirms family-demand support but does not establish search demand, willingness to pay, referrals, conversion, or follow-up capacity. All other component bands stay fixed.",
+      "source_ids": [
+        "ACS2024_BG",
+        "MORTON709_FIRST_PARTY_ARCHIVE",
+        "S04",
+        "S09",
+        "S10",
+        "S06"
+      ],
+      "confidence": "C: public-only directional evidence",
+      "limitation": "The school series has no observed 2023-24 value. Search demand, parent willingness to pay, capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The recommended 53 remains Research next.",
+      "components": [
+        {
+          "component": "Local Demand Fit",
+          "value": 65,
+          "weight": 0.2,
+          "contribution": 13.0,
+          "source_ids": [
+            "ACS2024_BG",
+            "MORTON709_FIRST_PARTY_ARCHIVE"
+          ],
+          "rationale": "Exact child counts and positive observed enrollment change support the existing family-demand band without proving realized myopia demand.",
+          "confidence": "medium",
+          "limitation": "The school series has no observed 2023-24 value. Search demand, parent willingness to pay, capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Competitive Gap",
+          "value": 35,
+          "weight": 0.15,
+          "contribution": 5.25,
+          "source_ids": [
+            "S09",
+            "S10"
+          ],
+          "rationale": "A peer publishes several myopia-control approaches, and no new lane-depth audit changes the contested state.",
+          "confidence": "medium",
+          "limitation": "The school series has no observed 2023-24 value. Search demand, parent willingness to pay, capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Current Capability",
+          "value": 65,
+          "weight": 0.15,
+          "contribution": 9.75,
+          "source_ids": [
+            "S04"
+          ],
+          "rationale": "Vintage publishes a dedicated service. Starts, retention, outcomes, and capacity remain unknown.",
+          "confidence": "medium",
+          "limitation": "The school series has no observed 2023-24 value. Search demand, parent willingness to pay, capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Access / Capacity Fit",
+          "value": 50,
+          "weight": 0.15,
+          "contribution": 7.5,
+          "source_ids": [
+            "S04",
+            "S06"
+          ],
+          "rationale": "Follow-up capacity, chair time, staff skill, and protocols remain unknown.",
+          "confidence": "medium",
+          "limitation": "The school series has no observed 2023-24 value. Search demand, parent willingness to pay, capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Revenue / Reimbursement Potential",
+          "value": 50,
+          "weight": 0.15,
+          "contribution": 7.5,
+          "source_ids": [
+            "S04"
+          ],
+          "rationale": "Price, payment, retention, collections, and margin remain unknown.",
+          "confidence": "medium",
+          "limitation": "The school series has no observed 2023-24 value. Search demand, parent willingness to pay, capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Referral Ecosystem Fit",
+          "value": 50,
+          "weight": 0.1,
+          "contribution": 5.0,
+          "source_ids": [
+            "S04"
+          ],
+          "rationale": "School, pediatric, parent, and provider referral relationships remain unknown.",
+          "confidence": "medium",
+          "limitation": "The school series has no observed 2023-24 value. Search demand, parent willingness to pay, capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The recommended 53 remains Research next."
+        },
+        {
+          "component": "Evidence Confidence",
+          "value": 50,
+          "weight": 0.1,
+          "contribution": 5.0,
+          "source_ids": [
+            "ACS2024_BG",
+            "MORTON709_FIRST_PARTY_ARCHIVE",
+            "S04",
+            "S09",
+            "S10"
+          ],
+          "rationale": "Direct catchment and first-party school evidence resolve the prior city-only family proxy, while operating and referral proof remain incomplete.",
+          "confidence": "medium",
+          "limitation": "The school series has no observed 2023-24 value. Search demand, parent willingness to pay, capacity, referrals, outcomes, retention, conversion, and economics remain unknown. The recommended 53 remains Research next."
+        }
+      ]
+    },
+    "specialty_contact_lenses": {
+      "display_name": "Specialty contact lenses",
+      "score": 51,
+      "full_precision_total": 50.75,
+      "label": "Research next",
+      "directionality": "Higher means better for the client.",
+      "formula": "Weighted sum of approved components",
+      "manual_band_scale": [
+        20,
+        35,
+        50,
+        65,
+        80
+      ],
+      "rounding_method": "Round once to the nearest whole point; a total ending in .50 rounds up.",
+      "changed_from_prior": false,
+      "prior_display_score": 51,
+      "decision_rationale": "The new catchment, growth, routing, and review evidence does not establish contact-lens population, keratoconus burden, search demand, referral demand, complete specialty-depth competition, fitting capacity, outcomes, or economics. No component crosses a rubric band.",
+      "source_ids": [
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S12",
+        "ACS2024_BG",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730"
+      ],
+      "confidence": "C: public-only directional evidence",
+      "limitation": "Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing, remakes, payer mix, and margin remain unknown. The score remains Research next.",
+      "components": [
+        {
+          "component": "Local Demand Fit",
+          "value": 50,
+          "weight": 0.2,
+          "contribution": 10.0,
+          "source_ids": [
+            "S05",
+            "ACS2024_BG"
+          ],
+          "rationale": "General demographics do not establish contact-lens or keratoconus demand.",
+          "confidence": "medium",
+          "limitation": "Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing, remakes, payer mix, and margin remain unknown. The score remains Research next."
+        },
+        {
+          "component": "Competitive Gap",
+          "value": 50,
+          "weight": 0.15,
+          "contribution": 7.5,
+          "source_ids": [
+            "S07",
+            "S08",
+            "S12"
+          ],
+          "rationale": "Peers publish contact-lens services, but equivalent specialty depth remains unknown.",
+          "confidence": "medium",
+          "limitation": "Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing, remakes, payer mix, and margin remain unknown. The score remains Research next."
+        },
+        {
+          "component": "Current Capability",
+          "value": 65,
+          "weight": 0.15,
+          "contribution": 9.75,
+          "source_ids": [
+            "S05"
+          ],
+          "rationale": "Vintage publishes specialty lens types and an offer, but operating proof remains absent.",
+          "confidence": "medium",
+          "limitation": "Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing, remakes, payer mix, and margin remain unknown. The score remains Research next."
+        },
+        {
+          "component": "Access / Capacity Fit",
+          "value": 50,
+          "weight": 0.15,
+          "contribution": 7.5,
+          "source_ids": [
+            "S05",
+            "S06"
+          ],
+          "rationale": "Fitting availability, doctor time, staff skill, and room capacity remain unknown.",
+          "confidence": "medium",
+          "limitation": "Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing, remakes, payer mix, and margin remain unknown. The score remains Research next."
+        },
+        {
+          "component": "Revenue / Reimbursement Potential",
+          "value": 50,
+          "weight": 0.15,
+          "contribution": 7.5,
+          "source_ids": [
+            "S05"
+          ],
+          "rationale": "Pricing, payer, remakes, chair-time cost, and margin remain unknown.",
+          "confidence": "medium",
+          "limitation": "Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing, remakes, payer mix, and margin remain unknown. The score remains Research next."
+        },
+        {
+          "component": "Referral Ecosystem Fit",
+          "value": 50,
+          "weight": 0.1,
+          "contribution": 5.0,
+          "source_ids": [
+            "S05"
+          ],
+          "rationale": "Ophthalmology, optometry, and keratoconus referral flows remain unknown.",
+          "confidence": "medium",
+          "limitation": "Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing, remakes, payer mix, and margin remain unknown. The score remains Research next."
+        },
+        {
+          "component": "Evidence Confidence",
+          "value": 35,
+          "weight": 0.1,
+          "contribution": 3.5,
+          "source_ids": [
+            "S05",
+            "S07",
+            "S08",
+            "S12"
+          ],
+          "rationale": "The public offer and general overlap remain the only lane-specific evidence. The new packets do not resolve lane demand or operations.",
+          "confidence": "medium",
+          "limitation": "Demand, specialty gap, fitting volume, success, chair time, capacity, referrals, pricing, remakes, payer mix, and margin remain unknown. The score remains Research next."
+        }
+      ]
+    }
+  }
+}

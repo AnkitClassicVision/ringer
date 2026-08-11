@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MyBCAT | Vintage Optical Competitive Growth Analysis</title>
+<style>
+  @page { size: Letter; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --ink: #1A242C;
+    --ink-2: #27343C;
+    --muted: #5B6B75;
+    --teal: #006064;
+    --teal-2: #00838F;
+    --aqua: #00ACC1;
+    --gold: #D3AF5E;
+    --surface: #F4F6F8;
+    --line: #DCE3E8;
+    --track: #E4E9EC;
+    --warning: #B56A3A;
+    --white: #FFFFFF;
+  }
+  html, body {
+    width: 100%;
+    min-height: 100%;
+    background: #DCE3E8;
+  }
+  body {
+    font-family: Inter, "Aptos", "Segoe UI", Arial, Helvetica, sans-serif;
+    color: var(--ink-2);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .page {
+    width: 8.5in;
+    height: 11in;
+    margin: 0 auto;
+    background: var(--white);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 30px rgba(26, 36, 44, 0.16);
+  }
+  .cond {
+    font-family: "Arial Narrow", "Aptos Narrow", "Roboto Condensed", Arial, sans-serif;
+  }
+
+  /* Hero */
+  .hero {
+    flex: 0 0 1.55in;
+    background: var(--ink);
+    color: #EAF0F3;
+    padding: 0.20in 0.48in 0.17in;
+    display: flex;
+    align-items: center;
+    gap: 0.30in;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after,
+  .hero::before {
+    content: "";
+    position: absolute;
+    border: 1px solid rgba(0, 172, 193, 0.24);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero::after {
+    width: 3.55in;
+    height: 3.55in;
+    right: -1.12in;
+    top: -1.48in;
+  }
+  .hero::before {
+    width: 2.55in;
+    height: 2.55in;
+    right: -0.58in;
+    top: -1.06in;
+    border-color: rgba(0, 172, 193, 0.14);
+  }
+  .hero-main {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .brand-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+  .brand-mark {
+    width: 27px;
+    height: 27px;
+    border: 2px solid var(--aqua);
+    border-radius: 50%;
+    position: relative;
+    flex: 0 0 27px;
+  }
+  .brand-mark::before {
+    content: "";
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    left: 5px;
+    top: 5px;
+  }
+  .brand-mark::after {
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    background: var(--aqua);
+    border-radius: 50%;
+    left: 9px;
+    top: 9px;
+  }
+  .brand-name {
+    font-weight: 750;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    color: var(--white);
+  }
+  .brand-tag {
+    font-size: 8px;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: #9BAEB8;
+    border-left: 1px solid #40515B;
+    padding-left: 8px;
+  }
+  .kicker {
+    font-size: 8.5px;
+    letter-spacing: 0.23em;
+    text-transform: uppercase;
+    color: var(--aqua);
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+  .hero h1 {
+    font-size: 29px;
+    line-height: 1.02;
+    font-weight: 680;
+    letter-spacing: -0.025em;
+    color: var(--white);
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: #7FD8E4;
+  }
+  .subject {
+    margin-top: 7px;
+    font-size: 8.8px;
+    color: #A9BAC3;
+  }
+  .subject b {
+    color: #D7E2E7;
+    font-weight: 650;
+  }
+  .score-block {
+    width: 2.52in;
+    display: flex;
+    align-items: center;
+    gap: 0.14in;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .ring {
+    position: relative;
+    width: 1.18in;
+    height: 1.18in;
+    flex: 0 0 1.18in;
+  }
+  .ring svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+  .ring-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .ring-num {
+    font-size: 36px;
+    font-weight: 760;
+    line-height: 0.92;
+    color: var(--white);
+  }
+  .ring-den {
+    font-size: 7.5px;
+    color: #9DB0BA;
+    letter-spacing: 0.10em;
+    margin-top: 4px;
+  }
+  .score-meta {
+    min-width: 0;
+  }
+  .score-label {
+    font-size: 14px;
+    line-height: 1.03;
+    font-weight: 760;
+    color: #7FD8E4;
+  }
+  .score-note {
+    margin-top: 6px;
+    font-size: 8px;
+    line-height: 1.35;
+    color: #A9BAC3;
+  }
+  .score-confidence {
+    margin-top: 5px;
+    font-size: 6.8px;
+    line-height: 1.25;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* Read */
+  .read {
+    flex: 0 0 0.53in;
+    display: flex;
+    align-items: center;
+    padding: 0.07in 0.48in;
+    background: var(--white);
+    border-bottom: 1.5px solid var(--ink);
+  }
+  .read .zone-spine {
+    padding-top: 0;
+  }
+  .read-label {
+    font-size: 9px;
+    font-weight: 750;
+    letter-spacing: 0.23em;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+  .read-text {
+    font-size: 8.7px;
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+  .read-text b {
+    color: var(--teal);
+    font-weight: 750;
+  }
+
+  /* Numbered zones */
+  .zones {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .zone {
+    display: flex;
+    padding: 0.10in 0.48in 0.095in;
+    border-bottom: 1px solid var(--line);
+    min-height: 0;
+  }
+  .zone.tint {
+    background: var(--surface);
+  }
+  .market-zone { flex: 1.12 1 0; }
+  .competition-zone { flex: 1.04 1 0; }
+  .opportunity-zone { flex: 0.84 1 0; }
+  .zone-spine {
+    width: 0.54in;
+    flex: 0 0 0.54in;
+    padding-top: 1px;
+  }
+  .zone-num {
+    font-size: 29px;
+    line-height: 1;
+    font-weight: 250;
+    color: var(--teal);
+    opacity: 0.56;
+  }
+  .zone-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .zone-label {
+    font-size: 8.7px;
+    font-weight: 750;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 2px;
+  }
+  .zone-head {
+    font-size: 14.5px;
+    line-height: 1.12;
+    font-weight: 680;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  /* Market */
+  .market-intro {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .market-intro .zone-head {
+    margin-bottom: 5px;
+  }
+  .market-badge {
+    width: 1.82in;
+    flex: 0 0 1.82in;
+    padding-bottom: 5px;
+  }
+  .micro-meter-top,
+  .bar-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px;
+  }
+  .micro-meter-top {
+    margin-bottom: 2px;
+  }
+  .micro-meter-label {
+    font-size: 7.6px;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .micro-meter-value {
+    font-size: 10px;
+    font-weight: 780;
+    color: var(--ink);
+  }
+  .catchment-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    background: var(--white);
+    border-top: 2px solid var(--ink);
+  }
+  .catchment-table th,
+  .catchment-table td {
+    padding: 3px 4px;
+    text-align: right;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  .catchment-table th {
+    background: var(--ink);
+    color: #DDE8ED;
+    font-size: 6.9px;
+    line-height: 1.1;
+    font-weight: 680;
+    letter-spacing: 0.02em;
+  }
+  .catchment-table td {
+    font-size: 7.6px;
+    line-height: 1.15;
+    color: var(--ink-2);
+  }
+  .catchment-table th:first-child,
+  .catchment-table td:first-child {
+    width: 0.58in;
+    text-align: left;
+    font-weight: 700;
+  }
+  .catchment-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .table-note {
+    font-size: 6.9px;
+    line-height: 1.28;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .growth-strip {
+    margin-top: 5px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .growth-item {
+    padding-top: 5px;
+    display: flex;
+    align-items: baseline;
+    gap: 7px;
+    min-width: 0;
+  }
+  .growth-item + .growth-item {
+    border-left: 1px solid var(--line);
+    padding-left: 12px;
+  }
+  .growth-number {
+    flex-shrink: 0;
+    font-size: 13.5px;
+    font-weight: 780;
+    color: var(--teal);
+  }
+  .growth-copy {
+    font-size: 7.2px;
+    line-height: 1.25;
+    color: var(--muted);
+  }
+  .growth-copy b {
+    color: var(--ink);
+  }
+
+  /* Meters and competition */
+  .score-meter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 0.28in;
+    row-gap: 5px;
+  }
+  .bar-row {
+    min-width: 0;
+  }
+  .bar-top {
+    margin-bottom: 2px;
+  }
+  .bar-name {
+    font-size: 7.8px;
+    font-weight: 680;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .bar-name small {
+    font-size: 6.5px;
+    color: var(--muted);
+    font-weight: 550;
+    margin-left: 3px;
+  }
+  .bar-val {
+    font-size: 9.7px;
+    font-weight: 780;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .bar-val span {
+    font-size: 6.2px;
+    color: var(--muted);
+    font-weight: 650;
+  }
+  .bar-track {
+    height: 5px;
+    overflow: hidden;
+    border-radius: 6px;
+    background: var(--track);
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+  }
+  .formula-line {
+    margin-top: 4px;
+    font-size: 6.8px;
+    color: var(--muted);
+  }
+  .formula-line b {
+    color: var(--ink);
+  }
+  .competition-evidence {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid #CBD5DA;
+    display: grid;
+    grid-template-columns: 0.86fr 1.34fr;
+    gap: 0.18in;
+  }
+  .evidence-block {
+    border-left: 3px solid var(--aqua);
+    padding-left: 8px;
+  }
+  .evidence-block.warning {
+    border-left-color: var(--warning);
+  }
+  .evidence-title {
+    font-size: 7.2px;
+    font-weight: 780;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 2px;
+  }
+  .evidence-block.warning .evidence-title {
+    color: var(--warning);
+  }
+  .evidence-copy {
+    font-size: 7.15px;
+    line-height: 1.29;
+    color: var(--muted);
+  }
+  .evidence-copy b {
+    color: var(--ink);
+    font-weight: 720;
+  }
+
+  /* Opportunity lanes */
+  .lane {
+    display: grid;
+    grid-template-columns: 18px 1.55in 0.62in 0.82in 1fr;
+    align-items: center;
+    gap: 8px;
+    min-height: 0.38in;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .lane-rank {
+    font-size: 12px;
+    font-weight: 780;
+    color: #9BAAB2;
+  }
+  .lane-name {
+    font-size: 8.4px;
+    line-height: 1.1;
+    font-weight: 720;
+    color: var(--ink);
+  }
+  .lane-name span {
+    display: block;
+    font-size: 6.5px;
+    color: var(--teal-2);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .score-pill {
+    display: inline-block;
+    border-radius: 3px;
+    padding: 2px 5px;
+    text-align: center;
+    font-size: 10.5px;
+    font-weight: 780;
+    color: var(--white);
+    background: var(--teal);
+  }
+  .score-pill.mid {
+    background: var(--teal-2);
+  }
+  .score-pill.gold {
+    color: var(--ink);
+    background: var(--gold);
+  }
+  .lane-proof {
+    font-size: 6.8px;
+    line-height: 1.23;
+    color: var(--muted);
+  }
+  .digital-lever {
+    margin-top: 5px;
+    display: grid;
+    grid-template-columns: 1.72in 1fr;
+    gap: 0.18in;
+    align-items: center;
+  }
+  .digital-copy {
+    border-left: 3px solid var(--gold);
+    padding-left: 8px;
+    font-size: 7.05px;
+    line-height: 1.26;
+    color: var(--muted);
+  }
+  .digital-copy b {
+    color: var(--ink);
+  }
+  .unknown-line {
+    margin-top: 5px;
+    padding-top: 4px;
+    border-top: 1px solid var(--line);
+    font-size: 6.45px;
+    line-height: 1.22;
+    color: var(--muted);
+  }
+  .unknown-line b {
+    color: var(--ink);
+  }
+
+  /* First 30 Days */
+  .plan {
+    flex: 0 0 1.22in;
+    padding: 0.09in 0.48in 0.08in;
+    display: flex;
+    gap: 0.18in;
+    background: var(--surface);
+    border-top: 2px solid var(--ink);
+  }
+  .plan-label {
+    width: 0.54in;
+    flex: 0 0 0.54in;
+  }
+  .plan-label .zone-label {
+    line-height: 1.35;
+  }
+  .fix {
+    flex: 1;
+    min-width: 0;
+    border-top: 3px solid var(--aqua);
+    padding: 5px 7px 0;
+    background: var(--white);
+  }
+  .fix:nth-of-type(3) {
+    border-top-color: var(--teal-2);
+  }
+  .fix:nth-of-type(4) {
+    border-top-color: var(--gold);
+  }
+  .fix-title {
+    font-size: 8px;
+    line-height: 1.12;
+    font-weight: 780;
+    color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .fix p {
+    font-size: 6.25px;
+    line-height: 1.19;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+  .fix p b {
+    color: var(--ink-2);
+    font-weight: 720;
+  }
+
+  /* Internal review footer */
+  .review-footer {
+    flex: 0 0 0.45in;
+    background: var(--ink);
+    color: #DDE6EA;
+    padding: 0.075in 0.48in;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .footer-status {
+    font-size: 8.2px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--white);
+  }
+  .footer-status span {
+    color: #7FD8E4;
+  }
+  .footer-gate {
+    font-size: 7.4px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: right;
+  }
+
+  @media print {
+    html, body {
+      width: 8.5in;
+      height: 11in;
+      background: var(--white);
+    }
+    .page {
+      margin: 0;
+      box-shadow: none;
+      break-after: avoid-page;
+      page-break-after: avoid;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="hero">
+    <div class="hero-main">
+      <div class="brand-row">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-name">MyBCAT</span>
+        <span class="brand-tag">Practice Growth Intelligence</span>
+      </div>
+      <div class="kicker">Competitive Growth Analysis | Internal Candidate</div>
+      <h1>Vintage Optical has demand support.<br><em>Win by measuring the friction.</em></h1>
+      <div class="subject"><b>Morton, Illinois</b> | Public-only directional evidence | Evidence reviewed 2026-07-30</div>
+    </div>
+    <div class="score-block">
+      <div class="ring">
+        <svg viewBox="0 0 100 100" role="img" aria-label="Client Opportunity Score 54 out of 100">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="#3D4C55" stroke-width="7"/>
+          <circle cx="50" cy="50" r="44" fill="none" stroke="#00ACC1" stroke-width="7"
+                  stroke-linecap="round" stroke-dasharray="149.3 276.5"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-num">54</div>
+          <div class="ring-den">/ 100</div>
+        </div>
+      </div>
+      <div class="score-meta">
+        <div class="score-label cond">Client Opportunity Score</div>
+        <div class="score-note">This is not a grade. It is directional evidence from public sources only.</div>
+        <div class="score-confidence">Measure first | Confidence C</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="read">
+    <div class="zone-spine"><div class="read-label cond">The Read</div></div>
+    <div class="zone-body">
+      <div class="read-text">Demand evidence improved, but pressure remains meaningful. Review trust comes from <b>one bounded Google sample</b>. The next move is measure-first testing, not broad spend.</div>
+    </div>
+  </section>
+
+  <div class="zones">
+    <section class="zone market-zone">
+      <div class="zone-spine"><div class="zone-num cond">1</div></div>
+      <div class="zone-body">
+        <div class="market-intro">
+          <div>
+            <div class="zone-label cond">Your Market</div>
+            <div class="zone-head cond">Modeled catchments show a broad demand base, with observed local growth support.</div>
+          </div>
+          <div class="market-badge">
+            <div class="micro-meter-top">
+              <span class="micro-meter-label">Market Demand-Supply</span>
+              <span class="micro-meter-value">61 / 100</span>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width:61%; background:#006064;"></div></div>
+            <div class="formula-line">Higher = more attractive</div>
+          </div>
+        </div>
+
+        <table class="catchment-table" aria-label="Modeled drive-time catchment estimates">
+          <thead>
+            <tr>
+              <th>Window</th>
+              <th>Population</th>
+              <th>Households</th>
+              <th>Under 18</th>
+              <th>Age 40-64</th>
+              <th>Age 65+</th>
+              <th>Diabetes context</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>5 min</td><td>6,624</td><td>2,722</td><td>1,712</td><td>1,811</td><td>1,311</td><td>9.6%</td></tr>
+            <tr><td>10 min</td><td>19,322</td><td>7,873</td><td>4,571</td><td>5,843</td><td>4,291</td><td>10.9%</td></tr>
+            <tr><td>15 min</td><td>54,768</td><td>23,793</td><td>11,707</td><td>17,431</td><td>10,939</td><td>12.4%</td></tr>
+            <tr><td>20 min</td><td>173,058</td><td>75,244</td><td>38,652</td><td>53,102</td><td>32,473</td><td>13.2%</td></tr>
+            <tr><td>30 min</td><td>283,661</td><td>120,940</td><td>64,831</td><td>86,558</td><td>53,258</td><td>12.3%</td></tr>
+          </tbody>
+        </table>
+        <div class="table-note">Modeled area-weighted estimates, not patient counts. Full VDU remains null. No live traffic.</div>
+
+        <div class="growth-strip">
+          <div class="growth-item">
+            <div class="growth-number cond">+2.29%</div>
+            <div class="growth-copy"><b>Observed population:</b> 17,172 in 2020 to 17,565 in 2025, +393. Village change, not a forecast.</div>
+          </div>
+          <div class="growth-item">
+            <div class="growth-number cond">+3.92%</div>
+            <div class="growth-copy"><b>Observed enrollment:</b> 3,238 in 2022-2023 to 3,365 in 2025-26, +127. 2023-24 is missing and not interpolated.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="zone tint competition-zone">
+      <div class="zone-spine"><div class="zone-num cond">2</div></div>
+      <div class="zone-body">
+        <div class="zone-label cond">Your Competition</div>
+        <div class="zone-head cond">Pressure is real. The evidence supports controlled tests, not a broad competitive claim.</div>
+
+        <div class="score-meter-grid">
+          <div class="bar-row">
+            <div class="bar-top"><span class="bar-name">Competitive Pressure</span><span class="bar-val">57 <span>/ 100</span></span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:57%; background:#B56A3A;"></div></div>
+            <div class="formula-line">Higher = more pressure</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-top"><span class="bar-name">Room to Win</span><span class="bar-val">43 <span>/ 100</span></span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:43%; background:#D3AF5E;"></div></div>
+            <div class="formula-line">Higher = better</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-top"><span class="bar-name">Practice Competitiveness</span><span class="bar-val">61 <span>/ 100</span></span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:61%; background:#00838F;"></div></div>
+            <div class="formula-line">Higher = stronger</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-top"><span class="bar-name">Client Opportunity</span><span class="bar-val">54 <span>/ 100</span></span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:54%; background:#006064;"></div></div>
+            <div class="formula-line">Public-only directional score</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-top"><span class="bar-name">Digital Presence</span><span class="bar-val">60 <span>/ 100</span></span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:60%; background:#00ACC1;"></div></div>
+            <div class="formula-line">Higher = stronger</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-top"><span class="bar-name">Exact inverse</span><span class="bar-val">43</span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:43%; background:#D3AF5E;"></div></div>
+            <div class="formula-line"><b>Room to Win = 100 - 57 = 43</b></div>
+          </div>
+        </div>
+
+        <div class="competition-evidence">
+          <div class="evidence-block warning">
+            <div class="evidence-title">Corrected Focus route</div>
+            <div class="evidence-copy"><b>233.4 seconds | 3.89 minutes | 1.53 miles</b><br>Direct Google listing pins. No live traffic. The correction does not change the score band.</div>
+          </div>
+          <div class="evidence-block">
+            <div class="evidence-title">Bounded review trust sample</div>
+            <div class="evidence-copy"><b>Vintage 4.9 / 348; Focus 4.8 / 182; Tri-County 4.9 / 271; Walmart 3.5 / 8.</b> One same-page Google sample. The rank grid did not run. This is not a complete peer export, and canonical office count remains null.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="zone opportunity-zone">
+      <div class="zone-spine"><div class="zone-num cond">3</div></div>
+      <div class="zone-body">
+        <div class="zone-label cond">Your Opportunity</div>
+        <div class="zone-head cond">Three specialty lanes rank closely. Each needs research before investment.</div>
+
+        <div class="lane">
+          <div class="lane-rank cond">1</div>
+          <div class="lane-name">Dry eye <span>Research next</span></div>
+          <div><span class="score-pill">53</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:53%; background:#006064;"></div></div>
+          <div class="lane-proof">Would move with observed demand, referral flow, delivery capacity, and outcomes.</div>
+        </div>
+        <div class="lane">
+          <div class="lane-rank cond">2</div>
+          <div class="lane-name">Myopia management <span>Research next</span></div>
+          <div><span class="score-pill mid">53</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:53%; background:#00838F;"></div></div>
+          <div class="lane-proof">Would move with inquiry, referral, program capacity, completion, and outcomes evidence.</div>
+        </div>
+        <div class="lane">
+          <div class="lane-rank cond">3</div>
+          <div class="lane-name">Specialty contact lenses <span>Research next</span></div>
+          <div><span class="score-pill gold">51</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:51%; background:#D3AF5E;"></div></div>
+          <div class="lane-proof">Would move with qualified demand, referrals, chair time, remakes, capacity, and outcomes.</div>
+        </div>
+
+        <div class="digital-lever">
+          <div class="bar-row">
+            <div class="bar-top"><span class="bar-name">Digital Presence</span><span class="bar-val">60 <span>/ 100</span></span></div>
+            <div class="bar-track"><div class="bar-fill" style="width:60%; background:#00ACC1;"></div></div>
+          </div>
+          <div class="digital-copy"><b>Bounded measurement lever:</b> establish local visibility, source-specific reputation, and booking completion baselines. This is not a revenue projection.</div>
+        </div>
+
+        <div class="unknown-line"><b>Unknown stays null:</b> canonical office count, Full VDU, rank grid, complete provider entity dedupe, patient choice, live traffic, conversion, capacity, outcomes, economics, and cross-platform review total.</div>
+      </div>
+    </section>
+  </div>
+
+  <section class="plan">
+    <div class="plan-label"><div class="zone-label cond">First<br>30 Days</div></div>
+    <article class="fix">
+      <div class="fix-title">Fix Card 1: Visibility baseline</div>
+      <p><b>Owner:</b> Marketing lead</p>
+      <p><b>First proof:</b> Approved query set and geographic rank-grid export.</p>
+      <p><b>Cadence / decision:</b> Baseline, then monthly. Act on repeatable query gaps.</p>
+      <p><b>Kill rule:</b> Stop if geography or entity matching cannot be reproduced.</p>
+    </article>
+    <article class="fix">
+      <div class="fix-title">Fix Card 2: Reputation source control</div>
+      <p><b>Owner:</b> Practice manager</p>
+      <p><b>First proof:</b> Platform-specific count, recency, and response baseline.</p>
+      <p><b>Cadence / decision:</b> Reconcile monthly. Choose one measured workflow.</p>
+      <p><b>Kill rule:</b> Stop cross-platform totals without dedupe.</p>
+    </article>
+    <article class="fix">
+      <div class="fix-title">Fix Card 3: Booking completion</div>
+      <p><b>Owner:</b> Operations owner</p>
+      <p><b>First proof:</b> Non-PHI funnel numerator and final denominator.</p>
+      <p><b>Cadence / decision:</b> Weekly for 30 days. Fix the highest verified drop-off.</p>
+      <p><b>Kill rule:</b> Stop if capacity or ownership is unavailable.</p>
+    </article>
+  </section>
+
+  <footer class="review-footer">
+    <div class="footer-status"><span>Rendered internal candidate</span> | Internal-only</div>
+    <div class="footer-gate">Human Project Room approval required</div>
+  </footer>
+</main>
+</body>
+</html>

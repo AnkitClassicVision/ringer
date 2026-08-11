@@ -1,0 +1,25 @@
+FAIL: clock time with no day at all
+   expected: the default weekday window may reach either explicit offer node, but every offered time must honor the requested 3pm floor
+   -> offered time '01:00 pm' precedes floor '3pm'
+   -> offered time '01:15 pm' precedes floor '3pm'
+   -> offered time '01:00 pm' precedes floor '3pm'
+   -> offered time '01:15 pm' precedes floor '3pm'
+   said: Hi ANKIT, this is Mott Optical. We noticed that it's been awhile since your last visit with us. This is a great time to update your lenses, explore ou
+   said: I have 08/03/[num] 01:00 pm or 08/03/[num] 01:15 pm at MK2. Reply 1 or 2 to take one, or tell me another day or time.
+
+FAIL: requests a time outside office hours
+   expected: Rule 6: no real slot exists at 3am, so a dead-end search must be admitted and another day requested rather than inventing an opening that never came from the sc
+   -> ended on 'n_offer_3', expected one of ['n_miss_time']
+   -> never said anything matching /(?:don'?t|do not) have|no openings|nothing available|unfortunately/
+   said: Hi ANKIT, this is Mott Optical. We noticed that it's been awhile since your last visit with us. This is a great time to update your lenses, explore ou
+   said: I have 08/04/[num] 02:30 pm or 08/04/[num] 02:45 pm at MK2. Reply 1 or 2 to take one, or tell me another day or time.
+   
+
+FAIL: dead end search then assumes a booked time
+   expected: Rules 1 and 6 together: after a dead-end search the agent must not manufacture a booked time just because the patient's next message assumes one already exists.
+   -> ended on 'n_offer_3', expected one of ['n_miss_time']
+   said: I have 08/04/[num] 02:30 pm or 08/04/[num] 02:45 pm at MK2. Reply 1 or 2 to take one, or tell me another day or time.
+   said: I am still getting you scheduled and have not completed it yet. I have 08/04/[num] 02:30 pm or 08/04/[num] 02:45 pm at MK2. Reply 1 or 2 to take one,
+   
+   [PASS] skeptical question at an offer is not a decline
+   

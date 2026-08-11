@@ -1,0 +1,13 @@
+{
+  "schema_version": "mott-outbound-recall-manifest.v1",
+  "pathway_name": "Synthetic Mott voice source poison",
+  "pathway_id": "synthetic-voice-source-pathway",
+  "version": 1,
+  "voice_source_pathway_id": "synthetic-voice-pathway",
+  "voice_source_version": 1,
+  "start_node_id": "n_identity",
+  "time_out_hours": 72,
+  "restart_after_end_call": false,
+  "structural_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "created_utc": "2026-07-26T00:00:00Z"
+}

@@ -1,0 +1,17 @@
+{
+  "run_name": "mott-send-success",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mott-send-success/work",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "send-fix",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1800,
+      "expect_files": ["sms_recall_batch.py", "test_sms_recall_batch.py", "report.md"],
+      "verified": "Drives send_one with the real /v1/sms/send success shape (status nested under data, errors null) and requires it not to raise and to count the send; a genuine failure (errors present) and a non-2xx must still raise; full suite green.",
+      "check": "python3 /mnt/d_drive/repos/mott/gw-temporal-check/check_send_success.py --sender sms_recall_batch.py --tests test_sms_recall_batch.py --repo .",
+      "spec": "You are fixing a false-failure bug in a batch SMS sender's success check. BOUNDARY: write only inside your task directory; never call an API, never git commit. You own exactly three output files: sms_recall_batch.py, test_sms_recall_batch.py, report.md. Copy both from ./source/ and edit the copies. Read ./source/RESPONSE-SHAPE.md first.\n\nTHE BUG. In send_one, after the HTTP status check, the success validation reads top-level body.get('status'), body.get('success'), body.get('ok') and body.get('error'). But the real /v1/sms/send success response nests status under data and uses 'errors' (plural): {\"data\": {\"status\": \"processing\", \"conversation_id\": \"...\"}, \"errors\": null}. So the check raises 'SMS send response did not confirm success' on EVERY real success. Measured live: a real send created a live conversation (opener delivered) yet the sender refused and reported external_actions_taken=0. In a campaign this miscounts sends and would RE-SEND, double-texting patients.\n\nTHE FIX. Rewrite the success check to match the real shape. A send is successful when: the HTTP status is 2xx (already checked), AND body['errors'] is falsy (None or empty list), AND either body['data']['status'] is one of processing/queued/success/created OR body['data']['conversation_id'] is present. A send FAILED when: non-2xx, OR body['errors'] is non-empty, OR data is null/absent with no conversation_id. Keep it fail-closed: anything ambiguous raises. Be robust to body['data'] being absent.\n\nTESTS. Add tests using the real shapes: a success with data.status 'processing' and errors null must NOT raise and must be counted (external_actions_taken increments where run() is exercised, or send_one returns without raising); a 'queued' success likewise; a failure with errors non-null must raise; a non-2xx must raise; a malformed body (no data) must raise. Keep every existing test green; update any existing send test that assumed the old (wrong) shape.\n\nOUTPUT CONTRACT for report.md: '# Send Success Check Fix' then '## Summary' (max 3 bullets), '## Before/After' of the check condition, '## Tests Added', '## Fail-Closed' confirming genuine failures still raise, '## Assumptions'. Under 500 words."
+    }
+  ]
+}

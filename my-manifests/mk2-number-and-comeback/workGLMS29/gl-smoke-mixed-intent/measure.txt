@@ -1,0 +1,6 @@
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN=1 WALL_MS=6328 N_MSGS=1 NODE=n_post_booking SAID=Hi Rachel! I'm just calling to confirm that your appointment is all set. Is there anything else I can help you with today?
+TURN=2 WALL_MS=2044 N_MSGS=1 NODE=n_post_booking SAID=I understand you'd like to change your appointment to Thursday. Since I'm unable to make any changes to your schedule, you'll need to call the office directly at (212) 219-2219 to reschedule. They'll 
+TURN=3 WALL_MS=1813 N_MSGS=1 NODE=n_post_booking SAID=I can't check availability or make changes to your appointment from here. For any scheduling changes, including looking for openings on Wednesday, please give the office a call at (212) 219-2219.
+RESULT label=gl16-mixed turns=3 total_wall_ms=10185 filler_hits=0 candidate=0

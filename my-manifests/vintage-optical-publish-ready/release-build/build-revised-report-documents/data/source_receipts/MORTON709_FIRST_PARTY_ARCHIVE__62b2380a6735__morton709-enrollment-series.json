@@ -1,0 +1,24 @@
+{
+  "captured_at": "2026-07-30",
+  "source": "Morton CUSD 709 current and archived first-party pages",
+  "records": [
+    {
+      "school_year": "2022-2023",
+      "enrollment": 3238,
+      "receipt": "morton709-archive-20240117.html",
+      "sha256": "3a2e38c98bbf1e993cc530cab7656da21333c0ec75c3a1163a45780f140d73eb"
+    },
+    {
+      "school_year": "2024-25",
+      "enrollment": 3299,
+      "receipt": "morton709-archive-20250912.html",
+      "sha256": "a88d1b7df912bb6811bd84ed7b721cc6366fa5b59b4755dce70329bb9e0a35f0"
+    },
+    {
+      "school_year": "2025-26",
+      "enrollment": 3365,
+      "receipt": "morton709-live-20260730.html",
+      "sha256": "dc59e4c7ed1790348ca84d150d196b0e3a523070032f7b4d2f81e89e4ca5d9b7"
+    }
+  ]
+}

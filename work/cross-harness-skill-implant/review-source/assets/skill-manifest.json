@@ -1,0 +1,11 @@
+{
+  "name": "clean-my-ai-harness-mission-fit",
+  "version": "1.0.0",
+  "release_date": "2026-08-06",
+  "base_product": "Clean My AI Harness",
+  "base_repository": "https://github.com/NateBJones-Projects/clean-my-ai-harness",
+  "outputs": [
+    "YOUR-MISSION-FIT.html",
+    ".clean-my-ai-harness/mission-fit.json"
+  ]
+}

@@ -1,0 +1,1508 @@
+{
+  "analysis_options": null,
+  "edges": [
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_identity to n_appt_check when: identity succeeds uniquely.",
+        "isHighlighted": false,
+        "label": "identity succeeds uniquely"
+      },
+      "id": "edge-n_identity-n_appt_check-identity-succeeds-uniquely",
+      "source": "n_identity",
+      "sourceHandle": null,
+      "target": "n_appt_check",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_identity to e_close when: identity fails or is unsafe.",
+        "isHighlighted": false,
+        "label": "identity fails or is unsafe"
+      },
+      "id": "edge-n_identity-e_close-identity-fails-or-is-unsafe",
+      "source": "n_identity",
+      "sourceHandle": null,
+      "target": "e_close",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_appt_check to n_goal_update when: appointment check is explicitly ok and count is zero.",
+        "isHighlighted": false,
+        "label": "appointment check is explicitly ok and count is zero"
+      },
+      "id": "edge-n_appt_check-n_goal_update-appointment-check-is-explicitly-ok-and-count-is-zero",
+      "source": "n_appt_check",
+      "sourceHandle": null,
+      "target": "n_goal_update",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_appt_check to e_close when: existing appointment or any non-true appointment-check result.",
+        "isHighlighted": false,
+        "label": "existing appointment or any non-true appointment-check result"
+      },
+      "id": "edge-n_appt_check-e_close-existing-appointment-or-any-non-true-appointment-check-result",
+      "source": "n_appt_check",
+      "sourceHandle": null,
+      "target": "e_close",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_goal_update to n_availability when: accepted scheduling update 1 through 8, including every usable clarified date.",
+        "isHighlighted": false,
+        "label": "accepted scheduling update 1 through 8, including every usable clarified date"
+      },
+      "id": "edge-n_goal_update-n_availability-accepted-scheduling-update-1-through-8-including-every-usable-clarified-",
+      "source": "n_goal_update",
+      "sourceHandle": null,
+      "target": "n_availability",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_goal_update to e_close when: ninth scheduling update, abandonment, or timeout.",
+        "isHighlighted": false,
+        "label": "ninth scheduling update, abandonment, or timeout"
+      },
+      "id": "edge-n_goal_update-e_close-ninth-scheduling-update-abandonment-or-timeout",
+      "source": "n_goal_update",
+      "sourceHandle": null,
+      "target": "e_close",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_availability to n_goal_response when: offer, nearest alternatives, empty range, lost slot, ambiguity, or bounded re-ask.",
+        "isHighlighted": false,
+        "label": "offer, nearest alternatives, empty range, lost slot, ambiguity, or bounded re-ask"
+      },
+      "id": "edge-n_availability-n_goal_response-offer-nearest-alternatives-empty-range-lost-slot-ambiguity-or-bounded-re",
+      "source": "n_availability",
+      "sourceHandle": null,
+      "target": "n_goal_response",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_availability to n_select when: gateway identifies a live selection candidate.",
+        "isHighlighted": false,
+        "label": "gateway identifies a live selection candidate"
+      },
+      "id": "edge-n_availability-n_select-gateway-identifies-a-live-selection-candidate",
+      "source": "n_availability",
+      "sourceHandle": null,
+      "target": "n_select",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_availability to n_service_guard when: gateway failure or explicit exhaustion routes through office/defer guard.",
+        "isHighlighted": false,
+        "label": "gateway failure or explicit exhaustion routes through office/defer guard"
+      },
+      "id": "edge-n_availability-n_service_guard-gateway-failure-or-explicit-exhaustion-routes-through-office-defer-guard",
+      "source": "n_availability",
+      "sourceHandle": null,
+      "target": "n_service_guard",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_goal_response to n_goal_update when: every patient scheduling reply; abandonment and timeout are interpreted at the sole inbound update.",
+        "isHighlighted": false,
+        "label": "every patient scheduling reply; abandonment and timeout are interpreted at the sole inbound update"
+      },
+      "id": "edge-n_goal_response-n_goal_update-every-patient-scheduling-reply-abandonment-and-timeout-are-interpreted-a",
+      "source": "n_goal_response",
+      "sourceHandle": null,
+      "target": "n_goal_update",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_select to n_consent when: selection binds to an unexpired exact offer member.",
+        "isHighlighted": false,
+        "label": "selection binds to an unexpired exact offer member"
+      },
+      "id": "edge-n_select-n_consent-selection-binds-to-an-unexpired-exact-offer-member",
+      "source": "n_select",
+      "sourceHandle": null,
+      "target": "n_consent",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_select to n_availability when: stale offer silently refreshes through one normal attempt.",
+        "isHighlighted": false,
+        "label": "stale offer silently refreshes through one normal attempt"
+      },
+      "id": "edge-n_select-n_availability-stale-offer-silently-refreshes-through-one-normal-attempt",
+      "source": "n_select",
+      "sourceHandle": null,
+      "target": "n_availability",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_select to n_goal_update when: reply is a goal patch or mixed selection and preference.",
+        "isHighlighted": false,
+        "label": "reply is a goal patch or mixed selection and preference"
+      },
+      "id": "edge-n_select-n_goal_update-reply-is-a-goal-patch-or-mixed-selection-and-preference",
+      "source": "n_select",
+      "sourceHandle": null,
+      "target": "n_goal_update",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_consent to n_atomic_book when: explicit YES to date-only consent.",
+        "isHighlighted": false,
+        "label": "explicit YES to date-only consent"
+      },
+      "id": "edge-n_consent-n_atomic_book-explicit-yes-to-date-only-consent",
+      "source": "n_consent",
+      "sourceHandle": null,
+      "target": "n_atomic_book",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_consent to n_goal_update when: NO, question, or changed preference.",
+        "isHighlighted": false,
+        "label": "NO, question, or changed preference"
+      },
+      "id": "edge-n_consent-n_goal_update-no-question-or-changed-preference",
+      "source": "n_consent",
+      "sourceHandle": null,
+      "target": "n_goal_update",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_atomic_book to n_confirm when: definite success with boolean false slot conflict.",
+        "isHighlighted": false,
+        "label": "definite success with boolean false slot conflict"
+      },
+      "id": "edge-n_atomic_book-n_confirm-definite-success-with-boolean-false-slot-conflict",
+      "source": "n_atomic_book",
+      "sourceHandle": null,
+      "target": "n_confirm",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_atomic_book to n_goal_update when: definite slot conflict becomes lost-slot update.",
+        "isHighlighted": false,
+        "label": "definite slot conflict becomes lost-slot update"
+      },
+      "id": "edge-n_atomic_book-n_goal_update-definite-slot-conflict-becomes-lost-slot-update",
+      "source": "n_atomic_book",
+      "sourceHandle": null,
+      "target": "n_goal_update",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_atomic_book to n_reconcile when: unknown outcome after identical-key retries are exhausted.",
+        "isHighlighted": false,
+        "label": "unknown outcome after identical-key retries are exhausted"
+      },
+      "id": "edge-n_atomic_book-n_reconcile-unknown-outcome-after-identical-key-retries-are-exhausted",
+      "source": "n_atomic_book",
+      "sourceHandle": null,
+      "target": "n_reconcile",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_atomic_book to e_close when: definite failure or invalid conflict value.",
+        "isHighlighted": false,
+        "label": "definite failure or invalid conflict value"
+      },
+      "id": "edge-n_atomic_book-e_close-definite-failure-or-invalid-conflict-value",
+      "source": "n_atomic_book",
+      "sourceHandle": null,
+      "target": "e_close",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_reconcile to n_confirm when: one unique exact attempted-offer match.",
+        "isHighlighted": false,
+        "label": "one unique exact attempted-offer match"
+      },
+      "id": "edge-n_reconcile-n_confirm-one-unique-exact-attempted-offer-match",
+      "source": "n_reconcile",
+      "sourceHandle": null,
+      "target": "n_confirm",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_reconcile to e_close when: zero, ambiguous, mismatched, or unavailable reconciliation.",
+        "isHighlighted": false,
+        "label": "zero, ambiguous, mismatched, or unavailable reconciliation"
+      },
+      "id": "edge-n_reconcile-e_close-zero-ambiguous-mismatched-or-unavailable-reconciliation",
+      "source": "n_reconcile",
+      "sourceHandle": null,
+      "target": "e_close",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_confirm to e_close when: booked close or post-booking deferral.",
+        "isHighlighted": false,
+        "label": "booked close or post-booking deferral"
+      },
+      "id": "edge-n_confirm-e_close-booked-close-or-post-booking-deferral",
+      "source": "n_confirm",
+      "sourceHandle": null,
+      "target": "e_close",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_service_guard to n_goal_update when: help, office, or FAQ answer continues same goal.",
+        "isHighlighted": false,
+        "label": "help, office, or FAQ answer continues same goal"
+      },
+      "id": "edge-n_service_guard-n_goal_update-help-office-or-faq-answer-continues-same-goal",
+      "source": "n_service_guard",
+      "sourceHandle": null,
+      "target": "n_goal_update",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_service_guard to e_close when: explicit decline or office termination.",
+        "isHighlighted": false,
+        "label": "explicit decline or office termination"
+      },
+      "id": "edge-n_service_guard-e_close-explicit-decline-or-office-termination",
+      "source": "n_service_guard",
+      "sourceHandle": null,
+      "target": "e_close",
+      "targetHandle": null,
+      "type": "custom"
+    },
+    {
+      "animated": true,
+      "data": {
+        "description": "Route from n_suppress to e_close when: STOP or wrong-person suppression response.",
+        "isHighlighted": false,
+        "label": "STOP or wrong-person suppression response"
+      },
+      "id": "edge-n_suppress-e_close-stop-or-wrong-person-suppression-response",
+      "source": "n_suppress",
+      "sourceHandle": null,
+      "target": "e_close",
+      "targetHandle": null,
+      "type": "custom"
+    }
+  ],
+  "entity_schemas": null,
+  "memory_enabled": false,
+  "nodes": [
+    {
+      "data": {
+        "active": false,
+        "body": "{\"phone\":\"{{recall_cell}}\",\"patient_id\":\"{{recall_patient_id}}\"}",
+        "headers": {
+          "Authorization": "{{ SECRET.MottGatewayToken }}",
+          "Content-Type": "application/json"
+        },
+        "isStart": true,
+        "method": "POST",
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "name": "Resolve identity (silent)",
+        "responseData": [
+          {
+            "data": "$.ok",
+            "name": "ok"
+          },
+          {
+            "data": "$.result.count",
+            "name": "count"
+          },
+          {
+            "data": "$.result.patients[0].name_first",
+            "name": "patient_first"
+          },
+          {
+            "data": "$.result.patients[0].patient_id",
+            "name": "patient_id"
+          },
+          {
+            "data": "$.result.exam_type_id",
+            "name": "exam_type_id"
+          }
+        ],
+        "responsePathways": [
+          [
+            "recall_cell",
+            "==",
+            "",
+            {
+              "id": "e_close",
+              "name": "No mobile supplied"
+            }
+          ],
+          [
+            "recall_patient_id",
+            "==",
+            "",
+            {
+              "id": "e_close",
+              "name": "No patient id supplied"
+            }
+          ],
+          [
+            "store",
+            "==",
+            "",
+            {
+              "id": "e_close",
+              "name": "No store supplied"
+            }
+          ],
+          [
+            "count",
+            "==",
+            "1",
+            {
+              "id": "n_appt_check",
+              "name": "Identity confirmed"
+            }
+          ],
+          [
+            "count",
+            "==",
+            "0",
+            {
+              "id": "e_close",
+              "name": "Identity failed"
+            }
+          ],
+          [
+            "count",
+            ">=",
+            "2",
+            {
+              "id": "e_close",
+              "name": "Identity not unique"
+            }
+          ],
+          [
+            "ok",
+            "!=",
+            "true",
+            {
+              "id": "e_close",
+              "name": "Identity lookup unavailable"
+            }
+          ]
+        ],
+        "text": "",
+        "url": "https://mott-booking-gw.mail.mybcat.com/patient-search"
+      },
+      "height": 115,
+      "id": "n_identity",
+      "position": {
+        "x": 850,
+        "y": 57.5
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Webhook",
+      "width": 320,
+      "x": 850,
+      "y": 57.5
+    },
+    {
+      "data": {
+        "active": false,
+        "body": "{\"patient_id\": \"{{patient_id}}\", \"store\": \"{{store}}\"}",
+        "headers": {
+          "Authorization": "{{ SECRET.MottGatewayToken }}",
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "name": "Upcoming appointment check (silent)",
+        "responseData": [
+          {
+            "data": "$.ok",
+            "name": "ok"
+          },
+          {
+            "data": "$.result.count",
+            "name": "appt_count"
+          }
+        ],
+        "responsePathways": [
+          [
+            "ok",
+            "!=",
+            "true",
+            {
+              "id": "e_close",
+              "name": "Fail-safe office/defer guard"
+            }
+          ],
+          [
+            "appt_count",
+            ">=",
+            "1",
+            {
+              "id": "e_close",
+              "name": "Existing appointment"
+            }
+          ],
+          [
+            "appt_count",
+            "==",
+            "0",
+            {
+              "id": "n_goal_update",
+              "name": "No upcoming appointment"
+            }
+          ]
+        ],
+        "text": "",
+        "url": "https://mott-booking-gw.mail.mybcat.com/appt-list"
+      },
+      "height": 115,
+      "id": "n_appt_check",
+      "position": {
+        "x": 0,
+        "y": 100
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Webhook",
+      "width": 320,
+      "x": 0,
+      "y": 100
+    },
+    {
+      "data": {
+        "active": false,
+        "name": "Update persistent scheduling goal",
+        "prompt": "Maintain exactly one persistent scheduling_goal_v94 object. On revision 0 send exactly:\nHi {{patient_first}}, this is MK2 Optical.\n\nWe noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.\n\nMany vision insurance benefits renew yearly, so don't let your benefits go unused!\n\nWhen would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.\n\n如需中文服务，请直接用中文回复。\nOn later turns do not repeat the greeting. Apply EXTRACT_GOAL_UPDATE_V94 as a patch only; omitted fields retain and rejected constraints alone clear. This is the sole scheduling inbound node. Every usable date, including an answer to ambiguity or its re-ask, proceeds to n_availability. Never announce work in progress. Cap completed scheduling iterations at 8; the ninth routes to loop_cap close.",
+        "userWait": true,
+        "goalObject": {
+          "name": "scheduling_goal_v94",
+          "persistent": true,
+          "fields": {
+            "goal_intent": "SPEC §2 typed field",
+            "goal_from": "SPEC §2 typed field",
+            "goal_to": "SPEC §2 typed field",
+            "time_from": "SPEC §2 typed field",
+            "time_to": "SPEC §2 typed field",
+            "anchor": "SPEC §2 typed field",
+            "relation": "SPEC §2 typed field",
+            "goal_status": "SPEC §2 typed field",
+            "goal_revision": "SPEC §2 typed field",
+            "goal_clarify_count": "SPEC §2 typed field",
+            "goal_ambiguity_key": "SPEC §2 typed field",
+            "last_offered_dates": "SPEC §2 typed field",
+            "offer_id": "SPEC §2 typed field",
+            "offer_expires_at": "SPEC §2 typed field",
+            "selected_slot": "SPEC §2 typed field"
+          },
+          "initial": {
+            "goal_intent": "book_exam",
+            "goal_from": "monday",
+            "goal_to": "friday",
+            "time_from": "none",
+            "time_to": "none",
+            "anchor": "day-open",
+            "relation": "after",
+            "goal_status": "unsatisfied",
+            "goal_revision": 0,
+            "goal_clarify_count": 0,
+            "goal_ambiguity_key": "none",
+            "last_offered_dates": [],
+            "offer_id": "none",
+            "offer_expires_at": "none",
+            "selected_slot": "none"
+          },
+          "lifecycle": [
+            "unsatisfied -> offered -> confirmed",
+            "unsatisfied|offered -> abandoned"
+          ],
+          "patch_semantics": "absence retains; explicit replacement replaces; explicit rejection clears only the rejected constraint",
+          "authority": "n_availability goal_echo atomically replaces the stored object; gateway wins every disagreement",
+          "persistent_objects": 1,
+          "authoritative_writer": "n_availability"
+        },
+        "extractionDefinition": {
+          "name": "EXTRACT_GOAL_UPDATE_V94",
+          "definition": "Read the full conversation and latest USER message. Return exactly:\nuser_verbatim: exact latest user text, with double quotes changed to single quotes.\nintent_update: book_exam|abandon|retain.\nfrom_update: an accepted future day/range phrase, unclear, clear, or retain.\nto_update: an accepted future range end, unclear, clear, or retain.\ntime_from_update: 12-hour time with AM/PM, none|clear|retain.\ntime_to_update: 12-hour time with AM/PM, none|clear|retain.\nanchor_update: day-open|day-close|noon|an explicit 12-hour time with AM/PM|clear|retain.\nrelation_update: nearest|before|after|clear|retain.\nselection_update: 1|2|yes|no|unclear|none.\n\nRules: update only what the latest user changed. Never reset omitted fields. Rejections clear only the rejected value. Bare weekdays mean the next occurrence. Preserve week qualifiers. ASAP/next available/earliest means tomorrow with anchor=day-open and relation=after. First appointment means anchor=day-open and relation=after. Last/latest slot means anchor=day-close and relation=before. Around noon means anchor=noon and relation=nearest. After an explicit time sets that time as anchor and relation=after. Before an explicit time sets that time as anchor and relation=before. Morning/afternoon/late select configured anchor presets, not band bounds. A correction 'no, the following X' resolves relative to the offered date plus 7 days, never relative to today. A question is not consent. A message that selects and changes a preference is a goal update, not booking consent. Do not calculate or emit slot times, booking status, prose, or any other field."
+        },
+        "extractVars": [
+          [
+            "goal_update_v94",
+            "string",
+            "EXTRACT_GOAL_UPDATE_V94",
+            false,
+            false,
+            true
+          ]
+        ],
+        "modelOptions": {
+          "newTemperature": 0.2
+        },
+        "loopContract": {
+          "counter": "goal_revision",
+          "maximum_completed_iterations": 8,
+          "ninth_update_target": "e_close",
+          "ninth_update_mode": "loop_cap",
+          "guards_do_not_consume_or_reset": true
+        }
+      },
+      "height": 115,
+      "id": "n_goal_update",
+      "position": {
+        "x": 850,
+        "y": 500
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Default",
+      "width": 320,
+      "x": 850,
+      "y": 500
+    },
+    {
+      "data": {
+        "active": false,
+        "name": "Interpret goal and search once (silent)",
+        "body": "{\"store\":\"{{store}}\",\"prior_goal\":\"{{scheduling_goal_v94}}\",\"pathway_update\":\"{{goal_update_v94}}\",\"raw_text\":\"{{lastUserMessage}}\",\"user_verbatim\":\"{{user_verbatim}}\",\"current_offer_id\":\"{{offer_id}}\",\"call_id\":\"{{callID}}\",\"goal_from\":\"{{goal_from}}\",\"goal_to\":\"{{goal_to}}\",\"time_from\":\"{{time_from}}\",\"time_to\":\"{{time_to}}\",\"anchor\":\"{{anchor}}\",\"relation\":\"{{relation}}\",\"time_pref\":\"{{time_pref}}\",\"slot_minutes\":15}",
+        "headers": {
+          "Authorization": "{{ SECRET.MottGatewayToken }}",
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "modelOptions": {
+          "retryAttempts": 1,
+          "skipUserResponse": true
+        },
+        "responseData": [
+          {
+            "data": "$.ok",
+            "name": "ok"
+          },
+          {
+            "data": "$.result.goal_echo",
+            "name": "goal_echo"
+          },
+          {
+            "data": "$.result.pathway_read",
+            "name": "pathway_read"
+          },
+          {
+            "data": "$.result.gateway_read",
+            "name": "gateway_read"
+          },
+          {
+            "data": "$.result.decision_source",
+            "name": "decision_source"
+          },
+          {
+            "data": "$.result.disagreement_fields",
+            "name": "disagreement_fields"
+          },
+          {
+            "data": "$.result.response_kind",
+            "name": "response_kind"
+          },
+          {
+            "data": "$.result.question_kind",
+            "name": "question_kind"
+          },
+          {
+            "data": "$.result.inventory_token",
+            "name": "inventory_token"
+          },
+          {
+            "data": "$.result.choices",
+            "name": "choices"
+          },
+          {
+            "data": "$.result.choices[0].choice",
+            "name": "slot_1_choice"
+          },
+          {
+            "data": "$.result.choices[0].slot_id",
+            "name": "slot_1_id"
+          },
+          {
+            "data": "$.result.choices[0].date",
+            "name": "slot_1_date"
+          },
+          {
+            "data": "$.result.choices[0].day_name",
+            "name": "slot_1_day_name"
+          },
+          {
+            "data": "$.result.choices[0].start",
+            "name": "slot_1_start"
+          },
+          {
+            "data": "$.result.choices[0].store",
+            "name": "slot_1_store"
+          },
+          {
+            "data": "$.result.choices[1].choice",
+            "name": "slot_2_choice"
+          },
+          {
+            "data": "$.result.choices[1].slot_id",
+            "name": "slot_2_id"
+          },
+          {
+            "data": "$.result.choices[1].date",
+            "name": "slot_2_date"
+          },
+          {
+            "data": "$.result.choices[1].day_name",
+            "name": "slot_2_day_name"
+          },
+          {
+            "data": "$.result.choices[1].start",
+            "name": "slot_2_start"
+          },
+          {
+            "data": "$.result.choices[1].store",
+            "name": "slot_2_store"
+          },
+          {
+            "data": "$.result.offer_id",
+            "name": "offer_id"
+          },
+          {
+            "data": "$.result.offer_issued_at",
+            "name": "offer_issued_at"
+          },
+          {
+            "data": "$.result.offer_expires_at",
+            "name": "offer_expires_at"
+          },
+          {
+            "data": "$.result.goal_clarify_count",
+            "name": "goal_clarify_count"
+          },
+          {
+            "data": "$.result.goal_ambiguity_key",
+            "name": "goal_ambiguity_key"
+          }
+        ],
+        "responsePathways": [
+          [
+            "ok",
+            "!=",
+            "true",
+            {
+              "id": "n_service_guard",
+              "name": "Availability unavailable: office/defer guard"
+            }
+          ],
+          [
+            "response_kind",
+            "==",
+            "offer",
+            {
+              "id": "n_goal_response",
+              "name": "Fresh two-choice offer"
+            }
+          ],
+          [
+            "response_kind",
+            "==",
+            "empty_nearest",
+            {
+              "id": "n_goal_response",
+              "name": "Nearest real alternatives"
+            }
+          ],
+          [
+            "response_kind",
+            "==",
+            "ambiguity",
+            {
+              "id": "n_goal_response",
+              "name": "Targeted clarification"
+            }
+          ],
+          [
+            "response_kind",
+            "==",
+            "reask",
+            {
+              "id": "n_goal_response",
+              "name": "One bounded re-ask"
+            }
+          ],
+          [
+            "response_kind",
+            "==",
+            "empty",
+            {
+              "id": "n_goal_response",
+              "name": "Empty range"
+            }
+          ],
+          [
+            "response_kind",
+            "==",
+            "lost_slot",
+            {
+              "id": "n_goal_response",
+              "name": "Lost selected slot"
+            }
+          ],
+          [
+            "response_kind",
+            "==",
+            "selection",
+            {
+              "id": "n_select",
+              "name": "Live selection candidate"
+            }
+          ],
+          [
+            "response_kind",
+            "==",
+            "exhausted",
+            {
+              "id": "n_service_guard",
+              "name": "Explicit exhaustion: office guard"
+            }
+          ]
+        ],
+        "text": "",
+        "url": "https://mott-booking-gw.mail.mybcat.com/availability",
+        "patch": "pathway patch {{goal_update_v94}}",
+        "goalEchoWrite": "Atomically replace scheduling_goal_v94 with complete goal_echo before routing; no pathway field overrides it.",
+        "orderingRule": "Sort each day's real slots by distance from anchor; apply the directional filter; nearest has no exclusion, before excludes at/after anchor, after excludes at/before anchor; return top two.",
+        "queryContract": "Exactly one inventory query per accepted update; bounded request with no legacy paging branches or band compensation.",
+        "offerContract": {
+          "choice_count": 2,
+          "ttl_minutes": 10,
+          "invalid_at_expiry": true,
+          "invalid_on_any_goal_change": true
+        }
+      },
+      "height": 115,
+      "id": "n_availability",
+      "position": {
+        "x": 1225,
+        "y": 700
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Webhook",
+      "width": 320,
+      "x": 1225,
+      "y": 700
+    },
+    {
+      "data": {
+        "active": false,
+        "name": "Render offer or bounded question",
+        "prompt": "Render exactly one response_kind using only this call's data. offer: \"I have {{slot_1_day_name}} {{slot_1_date}} {{slot_1_start}} or {{slot_2_day_name}} {{slot_2_date}} {{slot_2_start}} at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.\" latest: use the same standard two-choice offer pattern, ordered true latest then immediately before. ambiguity: \"I want to make sure I get the right day. Did you mean {{date_candidate_1_en}} or {{date_candidate_2_en}}? You can also reply with a different date.\" reask: \"Please reply with one specific day or date, such as August 12. I’ll search using the best date I have after this reply.\" empty: \"I don't have anything open in that range. What other day or date range works for you?\" empty_nearest: \"I don't have anything open in that range. The nearest openings are {{slot_1_day_name}} {{slot_1_start}} or {{slot_2_day_name}} {{slot_2_start}} at MK2 Optical. Reply 1 or 2 to take one, or tell me another date range.\" lost_slot: \"That opening is no longer available. What other day or date range works for you?\" Only offer and empty_nearest may state clock times, and only the two choices under this response's offer_id and inventory_token. A usable date always exits to n_goal_update. Ambiguity asks once, re-asks once, then gateway fail-opens to search using the best retained non-null range. Never remain here and never claim booking.",
+        "userWait": true,
+        "modelOptions": {
+          "newTemperature": 0.2
+        },
+        "clarifyContract": {
+          "question_limit_per_ambiguity": 1,
+          "reask_limit_per_ambiguity": 1,
+          "after_reask": "fail-open-to-search",
+          "usable_date_target": "n_goal_update",
+          "self_loop": false
+        }
+      },
+      "height": 115,
+      "id": "n_goal_response",
+      "position": {
+        "x": 1600,
+        "y": 900
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Default",
+      "width": 320,
+      "x": 1600,
+      "y": 900
+    },
+    {
+      "data": {
+        "active": false,
+        "name": "Bind live offer or refresh silently",
+        "body": "{\"operation\":\"bind_live_offer\",\"offer_id\":\"{{offer_id}}\",\"offer_expires_at\":\"{{offer_expires_at}}\",\"selection\":\"{{selection_update}}\",\"raw_text\":\"{{lastUserMessage}}\",\"prior_goal\":\"{{scheduling_goal_v94}}\",\"choices\":\"{{choices}}\",\"inventory_token\":\"{{inventory_token}}\",\"call_id\":\"{{callID}}\"}",
+        "headers": {
+          "Authorization": "{{ SECRET.MottGatewayToken }}",
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "responseData": [
+          {
+            "data": "$.ok",
+            "name": "select_ok"
+          },
+          {
+            "data": "$.result.kind",
+            "name": "select_kind"
+          },
+          {
+            "data": "$.result.selected_slot",
+            "name": "selected_slot"
+          },
+          {
+            "data": "$.result.goal_patch",
+            "name": "selection_goal_patch"
+          }
+        ],
+        "responsePathways": [
+          [
+            "select_kind",
+            "==",
+            "selected",
+            {
+              "id": "n_consent",
+              "name": "Live exact offer member selected"
+            }
+          ],
+          [
+            "select_kind",
+            "==",
+            "stale",
+            {
+              "id": "n_availability",
+              "name": "Silent normal refresh"
+            }
+          ],
+          [
+            "select_kind",
+            "==",
+            "goal_patch",
+            {
+              "id": "n_goal_update",
+              "name": "Preference change re-enters goal update"
+            }
+          ],
+          [
+            "select_ok",
+            "!=",
+            "true",
+            {
+              "id": "n_availability",
+              "name": "Silent safe refresh"
+            }
+          ]
+        ],
+        "text": "",
+        "url": "https://mott-booking-gw.mail.mybcat.com/offer-select",
+        "staleContract": "Expired or goal-invalidated acceptance never books and produces no visible error; run one normal fresh availability attempt."
+      },
+      "height": 115,
+      "id": "n_select",
+      "position": {
+        "x": 1975,
+        "y": 1100
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Webhook",
+      "width": 320,
+      "x": 1975,
+      "y": 1100
+    },
+    {
+      "data": {
+        "active": false,
+        "name": "Date-only booking consent",
+        "prompt": "Send exactly: \"To confirm, you want the eye exam on {{selected_slot_day_name}} at MK2 Optical. Reply YES to book it, or NO to keep looking.\" This is date-only: never state a clock time and never claim a booking. YES only routes to n_atomic_book. NO and every preference change route to n_goal_update. A question is not consent.",
+        "userWait": true,
+        "modelOptions": {
+          "newTemperature": 0.2
+        }
+      },
+      "height": 115,
+      "id": "n_consent",
+      "position": {
+        "x": 2350,
+        "y": 1300
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Default",
+      "width": 320,
+      "x": 2350,
+      "y": 1300
+    },
+    {
+      "data": {
+        "active": false,
+        "name": "Atomic conflict check and book (silent)",
+        "body": "{\"operation\":\"check_and_book\",\"offer_id\":\"{{offer_id}}\",\"slot\":\"{{selected_slot}}\",\"slot_id\":\"{{selected_slot.slot_id}}\",\"inventory_token\":\"{{selected_slot.inventory_token}}\",\"patient_id\":\"{{patient_id}}\",\"store\":\"{{store}}\",\"exam_type_id\":\"{{exam_type_id}}\",\"idempotency_key\":\"{{conversation_id}}:{{offer_id}}\"}",
+        "headers": {
+          "Authorization": "{{ SECRET.MottGatewayToken }}",
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "modelOptions": {
+          "retryAttempts": 2,
+          "skipUserResponse": true
+        },
+        "responseData": [
+          {
+            "data": "$.ok",
+            "name": "book_ok"
+          },
+          {
+            "data": "$.success",
+            "name": "book_success"
+          },
+          {
+            "data": "$.slot_conflict",
+            "name": "slot_conflict"
+          },
+          {
+            "data": "$.outcome_known",
+            "name": "outcome_known"
+          },
+          {
+            "data": "$.attempted_offer",
+            "name": "attempted_offer"
+          },
+          {
+            "data": "$.error",
+            "name": "book_error"
+          }
+        ],
+        "responsePathways": [
+          [
+            "slot_conflict",
+            "==",
+            "true",
+            {
+              "id": "n_goal_update",
+              "name": "Definite conflict returns as lost-slot update"
+            }
+          ],
+          [
+            "book_success",
+            "==",
+            "true",
+            {
+              "id": "n_confirm",
+              "name": "Atomic booking succeeded"
+            }
+          ],
+          [
+            "outcome_known",
+            "==",
+            "false",
+            {
+              "id": "n_reconcile",
+              "name": "Exhausted transport retries require exact reconciliation"
+            }
+          ],
+          [
+            "book_success",
+            "==",
+            "false",
+            {
+              "id": "e_close",
+              "name": "Definite booking failure"
+            }
+          ],
+          [
+            "slot_conflict",
+            "!=",
+            "false",
+            {
+              "id": "e_close",
+              "name": "Blank missing or non-boolean conflict fails safe"
+            }
+          ]
+        ],
+        "text": "",
+        "url": "https://mott-booking-gw.mail.mybcat.com/sign",
+        "retryContract": "After timeout/transport failure retry identical request and identical idempotency key with bounded backoff, at most 2 retries; never mint a key or change payload.",
+        "conflictContract": "Only boolean false permits success evaluation; blank, missing, or non-boolean fails safe."
+      },
+      "height": 115,
+      "id": "n_atomic_book",
+      "position": {
+        "x": 2725,
+        "y": 1500
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Webhook",
+      "width": 320,
+      "x": 2725,
+      "y": 1500
+    },
+    {
+      "data": {
+        "active": false,
+        "name": "Reconcile exact attempted offer once (silent)",
+        "body": "{\"operation\":\"reconcile_exact_attempt\",\"offer_id\":\"{{attempted_offer.offer_id}}\",\"slot_id\":\"{{attempted_offer.slot_id}}\",\"store\":\"{{attempted_offer.store}}\",\"patient_id\":\"{{patient_id}}\",\"attempted_date\":\"{{attempted_offer.date}}\",\"attempted_start\":\"{{attempted_offer.start}}\"}",
+        "headers": {
+          "Authorization": "{{ SECRET.MottGatewayToken }}",
+          "Content-Type": "application/json"
+        },
+        "method": "POST",
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "responseData": [
+          {
+            "data": "$.ok",
+            "name": "recon_ok"
+          },
+          {
+            "data": "$.result.exact_match_count",
+            "name": "exact_match_count"
+          },
+          {
+            "data": "$.result.exact_match",
+            "name": "exact_match"
+          }
+        ],
+        "responsePathways": [
+          [
+            "recon_ok",
+            "!=",
+            "true",
+            {
+              "id": "e_close",
+              "name": "Reconciliation unavailable"
+            }
+          ],
+          [
+            "exact_match_count",
+            "==",
+            "1",
+            {
+              "id": "n_confirm",
+              "name": "Unique exact attempted appointment exists"
+            }
+          ],
+          [
+            "exact_match_count",
+            "==",
+            "0",
+            {
+              "id": "e_close",
+              "name": "No exact match"
+            }
+          ],
+          [
+            "exact_match_count",
+            ">=",
+            "2",
+            {
+              "id": "e_close",
+              "name": "Ambiguous exact matches"
+            }
+          ]
+        ],
+        "text": "",
+        "url": "https://mott-booking-gw.mail.mybcat.com/appt-list",
+        "matchContract": "Unique match must agree on offer_id, slot_id, store, patient, attempted date, and attempted start; count-only evidence is forbidden."
+      },
+      "height": 115,
+      "id": "n_reconcile",
+      "position": {
+        "x": 3100,
+        "y": 1700
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Webhook",
+      "width": 320,
+      "x": 3100,
+      "y": 1700
+    },
+    {
+      "data": {
+        "active": false,
+        "name": "Confirmed booking close",
+        "prompt": "You are the sole affirmative booking-claim owner. On direct atomic success, name the confirmed date but no clock time, then end exactly: \"You're all set. If you have further questions, please call MK2 Optical at (212) 219-2219\". On recovered exact reconciliation, send exactly that fixed close. Chinese fixed close: \"您都安排好了。如有其他问题，请致电 MK2 Optical，电话：(212) 219-2219\". Any later request defers and never searches or books again.",
+        "userWait": true,
+        "modelOptions": {
+          "newTemperature": 0.2
+        }
+      },
+      "height": 115,
+      "id": "n_confirm",
+      "position": {
+        "x": 3475,
+        "y": 1900
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Default",
+      "width": 320,
+      "x": 3475,
+      "y": 1900
+    },
+    {
+      "data": {
+        "active": false,
+        "name": "Global help office and FAQ guard",
+        "prompt": "Global service guard. help: \"This is MK2 Optical's appointment scheduling assistant. For help, call (212) 219-2219. Reply STOP to opt out.\" office: give (212) 219-2219 for orders, glasses status, or medical questions. FAQ: vision insurance typically has an allowance with co-pays; cost depends on benefits; office staff can help at (212) 219-2219. Ask whether to continue scheduling, without repeating any offer or clock time. A question is never a decline. Return to n_goal_update unless the patient explicitly abandons, has an existing appointment, or needs office termination.",
+        "userWait": true,
+        "isGlobal": true,
+        "enableGlobalAutoReturn": false,
+        "globalLabel": "HELP, office, insurance, coverage, cost, contact lens, frames, sunglasses, orders, glasses status, or medical question before confirmation",
+        "modelOptions": {
+          "newTemperature": 0.2
+        }
+      },
+      "height": 115,
+      "id": "n_service_guard",
+      "position": {
+        "x": 100,
+        "y": 700
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Default",
+      "width": 320,
+      "x": 100,
+      "y": 700
+    },
+    {
+      "data": {
+        "active": false,
+        "name": "STOP or wrong-person suppression (silent)",
+        "isGlobal": true,
+        "enableGlobalAutoReturn": false,
+        "globalLabel": "The patient wants the texts to stop. This includes a message that is just the word STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT or REMOVE on its own in any casing, and any message asking to be taken off the list, to stop texting, or to not be contacted again. Match this even when the message is a single word with no other context. The person holding this phone is not the patient. This includes a message that is just NOT ME or WRONG NUMBER, and any message saying they are not that person, they do not know that person, this is the wrong number, or asking who this is because they were not expecting to hear from an eye doctor.",
+        "method": "POST",
+        "url": "https://mott-booking-gw.mail.mybcat.com/sms-suppression",
+        "headers": {
+          "Authorization": "{{ SECRET.MottGatewayToken }}",
+          "Content-Type": "application/json"
+        },
+        "body": "{\"phone_e164\":\"{{recall_cell}}\",\"reason\":\"{{suppression_reason}}\",\"source\":\"sms_reply\"}",
+        "modelOptions": {
+          "retryAttempts": 0,
+          "skipUserResponse": true
+        },
+        "responseData": [
+          {
+            "data": "$.ok",
+            "name": "suppression_ok"
+          }
+        ],
+        "responsePathways": [
+          [
+            "suppression_ok",
+            "==",
+            "true",
+            {
+              "id": "e_close",
+              "name": "Suppression recorded"
+            }
+          ],
+          [
+            "suppression_ok",
+            "!=",
+            "true",
+            {
+              "id": "e_close",
+              "name": "Suppression response still closes"
+            }
+          ]
+        ],
+        "text": "",
+        "modes": {
+          "stop": {
+            "reason": "stop",
+            "close_mode": "stop"
+          },
+          "wrong_person": {
+            "reason": "complaint",
+            "close_mode": "not_me"
+          }
+        }
+      },
+      "height": 115,
+      "id": "n_suppress",
+      "position": {
+        "x": 100,
+        "y": 1100
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "Webhook",
+      "width": 320,
+      "x": 100,
+      "y": 1100
+    },
+    {
+      "data": {
+        "active": false,
+        "name": "Parameterized terminal close",
+        "text": "{{close_text}}",
+        "outcome": "{{close_mode}}",
+        "modes": {
+          "e_safe_identity": "I couldn't safely continue this scheduling request. Please call MK2 Optical at (212) 219-2219.",
+          "e_safe_failure": "I couldn't access scheduling right now and no appointment was booked. Please call MK2 Optical at (212) 219-2219.",
+          "e_booking_failed": "I wasn't able to confirm whether that booking went through. The MK2 Optical office will double-check it and reach out to you. If you'd like, you can also call them at (212) 219-2219.",
+          "e_booked": "Thank you. We look forward to seeing you.",
+          "e_office": "Please call MK2 Optical at (212) 219-2219.",
+          "e_declined": "Ok, thank you for letting us know. If you need anything, call the office at (212) 219-2219.",
+          "e_stop": "Understood. If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.",
+          "e_not_me": "Sorry about that. If you would like to be taken off our list, please call MK2 Optical at (212) 219-2219 and the office can take care of it.",
+          "e_existing": "Please call MK2 Optical at (212) 219-2219 and the office can help with that appointment.",
+          "e_timeout": "Closing this conversation.",
+          "e_defer": "For that you'll have to contact the MK2 Optical office at (212) 219-2219",
+          "e_book_unknown": "I wasn't able to confirm whether that booking went through. The MK2 Optical office will double-check it and reach out to you. If you'd like, you can also call them at (212) 219-2219.",
+          "loop_cap": "I’m sorry I couldn’t finish scheduling here. Please call MK2 Optical at (212) 219-2219 for help.",
+          "loop_cap_zh": "很抱歉，我无法在这里完成预约。请致电 MK2 Optical (212) 219-2219 获取帮助。",
+          "exhausted": "I’m sorry I couldn’t find another opening that works. Please call MK2 Optical at (212) 219-2219 for help."
+        },
+        "terminalModes": [
+          "booked",
+          "deferred_after_booking",
+          "stop",
+          "not_me",
+          "identity_failed",
+          "gateway_failed",
+          "existing_appointment",
+          "no_reply",
+          "declined",
+          "booking_unverified",
+          "loop_cap",
+          "exhausted"
+        ]
+      },
+      "height": 115,
+      "id": "e_close",
+      "position": {
+        "x": 3850,
+        "y": 2100
+      },
+      "sourcePosition": "bottom",
+      "targetPosition": "top",
+      "type": "End Call",
+      "width": 320,
+      "x": 3850,
+      "y": 2100
+    }
+  ],
+  "post_call_actions": null,
+  "revision_number": 94,
+  "version_number": 94,
+  "source_id_map": {
+    "n_identity": "n_identity",
+    "n_appt_check": "n_appt_check",
+    "n_ask": "n_goal_update",
+    "n_negotiate": "n_goal_update",
+    "n_date_conflict": "n_goal_response",
+    "n_miss_empty": "n_goal_response",
+    "n_miss_thin": "n_goal_response",
+    "n_miss_unbookable": "n_goal_response",
+    "n_clarify": "n_goal_response",
+    "n_miss_time": "n_goal_response",
+    "n_offer": "n_goal_response",
+    "n_offer_2": "n_goal_response",
+    "n_offer_3": "n_goal_response",
+    "n_offer_near": "n_goal_response",
+    "n_recheck": "n_goal_response",
+    "n_miss_unread": "e_close",
+    "e_safe_identity": "e_close",
+    "e_safe_failure": "e_close",
+    "e_booking_failed": "e_close",
+    "e_book_unknown": "e_close",
+    "e_booked": "e_close",
+    "e_office": "e_close",
+    "e_declined": "e_close",
+    "e_stop": "e_close",
+    "e_not_me": "e_close",
+    "e_existing": "e_close",
+    "e_timeout": "e_close",
+    "e_defer": "e_close",
+    "n_which_intent": "n_select",
+    "n_gate_1": "n_consent",
+    "n_gate_2": "n_consent",
+    "n_search": "n_availability",
+    "n_page_2": "n_availability",
+    "n_page_3": "n_availability",
+    "n_page_near": "n_availability",
+    "n_verify_1": "n_atomic_book",
+    "n_verify_2": "n_atomic_book",
+    "n_book_1": "n_atomic_book",
+    "n_book_2": "n_atomic_book",
+    "n_confirm": "n_confirm",
+    "e_booked_recovered": "n_confirm",
+    "n_help": "n_service_guard",
+    "n_office": "n_service_guard",
+    "n_faq": "n_service_guard",
+    "n_suppress_stop": "n_suppress",
+    "n_suppress_not_me": "n_suppress",
+    "n_reconcile_1": "n_reconcile",
+    "n_reconcile_2": "n_reconcile"
+  },
+  "contract": {
+    "spec": "SPEC-v94-draft4",
+    "node_target": 13,
+    "goal_object": {
+      "name": "scheduling_goal_v94",
+      "persistent": true,
+      "fields": {
+        "goal_intent": "SPEC §2 typed field",
+        "goal_from": "SPEC §2 typed field",
+        "goal_to": "SPEC §2 typed field",
+        "time_from": "SPEC §2 typed field",
+        "time_to": "SPEC §2 typed field",
+        "anchor": "SPEC §2 typed field",
+        "relation": "SPEC §2 typed field",
+        "goal_status": "SPEC §2 typed field",
+        "goal_revision": "SPEC §2 typed field",
+        "goal_clarify_count": "SPEC §2 typed field",
+        "goal_ambiguity_key": "SPEC §2 typed field",
+        "last_offered_dates": "SPEC §2 typed field",
+        "offer_id": "SPEC §2 typed field",
+        "offer_expires_at": "SPEC §2 typed field",
+        "selected_slot": "SPEC §2 typed field"
+      },
+      "initial": {
+        "goal_intent": "book_exam",
+        "goal_from": "monday",
+        "goal_to": "friday",
+        "time_from": "none",
+        "time_to": "none",
+        "anchor": "day-open",
+        "relation": "after",
+        "goal_status": "unsatisfied",
+        "goal_revision": 0,
+        "goal_clarify_count": 0,
+        "goal_ambiguity_key": "none",
+        "last_offered_dates": [],
+        "offer_id": "none",
+        "offer_expires_at": "none",
+        "selected_slot": "none"
+      },
+      "lifecycle": [
+        "unsatisfied -> offered -> confirmed",
+        "unsatisfied|offered -> abandoned"
+      ],
+      "patch_semantics": "absence retains; explicit replacement replaces; explicit rejection clears only the rejected constraint",
+      "authority": "n_availability goal_echo atomically replaces the stored object; gateway wins every disagreement",
+      "persistent_objects": 1,
+      "authoritative_writer": "n_availability"
+    },
+    "loop_cap": 8,
+    "ninth_update_target": "e_close",
+    "scheduling_loop": [
+      "n_goal_update",
+      "n_availability",
+      "n_goal_response",
+      "n_goal_update"
+    ],
+    "extraction_definition": "EXTRACT_GOAL_UPDATE_V94",
+    "availability_call_sites": [
+      "n_availability"
+    ],
+    "availability": "distance from anchor, directional filter, top two, one inventory query",
+    "offer": {
+      "terms": "offer_id, offer_issued_at, offer_expires_at, and inventory_token bind exactly two normalized real choices; nearest choices are real inventory. Invalidate at expiry or goal change; stale acceptance silently refreshes.",
+      "ttl_minutes": 10,
+      "choices": 2
+    },
+    "safety": {
+      "clarify_max_questions": 2,
+      "appt_check_fail_target": "e_close",
+      "blank_conflict_target": "e_close"
+    },
+    "atomic_booking": {
+      "terms": "governed /sign check_and_book with exact offer_id and slot_id; idempotency key conversation_id + ':' + offer_id; identical request and idempotency key on retry",
+      "max_retries": 2
+    },
+    "reconciliation": {
+      "terms": "one read using offer_id, slot_id, store, patient, attempted date and start; confirm only a unique exact match"
+    },
+    "affirmative_claim_owner": "n_confirm",
+    "latency": {
+      "max_visible_answer_seconds": 15.0,
+      "measurement_owner": "harness",
+      "p95_required": true
+    },
+    "source_contraction": {
+      "source_node_count": 48
+    }
+  }
+}

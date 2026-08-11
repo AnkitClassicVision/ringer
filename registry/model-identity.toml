@@ -10,11 +10,16 @@
 [engines.codex]
 harness = "Codex CLI"
 access = "OAuth plan"
-default_model_key = "gpt-5.5"
+default_model_key = "codex-cli-default"
+
+[engines.codex.models."codex-cli-default"]
+display = "Codex CLI default (unpinned)"
+confidence = "verified"
+source = "No explicit model selector was recorded for the Codex CLI invocation"
 
 [engines.codex.models."gpt-5.5"]
 display = "GPT-5.5"
-confidence = "verified"     # snapshot gpt-5.5-2026-04-23, Codex CLI default; see capability file
+confidence = "verified"
 source = "https://developers.openai.com/codex/models"
 
 [engines.grok]
@@ -39,9 +44,8 @@ source = "https://cursor.com/blog/composer-2-5"
 [engines.opencode]
 harness = "OpenCode"
 access = "OpenRouter API"
-# model key = the manifest "model" slug; entries below map slugs to display
-# names. Unlisted slugs display as the slug with the "openrouter/" prefix
-# stripped, access "OpenRouter API".
+# Historical evidence only. Active OpenRouter text routes use Pi. These
+# entries preserve the harness identity of old OpenCode run logs.
 
 [engines.opencode.models."openrouter/z-ai/glm-5.2"]
 display = "GLM 5.2"
@@ -57,3 +61,43 @@ source = "manifest model field; OpenRouter slug moonshotai/kimi-k2.7-code"
 display = "Nemotron 3 Super 120B (free)"
 confidence = "verified"
 source = "manifest model field; OpenRouter slug nvidia/nemotron-3-super-120b-a12b:free"
+
+[engines.pi-openrouter]
+harness = "Pi"
+access = "OpenRouter API"
+default_model_key = "openrouter/z-ai/glm-5.2"
+
+[engines.pi-openrouter.models."openrouter/x-ai/grok-4.5"]
+display = "Grok 4.5"
+confidence = "verified"
+source = "manifest model field; OpenRouter slug x-ai/grok-4.5"
+
+[engines.pi-openrouter.models."openrouter/z-ai/glm-5.2"]
+display = "GLM 5.2"
+confidence = "verified"
+source = "manifest model field; OpenRouter slug z-ai/glm-5.2"
+
+[engines.pi-openrouter.models."openrouter/moonshotai/kimi-k3"]
+display = "Kimi K3"
+confidence = "verified"
+source = "manifest model field; OpenRouter slug moonshotai/kimi-k3"
+
+[engines.seedance]
+harness = "OpenRouter Video API"
+access = "OpenRouter API"
+default_model_key = "bytedance/seedance-2.0"
+
+[engines.seedance.models."bytedance/seedance-2.0"]
+display = "Seedance 2.0"
+confidence = "verified"
+source = "OpenRouter GET /videos/models, verified 2026-07-12"
+
+[engines.seedance.models."bytedance/seedance-2.0-fast"]
+display = "Seedance 2.0 Fast"
+confidence = "verified"
+source = "OpenRouter Video API manifest override, verified 2026-07-12"
+
+[engines.seedance.models."bytedance/seedance-1-5-pro"]
+display = "Seedance 1.5 Pro"
+confidence = "verified"
+source = "OpenRouter Video API manifest override, verified 2026-07-12"

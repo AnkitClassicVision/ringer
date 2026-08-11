@@ -1,0 +1,282 @@
+nd a subsequent status check showed no resulting file.
+
+Progress
+- % to true goal: 100%
+- % to current goal: 100%
+- Done: independent R1-R5 ruling, contract verification, transcript verification, graph review, static gate review
+- In flight: none
+- Not done: contract revisions, candidate implementation, Monday probe, full 30-scenario run, campaign gate
+- Blockers: unresolved Sunday temporal behavior, 3:00 pm-floor defect, suppression gate baseline defect, Project Room owner review
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Completed
+tokens used
+378,514
+Ankit —
+
+CANARY: blue paperclip
+
+This is an internal supervisory decision. The Mott Project Room remains `inventory_review_required`, with `last_reviewed_at: null` and an open owner-review gap, so this is not a production-readiness approval. The room permits only `"internal-audit-only"` use. [Project Room](/home/ankit114/.mybcat/project_rooms/rooms/mott.json:67) [Project Room](/home/ankit114/.mybcat/project_rooms/rooms/mott.json:69) [Project Room](/home/ankit114/.mybcat/project_rooms/rooms/mott.json:93)
+
+## R1 VERDICT
+
+**APPROVE WITH CHANGES. The submitted A–E plan is not approved as written. Do not mint or activate the candidate until these changes are incorporated.**
+
+1. **A, contract: revise before making canonical.**
+
+   The semantic rule is internally clear:
+
+   > “A week qualifier ... means the calendar week AFTER the current one, anchored on Monday.”  
+   [contract/TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:9)
+
+   But section 4 must not say the Sunday defect is `"accepted interim"`. The contract itself says Sunday can generate a result seven days late and acknowledges that inbound replies can hit it:
+
+   > “On a SUNDAY, a week-qualified request resolves one week late”  
+   > “inbound replies on Sundays can hit this.”  
+   [contract/TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:54)
+
+   That conflicts with the owner directive that correct temporal behavior ship complete.
+
+2. **B, start from build_v57.py: approved in principle.**
+
+   Removing the contradictory instruction at lines 82–84 from the builder and regenerating the JSON resolves my prior objection to copying a contaminated `n_miss_time`. The contradiction is real:
+
+   > “`tues nxt wk` must become tuesday”  
+   > “If the clipped phrase cannot safely be reduced ... write the full weekday followed by next week.”  
+   [graph/build_v57.py](/home/ankit114/repos/mott-v21-snap/graph/build_v57.py:82)
+
+   However, `"Nothing else changes"` is rejected. The 3:00 pm-floor defect must also be fixed or conservatively routed; see R2 #3.
+
+3. **C, assertion changes: revise.**
+
+   - #1 and #4: expect qualified extraction and dynamically calculated dates.
+   - #2: assert specifically `n_which_intent`, not a broad “offer family.”
+   - #3: do **not** widen the accepted-node family. Assert that every offered time satisfies the requested floor. If that cannot be guaranteed, require an honest non-offer route.
+   - #5: widen the wording regex as proposed.
+
+   Dynamic date assertions require runner work, not just scenario edits. The current runner only checks node, exact variables, and regular expressions; it has no resolved-date contract check. [harness/pathway_harness.py](/home/ankit114/repos/mott-v21-snap/harness/pathway_harness.py:141)
+
+4. **D, gate: revise.**
+
+   The current v57 checker explicitly describes itself as a structural floor:
+
+   > “This cannot prove conversational behaviour: only a live run of the 30 scenarios can”  
+   [harness/checks/check_v57_fixes.py](/home/ankit114/repos/mott-v21-snap/harness/checks/check_v57_fixes.py:2)
+
+   Its present pass therefore remains non-dispositive.
+
+   Suppression must be a named candidate gate. The dedicated checker currently compares every node against the baseline and rejects unrelated changes. [harness/checks/check_suppression_wiring.py](/home/ankit114/repos/mott-v21-snap/harness/checks/check_suppression_wiring.py:119)
+
+   Exact local check:
+
+   ```text
+   python3 harness/checks/check_suppression_wiring.py \
+     --graph graph/v57_graph.json --baseline graph/v56_graph.json
+
+   CHECK FAILED
+   nodes changed that are not opt-out exits:
+   ['e_booked', 'n_offer', 'n_offer_2', 'n_offer_3', 'n_offer_near', 'n_search']
+   ```
+
+   Redesign it around a declared-delta manifest or a suppression-only subgraph comparison. Its endpoint/body/exit invariants remain useful.
+
+5. **E, Monday order: approved, with probe corrections.**
+
+   The script must fail closed unless run on exactly 2026-07-27. It currently merely warns off-Monday and continues. [scripts/probe_temporal_resolver.py](/home/ankit114/repos/mott-v21-snap/scripts/probe_temporal_resolver.py:63)
+
+   It must also replace its claim that a pass proves H1 with “consistent with H1.” It currently says:
+
+   > “H1 (Sunday-anchored gateway) predicts exactly this on Mondays”  
+   [scripts/probe_temporal_resolver.py](/home/ankit114/repos/mott-v21-snap/scripts/probe_temporal_resolver.py:91)
+
+**What would change this ruling:** A revised diff satisfying all five conditions, red-proofed structural gates, the Monday resolver results, and an honest 30/30 run against the exact minted artifact.
+
+## R2 VERDICT
+
+### 1. `vague week request`
+
+**REFUTE AS WRITTEN. Correct extraction; defective resolved behavior; stale existing assertion.**
+
+Actual assertion:
+
+> `'expect_node': 'n_offer'`  
+> `'expect_vars': {'preference_from': 'monday', 'preference_to': 'friday'}`  
+> [harness/scenarios.py](/home/ankit114/repos/mott-v21-snap/harness/scenarios.py:22)
+
+Actual run:
+
+> `preference_from was 'monday next week', expected 'monday'`  
+> `I have 08/03/[num] 11:00 am ...`  
+> [scenario_output.txt](/tmp/claude-1000/-mnt-d-drive-repos-mott/1be1395d-c2b1-4124-ab95-4ee3999427dc/scratchpad/scenario_output.txt:5)
+
+Under the owner’s contract, qualified extraction is correct. On Sunday 2026-07-26, the intended Monday was 07/27, so offering 08/03 was wrong.
+
+**What would change the ruling:** Evidence that the owner’s semantic rule changed, or a resolver result showing 08/03 was the intended target under that rule.
+
+### 2. `picks a slot but also asks for a different one`
+
+**CONFIRM. Correct behavior; stale node assertion.**
+
+Actual assertion:
+
+> `'expect_node': 'n_offer'`  
+> `'expect_text': '(which|mean|clarify)|\\bor\\b[^?]*\\?'`  
+> [harness/scenarios.py](/home/ankit114/repos/mott-v21-snap/harness/scenarios.py:85)
+
+Actual run:
+
+> `ended on 'n_which_intent'`  
+> “Did you mean the Tuesday 11:00 am opening, or should I look for a Wednesday instead?”  
+> [scenario_output.txt](/tmp/claude-1000/-mnt-d-drive-repos-mott/1be1395d-c2b1-4124-ab95-4ee3999427dc/scratchpad/scenario_output.txt:28)
+
+The node expressly says:
+
+> “Make the patient choose which instruction they mean before any booking path can run.”  
+> [graph/build_v57.py](/home/ankit114/repos/mott-v21-snap/graph/build_v57.py:511)
+
+Its outgoing edges lead to confirmation gates or negotiation, not directly to booking. [graph/build_v57.py](/home/ankit114/repos/mott-v21-snap/graph/build_v57.py:827)
+
+**What would change the ruling:** A transcript showing it selected or booked a slot before clarification, or a graph edge bypassing the confirmation gate.
+
+### 3. `clock time with no day at all`
+
+**REFUTE. REAL DEFECT. Do not bless it by accepting the offer-node family.**
+
+Actual assertion:
+
+> `'turns': ['hi', 'after 3pm works for me']`  
+> `'expect_node': 'n_offer'`  
+> `'why': 'the removed time-floor capture was ignored by the scheduler...'`  
+> [harness/scenarios.py](/home/ankit114/repos/mott-v21-snap/harness/scenarios.py:98)
+
+Actual run:
+
+> “I have 07/27/[num] 02:30 pm or 07/27/[num] 02:45 pm”  
+> [scenario_output.txt](/tmp/claude-1000/-mnt-d-drive-repos-mott/1be1395d-c2b1-4124-ab95-4ee3999427dc/scratchpad/scenario_output.txt:36)
+
+Both offers precede the requested 3:00 pm floor. The gateway’s time parameters are documented as ignored. [harness/TEMPORAL-BRIEF.md](/home/ankit114/repos/mott-v21-snap/harness/TEMPORAL-BRIEF.md:64)
+
+**What would change the ruling:** A candidate run proving every offered time is at or after 3:00 pm, or an honest route that makes no purportedly matching offer.
+
+### 4. `texting shorthand for next tuesday`
+
+**REFUTE AS WRITTEN. Correct extraction; wrong Sunday resolution; stale existing assertion.**
+
+Actual assertion:
+
+> `'expect_vars': {'preference_from': 'tuesday', 'preference_to': 'tuesday'}`  
+> [harness/scenarios.py](/home/ankit114/repos/mott-v21-snap/harness/scenarios.py:132)
+
+Actual run:
+
+> `preference_from was 'tuesday next week'`  
+> “I have 08/04/[num] 10:30 am ...”  
+> [scenario_output.txt](/tmp/claude-1000/-mnt-d-drive-repos-mott/1be1395d-c2b1-4124-ab95-4ee3999427dc/scratchpad/scenario_output.txt:50)
+
+Qualified extraction matches the owner’s rule. The owner target on Sunday 07/26 was Tuesday 07/28, not 08/04. The resolved result was wrong by seven days.
+
+**What would change the ruling:** A different owner semantic contract or a resolver fix producing the Monday-anchored target.
+
+### 5. `requests a time outside office hours`
+
+**CONFIRM. Correct behavior; defective regex.**
+
+Actual assertion:
+
+> `'expect_text': "don'?t have|no openings|nothing available|unfortunately"`  
+> [harness/scenarios.py](/home/ankit114/repos/mott-v21-snap/harness/scenarios.py:201)
+
+Actual response:
+
+> “I do not have anything available at that time.”  
+> [scenario_output.txt](/tmp/claude-1000/-mnt-d-drive-repos-mott/1be1395d-c2b1-4124-ab95-4ee3999427dc/scratchpad/scenario_output.txt:73)
+
+The response is honest and semantically satisfies the scenario. Widening to `(?:don'?t|do not) have|no openings|nothing available|unfortunately` is correct.
+
+**What would change the ruling:** A response offering 3:00 am, implying a booking, or failing to ask for another preference.
+
+## R3 VERDICT
+
+**INSUFFICIENT to call H1 the “best explanation.” H1 is parsimonious and fits all three observations, but it is not distinguished from other parser semantics.**
+
+The contract properly concedes:
+
+> “H1 is a hypothesis fit to three same-day data points. It is NOT proven for other days.”  
+> [contract/TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:43)
+
+All three observations were collected on the same Sunday and all show the same +7-day pattern. [contract/TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:30)
+
+**Cheapest single falsifying probe:** On Monday 2026-07-27, send one `/availability` request with both `from` and `to` equal to `tuesday next week`.
+
+- H1 prediction: first returned date is 2026-08-04.
+- A return of 2026-08-11 falsifies H1.
+- A return of 2026-08-04 leaves H1 alive but does not prove it.
+
+That phrase already appears in the four-phrase corpus. [scripts/probe_temporal_resolver.py](/home/ankit114/repos/mott-v21-snap/scripts/probe_temporal_resolver.py:23)
+
+**What would change the ruling:** Different-day measurements that uniquely separate anchor rules, or inspected deployed resolver code showing the actual week-anchor algorithm. A Monday match alone is not enough to call H1 proven.
+
+## R4 VERDICT
+
+**REJECT the Sunday residual for a release represented as fully functional.**
+
+The bounded-harm argument is inadequate. The contract says:
+
+> “Wrong-week BOOKING cannot occur silently; wrong-week OFFERING can.”  
+> [contract/TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:56)
+
+The system has no semantic comparison between the patient’s relative phrase and the resolved date. A patient can reply YES without recognizing that a numeric date is seven days late. The repository already warns:
+
+> “nobody reads `08/03/2026 11:00 am` and notices it is the wrong week.”  
+> [reviews/gateway-handover-brief.md](/home/ankit114/repos/mott-v21-snap/reviews/gateway-handover-brief.md:88)
+
+“No outbound on Sunday” does not control inbound Sunday replies, which the contract expressly acknowledges.
+
+**Available graph-only interim mitigation:** Extract every week-qualified request as `unclear`, then use the existing route:
+
+> `["preference_from", "==", "unclear", {"id": "n_clarify"...}]`  
+> [graph/build_v57.py](/home/ankit114/repos/mott-v21-snap/graph/build_v57.py:570)
+
+`n_clarify` asks for an explicit month and day and prohibits calculating a date. [graph/build_v57.py](/home/ankit114/repos/mott-v21-snap/graph/build_v57.py:461)
+
+That mitigation:
+
+- requires no model date arithmetic;
+- requires no day-of-week routing variable;
+- prevents wrong-week offers;
+- reduces functionality because next-week requests require clarification.
+
+Therefore it is acceptable only as a safe interim release, not as completion of the owner’s full-function directive. Full function requires a Monday-anchored gateway resolver or equivalent deterministic gateway normalization.
+
+**What would change the ruling:** A gateway fix proven across all seven run days, or a deterministic gateway/graph guard that prevents any Sunday qualified-week request from reaching an offer or booking path. The Monday probe alone does not resolve Sunday behavior.
+
+## R5 VERDICT
+
+**The packet contains seven unsupported or incorrect framings.**
+
+1. **“#3 is correct-enough behavior” is false.** The offered times precede the requested floor.
+
+2. **“#1 and #4 resolved one week late because the run was on Sunday” asserts causation not established by the evidence.** Sunday correlation is measured; H1 remains a hypothesis.
+
+3. **“Three independent measurements” overstates provenance.** The contract documents two probes and one live scenario, all on the same day. It does not establish three independent measurement sessions. [contract/TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:30)
+
+4. **“Every other v57 behavior doing its job” is false.** #3 is a counterexample, and one 30-scenario run cannot independently prove suppression persistence.
+
+5. **The suppression gate is omitted from the revised gate plan even though suppression is part of the owner’s required function.** The existing dedicated checker fails against the v56 baseline because it conflates suppression isolation with unrelated v57 changes. [harness/checks/check_suppression_wiring.py](/home/ankit114/repos/mott-v21-snap/harness/checks/check_suppression_wiring.py:119)
+
+6. **A green suite with honest run-date assertions is incompatible with accepting the Sunday overshoot.** The contract requires resolved dates to match the run-date target while predicting that Sunday will be wrong. [contract/TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:70)
+
+7. **The probe script says it compares against the gateway’s “own reported day,” but the implementation reads `datetime.date.today()` from the local machine.** [scripts/probe_temporal_resolver.py](/home/ankit114/repos/mott-v21-snap/scripts/probe_temporal_resolver.py:4) [scripts/probe_temporal_resolver.py](/home/ankit114/repos/mott-v21-snap/scripts/probe_temporal_resolver.py:63)
+
+**What would change this ruling:** Correct those claims in the packet and contract, strengthen the probe and suppression gate, and fix or conservatively route the 3:00 pm-floor case.
+
+No external API or live harness was run. No file was changed. I did mistakenly invoke `py_compile`; the read-only filesystem blocked it before creating `__pycache__`, and a subsequent status check showed no resulting file.
+
+Progress
+- % to true goal: 100%
+- % to current goal: 100%
+- Done: independent R1-R5 ruling, contract verification, transcript verification, graph review, static gate review
+- In flight: none
+- Not done: contract revisions, candidate implementation, Monday probe, full 30-scenario run, campaign gate
+- Blockers: unresolved Sunday temporal behavior, 3:00 pm-floor defect, suppression gate baseline defect, Project Room owner review

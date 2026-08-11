@@ -1,0 +1,68 @@
+{
+  "verdict": "PASS",
+  "inspected_at_utc": "2026-07-30T14:49:34Z",
+  "inspection_method": [
+    "Fresh Google Chrome PDFs rendered at Letter size",
+    "All 26 pages rasterized at 150 dpi",
+    "Gauge-template one-pager inspected full size after the executive-read clipping fix",
+    "Explainer pages 1 through 25 inspected in five numbered contact sheets"
+  ],
+  "expected_pages": 26,
+  "pages_inspected": 26,
+  "artifacts": {
+    "onepager": {
+      "pages": 1,
+      "page_size_points": [612, 792],
+      "sha256": "0ad82c2597c2594131bf9650bd3d45c718db6a8a2000256b2bbb9504f64ce349"
+    },
+    "number_explainer": {
+      "pages": 25,
+      "page_size_points": [612, 792],
+      "sha256": "4c544174cc06b7c5075cfce1865f6ab25cff24b6e385ec0e5ca9f7a9b8f58b2e"
+    }
+  },
+  "checks": {
+    "matches_sample_template_spine": "PASS",
+    "dark_navy_hero": "PASS",
+    "client_opportunity_54_circular_gauge": "PASS",
+    "aqua_teal_gold_palette": "PASS",
+    "numbered_zones": "PASS",
+    "colored_score_meters": "PASS",
+    "complete_executive_read": "PASS",
+    "five_window_catchment_table": "PASS",
+    "exactly_three_fix_cards": "PASS",
+    "project_room_footer": "PASS",
+    "clipping": "PASS",
+    "overlap": "PASS",
+    "cut_off_text": "PASS",
+    "blank_or_near_blank_spill_pages": "PASS",
+    "broken_tables": "PASS",
+    "orphaned_headings": "PASS",
+    "page_edge_violations": "PASS",
+    "header_footer_consistency": "PASS",
+    "score_direction_clarity": "PASS",
+    "required_sections_visible": "PASS"
+  },
+  "page_results": [
+    {"scope": "gauge-template onepager page 1", "result": "PASS"},
+    {"scope": "explainer pages 1-5", "result": "PASS"},
+    {"scope": "explainer pages 6-10", "result": "PASS"},
+    {"scope": "explainer pages 11-15", "result": "PASS"},
+    {"scope": "explainer pages 16-20", "result": "PASS"},
+    {"scope": "explainer pages 21-25", "result": "PASS"}
+  ],
+  "corrected_findings": [
+    {
+      "finding": "The first gauge-template Chrome render clipped the executive-read strip and exposed only fragments of its sentence.",
+      "resolution": "Reserved 0.70 inches for the strip, aligned its contents from the top, expanded the label spine, rerendered in production Chrome, and reinspected the full page.",
+      "status": "resolved"
+    }
+  ],
+  "nonblocking_observations": [
+    "The catchment table and Fix Card metadata are compact; they remain legible at normal PDF zoom but may be less comfortable on low-quality office printers.",
+    "The 25-page explainer intentionally preserves complete scoring, source, receipt, and limitation lineage."
+  ],
+  "blocking_findings": [],
+  "external_actions_taken": "none",
+  "highest_truthful_state": "VISUAL_QA_PASSED_FRESH_REVIEWS_PENDING"
+}

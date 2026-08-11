@@ -1,0 +1,870 @@
+{
+  "schema_version": "route-receipts-v1",
+  "collected_at": "2026-07-30T01:35:21.143554+00:00",
+  "geocoder": "Nominatim/OpenStreetMap public endpoint",
+  "router": "OSRM public route endpoint",
+  "subject": {
+    "id": "SUBJECT",
+    "name": "Vintage Optical",
+    "query": "605 South Main Street, Morton, Illinois 61550",
+    "expected_city": "Morton",
+    "candidate_tier": "subject",
+    "category": "independent_optometry",
+    "geocode_url": "https://nominatim.openstreetmap.org/search?q=605+South+Main+Street%2C+Morton%2C+Illinois+61550&format=jsonv2&limit=5&addressdetails=1&countrycodes=us",
+    "candidates": [
+      {
+        "place_id": 372894147,
+        "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+        "osm_type": "node",
+        "osm_id": 11648637029,
+        "lat": "40.6048878",
+        "lon": "-89.4669666",
+        "category": "place",
+        "type": "house",
+        "place_rank": 30,
+        "importance": 5.917677576862772e-05,
+        "addresstype": "place",
+        "name": "",
+        "display_name": "605, South Main Street, Morton, Tazewell County, Illinois, 61550, United States",
+        "address": {
+          "house_number": "605",
+          "road": "South Main Street",
+          "town": "Morton",
+          "county": "Tazewell County",
+          "state": "Illinois",
+          "ISO3166-2-lvl4": "US-IL",
+          "postcode": "61550",
+          "country": "United States",
+          "country_code": "us"
+        },
+        "boundingbox": [
+          "40.6048378",
+          "40.6049378",
+          "-89.4670166",
+          "-89.4669166"
+        ]
+      }
+    ],
+    "selected": {
+      "place_id": 372894147,
+      "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+      "osm_type": "node",
+      "osm_id": 11648637029,
+      "lat": "40.6048878",
+      "lon": "-89.4669666",
+      "category": "place",
+      "type": "house",
+      "place_rank": 30,
+      "importance": 5.917677576862772e-05,
+      "addresstype": "place",
+      "name": "",
+      "display_name": "605, South Main Street, Morton, Tazewell County, Illinois, 61550, United States",
+      "address": {
+        "house_number": "605",
+        "road": "South Main Street",
+        "town": "Morton",
+        "county": "Tazewell County",
+        "state": "Illinois",
+        "ISO3166-2-lvl4": "US-IL",
+        "postcode": "61550",
+        "country": "United States",
+        "country_code": "us"
+      },
+      "boundingbox": [
+        "40.6048378",
+        "40.6049378",
+        "-89.4670166",
+        "-89.4669166"
+      ]
+    },
+    "lat": 40.6048878,
+    "lon": -89.4669666
+  },
+  "targets": [
+    {
+      "id": "R01",
+      "name": "Focus On Eyes",
+      "query": "Focus On Eyes, Morton, Illinois",
+      "expected_city": "Morton",
+      "candidate_tier": "tier_1",
+      "category": "independent_optometry",
+      "geocode_url": "https://nominatim.openstreetmap.org/search?q=Focus+On+Eyes%2C+Morton%2C+Illinois&format=jsonv2&limit=5&addressdetails=1&countrycodes=us",
+      "candidates": [
+        {
+          "place_id": 374229144,
+          "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+          "osm_type": "way",
+          "osm_id": 237824322,
+          "lat": "40.6196077",
+          "lon": "-89.4680865",
+          "category": "shop",
+          "type": "optician",
+          "place_rank": 30,
+          "importance": 5.917677576862772e-05,
+          "addresstype": "shop",
+          "name": "Focus on Eyes",
+          "display_name": "Focus on Eyes, Clark Street, Morton, Tazewell County, Illinois, 61550, United States",
+          "address": {
+            "shop": "Focus on Eyes",
+            "road": "Clark Street",
+            "town": "Morton",
+            "county": "Tazewell County",
+            "state": "Illinois",
+            "ISO3166-2-lvl4": "US-IL",
+            "postcode": "61550",
+            "country": "United States",
+            "country_code": "us"
+          },
+          "boundingbox": [
+            "40.6195112",
+            "40.6197038",
+            "-89.4681316",
+            "-89.4680412"
+          ]
+        }
+      ],
+      "selected": {
+        "place_id": 374229144,
+        "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+        "osm_type": "way",
+        "osm_id": 237824322,
+        "lat": "40.6196077",
+        "lon": "-89.4680865",
+        "category": "shop",
+        "type": "optician",
+        "place_rank": 30,
+        "importance": 5.917677576862772e-05,
+        "addresstype": "shop",
+        "name": "Focus on Eyes",
+        "display_name": "Focus on Eyes, Clark Street, Morton, Tazewell County, Illinois, 61550, United States",
+        "address": {
+          "shop": "Focus on Eyes",
+          "road": "Clark Street",
+          "town": "Morton",
+          "county": "Tazewell County",
+          "state": "Illinois",
+          "ISO3166-2-lvl4": "US-IL",
+          "postcode": "61550",
+          "country": "United States",
+          "country_code": "us"
+        },
+        "boundingbox": [
+          "40.6195112",
+          "40.6197038",
+          "-89.4681316",
+          "-89.4680412"
+        ]
+      },
+      "lat": 40.6196077,
+      "lon": -89.4680865,
+      "route_url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4680865,40.6196077?overview=false&steps=false&alternatives=false",
+      "route_response": {
+        "code": "Ok",
+        "routes": [
+          {
+            "legs": [
+              {
+                "steps": [],
+                "weight": 324.9,
+                "summary": "",
+                "duration": 244.3,
+                "distance": 2504.2
+              }
+            ],
+            "weight_name": "routability",
+            "weight": 324.9,
+            "duration": 244.3,
+            "distance": 2504.2
+          }
+        ],
+        "waypoints": [
+          {
+            "hint": "eF0qhX9dKoUfAAAAPgAAAF4AAAAVAAAAOkPOQLoJUEE4QZxBI1-OQA8AAAAgAAAALwAAAAsAAABgegAAH9iq-tuUawKp16r62JRrAgQAXxYAAAAA",
+            "location": [
+              -89.466849,
+              40.604891
+            ],
+            "name": "",
+            "distance": 9.989563013
+          },
+          {
+            "hint": "jSwnhe0sJ4VhAAAAagAAALYAAAC8AAAAnnOiQUH9r0HB2RdC5PEcQjAAAAA2AAAAWwAAAF4AAABgegAASdOq-tnNawJJ06r6WM5rAgQA7xAAAAAA",
+            "location": [
+              -89.468087,
+              40.619481
+            ],
+            "name": "",
+            "distance": 14.10292666
+          }
+        ]
+      },
+      "route_minutes": 4.07,
+      "route_miles": 1.56,
+      "status": "routed"
+    },
+    {
+      "id": "R02",
+      "name": "Walmart Vision Center Morton",
+      "query": "155 East Courtland Street, Morton, Illinois 61550",
+      "expected_city": "Morton",
+      "candidate_tier": "tier_2",
+      "category": "retail_optical_with_od",
+      "geocode_url": "https://nominatim.openstreetmap.org/search?q=155+East+Courtland+Street%2C+Morton%2C+Illinois+61550&format=jsonv2&limit=5&addressdetails=1&countrycodes=us",
+      "candidates": [
+        {
+          "place_id": 374212084,
+          "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+          "osm_type": "way",
+          "osm_id": 236365973,
+          "lat": "40.6301455",
+          "lon": "-89.4617449",
+          "category": "shop",
+          "type": "supermarket",
+          "place_rank": 30,
+          "importance": 2.8699931334355954e-05,
+          "addresstype": "shop",
+          "name": "Walmart Supercenter",
+          "display_name": "Walmart Supercenter, 155, East Courtland Street, Morton, Tazewell County, Illinois, 61550, United States",
+          "address": {
+            "shop": "Walmart Supercenter",
+            "house_number": "155",
+            "road": "East Courtland Street",
+            "town": "Morton",
+            "county": "Tazewell County",
+            "state": "Illinois",
+            "ISO3166-2-lvl4": "US-IL",
+            "postcode": "61550",
+            "country": "United States",
+            "country_code": "us"
+          },
+          "boundingbox": [
+            "40.6296594",
+            "40.6306637",
+            "-89.4628948",
+            "-89.4609534"
+          ]
+        },
+        {
+          "place_id": 374232672,
+          "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+          "osm_type": "node",
+          "osm_id": 12876222220,
+          "lat": "40.6289542",
+          "lon": "-89.4616539",
+          "category": "amenity",
+          "type": "post_box",
+          "place_rank": 30,
+          "importance": 2.8699931334355954e-05,
+          "addresstype": "amenity",
+          "name": "6155000019",
+          "display_name": "6155000019, 155, East Courtland Street, Morton, Tazewell County, Illinois, 61550, United States",
+          "address": {
+            "amenity": "6155000019",
+            "house_number": "155",
+            "road": "East Courtland Street",
+            "town": "Morton",
+            "county": "Tazewell County",
+            "state": "Illinois",
+            "ISO3166-2-lvl4": "US-IL",
+            "postcode": "61550",
+            "country": "United States",
+            "country_code": "us"
+          },
+          "boundingbox": [
+            "40.6289042",
+            "40.6290042",
+            "-89.4617039",
+            "-89.4616039"
+          ]
+        },
+        {
+          "place_id": 374262429,
+          "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+          "osm_type": "node",
+          "osm_id": 6328175102,
+          "lat": "40.6305925",
+          "lon": "-89.4609891",
+          "category": "amenity",
+          "type": "loading_dock",
+          "place_rank": 30,
+          "importance": 2.8699931334355954e-05,
+          "addresstype": "amenity",
+          "name": "",
+          "display_name": "155, East Courtland Street, Morton, Tazewell County, Illinois, 61550, United States",
+          "address": {
+            "house_number": "155",
+            "road": "East Courtland Street",
+            "town": "Morton",
+            "county": "Tazewell County",
+            "state": "Illinois",
+            "ISO3166-2-lvl4": "US-IL",
+            "postcode": "61550",
+            "country": "United States",
+            "country_code": "us"
+          },
+          "boundingbox": [
+            "40.6305425",
+            "40.6306425",
+            "-89.4610391",
+            "-89.4609391"
+          ]
+        },
+        {
+          "place_id": 415958483,
+          "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+          "osm_type": "way",
+          "osm_id": 241056900,
+          "lat": "40.6286909",
+          "lon": "-89.4554218",
+          "category": "place",
+          "type": "house",
+          "place_rank": 30,
+          "importance": 9.99999999995449e-06,
+          "addresstype": "place",
+          "name": "",
+          "display_name": "155, East Courtland Street, Morton, Tazewell County, Illinois, 61550, United States",
+          "address": {
+            "house_number": "155",
+            "road": "East Courtland Street",
+            "town": "Morton",
+            "county": "Tazewell County",
+            "state": "Illinois",
+            "ISO3166-2-lvl4": "US-IL",
+            "postcode": "61550",
+            "country": "United States",
+            "country_code": "us"
+          },
+          "boundingbox": [
+            "40.6286409",
+            "40.6287409",
+            "-89.4554718",
+            "-89.4553718"
+          ]
+        },
+        {
+          "place_id": 415961152,
+          "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+          "osm_type": "way",
+          "osm_id": 22033674,
+          "lat": "40.6286081",
+          "lon": "-89.4527603",
+          "category": "place",
+          "type": "house",
+          "place_rank": 30,
+          "importance": 9.99999999995449e-06,
+          "addresstype": "place",
+          "name": "",
+          "display_name": "155, East Courtland Street, Morton, Tazewell County, Illinois, 61550, United States",
+          "address": {
+            "house_number": "155",
+            "road": "East Courtland Street",
+            "town": "Morton",
+            "county": "Tazewell County",
+            "state": "Illinois",
+            "ISO3166-2-lvl4": "US-IL",
+            "postcode": "61550",
+            "country": "United States",
+            "country_code": "us"
+          },
+          "boundingbox": [
+            "40.6285581",
+            "40.6286581",
+            "-89.4528103",
+            "-89.4527103"
+          ]
+        }
+      ],
+      "selected": {
+        "place_id": 374212084,
+        "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+        "osm_type": "way",
+        "osm_id": 236365973,
+        "lat": "40.6301455",
+        "lon": "-89.4617449",
+        "category": "shop",
+        "type": "supermarket",
+        "place_rank": 30,
+        "importance": 2.8699931334355954e-05,
+        "addresstype": "shop",
+        "name": "Walmart Supercenter",
+        "display_name": "Walmart Supercenter, 155, East Courtland Street, Morton, Tazewell County, Illinois, 61550, United States",
+        "address": {
+          "shop": "Walmart Supercenter",
+          "house_number": "155",
+          "road": "East Courtland Street",
+          "town": "Morton",
+          "county": "Tazewell County",
+          "state": "Illinois",
+          "ISO3166-2-lvl4": "US-IL",
+          "postcode": "61550",
+          "country": "United States",
+          "country_code": "us"
+        },
+        "boundingbox": [
+          "40.6296594",
+          "40.6306637",
+          "-89.4628948",
+          "-89.4609534"
+        ]
+      },
+      "lat": 40.6301455,
+      "lon": -89.4617449,
+      "route_url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4617449,40.6301455?overview=false&steps=false&alternatives=false",
+      "route_response": {
+        "code": "Ok",
+        "routes": [
+          {
+            "legs": [
+              {
+                "steps": [],
+                "weight": 353.4,
+                "summary": "",
+                "duration": 342.8,
+                "distance": 3786.4
+              }
+            ],
+            "weight_name": "routability",
+            "weight": 353.4,
+            "duration": 342.8,
+            "distance": 3786.4
+          }
+        ],
+        "waypoints": [
+          {
+            "hint": "eF0qhX9dKoUfAAAAPgAAAF4AAAAVAAAAOkPOQLoJUEE4QZxBI1-OQA8AAAAgAAAALwAAAAsAAABgegAAH9iq-tuUawKp16r62JRrAgQAXxYAAAAA",
+            "location": [
+              -89.466849,
+              40.604891
+            ],
+            "name": "",
+            "distance": 9.989563013
+          },
+          {
+            "hint": "MxskhTcbJIWyAAAAEAAAAHIAAAAAAAAAeQSVQseZ0EBwdwBCAAAAALIAAAAQAAAATQAAAAAAAABgegAA9euq-pr5awIP7Kr6gvdrAgQAfwUAAAAA",
+            "location": [
+              -89.461771,
+              40.630682
+            ],
+            "name": "",
+            "distance": 59.56165238
+          }
+        ]
+      },
+      "route_minutes": 5.71,
+      "route_miles": 2.35,
+      "status": "routed"
+    },
+    {
+      "id": "R03",
+      "name": "Tri-County Eye Center Washington",
+      "query": "100 Hillcrest Drive, Washington, Illinois 61571",
+      "expected_city": "Washington",
+      "candidate_tier": "tier_1",
+      "category": "regional_eye_care_group",
+      "geocode_url": "https://nominatim.openstreetmap.org/search?q=100+Hillcrest+Drive%2C+Washington%2C+Illinois+61571&format=jsonv2&limit=5&addressdetails=1&countrycodes=us",
+      "candidates": [
+        {
+          "place_id": 392061826,
+          "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+          "osm_type": "way",
+          "osm_id": 1356237976,
+          "lat": "40.7040920",
+          "lon": "-89.4326440",
+          "category": "place",
+          "type": "house",
+          "place_rank": 30,
+          "importance": 9.99999999995449e-06,
+          "addresstype": "place",
+          "name": "",
+          "display_name": "100, Hillcrest Drive, Washington, Tazewell County, Illinois, 61571, United States",
+          "address": {
+            "house_number": "100",
+            "road": "Hillcrest Drive",
+            "town": "Washington",
+            "county": "Tazewell County",
+            "state": "Illinois",
+            "ISO3166-2-lvl4": "US-IL",
+            "postcode": "61571",
+            "country": "United States",
+            "country_code": "us"
+          },
+          "boundingbox": [
+            "40.7040420",
+            "40.7041420",
+            "-89.4326940",
+            "-89.4325940"
+          ]
+        }
+      ],
+      "selected": {
+        "place_id": 392061826,
+        "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+        "osm_type": "way",
+        "osm_id": 1356237976,
+        "lat": "40.7040920",
+        "lon": "-89.4326440",
+        "category": "place",
+        "type": "house",
+        "place_rank": 30,
+        "importance": 9.99999999995449e-06,
+        "addresstype": "place",
+        "name": "",
+        "display_name": "100, Hillcrest Drive, Washington, Tazewell County, Illinois, 61571, United States",
+        "address": {
+          "house_number": "100",
+          "road": "Hillcrest Drive",
+          "town": "Washington",
+          "county": "Tazewell County",
+          "state": "Illinois",
+          "ISO3166-2-lvl4": "US-IL",
+          "postcode": "61571",
+          "country": "United States",
+          "country_code": "us"
+        },
+        "boundingbox": [
+          "40.7040420",
+          "40.7041420",
+          "-89.4326940",
+          "-89.4325940"
+        ]
+      },
+      "lat": 40.704092,
+      "lon": -89.432644,
+      "route_url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.432644,40.704092?overview=false&steps=false&alternatives=false",
+      "route_response": {
+        "code": "Ok",
+        "routes": [
+          {
+            "legs": [
+              {
+                "steps": [],
+                "weight": 1267.1,
+                "summary": "",
+                "duration": 1256.5,
+                "distance": 17457.5
+              }
+            ],
+            "weight_name": "routability",
+            "weight": 1267.1,
+            "duration": 1256.5,
+            "distance": 17457.5
+          }
+        ],
+        "waypoints": [
+          {
+            "hint": "eF0qhX9dKoUfAAAAPgAAAF4AAAAVAAAAOkPOQLoJUEE4QZxBI1-OQA8AAAAgAAAALwAAAAsAAABgegAAH9iq-tuUawKp16r62JRrAgQAXxYAAAAA",
+            "location": [
+              -89.466849,
+              40.604891
+            ],
+            "name": "",
+            "distance": 9.989563013
+          },
+          {
+            "hint": "cWc2ixH4lYsLAAAABAAAAAAAAAAAAAAAD-1aQYFaXUAAAAAAAAAAAAsAAAAEAAAAAAAAAAAAAABgegAAKF6r-kYYbQK8Xav6XBhtAgAAPwwAAAAA",
+            "location": [
+              -89.432536,
+              40.70407
+            ],
+            "name": "Hillcrest Drive",
+            "distance": 9.445672817
+          }
+        ]
+      },
+      "route_minutes": 20.94,
+      "route_miles": 10.85,
+      "status": "routed"
+    },
+    {
+      "id": "R04",
+      "name": "Vision Care Center Washington",
+      "query": "1009 North Cummings Lane, Washington, Illinois 61571",
+      "expected_city": "Washington",
+      "candidate_tier": "tier_1",
+      "category": "regional_optometry_specialty_peer",
+      "geocode_url": "https://nominatim.openstreetmap.org/search?q=1009+North+Cummings+Lane%2C+Washington%2C+Illinois+61571&format=jsonv2&limit=5&addressdetails=1&countrycodes=us",
+      "candidates": [
+        {
+          "place_id": 414169785,
+          "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+          "osm_type": "way",
+          "osm_id": 22033870,
+          "lat": "40.7145273",
+          "lon": "-89.4455579",
+          "category": "place",
+          "type": "house",
+          "place_rank": 30,
+          "importance": 9.99999999995449e-06,
+          "addresstype": "place",
+          "name": "",
+          "display_name": "1009, North Cummings Lane, Washington, Tazewell County, Illinois, 61571, United States",
+          "address": {
+            "house_number": "1009",
+            "road": "North Cummings Lane",
+            "town": "Washington",
+            "county": "Tazewell County",
+            "state": "Illinois",
+            "ISO3166-2-lvl4": "US-IL",
+            "postcode": "61571",
+            "country": "United States",
+            "country_code": "us"
+          },
+          "boundingbox": [
+            "40.7144773",
+            "40.7145773",
+            "-89.4456079",
+            "-89.4455079"
+          ]
+        },
+        {
+          "place_id": 414177771,
+          "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+          "osm_type": "way",
+          "osm_id": 22033870,
+          "lat": "40.7148337",
+          "lon": "-89.4459119",
+          "category": "place",
+          "type": "house",
+          "place_rank": 30,
+          "importance": 9.99999999995449e-06,
+          "addresstype": "place",
+          "name": "",
+          "display_name": "1009, North Cummings Lane, Washington, Tazewell County, Illinois, 61571, United States",
+          "address": {
+            "house_number": "1009",
+            "road": "North Cummings Lane",
+            "town": "Washington",
+            "county": "Tazewell County",
+            "state": "Illinois",
+            "ISO3166-2-lvl4": "US-IL",
+            "postcode": "61571",
+            "country": "United States",
+            "country_code": "us"
+          },
+          "boundingbox": [
+            "40.7147837",
+            "40.7148837",
+            "-89.4459619",
+            "-89.4458619"
+          ]
+        }
+      ],
+      "selected": {
+        "place_id": 414169785,
+        "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+        "osm_type": "way",
+        "osm_id": 22033870,
+        "lat": "40.7145273",
+        "lon": "-89.4455579",
+        "category": "place",
+        "type": "house",
+        "place_rank": 30,
+        "importance": 9.99999999995449e-06,
+        "addresstype": "place",
+        "name": "",
+        "display_name": "1009, North Cummings Lane, Washington, Tazewell County, Illinois, 61571, United States",
+        "address": {
+          "house_number": "1009",
+          "road": "North Cummings Lane",
+          "town": "Washington",
+          "county": "Tazewell County",
+          "state": "Illinois",
+          "ISO3166-2-lvl4": "US-IL",
+          "postcode": "61571",
+          "country": "United States",
+          "country_code": "us"
+        },
+        "boundingbox": [
+          "40.7144773",
+          "40.7145773",
+          "-89.4456079",
+          "-89.4455079"
+        ]
+      },
+      "lat": 40.7145273,
+      "lon": -89.4455579,
+      "route_url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4455579,40.7145273?overview=false&steps=false&alternatives=false",
+      "route_response": {
+        "code": "Ok",
+        "routes": [
+          {
+            "legs": [
+              {
+                "steps": [],
+                "weight": 1355.3,
+                "summary": "",
+                "duration": 1344.7,
+                "distance": 26279.5
+              }
+            ],
+            "weight_name": "routability",
+            "weight": 1355.3,
+            "duration": 1344.7,
+            "distance": 26279.5
+          }
+        ],
+        "waypoints": [
+          {
+            "hint": "eF0qhX9dKoUfAAAAPgAAAF4AAAAVAAAAOkPOQLoJUEE4QZxBI1-OQA8AAAAgAAAALwAAAAsAAABgegAAH9iq-tuUawKp16r62JRrAgQAXxYAAAAA",
+            "location": [
+              -89.466849,
+              40.604891
+            ],
+            "name": "",
+            "distance": 9.989563013
+          },
+          {
+            "hint": "gK6ah5BirocTAAAAMwAAAAAAAAAAAAAA0xbuQSF4mUIAAAAAAAAAABMAAAAzAAAAAAAAAAAAAABgegAAySqr-h9BbQJKK6v6H0FtAgAAfxYAAAAA",
+            "location": [
+              -89.445687,
+              40.714527
+            ],
+            "name": "North Cummings Lane",
+            "distance": 10.89842348
+          }
+        ]
+      },
+      "route_minutes": 22.41,
+      "route_miles": 16.33,
+      "status": "routed"
+    },
+    {
+      "id": "R05",
+      "name": "Bard Optical East Peoria",
+      "query": "412 Riverside Drive, East Peoria, Illinois 61611",
+      "expected_city": "East Peoria",
+      "candidate_tier": "tier_2",
+      "category": "retail_optical_with_eye_care",
+      "geocode_url": "https://nominatim.openstreetmap.org/search?q=412+Riverside+Drive%2C+East+Peoria%2C+Illinois+61611&format=jsonv2&limit=5&addressdetails=1&countrycodes=us",
+      "candidates": [
+        {
+          "place_id": 391668139,
+          "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+          "osm_type": "way",
+          "osm_id": 863031124,
+          "lat": "40.6821622",
+          "lon": "-89.5857929",
+          "category": "place",
+          "type": "house",
+          "place_rank": 30,
+          "importance": 9.99999999995449e-06,
+          "addresstype": "place",
+          "name": "",
+          "display_name": "412, Riverside Drive, East Peoria, Tazewell County, Illinois, 61611, United States",
+          "address": {
+            "house_number": "412",
+            "road": "Riverside Drive",
+            "town": "East Peoria",
+            "county": "Tazewell County",
+            "state": "Illinois",
+            "ISO3166-2-lvl4": "US-IL",
+            "postcode": "61611",
+            "country": "United States",
+            "country_code": "us"
+          },
+          "boundingbox": [
+            "40.6821122",
+            "40.6822122",
+            "-89.5858429",
+            "-89.5857429"
+          ]
+        }
+      ],
+      "selected": {
+        "place_id": 391668139,
+        "licence": "Data \u00a9 OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+        "osm_type": "way",
+        "osm_id": 863031124,
+        "lat": "40.6821622",
+        "lon": "-89.5857929",
+        "category": "place",
+        "type": "house",
+        "place_rank": 30,
+        "importance": 9.99999999995449e-06,
+        "addresstype": "place",
+        "name": "",
+        "display_name": "412, Riverside Drive, East Peoria, Tazewell County, Illinois, 61611, United States",
+        "address": {
+          "house_number": "412",
+          "road": "Riverside Drive",
+          "town": "East Peoria",
+          "county": "Tazewell County",
+          "state": "Illinois",
+          "ISO3166-2-lvl4": "US-IL",
+          "postcode": "61611",
+          "country": "United States",
+          "country_code": "us"
+        },
+        "boundingbox": [
+          "40.6821122",
+          "40.6822122",
+          "-89.5858429",
+          "-89.5857429"
+        ]
+      },
+      "lat": 40.6821622,
+      "lon": -89.5857929,
+      "route_url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.5857929,40.6821622?overview=false&steps=false&alternatives=false",
+      "route_response": {
+        "code": "Ok",
+        "routes": [
+          {
+            "legs": [
+              {
+                "steps": [],
+                "weight": 850.3,
+                "summary": "",
+                "duration": 839.7,
+                "distance": 14880.2
+              }
+            ],
+            "weight_name": "routability",
+            "weight": 850.3,
+            "duration": 839.7,
+            "distance": 14880.2
+          }
+        ],
+        "waypoints": [
+          {
+            "hint": "eF0qhX9dKoUfAAAAPgAAAF4AAAAVAAAAOkPOQLoJUEE4QZxBI1-OQA8AAAAgAAAALwAAAAsAAABgegAAH9iq-tuUawKp16r62JRrAgQAXxYAAAAA",
+            "location": [
+              -89.466849,
+              40.604891
+            ],
+            "name": "",
+            "distance": 9.989563013
+          },
+          {
+            "hint": "VLIWhAblQIchAAAAIwAAADUAAAAAAAAAdPhbQdijZkHHza9BAAAAACEAAAAjAAAANQAAAAAAAABgegAAAgep-prCbAJ_B6n6ssJsAgIAnxUAAAAA",
+            "location": [
+              -89.585918,
+              40.682138
+            ],
+            "name": "",
+            "distance": 10.89925652
+          }
+        ]
+      },
+      "route_minutes": 14.0,
+      "route_miles": 9.25,
+      "status": "routed"
+    },
+    {
+      "id": "R06",
+      "name": "Illinois Eye Center Washington",
+      "query": "93 Eastgate Drive, Washington, Illinois 61571",
+      "expected_city": "Washington",
+      "candidate_tier": "tier_2",
+      "category": "ophthalmology_medical_surgical",
+      "geocode_url": "https://nominatim.openstreetmap.org/search?q=93+Eastgate+Drive%2C+Washington%2C+Illinois+61571&format=jsonv2&limit=5&addressdetails=1&countrycodes=us",
+      "candidates": [],
+      "selected": null,
+      "status": "geocode_missing"
+    }
+  ],
+  "limitations": [
+    "Point-to-point practice-origin routes are not polygon isochrones or patient-origin choice sets.",
+    "Nominatim entity matches require review against official addresses before scoring.",
+    "Traffic and time-of-day variation are not represented by the public OSRM route."
+  ]
+}

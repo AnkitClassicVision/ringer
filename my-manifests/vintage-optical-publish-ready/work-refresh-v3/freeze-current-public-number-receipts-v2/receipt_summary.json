@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.1",
+  "retrieved_at": "2026-07-30T03:25:16.993370+00:00",
+  "status": "PASS",
+  "census_pep_2025": {
+    "url": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2025/cities/totals/sub-est2025.csv",
+    "http_status": 200,
+    "content_type": "text/csv",
+    "values": {
+      "name": "Morton village",
+      "state": "Illinois",
+      "state_fips": "17",
+      "place_fips": "50621",
+      "population_estimate": 17565,
+      "column": "POPESTIMATE2025"
+    }
+  },
+  "census_pep_2024": {
+    "url": "https://www2.census.gov/programs-surveys/popest/datasets/2020-2024/cities/totals/sub-est2024.csv",
+    "http_status": 200,
+    "content_type": "text/csv",
+    "values": {
+      "name": "Morton village",
+      "state": "Illinois",
+      "state_fips": "17",
+      "place_fips": "50621",
+      "population_estimate": 17557,
+      "column": "POPESTIMATE2024"
+    }
+  },
+  "quickfacts_live_audit": {
+    "source_audit": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-audit/challenge-sources-and-logic/source_checks.json",
+    "retrieval_status": "PASS_WITH_LIMITATION",
+    "source_url": "https://www.census.gov/quickfacts/fact/table/mortonvillageillinois/PST045224",
+    "under_18_percent": 25.9,
+    "age_65_plus_percent": 23.1,
+    "limitations": "The live endpoint is mutable and no frozen Census payload is stored in the packet. The 2024 estimate is historical rather than the current default. All values are city-boundary context, not drive-time catchment measurements."
+  },
+  "osrm_r01": {
+    "url": "https://router.project-osrm.org/route/v1/driving/-89.4669666,40.6048878;-89.4680865,40.6196077?overview=false&steps=false&alternatives=false",
+    "http_status": 200,
+    "values": {
+      "duration_seconds": 244.3,
+      "distance_meters": 2504.2,
+      "route_minutes_2dp": 4.07,
+      "route_miles_2dp": 1.56,
+      "code": "Ok"
+    }
+  },
+  "baseline_comparison": {
+    "page_population_2024": 17557,
+    "frozen_population_2024": 17557,
+    "current_population_2025": 17565,
+    "population_update_required": true,
+    "age_shares_unchanged": true,
+    "page_route_minutes": 4.07,
+    "current_route_minutes": 4.07,
+    "route_update_required": false
+  }
+}

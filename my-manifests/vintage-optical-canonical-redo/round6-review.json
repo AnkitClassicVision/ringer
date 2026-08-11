@@ -1,0 +1,19 @@
+{
+  "run_name": "vintage-optical-canonical-grow",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/work-review-v3",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "fresh-process-and-release-review-v3",
+      "engine": "codex",
+      "task_type": "code-review",
+      "reasoning_effort": "high",
+      "timeout_s": 1200,
+      "max_attempts": 1,
+      "expect_files": ["review.md"],
+      "spec": "You are a fresh report-only reviewer. Write only ./review.md. Do not modify the canonical report folder or any source. Do not contact anyone, call MCP/Apps, capture memory, commit, push, send, publish, or deploy.\n\nReview /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30/ against the authoritative process files: AGENTS.md, RUNBOOK_COMPETITIVE_ANALYSIS.md, INTAKE_FORMS.md, README.md, RUBRIC.md, CALCULATIONS.md, WEBSITE_POSITIONING.md, FIX_IT_PLAYBOOK.md, OUTPUT_SCHEMA.md, client-onepager/sample-onepager-b.html, and client-onepager/DESIGN_SPEC.md in /mnt/d_drive/repos/optometry-competition-analyzer-rubric/. Also read /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/plan.md and the validators under its checks directory.\n\nVerify independently: exact GROW intake; evidence/source registry; Tier 1/Tier 2 set; route receipt limitations; fixed 5/10/15/20/30 windows; null handling for unavailable catchment inputs; base component bands only from 20,35,50,65,80; formula recomputation; parallel basis/source/confidence/unknown records; raw pressure hidden from client-style visible page; Room to Win high-good; Digital Presence; specialty modules; exactly three GROW Fix Cards with shown math; source IDs; The Read first; one Letter page; internal-only/unroomed/not-for-external-use boundary; and external actions none. Treat unsupported review counts, complete-supply claims, route-window demographics, dollar forecasts, clinical-quality claims, or client-ready language as material or fatal.\n\nRequired headings: ## Verdict; ## Process conformance; ## Fatal issues; ## Material issues; ## Minor issues; ## Release boundary; ## Evidence checked. The verdict line must be exactly `Verdict: READY_INTERNAL` only if there are no fatal or material issues. Otherwise use `Verdict: NOT_READY` and explain. The release boundary must say this is not client-ready, Project Room is empty/unroomed, and external actions: none. Do not use em dashes.",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/checks/validate_fresh_review.py --review review.md",
+      "verified": "a fresh reviewer independently confirms canonical process conformance, no fatal or material internal-release issues, one-page output, and the blocked external-send boundary"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS21",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-patch-conditions",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["patch.log", "pathway-goalloop-draft.json"],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/patch_anchor_conditions.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD27/gl-round20-fix/pathway-goalloop-draft.json ./pathway-goalloop-draft.json > patch.log 2>&1; rc=$?; cat patch.log; exit $rc",
+      "check": "grep -q 'PATCH_DONE' patch.log || { echo 'FAIL: patch did not run'; cat patch.log; exit 1; }; PYTHONDONTWRITEBYTECODE=1 python3 -c \"import json,sys;g=json.load(open('pathway-goalloop-draft.json'));bad=[];\\nfor n in g['nodes']:\\n    for row in (n.get('data',{}).get('responsePathways') or []):\\n        if isinstance(row,list) and len(row)>=3 and isinstance(row[2],str) and (' and ' in row[2].lower() or ' or ' in row[2].lower()): bad.append((n['id'],row[:3]))\\nnode={n['id']:n for n in g['nodes']}['n_goal_search_offered_anchor']\\nrp=json.dumps(node['data'].get('responsePathways'))\\nif '\\\"anchor_exact\\\", \\\"==\\\", \\\"true\\\"' not in rp.replace(chr(10),''): bad.append(('exact-condition-missing',rp[:160]))\\nprint('FAIL: compound or missing conditions %s'%bad if bad else 'PASS: all responsePathway conditions are simple triples and the exact-match route is armed');sys.exit(1 if bad else 0)\"",
+      "verified": "Every responsePathway condition is a simple [field, operator, value] triple - the compound value that could never match is gone, and the anchor_exact == true route to the single confirmation is armed."
+    },
+    {
+      "key": "gl-validate-mint",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["mint.txt"],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD27/gl-round20-fix/check_goalloop_graph.py --draft /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS21/gl-patch-conditions/pathway-goalloop-draft.json > mint.txt 2>&1 || { echo 'REFUSED: validation failed - not minting' >> mint.txt; cat mint.txt; exit 2; }; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/mott-v21-snap/scripts/mint_graph_version.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS21/gl-patch-conditions/pathway-goalloop-draft.json >> mint.txt 2>&1; rc=$?; tail -6 mint.txt; exit $rc",
+      "check": "grep -qi 'PASS' mint.txt || { echo 'FAIL: validation did not pass before mint'; head -5 mint.txt; exit 1; }; grep -q 'REFUSED' mint.txt && { echo 'FAIL: refusal recorded'; exit 1; }; grep -qE 'VERSION=[0-9]+' mint.txt || { echo 'FAIL: no minted version'; tail -6 mint.txt; exit 1; }; echo \"PASS: validated then minted unattached - $(grep -m1 -E 'VERSION=[0-9]+' mint.txt)\"",
+      "verified": "The condition-corrected graph minted unattached strictly after the twenty-assertion validator passed on the patched draft."
+    },
+    {
+      "key": "gl-keepdate-timepick-replay",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["capture.log", "turn3.json", "turns.json"],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS21/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || exit 1; echo REPLAY_VERSION=$V; python3 -c \"import json;json.dump(['hi','How about next Thursday?','1045'],open('turns.json','w'))\" && CAPTURE_TURNS=\"$(cat turns.json)\" HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py $V . > capture.log 2>&1; rc=$?; tail -6 capture.log; exit $rc",
+      "check": "grep -q 'CAPTURE_COMPLETE' capture.log || { echo 'FAIL: capture incomplete'; tail -5 capture.log; exit 1; }; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_no_false_booking.py . || exit 1; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_keepdate_confirm.py turn3.json 08/13/2026 10:45",
+      "verified": "Ankit's exact sequence on the corrected mint: 'next Thursday' then '1045' holds 08/13 and goes straight to the single booking confirmation, with no intermediate offer step, no off-grid time and no booking claim."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+ORIGINAL_PATH=/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGWfix2/gw-prod-extract2/bland_gateway_prod.py
+ORIGINAL_SHA=a16cb4ad83a761b2
+CASE=1 phrase="No the following Thursday" actual=08/13/2026 expected=08/13/2026 ok=1
+CASE=2 phrase="the following Thursday" actual=08/13/2026 expected=08/13/2026 ok=1
+CASE=3 phrase="following Thursday" actual=08/13/2026 expected=08/13/2026 ok=1
+CASE=4 phrase="the following Monday" actual=08/10/2026 expected=08/10/2026 ok=1
+CASE=5 phrase="following Tuesday" actual=08/11/2026 expected=08/11/2026 ok=1
+CASE=6 phrase="the following Friday" actual=08/14/2026 expected=08/14/2026 ok=1
+CASE=7 phrase="following Wednesday" actual=08/12/2026 expected=08/12/2026 ok=1
+CASE=8 phrase="No, the following Monday" actual=08/10/2026 expected=08/10/2026 ok=1
+CASE=9 phrase="No the following Tuesday" actual=08/11/2026 expected=08/11/2026 ok=1
+CASE=10 phrase="No, following Friday" actual=08/14/2026 expected=08/14/2026 ok=1
+CASE=11 phrase="the following Sunday" actual=08/16/2026 expected=08/16/2026 ok=1
+CASE=12 phrase="following Saturday" actual=08/15/2026 expected=08/15/2026 ok=1
+P1_EXT=12/12
+P2_DIFFS=0 P2_UNINTENDED=0
+P3_INCIDENT=08/13/2026

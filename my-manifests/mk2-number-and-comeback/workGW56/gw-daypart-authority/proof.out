@@ -1,0 +1,6 @@
+CASE=afternoon-dropped AFTER=12:00
+CASE=morning-window BEFORE=12:00
+CASE=evening-window AFTER=16:00
+CASE=explicit-after-kept AFTER=15:00
+CASE=anchor-outranks AFTER=none
+CASE=greeting-not-trigger AFTER=none

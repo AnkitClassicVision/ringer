@@ -1,0 +1,19 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS15b",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-post-booking-probe",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": [
+        "probe.txt"
+      ],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS15/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || { echo 'no minted version'; exit 1; }; echo PROBING_VERSION=$V; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD21/gl-round15-fix/post_booking_probe.py $V > probe.txt 2>&1; rc=$?; tail -8 probe.txt; exit $rc",
+      "check": "grep -q 'PROBE_RESULT booked_then_alive=True cleanup_count=0' probe.txt || { echo 'FAIL: probe result line missing or red:'; tail -12 probe.txt; exit 1; }; grep -E '^TURN=' probe.txt | grep -q 'OK=False' && { echo 'FAIL: a turn failed:'; grep 'OK=False' probe.txt; exit 1; }; echo \"PASS: $(grep PROBE_RESULT probe.txt)\"",
+      "verified": "The exact live defect replayed and killed: book, ask to change, keep texting - every message gets a live reply with the office referral, no re-booking language, and the probe's own cleanup leaves zero appointments."
+    }
+  ]
+}

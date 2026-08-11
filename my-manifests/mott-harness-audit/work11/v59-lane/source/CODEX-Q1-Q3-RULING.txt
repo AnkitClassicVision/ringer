@@ -1,0 +1,153 @@
+stently mean the owner-target week start.
+
+## Q2 VERDICT
+
+**GATEWAY FIX IS A PRECONDITION. Do not certify v58/v59 for release and do not run a campaign with this residual.**
+
+The failed probe falsified H1 and established that the broken set grows through the week:
+
+> “`X next week` overshoots by +7 exactly when weekday X has already occurred this week or is today.”  
+> [TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:61)
+
+A static model instruction cannot select bare versus qualified weekday correctly without knowing the gateway’s current weekday. The contract itself says:
+
+> “No static phrase-level encoding can express the owner’s calendar-week semantics under H2.”  
+> [TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:67)
+
+Patient-visible dates and renegotiation are recovery mechanisms, not correct temporal behavior. The owner directive explicitly requires correct temporal behavior complete. Therefore they cannot justify campaign release.
+
+The proposed gateway ambiguity flag must also be broadened. A Sunday-only “boundary day” flag is insufficient because Monday’s `monday next week` already failed. The gateway must either:
+
+- resolve every qualified weekday against the owner’s Monday-anchored calendar week; or
+- flag every request whose phrase-level resolution would differ from that owner-target week, not merely Sundays.
+
+The contract is internally stale here. Section 2 says the defect grows through the week, while section 4 still calls it:
+
+> “OPEN DEFECT: Sunday week-qualified resolution”  
+> “wrong-week OFFERING can, on Sunday inbound replies only”  
+> [TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:87)
+
+That section must be corrected before canonical approval.
+
+**What would change this ruling:** A deployed gateway fix followed by a deterministic weekday-by-weekday phrase matrix, a passing resolver probe for the exact campaign day, and a green 30-scenario certification run against the exact candidate artifact.
+
+## Q3 VERDICT
+
+**APPROVE WITH CHANGES: v58 may run diagnostically, but the current runner needs an explicit non-certifying mode first.**
+
+The current runner recognizes diagnostic mode only on Sundays:
+
+> `diagnostic_only = run_date.weekday() == 6`  
+> [pathway_harness.py](/home/ankit114/repos/mott-v21-snap/harness/pathway_harness.py:284)
+
+On Monday, it would present a 30/30 result as certifying. Add an explicit `--diagnostic` mode or a fail-closed wrapper that:
+
+- labels the receipt `DIAGNOSTIC ONLY`;
+- cannot emit a certification-pass artifact;
+- exits nonzero regardless of score;
+- is excluded mechanically from campaign-gate inputs.
+
+Expected v58 failures attributable to the known inverted vague-week mapping:
+
+- `vague week request`;
+- `week plus time of day`;
+- `cost question mid offer must defer not disclose`.
+
+All three use a vague `next week` request and carry `expect_week: 'next week'`. [scenarios.py](/home/ankit114/repos/mott-v21-snap/harness/scenarios.py:22) [scenarios.py](/home/ankit114/repos/mott-v21-snap/harness/scenarios.py:39) [scenarios.py](/home/ankit114/repos/mott-v21-snap/harness/scenarios.py:180)
+
+Disqualifying even in a diagnostic run:
+
+- Any mixed-intent clarification failure.
+- Any outside-hours honesty failure.
+- Any 3:00 pm-floor violation.
+- Any suppression, booking-claim, identity, language, or information-leak failure.
+- Any Monday failure for `tuesday next week`, including Chinese shorthand and clipped shorthand. That phrase matched the owner target on the verified Monday.
+- Any bare-weekday `soonest` failure.
+- A harness/assertion engine failure rather than an agent temporal result.
+
+Only failures directly traceable to the already-proven v58 vague-week inversion receive the “expected” label.
+
+**What would change this ruling:** If the run can influence certification/campaign state, or if its output cannot be distinguished mechanically from a certification receipt, it must not run.
+
+## Q4 VERDICT
+
+### Known-defective v54/v56 red runs
+
+**APPROVE WITH AMENDMENTS as certifier red tests, not as sufficient certifier certification.**
+
+The exact expected red failures must be registered before running, and the same unchanged scenarios/runner must then run against v54, v56, and the candidate.
+
+Current structural evidence already catches both old versions:
+
+- v56 lacks all four offer-to-`n_which_intent` edges and the outside-hours route.
+- v54 lacks the same protections and an offer node required by the present invariant set.
+
+Those are precisely the invariants checked at [check_candidate_gate.py](/home/ankit114/repos/mott-v21-snap/harness/checks/check_candidate_gate.py:137) and [check_candidate_gate.py](/home/ankit114/repos/mott-v21-snap/harness/checks/check_candidate_gate.py:169).
+
+I executed the read-only structural gate locally:
+
+```text
+v58: CHECK PASSED
+v56: CHECK FAILED, including missing mixed-intent edges and outside-hours route
+v54: CHECK FAILED, including missing mixed-intent edges and outside-hours route
+```
+
+Requirements:
+
+- Predeclare which current scenarios each old version must fail.
+- Do not alter assertions after seeing their outputs.
+- Treat additional calendar-dependent failures separately from the registered defects.
+- Do not claim two old-version failures prove complete certifier sensitivity. Keep the in-memory mutation battery, which currently catches eight mutations. [redproof_run.py](/home/ankit114/repos/mott-v21-snap/harness/checks/redproof_run.py:126)
+
+**What would change this ruling:** If v54 or v56 passes a predeclared known-defect scenario, the certifier is not trustworthy. If the old-version run requires any appointment write, reject it.
+
+### Governed book-and-cancel
+
+**REJECT in the current repository state, even with owner approval.**
+
+The harness correctly warns:
+
+> “Reaching the confirmation node writes a real appointment”  
+> “prove the cancel path before the booking path.”  
+> [pathway_harness.py](/home/ankit114/repos/mott-v21-snap/harness/pathway_harness.py:21)
+
+But the capability catalog says:
+
+> “Current Mott conductor grant does not allow cancel.”  
+> [mott-eyecloud-endpoint-field-catalog.csv](/home/ankit114/repos/mott-v21-snap/docs/mott-eyecloud-endpoint-field-catalog.csv:296)
+
+Booking before cancellation is available and proven creates a one-way patient-affecting risk. An owner go cannot make an unavailable cancellation capability reliable.
+
+**What would change this ruling:** Before any booking:
+
+1. The target is synthetic/test-only and explicitly allowlisted.
+2. The cancellation grant is enabled through the governed signer.
+3. A read-only cancellation preflight proves the exact appointment-ID route.
+4. A tested rollback owner and manual fallback are present.
+5. The current-turn owner approval names the target candidate and exact action.
+6. The run captures booking success, read-after-write, cancellation success, and read-after-cancel.
+
+## Evidence corrections
+
+- The packet calls the contract “rev 3”; the file header still says `rev 2`. [TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:1)
+- “H2 fits all eight points” is overstated. The contract’s H2 table has no prediction for bare `next week`; that observation supports the proposed start phrase but does not test H2. [TEMPORAL-CONTRACT.md](/home/ankit114/repos/mott-v21-snap/contract/TEMPORAL-CONTRACT.md:53)
+- The Monday probe receipt is verified and correctly failed closed with return code 1. [monday_probe_result.txt](/tmp/claude-1000/-mnt-d-drive-repos-mott/1be1395d-c2b1-4124-ab95-4ee3999427dc/scratchpad/monday_probe_result.txt:11)
+
+No files were changed. No external API, gateway call, deployed pathway, or live harness was run during this review.
+
+Compound proof:
+- Plan/spec yardstick: `contract/TEMPORAL-CONTRACT.md` plus the decision packet
+- Units proved: probe receipt, v58 extraction, assertion runner, structural gates, old-version red behavior, cancel capability
+- Review: report-only supervisory review
+- Highest true state: review-required; release blocked
+- Behavior verification: existing Monday probe receipt plus read-only local structural checks
+- Decision residue: hardest decision was separating diagnostic v59 value from release approval; rejected alternatives were accepting visible-date recovery or approving book-before-cancel; least-confident assumption is cross-day behavior of bare `next week`
+- Compound capture: none, read-only and no external writes authorized
+
+Progress
+- % to true goal: 100%
+- % to current goal: 100%
+- Done: Q1–Q4 rulings, probe verification, v58/static-gate review, cancellation-contract review
+- In flight: none
+- Not done: exact combined range probe, v59 amendments, explicit diagnostic mode, gateway temporal fix, certification suite, campaign gate
+- Blockers: gateway calendar semantics, stale contract sections, blocked cancellation capability, Project Room owner review

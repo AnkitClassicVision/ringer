@@ -1,0 +1,4 @@
+CASE=anchor-1115 FIRST=11:15 am
+CASE=anchor-2pm FIRST=02:00 pm
+CASE=latest FIRST=02:00 pm
+CASE=none FIRST=11:00 am

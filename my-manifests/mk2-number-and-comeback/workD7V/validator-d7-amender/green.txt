@@ -1,0 +1,3 @@
+ ! OPEN item OPEN-1: listed separately; pre-approved item warns but does not automatically fail
+ ! OPEN item OPEN-2: listed separately; pre-approved item warns but does not automatically fail
+PASS: all numbered assertions through [39] satisfied

@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-publish-ready",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-close",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "close-ready-for-project-room-review-packet",
+      "engine": "local-shell",
+      "task_type": "review",
+      "timeout_s": 300,
+      "expect_files": ["finalization_receipt.json"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/finalize_publish_candidate.py --report /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30 --reviews /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-final-reviews-verified --verdict /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-release-verdict-verified/verify-final-release-verdict-artifact --backup /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/backups/pre-final-close-20260730T053950Z --receipt finalization_receipt.json",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_closed_publish_candidate.py --report /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30 --receipt finalization_receipt.json --room /home/ankit114/.mybcat/project_rooms/rooms/vintage-optical-competitive-analysis.json",
+      "verified": "the packet closes with three clean independent reviews, a canary-safe final verdict, exact 1/11 Letter PDFs, 25-source lineage, current hashes, READY_FOR_PROJECT_ROOM_REVIEW as the highest truthful state, and external use still blocked for Ankit's source-inventory approval"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "run_name": "cross-harness-skill-implant",
+  "workdir": "/mnt/d_drive/repos/ringer/work/cross-harness-skill-implant/runtime-discovery-runs",
+  "max_parallel": 2,
+  "tasks": [
+    {
+      "key": "claude-skill-invocation",
+      "engine": "claude",
+      "model": "sonnet",
+      "task_type": "verification",
+      "timeout_s": 600,
+      "expect_files": [
+        "discovery.json"
+      ],
+      "engine_args": [
+        "--permission-mode",
+        "dontAsk",
+        "--allowedTools",
+        "Write",
+        "--effort",
+        "medium"
+      ],
+      "spec": "/clean-my-ai-harness-mission-fit\n\nThis is a read-only runtime-discovery smoke, not a mission audit or an implant. Do not use Read, Bash, search, MCP, network, memory, or external tools. Do not inspect filesystem paths directly. Rely only on the skill content injected by the runtime invocation on the first line. From the loaded skill's approved cross-harness implant section, copy exactly two complete verbatim sentences: the sentence that says filesystem presence is not higher discovery proof, and the sentence that forbids inventing native harness commands. Write only discovery.json in the current Ringer task directory. The JSON must have exactly these keys: runtime, skill_name, invoked, quotes, tools_used, error. Set skill_name to the invoked skill's frontmatter name. Set invoked true only if the runtime injected the skill content and you can quote both sentences exactly; otherwise false with a short error. quotes is a two-item string array. tools_used is [] when no external tools were used beyond writing this artifact. error is null on success. Do not include markdown or commentary. Set runtime to claude-code.",
+      "check": "python3 /mnt/d_drive/repos/ringer/work/cross-harness-skill-implant/check_runtime_discovery.py --file discovery.json --runtime claude-code",
+      "verified": "Claude Code natively resolves and invokes the live Mission Fit skill and returns both verbatim cross-harness guardrails without external tool use."
+    },
+    {
+      "key": "codex-skill-invocation",
+      "engine": "codex",
+      "task_type": "verification",
+      "timeout_s": 600,
+      "expect_files": [
+        "discovery.json"
+      ],
+      "engine_args": [
+        "-m",
+        "gpt-5.6-sol",
+        "-c",
+        "model_reasoning_effort=\"medium\""
+      ],
+      "spec": "$clean-my-ai-harness-mission-fit\n\nThis is a read-only runtime-discovery smoke, not a mission audit or an implant. Do not use Read, Bash, search, MCP, network, memory, or external tools. Do not inspect filesystem paths directly. Rely only on the skill content injected by the runtime invocation on the first line. From the loaded skill's approved cross-harness implant section, copy exactly two complete verbatim sentences: the sentence that says filesystem presence is not higher discovery proof, and the sentence that forbids inventing native harness commands. Write only discovery.json in the current Ringer task directory. The JSON must have exactly these keys: runtime, skill_name, invoked, quotes, tools_used, error. Set skill_name to the invoked skill's frontmatter name. Set invoked true only if the runtime injected the skill content and you can quote both sentences exactly; otherwise false with a short error. quotes is a two-item string array. tools_used is [] when no external tools were used beyond writing this artifact. error is null on success. Do not include markdown or commentary. Set runtime to codex.",
+      "check": "python3 /mnt/d_drive/repos/ringer/work/cross-harness-skill-implant/check_runtime_discovery.py --file discovery.json --runtime codex",
+      "verified": "Codex natively resolves and invokes the live Mission Fit skill and returns both verbatim cross-harness guardrails without external tool use."
+    }
+  ]
+}

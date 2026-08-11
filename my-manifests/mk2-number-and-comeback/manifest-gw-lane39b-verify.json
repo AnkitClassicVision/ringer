@@ -1,0 +1,20 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW39bv",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-lane39b-verify",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": [
+        "proof.out",
+        "pytest.out"
+      ],
+      "spec": "cp -r /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW39b/gw-datetime-tolerance/gw ./gw && cp /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW39b/gw-datetime-tolerance/proof_parse.py . && PYTHONDONTWRITEBYTECODE=1 python3 ./proof_parse.py > proof.out 2>&1 && cd gw && PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q > ../pytest.out 2>&1; rc=$?; cd ..; tail -2 pytest.out; cat proof.out; exit $rc",
+      "check": "grep -q 'PHRASE=08/06/2026 10:30 am DATE=2026-08-06' proof.out || { echo 'FAIL: datetime case missing'; cat proof.out; exit 1; }; exp=$(python3 -c \"import datetime;print((datetime.date.today()+datetime.timedelta(days=14)).isoformat())\"); exp10=$(python3 -c \"import datetime;print((datetime.date.today()+datetime.timedelta(days=10)).isoformat())\"); for p in '2 weeks from today' 'two weeks from today' 'in 2 weeks' '2 weeks'; do grep -q \"PHRASE=$p DATE=$exp\" proof.out || { echo \"FAIL: '$p' not $exp\"; cat proof.out; exit 1; }; done; grep -q \"PHRASE=10 days from now DATE=$exp10\" proof.out || { echo 'FAIL: 10-days case'; exit 1; }; summary=$(tail -1 pytest.out); echo \"$summary\" | grep -qE '^[0-9]+ passed' || { echo \"FAIL: pytest summary not clean: $summary\"; exit 1; }; echo \"$summary\" | grep -qE '[0-9]+ (failed|error)' && { echo \"FAIL: pytest summary shows failures: $summary\"; exit 1; }; echo \"PASS: lane-39 parser proven, suite green - $summary\"",
+      "verified": "A clean green receipt for the combined lane-39+39b gateway diff: relative offsets and slot-pinned datetime strings both resolve correctly and the full suite passes in a fresh task directory."
+    }
+  ]
+}

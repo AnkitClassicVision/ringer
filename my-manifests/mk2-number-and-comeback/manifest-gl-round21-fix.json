@@ -1,0 +1,23 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD29",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-round21-fix",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 2400,
+      "expect_files": [
+        "build_goalloop.py",
+        "check_goalloop_graph.py",
+        "pathway-goalloop-draft.json",
+        "frozen-extractors.json",
+        "DEBUG.md"
+      ],
+      "spec": "ROLE: fix worker for the Mott goal-loop Bland pathway, round 21. Work entirely inside your CWD; never modify anything outside it; no network, no git, no MCP/Apps/skills; do not mint, attach, deploy, or call any API. CONTEXT - measured live on v117 minutes ago: with Thursday 08/06 offers standing (10:30/10:45 am), the patient asked 'How about after 1'. Extraction worked (time_after 01:00 PM), but NO edge fired - the slot variables and BlandStatusCode are unchanged from the prior turn, proving no search ran - and the response node then FABRICATED a negative claim: 'I do not have anything after 1:00 pm on Thursday 08/06/2026', which is false (that day has 1:00, 2:00, 2:15 pm and later slots; only 1:30-2:00 is taken). Two defects: (A) the offered-date time-refinement edge did not match an 'after N' phrasing; (B) nothing bans the node from asserting unavailability it never searched for. THE FIX - copy every artifact from /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD28/gl-round20b-fix/ into CWD and change: (1) EDGE COVERAGE: extend the n_goal_response edge to n_goal_search_offered_time (and mirror its description) so its label also covers hour-refinement phrasings on the offered date: append ' - or asks for times after, before, later than, or from a given hour on that date, including phrases like after 1, after 3pm, before noon, later in the day'. Keep its existing content and offer-conditioning intact. (2) NO-NEGATIVE-CLAIM: add to the n_goal_response prompt a rule block starting with the exact marker 'NO-NEGATIVE-CLAIM:' stating: never say a time, window, day, or date has no availability unless the MOST RECENT search was run with that exact constraint and returned no matching slots; if the patient asks about a window you have not just searched, do not answer from memory - the routing must run a fresh search first; when in doubt, ask or search, never assert absence. Prompt may grow to 5,400 characters; every existing block stays. (3) Everything else from rounds 6-20b unchanged. (4) VALIDATOR: add ASSERTION 21 keeping 1-20 intact: the offered_time edge label contains the after-hour refinement phrasing with an 'after 1' example; the n_goal_response prompt contains NO-NEGATIVE-CLAIM; and keep the compound-condition ban from round 20b. Structured FAIL citing 'assertion 21'; must PASS your draft and FAIL the untouched round-20b draft at /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD28/gl-round20b-fix/pathway-goalloop-draft.json citing assertion 21. (5) build_goalloop.py regenerates deterministically; fixture-conformant.json updated. (6) DEBUG.md: the live evidence, both defects, the changes, regeneration command; mention extract/prompt/compress context as before.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_round21_fix.py ./check_goalloop_graph.py ./pathway-goalloop-draft.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD28/gl-round20b-fix/pathway-goalloop-draft.json",
+      "verified": "After-hour refinements on the offered date route to a fresh pinned search, and the response node is barred from asserting unavailability it has not just searched - with every guard from rounds 8-20b asserted intact."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-publish-ready",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-explainer-tight",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "tighten-public-source-table-after-chrome-qa",
+      "engine": "local-shell",
+      "task_type": "site-build",
+      "timeout_s": 120,
+      "expect_files": ["number-explainer.md", "number-explainer.html", "explainer_build_report.md"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/tighten_source_table.py --source /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-explainer-polish/polish-explainer-after-visual-qa-with-sol --target .",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_explainer_polish.py --dir . && python3 - <<'PY'\nfrom pathlib import Path\nh=Path('number-explainer.html').read_text()\nassert '.public-source-table td { padding-top: .045in; padding-bottom: .045in; }' in h\nassert '.public-source-table td { padding-top: .075in; padding-bottom: .075in; }' not in h\nprint('PASS: final public-source table padding contract')\nPY",
+      "verified": "only the public-source table padding is tightened enough to keep S17 with S01-S16; all numeric content, source records, formulas, links, type sizes, line heights, and Project Room boundaries are preserved"
+    }
+  ]
+}

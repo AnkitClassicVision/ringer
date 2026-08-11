@@ -1,0 +1,5 @@
+GATE=anaphora STATUS=200 first=08/17/2026 01:00 pm count=18
+GATE=away-override STATUS=200 first=08/18/2026 10:30 am count=28
+GATE=week-of-reg STATUS=200 first=08/17/2026 01:00 pm count=18
+GATE=relative-reg STATUS=200 first=08/18/2026 10:30 am count=28
+EXPECT_RELATIVE_DATE=08/18/2026

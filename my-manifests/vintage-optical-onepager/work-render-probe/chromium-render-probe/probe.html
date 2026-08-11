@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MyBCAT · Competitive Growth Analysis — Sample</title>
+<style>
+  @page { size: Letter; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 8.5in; height: 11in; }
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #27343C;
+    background: #FFFFFF;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  :root {
+    --ink: #1A242C;
+    --ink-2: #27343C;
+    --muted: #5B6B75;
+    --teal: #006064;
+    --teal-2: #00838F;
+    --aqua: #00ACC1;
+    --gold: #D3AF5E;
+    --surface: #F4F6F8;
+    --line: #DCE3E8;
+    --track: #E4E9EC;
+  }
+  .cond { font-family: 'IBM Plex Sans Condensed', 'IBM Plex Sans', sans-serif; }
+
+  /* ============ HERO ============ */
+  .hero {
+    background: var(--ink);
+    color: #EAF0F3;
+    padding: 0.22in 0.55in 0.19in;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.35in;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    right: -1.2in; top: -1.6in;
+    width: 3.6in; height: 3.6in;
+    border: 1px solid rgba(0,172,193,0.28);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    right: -0.7in; top: -1.1in;
+    width: 2.6in; height: 2.6in;
+    border: 1px solid rgba(0,172,193,0.16);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero-main { flex: 1; }
+  .brand-row { display: flex; align-items: center; gap: 8px; margin-bottom: 11px; }
+  .brand-row img { width: 26px; height: 26px; }
+  .brand-name { font-weight: 700; font-size: 13.5px; letter-spacing: 0.04em; color: #FFFFFF; }
+  .brand-tag { font-size: 8.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #8FA5B0; border-left: 1px solid #3D4C55; padding-left: 8px; margin-left: 2px; }
+  .kicker { font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--aqua); font-weight: 600; margin-bottom: 6px; }
+  .hero h1 { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 27px; line-height: 1.12; font-weight: 600; color: #FFFFFF; max-width: 5.1in; }
+  .hero h1 em { font-style: normal; color: #7FD8E4; }
+  .subject { margin-top: 9px; font-size: 9.5px; color: #A9BAC3; letter-spacing: 0.01em; }
+  .subject b { color: #D7E2E7; font-weight: 600; }
+
+  .score-block { display: flex; align-items: center; gap: 0.17in; flex-shrink: 0; }
+  .ring { position: relative; width: 1.12in; height: 1.12in; }
+  .ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring-center {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .ring-num { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 34px; font-weight: 700; color: #FFFFFF; line-height: 1; }
+  .ring-den { font-size: 7.5px; color: #8FA5B0; letter-spacing: 0.12em; margin-top: 2px; }
+  .score-meta { max-width: 1.45in; }
+  .score-label { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: 0.06em; color: #7FD8E4; }
+  .score-sub { font-size: 8.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #8FA5B0; margin: 2px 0 6px; }
+  .score-note { font-size: 8.5px; line-height: 1.45; color: #A9BAC3; }
+  .score-bands { font-size: 6.8px; letter-spacing: 0.06em; color: #7FD8E4; margin-top: 5px; }
+
+  /* ============ EXECUTIVE READ ============ */
+  .read { display: flex; flex-shrink: 0; padding: 0.06in 0.55in; background: #FFFFFF; border-bottom: 1.5px solid var(--ink); }
+  .read-text { font-size: 9px; line-height: 1.45; color: var(--ink-2); max-width: 7.1in; }
+  .read-text b { font-weight: 700; }
+
+  /* ============ SECTIONS ============ */
+  .zones { flex: 1; display: flex; flex-direction: column; }
+  .zone { display: flex; padding: 0.125in 0.55in; border-bottom: 1px solid var(--line); }
+  .zone.tint { background: var(--surface); }
+  .zone-spine { width: 0.62in; flex-shrink: 0; padding-top: 2px; }
+  .zone-num { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 30px; font-weight: 200; color: var(--teal); line-height: 1; opacity: 0.55; }
+  .zone-body { flex: 1; }
+  .zone-label { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 9.5px; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--teal); margin-bottom: 3px; }
+  .zone-head { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+
+  /* Zone 1: market stats */
+  .stats { display: flex; align-items: stretch; }
+  .stat { flex: 1; padding-right: 14px; }
+  .stat + .stat { border-left: 1px solid var(--line); padding-left: 14px; }
+  .stat-num { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 21px; font-weight: 700; color: var(--ink); line-height: 1.05; }
+  .stat-label { font-size: 8.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin-top: 3px; }
+  .stat-note { font-size: 8px; color: var(--muted); margin-top: 2px; line-height: 1.35; }
+  .zone-takeaway { margin-top: 8px; font-size: 9.5px; color: var(--ink-2); }
+  .zone-takeaway b { font-weight: 600; }
+
+  /* Zone 2: competition */
+  .comp-grid { display: flex; gap: 0.32in; }
+  .comp-left { width: 2.55in; flex-shrink: 0; }
+  .press-title { font-size: 8.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .bar-row { margin-bottom: 9px; }
+  .bar-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px; }
+  .bar-name { font-size: 9.5px; font-weight: 600; color: var(--ink); }
+  .bar-name span { font-weight: 400; color: var(--muted); font-size: 8.5px; }
+  .bar-val { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 13px; font-weight: 700; color: var(--ink); }
+  .bar-val span { font-size: 8px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-left: 3px; }
+  .bar-track { height: 7px; background: var(--track); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; }
+  .bar-scale { font-size: 7.5px; color: var(--muted); margin-top: 5px; }
+  .comp-right { flex: 1; }
+  .comp-row { display: flex; align-items: baseline; gap: 8px; padding: 3.5px 0; border-bottom: 1px dotted var(--line); }
+  .comp-row:last-of-type { border-bottom: none; }
+  .tier { flex-shrink: 0; font-size: 7px; font-weight: 700; letter-spacing: 0.1em; color: var(--teal); border: 1px solid var(--teal); border-radius: 3px; padding: 1px 4px; }
+  .tier.t2 { color: var(--muted); border-color: #B9C5CC; }
+  .comp-name { font-size: 9.5px; font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .comp-desc { font-size: 8.5px; color: var(--muted); }
+  .wedge { margin-top: 7px; border-left: 3px solid var(--aqua); background: rgba(0,172,193,0.07); padding: 6px 10px; font-size: 9px; line-height: 1.5; color: var(--ink-2); }
+  .wedge b { font-weight: 700; }
+
+  /* Zone 3: opportunity */
+  .lane { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--line); }
+  .lane:last-of-type { border-bottom: none; }
+  .lane-rank { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 12px; font-weight: 700; color: #9FB0BA; width: 14px; flex-shrink: 0; }
+  .lane-main { flex: 1; min-width: 0; }
+  .lane-name { font-size: 10.5px; font-weight: 700; color: var(--ink); }
+  .lane-why { font-size: 8px; color: var(--muted); margin-top: 1px; }
+  .lane-score { width: 1.28in; flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
+  .score-pill { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 11px; font-weight: 700; color: #FFFFFF; background: var(--teal); border-radius: 3px; padding: 1px 5px; min-width: 20px; text-align: center; }
+  .score-pill.mid { background: var(--teal-2); }
+  .score-pill.ops { background: var(--ink-2); font-size: 7px; letter-spacing: 0.08em; padding: 3px 5px; }
+  .score-read { font-size: 7.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); line-height: 1.2; }
+  .lane-meter { width: 0.85in; flex-shrink: 0; }
+  .lane-meter .bar-track { height: 5px; }
+  .lane-dollar { width: 1.22in; flex-shrink: 0; text-align: right; }
+  .dollar-num { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 14.5px; font-weight: 700; color: var(--ink); display: inline-block; border-bottom: 2.5px solid var(--gold); padding-bottom: 1px; }
+  .dollar-unit { font-size: 7.5px; color: var(--muted); display: block; margin-top: 2px; }
+  .lane-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 5px; padding-top: 5px; border-top: 2px solid var(--ink); }
+  .lane-total-left { font-size: 8.5px; color: var(--muted); }
+  .lane-total-right { font-size: 10px; font-weight: 600; color: var(--ink); }
+  .lane-total-right .dollar-num { font-size: 15px; margin-left: 5px; }
+  .conf-tag { font-size: 7px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 1px 4px; margin-left: 5px; vertical-align: 2px; }
+
+  /* First 30 days + CTA */
+  .plan { display: flex; gap: 0.28in; padding: 0.12in 0.55in 0.13in; background: var(--surface); border-bottom: 1px solid var(--line); }
+  .plan-label { width: 0.62in; flex-shrink: 0; }
+  .plan-label .zone-label { margin-bottom: 0; line-height: 1.5; }
+  .move { flex: 1; }
+  .move-num { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 10px; font-weight: 700; color: var(--aqua); letter-spacing: 0.06em; }
+  .move-name { font-size: 9.5px; font-weight: 700; color: var(--ink); margin: 1px 0 2px; }
+  .move-desc { font-size: 8px; color: var(--muted); line-height: 1.4; }
+
+  .cta {
+    background: var(--ink);
+    color: #EAF0F3;
+    padding: 0.10in 0.55in;
+    display: flex;
+    align-items: center;
+    gap: 0.3in;
+  }
+  .cta-text { flex: 1; }
+  .cta-head { font-family: 'IBM Plex Sans Condensed', sans-serif; font-size: 15px; font-weight: 600; color: #FFFFFF; }
+  .cta-sub { font-size: 8.5px; color: #A9BAC3; margin-top: 3px; }
+  .cta-sub b { color: #7FD8E4; font-weight: 600; }
+  .cta-btn {
+    flex-shrink: 0;
+    background: var(--aqua);
+    color: #06262B;
+    font-family: 'IBM Plex Sans Condensed', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 9px 18px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  .cta-btn small { display: block; font-family: 'IBM Plex Sans', sans-serif; font-size: 7.5px; font-weight: 600; letter-spacing: 0.04em; margin-top: 2px; color: #0E3A41; }
+
+  .fineprint {
+    padding: 0.06in 0.55in 0.08in;
+    font-size: 6.8px;
+    line-height: 1.4;
+    color: #7E8E98;
+    background: #FFFFFF;
+  }
+</style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-main">
+      <div class="brand-row">
+        <img src="assets/mybcat-logo.png" alt="MyBCAT logo">
+        <span class="brand-name">MyBCAT</span>
+        <span class="brand-tag">Practice Growth Intelligence</span>
+      </div>
+      <div class="kicker">Competitive Growth Analysis · Sample Report</div>
+      <h1>Where your next patient dollar is, <em>and who else wants it.</em></h1>
+      <div class="subject"><b>Sample: two-location family + specialty practice</b> · affluent suburban market · real analysis, details altered</div>
+    </div>
+    <div class="score-block">
+      <div class="ring">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="#3D4C55" stroke-width="7"/>
+          <circle cx="50" cy="50" r="44" fill="none" stroke="#00ACC1" stroke-width="7"
+                  stroke-linecap="round" stroke-dasharray="204.6 276.5"/>
+        </svg>
+        <div class="ring-center">
+          <div class="ring-num">74</div>
+          <div class="ring-den">/ 100</div>
+        </div>
+      </div>
+      <div class="score-meta">
+        <div class="score-label">WIN MORE</div>
+        <div class="score-sub">Competitive Opportunity Score</div>
+        <div class="score-note">Not a grade. It shows where growth is easiest and what to fix first.</div>
+        <div class="score-bands">HIGHER = BETTER · 85+ DOMINATE · 70–84 WIN MORE · 55–69 VULNERABLE · <54 AT RISK</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="zones">
+
+    <!-- EXECUTIVE READ -->
+    <section class="read">
+      <div class="zone-spine"><div class="zone-num" style="font-size:18px; opacity:0.45;">&#9733;</div></div>
+      <div class="zone-body">
+        <div class="zone-label">The Read</div>
+        <div class="read-text">This market is crowded: room to win is just <b>37</b> and <b>23</b> out of 100. Your opportunity is still <b>74</b> because the demand is rich, competitors are weak where it matters, and four revenue lanes sit open. A tight market with open lanes is exactly where growth comes from: not everywhere, lane by lane.</div>
+      </div>
+    </section>
+
+    <!-- ZONE 1: MARKET -->
+    <section class="zone">
+      <div class="zone-spine"><div class="zone-num">1</div></div>
+      <div class="zone-body">
+        <div class="zone-label">Your Market</div>
+        <div class="zone-head">Demand is not your problem. 100k+ residents in your service area, and the profile is ideal.</div>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-num">$120k+</div>
+            <div class="stat-label">Median HH Income</div>
+            <div class="stat-note">vs ~$75k US median. Funds premium optical + cash-pay care.</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">20%+</div>
+            <div class="stat-label">Children Under 18</div>
+            <div class="stat-note">Myopia management + family exam demand.</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">15%+</div>
+            <div class="stat-label">Age 65+</div>
+            <div class="stat-note">Medical eye care, dry eye, chronic-condition exams.</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">25%+</div>
+            <div class="stat-label">Work From Home</div>
+            <div class="stat-note">Near-home weekday visits beat commuter capture.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ZONE 2: COMPETITION -->
+    <section class="zone tint">
+      <div class="zone-spine"><div class="zone-num">2</div></div>
+      <div class="zone-body">
+        <div class="zone-label">Your Competition</div>
+        <div class="zone-head">Competitors are winning patients on convenience, not on care.</div>
+        <div class="comp-grid">
+          <div class="comp-left">
+            <div class="press-title">Room to win by location · higher = better</div>
+            <div class="bar-row">
+              <div class="bar-top">
+                <span class="bar-name">Location A <span>· anchor office</span></span>
+                <span class="bar-val">37<span>tight</span></span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width:37%; background:#B7791F;"></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-top">
+                <span class="bar-name">Location B <span>· growth office</span></span>
+                <span class="bar-val">23<span>very tight</span></span>
+              </div>
+              <div class="bar-track"><div class="bar-fill" style="width:23%; background:#B5452A;"></div></div>
+            </div>
+            <div class="bar-scale">Room to win, 0–100, higher = better. Low room = crowded market. The lanes below are where you win anyway.</div>
+          </div>
+          <div class="comp-right">
+            <div class="comp-row">
+              <span class="tier">TIER 1</span>
+              <span class="comp-name">Established private ODs</span>
+              <span class="comp-desc">competing on your specialty terrain: dry eye, myopia</span>
+            </div>
+            <div class="comp-row">
+              <span class="tier t2">TIER 2</span>
+              <span class="comp-name">National retail optical</span>
+              <span class="comp-desc">top-rated profile, frictionless online booking</span>
+            </div>
+            <div class="comp-row">
+              <span class="tier t2">TIER 2</span>
+              <span class="comp-name">Corporate OD chains</span>
+              <span class="comp-desc">walk-ins, real-time booking, retail pricing</span>
+            </div>
+            <div class="comp-row">
+              <span class="tier t2">TIER 2</span>
+              <span class="comp-name">Regional ophthalmology groups</span>
+              <span class="comp-desc">medical gravity, surgical referral engines</span>
+            </div>
+            <div class="wedge"><b>The wedge:</b> competitor reviews show scheduling runaround, long waits, and billing confusion. Your reviews praise caring staff and doctors who explain. That gap is winnable revenue.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ZONE 3: OPPORTUNITY -->
+    <section class="zone">
+      <div class="zone-spine"><div class="zone-num">3</div></div>
+      <div class="zone-body">
+        <div class="zone-label">Your Opportunity</div>
+        <div class="zone-head">Four revenue lanes, ranked by what you can realistically win.</div>
+
+        <div class="lane">
+          <div class="lane-rank">1</div>
+          <div class="lane-main">
+            <div class="lane-name">Appointment fill + recall recapture</div>
+            <div class="lane-why">Open slots + lapsed recalls, e.g., 8 recovered exams/wk × $170 avg visit ≈ $71k/yr.</div>
+          </div>
+          <div class="lane-score"><span class="score-pill ops">FASTEST&nbsp;LEVER</span></div>
+          <div class="lane-meter"><div class="bar-track"><div class="bar-fill" style="width:95%; background:#006064;"></div></div></div>
+          <div class="lane-dollar"><span class="dollar-num">$60–150k</span><span class="dollar-unit">est. per year · directional</span></div>
+        </div>
+
+        <div class="lane">
+          <div class="lane-rank">2</div>
+          <div class="lane-main">
+            <div class="lane-name">Dry eye + ocular surface</div>
+            <div class="lane-why">High senior + screen-time demand; no local competitor clearly owns the lane.</div>
+          </div>
+          <div class="lane-score"><span class="score-pill">86</span><span class="score-read">Own the lane</span></div>
+          <div class="lane-meter"><div class="bar-track"><div class="bar-fill" style="width:86%; background:#006064;"></div></div></div>
+          <div class="lane-dollar"><span class="dollar-num">$50–120k</span><span class="dollar-unit">est. per year · directional</span></div>
+        </div>
+
+        <div class="lane">
+          <div class="lane-rank">3</div>
+          <div class="lane-main">
+            <div class="lane-name">Myopia management</div>
+            <div class="lane-why">20%+ children + affluent parents; myopia typically starts ages 6–14.</div>
+          </div>
+          <div class="lane-score"><span class="score-pill">84</span><span class="score-read">Own the lane</span></div>
+          <div class="lane-meter"><div class="bar-track"><div class="bar-fill" style="width:84%; background:#006064;"></div></div></div>
+          <div class="lane-dollar"><span class="dollar-num">$40–100k</span><span class="dollar-unit">est. per year · directional</span></div>
+        </div>
+
+        <div class="lane">
+          <div class="lane-rank">4</div>
+          <div class="lane-main">
+            <div class="lane-name">Specialty contact lenses</div>
+            <div class="lane-why">Scleral + keratoconus fittings: a moat retail chains cannot copy.</div>
+          </div>
+          <div class="lane-score"><span class="score-pill mid">79</span><span class="score-read">Build + test</span></div>
+          <div class="lane-meter"><div class="bar-track"><div class="bar-fill" style="width:79%; background:#00838F;"></div></div></div>
+          <div class="lane-dollar"><span class="dollar-num">$30–80k</span><span class="dollar-unit">est. per year · directional</span></div>
+        </div>
+
+        <div class="lane-total">
+          <div class="lane-total-left">12 service lanes scored in the full analysis · top four shown</div>
+          <div class="lane-total-right">Combined directional upside <span class="dollar-num">$180–450k / yr</span><span class="conf-tag">public-data estimate</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FIRST 30 DAYS -->
+    <section class="plan">
+      <div class="plan-label"><div class="zone-label">First<br>30 Days</div></div>
+      <div class="move">
+        <div class="move-num">01</div>
+        <div class="move-name">Location B fill sprint</div>
+        <div class="move-desc">Track open slots, recalls, and web/phone conversion by location. Recapture lapsed patients first.</div>
+      </div>
+      <div class="move">
+        <div class="move-num">02</div>
+        <div class="move-name">"No runaround" campaign</div>
+        <div class="move-desc">Position directly against competitor pain: easy booking, clear answers, glasses without the wait.</div>
+      </div>
+      <div class="move">
+        <div class="move-num">03</div>
+        <div class="move-name">Route service lines by office</div>
+        <div class="move-desc">Each location owns distinct lanes: myopia + specialty lenses at A, dry eye + medical at B.</div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="cta-text">
+        <div class="cta-head">Want this map for your practice?</div>
+        <div class="cta-sub">Free deep-dive competitive analysis for <b>iCare Grow Circle</b> members: your market, your competitors, your ranked revenue lanes.</div>
+      </div>
+      <div class="cta-btn">Book your free strategy call<small>members only · inside iCare Grow Circle · join: tinyurl.com/27lerw6w</small></div>
+    </section>
+
+    <!-- FINE PRINT -->
+    <footer class="fineprint">
+      Methodology: public-data-first analysis using census demographics, health-burden data, competitor and review signals, and service-line scoring across 12 lanes. Dollar figures are directional ranges from public data and industry benchmarks, not projections; they sharpen when your practice data is added. Confidence grade: directional (public data only). Sample based on a real practice analysis; identifying details altered. No patient data is used or requested for this analysis. © 2026 MyBCAT · mybcat.com
+    </footer>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+GW_COUNT_BEFORE=0
+SEED_OK appt_id=...0436
+VERDICT: FAIL turn 'hi' failed: HTTP 500 {"data":null,"errors":[{"error":"HANDLE_PATHWAY_CHAT_INTERNAL_SERVER_ERROR","message":"An unknown error occurred"}]}
+CLEANUP cancel ...0436 -> HTTP 200
+CLEANUP_FINAL_COUNT=0

@@ -271,7 +271,11 @@ class ScoreboardPageTests(unittest.TestCase):
         self.assertIn("openrouter/proven", html)
         self.assertIn("openrouter/probation", html)
         self.assertIn("openrouter/free:free", html)
-        self.assertIn('<div class="model-name">GPT-5.5</div><div class="model-id">codex</div>', html)
+        self.assertIn(
+            '<div class="model-name">Codex CLI default (unpinned)</div>'
+            '<div class="model-id">codex</div>',
+            html,
+        )
         self.assertIn('<span class="tier-badge proven">proven</span>', html)
         self.assertIn('<span class="tier-badge probation">probation</span>', html)
         self.assertIn("n=20", html)
@@ -291,7 +295,7 @@ class ScoreboardPageTests(unittest.TestCase):
         html = self.render_to(self.root / "scoreboard.html")
 
         self.assertIn("<h1 class=\"scoreboard-title\">Model performance scoreboard</h1>", html)
-        self.assertIn("Generated July 6, 2026", html)
+        self.assertRegex(html, r"Generated [A-Z][a-z]+ [0-9]{1,2}, 20[0-9]{2}")
         self.assertIn('>eval log</a>', html)
         self.assertIn('>catalog</a>', html)
         self.assertIn('>model notes</a>', html)

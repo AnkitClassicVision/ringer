@@ -1,0 +1,270 @@
+{
+  "review_type": "technical",
+  "verdict": "PASS",
+  "reviewed_at_utc": "2026-07-30T15:09:12.035141Z",
+  "external_actions_taken": "none",
+  "blocking_findings": [],
+  "highest_truthful_state": "RENDERED_QA_PASSED_HUMAN_PROJECT_ROOM_REQUIRED",
+  "external_delivery_authorized": false,
+  "onepager_pages": 1,
+  "explainer_pages": 25,
+  "internal_path_leak_count": 0,
+  "stale_route_value_count": 0,
+  "client_visible_raw_receipt_path_leak_count": 0,
+  "receipt_integrity": "PASS",
+  "visual_qa": "PASS",
+  "reviewed_artifact_hashes": {
+    "onepager_pdf": "0ad82c2597c2594131bf9650bd3d45c718db6a8a2000256b2bbb9504f64ce349",
+    "number_explainer_pdf": "4c544174cc06b7c5075cfce1865f6ab25cff24b6e385ec0e5ca9f7a9b8f58b2e",
+    "scores_json": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c"
+  },
+  "validator_checks": {
+    "build_validator": {
+      "status": "PASS",
+      "exit_code": 0,
+      "sha256": "b9f47ff965c23ae6747469c01f5042c6d122906770e0f28174dc90a542715d7e"
+    },
+    "render_validator": {
+      "status": "PASS",
+      "exit_code": 0,
+      "sha256": "16bbc5670a0d87dd0841394259e837b29866eca0ab1bf25f5578bc76a6c12186"
+    }
+  },
+  "approved_contract_check": {
+    "status": "PASS",
+    "contract_status": "APPROVED_FOR_INTERNAL_REBUILD_ONLY",
+    "sha256": "0023999f4370e0c2484dd245b84db779e61796636bfb28149f389cc9bb803960",
+    "external_delivery_authorized": false,
+    "human_project_room_approval_required": true
+  },
+  "render_receipt_check": {
+    "status": "PASS",
+    "rendered_at_utc": "2026-07-30T14:48:30.331731+00:00",
+    "receipt_sha256": "3bb536440caa1be196b4cdc0d5040af23e23583428cc4234b5ff31af35b63f10",
+    "external_receipt_sha256": "3bb536440caa1be196b4cdc0d5040af23e23583428cc4234b5ff31af35b63f10",
+    "package_and_external_receipts_match_exactly": true,
+    "status_field": "PASS",
+    "network_used": false,
+    "registered_pdf_hashes_match": true,
+    "registered_page_counts_match": true,
+    "registered_letter_dimensions_match": true
+  },
+  "receipt_checks": {
+    "manifest_rows_declared": 50,
+    "manifest_rows_verified": 50,
+    "unique_files_declared": 33,
+    "unique_files_verified": 33,
+    "all_paths_package_relative_and_safe": true,
+    "all_files_exist": true,
+    "all_sha256_values_match": true,
+    "package_relative_audit_references": "PRESENT_AS_REQUIRED_BY_CONTRACT",
+    "unsafe_client_visible_raw_receipt_paths": 0
+  },
+  "pdf_checks": {
+    "onepager_pdf": {
+      "pages": 1,
+      "pages_dimension_checked": 1,
+      "page_size_points": [
+        612,
+        792
+      ],
+      "letter_dimensions": "PASS",
+      "sha256": "0ad82c2597c2594131bf9650bd3d45c718db6a8a2000256b2bbb9504f64ce349",
+      "html_modified_at_utc": "2026-07-30T14:46:07.440619Z",
+      "pdf_modified_at_utc": "2026-07-30T14:48:25.103388Z",
+      "fresh_after_html": true,
+      "text_pages_extracted": 1,
+      "blank_or_near_blank_pages": 0,
+      "minimum_nonwhitespace_characters_on_a_page": 3226
+    },
+    "number_explainer_pdf": {
+      "pages": 25,
+      "pages_dimension_checked": 25,
+      "page_size_points": [
+        612,
+        792
+      ],
+      "letter_dimensions": "PASS",
+      "sha256": "4c544174cc06b7c5075cfce1865f6ab25cff24b6e385ec0e5ca9f7a9b8f58b2e",
+      "html_modified_at_utc": "2026-07-30T14:02:30.602042Z",
+      "pdf_modified_at_utc": "2026-07-30T14:48:25.641395Z",
+      "fresh_after_html": true,
+      "text_pages_extracted": 25,
+      "blank_or_near_blank_pages": 0,
+      "minimum_nonwhitespace_characters_on_a_page": 676
+    }
+  },
+  "page_image_checks": {
+    "onepager": {
+      "expected": 1,
+      "found": 1,
+      "count_match": true,
+      "sequence_complete": true,
+      "all_files_nontrivial": true,
+      "smallest_file_bytes": 330239,
+      "sha256_index": "f97044fafdaba2563058911927a7e7c680aafed85fb174d55e065bc685904060",
+      "latest_modified_at_utc": "2026-07-30T14:48:25.962399Z"
+    },
+    "number_explainer": {
+      "expected": 25,
+      "found": 25,
+      "count_match": true,
+      "sequence_complete": true,
+      "all_files_nontrivial": true,
+      "smallest_file_bytes": 100279,
+      "sha256_index": "e22849b7d63b05648b39abb48fa57e09fe12df8f4a0c9f7ee6bf23df4522503a",
+      "latest_modified_at_utc": "2026-07-30T14:48:30.235454Z"
+    }
+  },
+  "visual_qa_check": {
+    "status": "PASS",
+    "inspected_at_utc": "2026-07-30T14:49:34Z",
+    "expected_pages": 26,
+    "pages_inspected": 26,
+    "all_recorded_checks_pass": true,
+    "blocking_findings": [],
+    "onepager_hash_matches_reviewed_pdf": true,
+    "number_explainer_hash_matches_reviewed_pdf": true
+  },
+  "client_visible_text_checks": {
+    "sources_checked": [
+      "onepager.html",
+      "number-explainer.md",
+      "number-explainer.html",
+      "onepager.pdf extracted text",
+      "number-explainer.pdf extracted text"
+    ],
+    "text_extraction": "PASS",
+    "internal_path_leak_count": 0,
+    "stale_route_value_count": 0,
+    "unsafe_raw_receipt_path_count": 0,
+    "contract_required_package_relative_audit_references_present": true
+  },
+  "required_files_verified": [
+    "onepager.html",
+    "onepager.pdf",
+    "number-explainer.md",
+    "number-explainer.html",
+    "number-explainer.pdf",
+    "scores.json",
+    "sources.json",
+    "source_inventory.json",
+    "missing_evidence.json",
+    "receipt_manifest.json",
+    "number_inventory.json",
+    "runlog.md",
+    "render_receipt.json",
+    "visual-qa.json"
+  ],
+  "required_file_checks": [
+    {
+      "file": "onepager.html",
+      "status": "PASS",
+      "sha256": "e5649f3ea910fa97af760dcd03848fc5503f7fa68874426cac67c46e8570c7a4",
+      "bytes": 25330,
+      "modified_at_utc": "2026-07-30T14:46:07.440619Z"
+    },
+    {
+      "file": "onepager.pdf",
+      "status": "PASS",
+      "sha256": "0ad82c2597c2594131bf9650bd3d45c718db6a8a2000256b2bbb9504f64ce349",
+      "bytes": 155931,
+      "modified_at_utc": "2026-07-30T14:48:25.103388Z"
+    },
+    {
+      "file": "number-explainer.md",
+      "status": "PASS",
+      "sha256": "7b514851cb1ccfb7661d11f9693605ef405267a96ed2b0b87be8176229628d40",
+      "bytes": 76080,
+      "modified_at_utc": "2026-07-30T14:02:30.600742Z"
+    },
+    {
+      "file": "number-explainer.html",
+      "status": "PASS",
+      "sha256": "84bd9cb4fdb9adb9dba60842af20eae50098d44017a50f7557cc23a3344277a9",
+      "bytes": 94462,
+      "modified_at_utc": "2026-07-30T14:02:30.602042Z"
+    },
+    {
+      "file": "number-explainer.pdf",
+      "status": "PASS",
+      "sha256": "4c544174cc06b7c5075cfce1865f6ab25cff24b6e385ec0e5ca9f7a9b8f58b2e",
+      "bytes": 662414,
+      "modified_at_utc": "2026-07-30T14:48:25.641395Z"
+    },
+    {
+      "file": "scores.json",
+      "status": "PASS",
+      "sha256": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c",
+      "bytes": 45317,
+      "modified_at_utc": "2026-07-30T13:55:37.490638Z"
+    },
+    {
+      "file": "sources.json",
+      "status": "PASS",
+      "sha256": "c54beaa3f81ad905bc70bb34d82baefaf3a43d63dbf58d519f912165190d9135",
+      "bytes": 18353,
+      "modified_at_utc": "2026-07-30T13:55:37.491263Z"
+    },
+    {
+      "file": "source_inventory.json",
+      "status": "PASS",
+      "sha256": "fed269940d49701e374ab8782d784b1ce0046f7097c34b99ef62cc238b01fd18",
+      "bytes": 31279,
+      "modified_at_utc": "2026-07-30T13:55:37.491573Z"
+    },
+    {
+      "file": "missing_evidence.json",
+      "status": "PASS",
+      "sha256": "0334e77fba1059c73c39ac1320c05d2e9172ecf581a444dcf938c561854acb1d",
+      "bytes": 4946,
+      "modified_at_utc": "2026-07-30T13:55:37.491796Z"
+    },
+    {
+      "file": "receipt_manifest.json",
+      "status": "PASS",
+      "sha256": "743c347135b58960c4454d7b6ef1a474ca0d740a5af03cd06b2b1cdbce5d398b",
+      "bytes": 35991,
+      "modified_at_utc": "2026-07-30T13:55:37.489961Z"
+    },
+    {
+      "file": "number_inventory.json",
+      "status": "PASS",
+      "sha256": "394c86456429863da760c490f54a8f6dc02477e95ee954ee822176b038147cf3",
+      "bytes": 2648181,
+      "modified_at_utc": "2026-07-30T14:48:24.181376Z"
+    },
+    {
+      "file": "runlog.md",
+      "status": "PASS",
+      "sha256": "d060bff1e65278ef9b238cf063621f302d02d696e159d29a452434aa6f9c7861",
+      "bytes": 4526,
+      "modified_at_utc": "2026-07-30T14:50:29.916046Z"
+    },
+    {
+      "file": "render_receipt.json",
+      "status": "PASS",
+      "sha256": "3bb536440caa1be196b4cdc0d5040af23e23583428cc4234b5ff31af35b63f10",
+      "bytes": 499,
+      "modified_at_utc": "2026-07-30T14:48:30.332886Z"
+    },
+    {
+      "file": "visual-qa.json",
+      "status": "PASS",
+      "sha256": "737ace5c2738f1e2a3be5edc2fc43f661b9f260b83a6fd52131497bf4fd24a11",
+      "bytes": 2728,
+      "modified_at_utc": "2026-07-30T14:49:59.988795Z"
+    }
+  ],
+  "package_read_check": {
+    "status": "PASS",
+    "files_read": 90,
+    "bytes_read": 309748199,
+    "json_files_parsed": 30,
+    "csv_files_streamed": 3,
+    "zip_archives_crc_checked": 1,
+    "package_sha256_index": "f53fae384b232d9d73551bf2e2bd51499546625d2eb0e55110ac9991f67d77c5"
+  },
+  "external_boundary": "No external delivery, publishing, upload, CRM write, outreach, or other external action is authorized.",
+  "remaining_human_gate": "Human Project Room approval of the exact reviewed package is required before external use."
+}

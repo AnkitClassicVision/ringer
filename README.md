@@ -104,8 +104,11 @@ Each task gets its own directory, its own worker, its own log, and its own verdi
 | `verified` | One plain-English sentence saying what the check proves — shown on the results page next to "finished & checked" |
 | `full_access` | Worker runs unsandboxed — required for workers that spawn their own sub-workers; must also be enabled in config |
 | `worktrees` (run-level) | Give each task an isolated git worktree of `repo` so parallel workers can't collide |
+| `worktree_lfs` (run-level) | `materialize` (default) downloads/checks out Git LFS content normally; `skip` sets `GIT_LFS_SKIP_SMUDGE=1` while creating worktrees. Use `skip` for code-only work in media repositories. |
 
 > **Worktree footgun:** on PASS the task's worktree is removed — including anything written inside it. In worktrees mode, worker logs live outside task worktrees in `workdir/logs/`; have workers write deliverables outside the worktree too, or have your `check` copy artifacts out before it exits 0.
+>
+> Before any real run, Ringer checks the disk-pressure marker, requires at least 60 GiB or 15% free after projected worktree creation, and estimates projection from repository checkout size times task count. A rejected run records a local receipt and creates no worktree.
 
 Not sure what your tasks even are yet? [`docs/interview-prompt.md`](docs/interview-prompt.md) is a prompt you paste into any chatbot; it interviews you about the job and hands back a brief your orchestrating agent can turn into a manifest. Ready-made skeletons for the patterns that work live in [`templates/`](templates/).
 
@@ -142,7 +145,10 @@ For CI and evals, `config.sample.toml` includes `[engines.mock]` so the enforcem
 
 ![Identical workers, each under its own light](docs/engines.png)
 
-Ringer ships with three worker lanes: **Codex CLI** is the built-in default, and `config.sample.toml` carries verified engine blocks for **Grok Build CLI** (works as-is once you `grok login`) and **OpenCode + OpenRouter** (one edit: point `bin` at the sandbox wrapper in your clone). Anything else with a headless CLI is a config block away:
+Ringer's primary text lanes are OAuth CLIs: **Codex CLI** for OpenAI,
+**Claude Code** for Anthropic, and **Gemini CLI** for headless Google work.
+`pi-openrouter` is the universal OpenRouter text API lane. Anything else with
+a headless CLI is a config block away:
 
 ```toml
 [engines.mymodel]
@@ -152,30 +158,38 @@ args_template = ["run", "{spec}", "--dir", "{taskdir}"]
 
 Per-task `"engine": "mymodel"` routes work to it — the invariants (stdin closed, process-group kill, executed verification, raw logs) apply to every engine identically.
 
-### The universal harness: OpenCode + OpenRouter
+### Seedance video through OpenRouter
 
-Unless a model ships its own first-class harness (Codex does), OpenCode is the harness that runs it — one engine block covers every OpenRouter-served model. `config.sample.toml` includes a ready-to-uncomment engine whose `{model}` placeholder is filled per task from the manifest's `"model"` field, with `model_default` as the fallback. The shipped default is OpenRouter's `z-ai/glm-5.2` — roughly $0.74/M input and $2.33/M output (2026-07), about 20-30x cheaper output than frontier coding models; a complete write-code-and-pass-the-check task lands around a penny.
+Ringer also ships a first-class `seedance` engine for OpenRouter's asynchronous Video API. It is a paid media-generation lane, not a Pi text model or catalog-only alias. See [Seedance video generation](docs/SEEDANCE-VIDEO.md) for configuration, manifest flags, auth resolution, cost metadata, and the checked asset-swarm example.
 
-OpenCode ships no OS sandbox, so the engine's `bin` points at an absolute path to `engines/opencode-sandboxed.sh` (ringer does not resolve engine bins relative to the repo): a macOS Seatbelt wrapper that leaves network and reads open but confines writes to the task dir, a per-run scratch dir (wired as the agent's `TMPDIR`/`XDG_CACHE_HOME`), and OpenCode's own state/config dirs. Its `--dangerously-skip-permissions` flag only silences OpenCode's interactive prompts; Seatbelt is the actual containment. Task paths reach the profile as `sandbox-exec -D` parameters rather than string interpolation, so a task dir with quotes or parens can't inject sandbox rules. `--no-sandbox` is wired as the engine's `full_access_args`, so ringer's `allow_full_access` gate still governs escapes. Non-macOS installs need their own sandbox (or full-access mode).
+### Auth-first model routing
 
-Setting it up takes about five minutes:
+Ringer fails closed for native and OpenRouter text routes:
+
+- Anthropic, Claude, Haiku, Sonnet, Opus, and Fable use `engines/claude-oauth.sh`. The wrapper clears inherited API routes, requires Claude Code to report first-party `claude.ai` authentication, normalizes supported family aliases, and forces safe mode without user/project/local settings.
+- OpenAI, GPT, o-series, and Codex use `engines/codex-oauth.sh`. The wrapper clears inherited API routes, requires `codex login status` to report a ChatGPT login, and forces `--ignore-user-config`.
+- Google and Gemini use `engines/gemini-oauth.sh` for machine-readable headless work. Installed Antigravity opens an interactive editor chat, so it is not the Ringer worker lane.
+- Every exact lowercase `openrouter/<publisher>/<model>` text selector uses `engines/pi-openrouter-ringer.sh`. On Linux, the wrapper always launches Pi inside bubblewrap: only the task directory is writable at `/workspace`, `/tmp` is private, `/proc` is absent, and Pi receives no host home or repository mount. It does not mount `/usr`; it resolves `/usr/bin/node`, strictly validates its `ldd` dependencies and ELF interpreter, and mounts only that minimal runtime under `/runtime` plus narrow DNS, TLS, NSS, and time data. `/usr/local`, `/usr/src`, shells, and unrelated host files remain absent. The installed Pi package is read-only at `/opt`. Before scratch creation or auth access, canonical common-path checks reject task directories equal to, above, or below the Pi agent directory, including symlink aliases, and reject overlap with the installed Pi package. The wrapper creates a read-only ephemeral `/agent` containing only a one-model `models-store.json` whose provider, model ID, and `https://openrouter.ai/api/v1` endpoint are validated and pinned. One Python supervisor opens and validates the literal source credential exactly once, pins that launch and redaction key in memory, injects it only as `OPENROUTER_API_KEY` in an explicitly constructed clean child environment, captures Pi directly, and redacts before the shell can read output. This removes the source-auth replacement race. No auth file is copied or mounted, and the key never enters Pi or bubblewrap argv. Global `models.json`, settings, extensions, prompts, and other agent state are neither copied nor mounted. Pi keeps the `read,write,edit` tools, while sessions, bash, extensions, skills, prompt templates, themes, and context files remain disabled. An exact credential match is redacted and fails the run with a generic error. Unsupported platforms, missing bubblewrap, malformed model cache, unsafe runtime dependencies, and unsupported Pi package layouts fail closed before invocation. Identity and accounting are verified before success markers.
+
+Ringer validates the family-to-wrapper pairing before launch. Neither OpenCode
+nor a custom engine can claim an OpenRouter text selector, even with
+`auth_routing_trusted = true`. Legacy Z.AI Coding Plan validation remains for
+older private configurations, but it is not an active sample default.
 
 ```bash
-# 1) Install the OpenCode CLI (pick one)
-curl -fsSL https://opencode.ai/install | bash
-# or: npm install -g opencode-ai
-# or: brew install anomalyco/tap/opencode
-
-# 2) Connect OpenRouter — create a key at https://openrouter.ai/settings/keys
-opencode auth login   # select OpenRouter, paste the key
-
-# 3) In ~/.config/ringer/config.toml, uncomment [engines.opencode] and set
-#    bin to the ABSOLUTE path of engines/opencode-sandboxed.sh in this clone.
-#    (Linux/WSL: the wrapper is macOS-only — set bin to the opencode binary
-#    itself; there is no OS write-confinement then, so keep manifests scoped.)
+codex login
+claude auth login
+gemini                  # complete Gemini CLI OAuth
+# Configure OpenRouter in ~/.pi/agent/auth.json for explicit API work.
+# Refresh Pi's OpenRouter model cache before an offline Ringer run needs a new
+# exact model; Ringer will not fetch or infer a missing cache entry.
 ```
 
-Route with per-task `"engine": "opencode"`, pick the model with per-task `"model": "openrouter/<any-model>"`, and set reasoning effort via `engine_args`: `["--variant", "low|high|max"]`. A sensible split: mechanical or tightly-specced tasks on the cheap lane, gnarly ones on your frontier engine — the executed check catches shortfalls either way, and `swarm_runs` rows tell you whether the cheap lane's pass rate holds.
+Route Anthropic with `"engine": "claude"`, OpenAI with `"engine": "codex"`,
+and Google with `"engine": "gemini"`. API fallback is explicit: the manifest
+must select `"engine": "pi-openrouter"` and name the exact OpenRouter selector.
+There is no automatic cross-engine failover, so an OAuth failure cannot silently
+incur API spend.
 
 ### The plan lane: Grok Build CLI
 

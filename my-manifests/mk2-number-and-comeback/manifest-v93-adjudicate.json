@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workV93adj",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "adjudicate-round1-draft",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["verdict.txt"],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_v91_graph.py --base /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v86.json --draft /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workV93/build-v93/pathway-v93-draft.json --v88-ref /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/pathway-v90.json --classification /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workK/build-v92/v91-classification.json > verdict.txt 2>&1; rc=$?; echo \"EXIT=$rc\" >> verdict.txt; cat verdict.txt; exit 0",
+      "check": "grep -qE '^EXIT=[0-9]+' verdict.txt || { echo 'FAIL: validator never ran'; exit 1; }; if grep -q 'EXIT=0' verdict.txt; then echo 'PASS: round-1 draft is validator-green under the amended D6 assertions - existing Bland v94 mint is the candidate'; else echo 'PASS-WITH-VERDICT: validator names the remaining defects (this adjudication run is successful either way):'; grep -E '^\\s*- \\[' verdict.txt | head -10; fi",
+      "verified": "The amended validator's full verdict on the round-1 D6 draft with the untouched v91 classification - either green (existing v94 mint is the candidate) or a precise defect list for round 3, on the record."
+    }
+  ]
+}

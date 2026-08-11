@@ -1,0 +1,21 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW46",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-anaphora-defer-fix",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1800,
+      "expect_files": [
+        "fixed-bland_gateway.py",
+        "proof_defer.py",
+        "DEBUG-GW46.md"
+      ],
+      "spec": "ROLE: fix worker for the Mott booking gateway, lane 46 (authoritative user_text defers on anaphora). Work entirely inside your CWD; never modify anything outside it; no network, no git, no MCP/Apps/skills, no deploys. CONTEXT - measured live on v109: the pathway's extraction correctly resolved the anaphoric ask 'What about Monday that week?' (with Tuesday 08/18 offers standing) into the explicit from='monday the week of 08/18/2026', and the gateway parses that phrase correctly to 08/17 when tested directly - but the LIVE request also carries user_text='What about Monday that week?', and the authoritative user_text interpretation layer (lane 40) re-read the bare 'monday' as next Monday 08/10 and OVERRODE the correct explicit from. The pathway is the only layer holding the conversational referent, so for anaphoric sentences the override is guaranteed wrong. THE RULE: when user_text contains an anaphoric date reference and no absolute date anchor - patterns like 'that week', 'the same week', 'that day', 'those days', 'the week we discussed/talked about' (no explicit date, month-day, weekday-with-week-qualifier, relative-offset, or today/tomorrow anchor alongside it) - the authoritative layer must SKIP its user_text override entirely and trust the explicit from/to. Sentences with absolute anchors keep the full lane-40 authoritative behavior (the away-sentence class must keep overriding). BASE FILE: ./deployed-bland_gateway.py is byte-equal to production image mott-lane-45. Produce ./fixed-bland_gateway.py, minimal in-style diff at the point where the user_text interpretation decides to override from/to. TESTS (frozen-today pattern, through the SAME handler-level resolution seam lane 44b used): (a) user_text 'What about Monday that week?' + from 'monday the week of 08/18/2026' -> resolves 08/17 (no override); (b) user_text \\\"What's the earliest I can do that day?\\\" + from 'monday the week of 08/18/2026' -> 08/17; (c) regression: the canonical away-sentence with from 'in 2 weeks' still resolves to today+14 via the availability-semantics override; (d) regression: user_text 'No I said two weeks not today' still applies its absolute interpretation; (e) all existing suite green in ./gwtest (copy of /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW44b/gw-week-vocab-live-fix/gwtest with fixed file installed). ./proof_defer.py: standalone offline, handler-level seam, prints 'CASE=anaphora-week FROM=2026-08-17', 'CASE=anaphora-day FROM=2026-08-17', 'CASE=away-override DATE=<today+14 iso>' (real date for that one). DEBUG-GW46.md: evidence, decision-point location, the anaphora pattern list, output tails, deploy separately gated.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 ./proof_defer.py > proof.out 2>&1 || { echo 'FAIL: proof crashed'; tail -5 proof.out; exit 1; }; exp=$(python3 -c \"import datetime;print((datetime.date.today()+datetime.timedelta(days=14)).isoformat())\"); for c in 'CASE=anaphora-week FROM=2026-08-17' 'CASE=anaphora-day FROM=2026-08-17' \"CASE=away-override DATE=$exp\"; do grep -q \"$c\" proof.out || { echo \"FAIL: missing $c\"; cat proof.out; exit 1; }; done; cd gwtest && PYTHONDONTWRITEBYTECODE=1 python3 -m pytest -q > ../pytest.out 2>&1; rc=$?; cd ..; summary=$(tail -1 pytest.out); [ $rc -eq 0 ] || { echo \"FAIL: suite red: $summary\"; tail -10 pytest.out; exit 1; }; echo \"$summary\" | grep -qE '^[0-9]+ passed' || { echo \"FAIL: summary not clean: $summary\"; exit 1; }; grep -qi 'anaphor' DEBUG-GW46.md || { echo 'FAIL: DEBUG lacks the anaphora rule'; exit 1; }; echo \"PASS: anaphora deference proven - $summary\"",
+      "verified": "The authoritative user_text layer defers to the pathway's context-resolved explicit from whenever the sentence is anaphoric with no absolute anchor - proven at the handler-level seam with the away-sentence override regression intact."
+    }
+  ]
+}

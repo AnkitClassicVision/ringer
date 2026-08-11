@@ -1,0 +1,15 @@
+2026-08-05 14:34:35,337 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 14:34:35,341 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 14:34:35,341 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 14:34:35,342 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 14:34:35,342 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 14:34:35,342 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 14:34:35,343 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 14:34:35,343 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+2026-08-05 14:34:35,343 INFO raw_gate flag=False tenant=cvc call_id_len=0 first_req=False
+CASE=ordinal-dropped FROM=2026-08-27 (from='thursday next week', verbatim='No Thursday the 27', context=ctx)
+CASE=ordinal-present-unchanged FROM=2026-08-27 (from='thursday the 27', verbatim='No Thursday the 27', context=ctx)
+CASE=that-weekday FROM=2026-08-27 (from='thursday', verbatim='How late can I come in that Thursday', context=ctx)
+CASE=bare-weekday-no-anaphor FROM=2026-08-06 (from='thursday', verbatim='how about thursday?', context=ctx - no override)
+CASE=clock-not-ordinal FROM=2026-08-06 (from='thursday', verbatim='thursday at 4:27 pm?', context='' - the 27 in a clock time must not trigger)
+CASE=ordinal-beats-anaphor FROM=2026-08-27 (from='thursday', verbatim='that Thursday, the 27th', context=ctx)

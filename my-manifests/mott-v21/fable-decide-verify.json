@@ -1,0 +1,19 @@
+{
+  "run_name": "mott-v21-recall-lanes",
+  "workdir": "/home/ankit114/.ringer/work/mott-v21-recall-lanes",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "fable-decide-verify",
+      "task_type": "probe",
+      "engine": "local-shell",
+      "timeout_s": 300,
+      "spec": "set -euo pipefail; cp /home/ankit114/.ringer/work/mott-v21-recall-lanes/fable-decide/decisions.json ./decisions.json; echo copied $(wc -c < ./decisions.json) bytes",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/mott-v21/checks/validate_decisions.py --packet decisions.json && cmp decisions.json /home/ankit114/.ringer/work/mott-v21-recall-lanes/fable-decide/decisions.json && echo 'artifact is byte-identical to the Fable original'",
+      "expect_files": [
+        "decisions.json"
+      ],
+      "verified": "the Fable decision packet passes the corrected validator unmodified, proving the earlier red was a checker type-handling defect and not a defect in the packet"
+    }
+  ]
+}

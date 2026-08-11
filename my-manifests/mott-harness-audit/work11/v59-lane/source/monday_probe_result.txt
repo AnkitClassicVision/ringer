@@ -1,0 +1,12 @@
+gateway-derived date: 2026-07-27 (Monday)   [local machine says 2026-07-27]
+
+phrase               expected date(s)             returned                     verdict
+------------------------------------------------------------------------------------------------
+tuesday              2026-07-28                   2026-07-28                   MATCH  [bare = soonest]
+tuesday next week    2026-08-04                   2026-08-04                   MATCH  [owner rule]
+monday next week     2026-08-03                   2026-08-10                   MISMATCH  [owner rule]
+friday next week     2026-08-07                   2026-08-07                   MATCH  [owner rule]
+next week            2026-08-03/2026-08-04/2026-08-05/2026-08-06/2026-08-07 2026-08-03                   MATCH  [range: owner target week Mon-Fri]
+
+PROBE FAILED: 1 phrase(s) resolved outside the owner's target dates on a verified gateway-Monday. Do not activate a campaign. Attach this table to the gateway dependency filing.
+PROBE FAILED (rc=1) at Mon Jul 27 12:06:13 AM EDT 2026 — temporal MISMATCH on a verified Monday.

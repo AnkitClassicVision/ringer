@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+________________ ERROR collecting tests/test_anaphora_defer.py _________________
+ImportError while importing test module '/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW46v/gw-lane46-fullsuite-verify/gwtest/tests/test_anaphora_defer.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib64/python3.14/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/test_anaphora_defer.py:7: in <module>
+    from conftest import load_gateway
+E   ModuleNotFoundError: No module named 'conftest'
+=========================== short test summary info ============================
+ERROR tests/test_anaphora_defer.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.16s

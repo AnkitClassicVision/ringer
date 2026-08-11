@@ -1,0 +1,27 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS18",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-validate-mint",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["mint.txt"],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD25/gl-round18-fix/check_goalloop_graph.py --draft /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD25/gl-round18-fix/pathway-goalloop-draft.json > mint.txt 2>&1 || { echo 'REFUSED: validation failed - not minting' >> mint.txt; cat mint.txt; exit 2; }; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/mott-v21-snap/scripts/mint_graph_version.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD25/gl-round18-fix/pathway-goalloop-draft.json >> mint.txt 2>&1; rc=$?; tail -6 mint.txt; exit $rc",
+      "check": "grep -qi 'PASS' mint.txt || { echo 'FAIL: validation did not pass before mint'; head -5 mint.txt; exit 1; }; grep -q 'REFUSED' mint.txt && { echo 'FAIL: refusal recorded'; exit 1; }; grep -qE 'VERSION=[0-9]+' mint.txt || { echo 'FAIL: no minted version'; tail -6 mint.txt; exit 1; }; echo \"PASS: validated then minted unattached - $(grep -m1 -E 'VERSION=[0-9]+' mint.txt)\"",
+      "verified": "The round-18 graph minted unattached strictly after its eighteen-assertion validator passed in the same task."
+    },
+    {
+      "key": "gl-timepick-replay",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["capture.log", "turn5.json", "turns.json"],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS18/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || exit 1; echo REPLAY_VERSION=$V; python3 -c \"import json;json.dump(['hi','How about Friday at 1020','What about 1040?','Lets do 1110','1115'],open('turns.json','w'))\" && CAPTURE_TURNS=\"$(cat turns.json)\" HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py $V . > capture.log 2>&1; rc=$?; tail -6 capture.log; exit $rc",
+      "check": "grep -q 'CAPTURE_COMPLETE' capture.log || { echo 'FAIL: capture incomplete'; tail -5 capture.log; exit 1; }; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_no_false_booking.py . || exit 1; PYTHONDONTWRITEBYTECODE=1 python3 -c \"import json,re,sys;d=json.load(open('turn5.json'))['data'];said=' '.join(str(x) for x in (d.get('assistant_responses') or []));print('FINAL_SAID='+said[:200]);bad=[];bad+=([] if '11:15' in said else ['turn 5 did not confirm the named 11:15 time']);bad+=(['turn 5 offered the wrong time 11:30'] if '11:30' in said else []);print('FAIL: '+'; '.join(bad) if bad else 'PASS: named time confirmed on the first try');sys.exit(1 if bad else 0)\"",
+      "verified": "Ankit's live pick sequence replayed: after three off-grid refusals, typing the bare time 1115 confirms 11:15 on the FIRST try with no wrong-slot detour, and no turn claims a booking or speaks an off-grid time."
+    }
+  ]
+}

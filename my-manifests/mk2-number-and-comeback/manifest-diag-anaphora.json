@@ -1,0 +1,16 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workDiagAnaphora",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-anaphora-ab",
+      "engine": "local-shell",
+      "timeout_s": 900,
+      "verified": "Four completed week-anaphora replays (two on v119, two on v120) with the turn-3 offered dates recorded per run, so regression vs extraction nondeterminism can be judged from the grid.",
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/anaphora_ab.py 119 120 2 > ab.txt 2>&1; rc=$?; cat ab.txt; exit $rc",
+      "check": "grep -q 'AB_DONE completed=4 expected=4' ab.txt || { echo 'FAIL: not all A/B runs completed:'; tail -6 ab.txt; exit 1; }; c=$(grep -cE '^AB=v1[12][90] run=[12] turn3_dates=' ab.txt); [ \"$c\" -eq 4 ] || { echo \"FAIL: expected 4 dated result lines, got $c\"; exit 1; }; echo 'PASS: A/B grid complete'; grep -E '^AB=' ab.txt",
+      "expect_files": ["ab.txt"]
+    }
+  ]
+}

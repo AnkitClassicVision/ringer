@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workBRprobe",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "bedrock-access-probe",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 300,
+      "expect_files": ["bedrock.txt"],
+      "spec": "python3 -u - <<'PY' > bedrock.txt 2>&1\nimport json\nimport boto3\nrt = boto3.client(\"bedrock-runtime\", region_name=\"us-east-1\")\nctl = boto3.client(\"bedrock\", region_name=\"us-east-1\")\ntry:\n    profs = ctl.list_inference_profiles(maxResults=100)\n    ids = [p.get(\"inferenceProfileId\", \"\") for p in profs.get(\"inferenceProfileSummaries\", [])]\n    anth = sorted(i for i in ids if \"anthropic\" in i)\n    print(\"PROFILES_ANTHROPIC=%d\" % len(anth))\n    for i in anth:\n        print(\"  PROFILE %s\" % i)\nexcept Exception as e:\n    print(\"LIST_PROFILES_ERROR %s: %s\" % (type(e).__name__, str(e)[:200]))\nfor mid in (\"us.anthropic.claude-haiku-4-5-20251001-v1:0\", \"us.anthropic.claude-sonnet-4-5-20250929-v1:0\"):\n    try:\n        r = rt.converse(modelId=mid, messages=[{\"role\": \"user\", \"content\": [{\"text\": \"Reply with the single word: ok\"}]}], inferenceConfig={\"maxTokens\": 10})\n        txt = r[\"output\"][\"message\"][\"content\"][0][\"text\"].strip()[:40]\n    except Exception as e:\n        print(\"CONVERSE %s -> ERROR %s: %s\" % (mid, type(e).__name__, str(e)[:250]))\n    else:\n        print(\"CONVERSE %s -> OK %r\" % (mid, txt))\nprint(\"PROBE_DONE\")\nPY\nrc=$?; cat bedrock.txt; exit $rc",
+      "check": "grep -q 'PROBE_DONE' bedrock.txt || { echo 'FAIL: probe did not finish'; head -5 bedrock.txt; exit 1; }; c=$(grep -cE '^CONVERSE .* -> (OK|ERROR)' bedrock.txt); [ \"$c\" -eq 2 ] || { echo \"FAIL: expected 2 CONVERSE attempts, got $c\"; exit 1; }; echo 'PASS: Bedrock access facts on record:'; grep -E '^CONVERSE|^PROFILES_ANTHROPIC|^LIST_PROFILES_ERROR' bedrock.txt | head -6",
+      "verified": "Direct Bedrock converse attempts with the exact exception printed plus the real inference-profile catalog, naming why the gateway module's silent except swallowed every LLM call from this machine."
+    }
+  ]
+}

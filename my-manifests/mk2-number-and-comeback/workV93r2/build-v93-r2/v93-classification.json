@@ -1,0 +1,434 @@
+{
+ "__top__": {
+  "version_number": "stale-base residue"
+ },
+ "e_book_unknown": {
+  "__object__": "D2"
+ },
+ "e_booked": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "e_booked_recovered": {
+  "__object__": "D2"
+ },
+ "e_booking_failed": {
+  "data.text": "D2",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "e_declined": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "e_defer": {
+  "__object__": "D1"
+ },
+ "e_existing": {
+  "data.globalLabel": "D1",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "e_not_me": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "e_office": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "e_safe_failure": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "e_safe_identity": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "e_stop": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "e_timeout": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "edge-n_appt_check-e_defer-appt-count-1": {
+  "__object__": "D1"
+ },
+ "edge-n_appt_check-n_ask-appt-count-0": {
+  "__object__": "D1"
+ },
+ "edge-n_appt_check-n_ask-ok-true": {
+  "__object__": "D1"
+ },
+ "edge-n_ask-n_search-says-any-day-weekday-date-week-weekend-or-time-preference-in": {
+  "__object__": "D5"
+ },
+ "edge-n_ask-n_search-says-when-they-want-to-come-in": {
+  "__object__": "D5"
+ },
+ "edge-n_book_1-e_booking_failed-book-success-true": {
+  "__object__": "D2"
+ },
+ "edge-n_book_1-n_reconcile_1-book-success-not-true": {
+  "__object__": "D2"
+ },
+ "edge-n_book_2-e_booking_failed-book-success-true": {
+  "__object__": "D2"
+ },
+ "edge-n_book_2-n_reconcile_2-book-success-not-true": {
+  "__object__": "D2"
+ },
+ "edge-n_clarify-n_search-names-a-specific-day": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_clarify-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_confirm-e_booked-confirmation-delivered": {
+  "__object__": "D1"
+ },
+ "edge-n_confirm-e_defer-anything-else-requested-after-booking": {
+  "__object__": "D1"
+ },
+ "edge-n_confirm-e_defer-change-requested-after-confirmation": {
+  "__object__": "D1"
+ },
+ "edge-n_confirm-n_office-change-requested-after-confirmation": {
+  "__object__": "D1"
+ },
+ "edge-n_date_conflict-n_search-patient-chooses-one-conflicting-date": {
+  "__object__": "D6"
+ },
+ "edge-n_identity-n_appt_check-count-1": {
+  "__object__": "D1"
+ },
+ "edge-n_identity-n_ask-count-1": {
+  "__object__": "D1"
+ },
+ "edge-n_miss_empty-n_search-names-a-specific-day": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_miss_empty-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_miss_thin-n_search-names-a-specific-day": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_miss_thin-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_miss_time-n_search-names-a-specific-day": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_miss_time-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_miss_unbookable-n_search-names-a-specific-day": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_miss_unbookable-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_miss_unread-n_search-names-a-specific-day": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_miss_unread-n_search-names-any-day-weekday-date-week-or-weekend-including-saturda": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_2-n_miss_thin-slot-1-start": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_2-n_miss_thin-slot-count-0": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_2-n_offer_2-slot-1-start": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_2-n_offer_2-slot-count-1": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_2-n_offer_near-time-pref-relaxed": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_3-n_offer_3-slot-1-start": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_3-n_offer_3-slot-count-1": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_3-n_offer_near-time-pref-relaxed": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_3-n_page_near-slot-1-start": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_3-n_page_near-slot-count-0": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_near-n_miss_thin-slot-1-start": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_near-n_miss_thin-slot-count-0": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_near-n_offer_near-slot-1-start": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_page_near-n_offer_near-slot-count-1": {
+  "__object__": "stale-base residue"
+ },
+ "edge-n_reconcile_1-e_book_unknown-recon-count-0": {
+  "__object__": "D2"
+ },
+ "edge-n_reconcile_1-e_book_unknown-recon-ok-not-true": {
+  "__object__": "D2"
+ },
+ "edge-n_reconcile_1-e_booked_recovered-recon-count-ge-1": {
+  "__object__": "D2"
+ },
+ "edge-n_reconcile_2-e_book_unknown-recon-count-0": {
+  "__object__": "D2"
+ },
+ "edge-n_reconcile_2-e_book_unknown-recon-ok-not-true": {
+  "__object__": "D2"
+ },
+ "edge-n_reconcile_2-e_booked_recovered-recon-count-ge-1": {
+  "__object__": "D2"
+ },
+ "edge-n_search-n_date_conflict-date-conflict-detected-conflict": {
+  "__object__": "stale-base residue"
+ },
+ "n_appt_check": {
+  "__object__": "D1"
+ },
+ "n_ask": {
+  "data.extractVars": "stale-base residue",
+  "data.modelOptions": "stale-base residue",
+  "data.prompt": "D3",
+  "data.userWait": "stale-base residue",
+  "height": "layout",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_book_1": {
+  "data.responsePathways": "D2",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_book_2": {
+  "data.responsePathways": "D2",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_clarify": {
+  "data.extractVars": "stale-base residue",
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_confirm": {
+  "data.prompt": "D1",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_date_conflict": {
+  "__object__": "D6"
+ },
+ "n_faq": {
+  "data.globalLabel": "D1",
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_gate_1": {
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_gate_2": {
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_help": {
+  "__object__": "stale-base residue"
+ },
+ "n_identity": {
+  "data.responsePathways": "D1",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_miss_empty": {
+  "data.extractVars": "stale-base residue",
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_miss_thin": {
+  "data.extractVars": "stale-base residue",
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_miss_time": {
+  "data.extractVars": "stale-base residue",
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_miss_unbookable": {
+  "data.extractVars": "stale-base residue",
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_miss_unread": {
+  "data.extractVars": "stale-base residue",
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_negotiate": {
+  "data.extractVars": "stale-base residue",
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_offer": {
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_offer_2": {
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_offer_3": {
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_offer_near": {
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_office": {
+  "data.globalLabel": "D1",
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_page_2": {
+  "data.body": "stale-base residue",
+  "data.modelOptions": "stale-base residue",
+  "data.responseData": "stale-base residue",
+  "data.responsePathways": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_page_3": {
+  "data.body": "stale-base residue",
+  "data.modelOptions": "stale-base residue",
+  "data.responseData": "stale-base residue",
+  "data.responsePathways": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_page_near": {
+  "data.body": "stale-base residue",
+  "data.modelOptions": "stale-base residue",
+  "data.responseData": "stale-base residue",
+  "data.responsePathways": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_recheck": {
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_reconcile_1": {
+  "__object__": "D2"
+ },
+ "n_reconcile_2": {
+  "__object__": "D2"
+ },
+ "n_search": {
+  "data.body": "stale-base residue",
+  "data.modelOptions": "stale-base residue",
+  "data.responseData": "D6",
+  "data.responsePathways": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_suppress_not_me": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_suppress_stop": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_verify_1": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_verify_2": {
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "n_which_intent": {
+  "data.prompt": "stale-base residue",
+  "position": "layout",
+  "x": "layout",
+  "y": "layout"
+ },
+ "open": {
+  "OPEN-1": "n_faq insurance sentence stays at its v86 default",
+  "OPEN-2": "analysis_options stays null"
+ },
+ "unclassified": {}
+}

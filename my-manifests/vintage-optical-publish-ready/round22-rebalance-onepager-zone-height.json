@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-source-refresh-report",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-bottom-density-fix",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "rebalance-onepager-zone-height",
+      "engine": "local-shell",
+      "task_type": "site-build",
+      "timeout_s": 300,
+      "expect_files": ["onepager.html"],
+      "spec": "set -euo pipefail; src=/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-bottom-fix/add-onepager-bottom-safety-gutter/onepager.html; cp \"$src\" ./onepager.html; python3 -c \"from pathlib import Path; p=Path('onepager.html'); s=p.read_text(); old='.market-zone { flex: 1.12 1 0; }\\n  .competition-zone { flex: 1.04 1 0; }\\n  .opportunity-zone { flex: 0.84 1 0; }'; new='.market-zone { flex: 1.05 1 0; }\\n  .competition-zone { flex: 1.04 1 0; }\\n  .opportunity-zone { flex: 0.91 1 0; }'; assert s.count(old)==1, 'zone flex block mismatch'; p.write_text(s.replace(old,new))\"; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_gauge_onepager_source.py --path ./onepager.html",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_gauge_onepager_source.py --path ./onepager.html && python3 -c \"from pathlib import Path; s=Path('onepager.html').read_text(); assert '.market-zone { flex: 1.05 1 0; }' in s; assert '.opportunity-zone { flex: 0.91 1 0; }' in s; assert 'padding-bottom: 0.18in' in s; print('PASS: zone height rebalanced without text or score edits')\"",
+      "verified": "the page keeps its 0.18in bottom gutter and all template/content checks while reallocating flexible zone height from unused market whitespace to the opportunity section without shrinking or editing any text"
+    }
+  ]
+}

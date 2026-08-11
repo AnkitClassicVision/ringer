@@ -1,0 +1,19 @@
+{
+  "rendered_at_utc": "2026-07-30T16:41:13.632692+00:00",
+  "network_used": false,
+  "onepager": {
+    "pages": 1,
+    "page_size": "612 x 792 pts (letter)",
+    "sha256": "0be6ae7bbefcba5059094844685864fe370f4de5847ca3eccd17c10fbb1a6aa6"
+  },
+  "number_explainer": {
+    "pages": 25,
+    "page_size": "612 x 792 pts (letter)",
+    "sha256": "161e3d771f06e8a02fa0959e901c815bb9c183bd79fc4bbba7902e7d33e1f4c5"
+  },
+  "page_images": {
+    "onepager": 1,
+    "explainer": 25
+  },
+  "status": "PASS"
+}

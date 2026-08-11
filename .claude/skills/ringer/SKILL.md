@@ -48,9 +48,9 @@ description: >-
    `--no-dashboard` except in automated tests or when the user explicitly
    asks.
 
-Ringer runs manifest tasks in parallel across cheap CLI workers (Codex,
-OpenCode/GLM, others via config) and verifies every task by **executing a
-check command** — exit 0 is the only PASS. Failed tasks are retried once
+Ringer runs manifest tasks in parallel across CLI workers (Codex, Claude Code,
+Gemini CLI, Pi/OpenRouter, and others via config) and verifies every task by
+**executing a check command** — exit 0 is the only PASS. Failed tasks are retried once
 with the check's actual failure output injected into the retry prompt. You —
 the orchestrating model — pay tokens only for specs, orchestration, and
 review.
@@ -211,26 +211,25 @@ audition one rung up in adjacent types; repeated first-attempt failures end
 the audition — record the demotion in MODEL-NOTES so the next orchestrator
 doesn't re-run the experiment.
 
-**OpenCode is the harness; the model is a manifest field.** Unless a model
-ships its own first-class harness (Codex does), it runs through the
-`opencode` engine with the task's `"model"` field set to the OpenRouter
-slug — e.g. `"engine": "opencode", "model": "openrouter/moonshotai/kimi-k2.7-code"`.
-This holds even when someone — including the user, in the heat of a run —
-says to "call kimi directly" or reach for the model's own CLI: the harness
-is what provides the sandbox, raw logs, token counts, and executed
-verification, so routing around it silently drops all four. Never clone an
-engine block or splice `-m` through `engine_args` to change models; that's
-what the `model` field is for, and a bakeoff is only real when the MANIFEST
-names each competitor (2026-07-06 lesson: an engine block with a hard-coded
-model ran one model under three competitors' names).
+**Pi is the universal OpenRouter text harness; the model is a manifest
+field.** Use the `pi-openrouter` engine with an exact lowercase selector,
+for example `"engine": "pi-openrouter", "model":
+"openrouter/moonshotai/kimi-k3"`. OpenAI, Anthropic, and Google stay on
+their native OAuth wrappers unless the manifest explicitly chooses
+`pi-openrouter`. Never invent automatic fallback from OAuth to API billing.
+Never splice a model through `engine_args`; a bakeoff is only real when the
+manifest names each competitor.
 
 Engines are config blocks (`[engines.<name>]` in config.toml), selectable
 per task via the manifest `engine` field. Defaults are deliberate:
 
 - **codex** (default): strongest general worker. Use per-task `engine_args`
   to set reasoning effort — spend it on hard tasks, not boilerplate.
-- **opencode**: the universal lane — any OpenRouter model via the `model`
-  field (engine `model_default` is GLM-5.2, the cheap-intelligence pick).
+- **claude**: native Anthropic work through Claude Code OAuth.
+- **gemini**: native headless Google work through Gemini CLI OAuth.
+- **pi-openrouter**: universal OpenRouter text API lane through Pi. The
+  default is `openrouter/z-ai/glm-5.2`; API use must be an explicit manifest
+  choice.
   Validate a model new to you with a trivial one-task manifest before
   trusting it with a batch.
 - Small/flash-class models are the first to choke on long conversational or

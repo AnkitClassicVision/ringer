@@ -1,0 +1,267 @@
+{
+  "webhooks": [
+    {
+      "id": "n_identity",
+      "url": "https://mott-booking-gw.mail.mybcat.com/patient-search",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. The catalog intends 10 seconds, but /patient-search was measured near 22 seconds under load, so the platform wait used in practice was longer in those observations; this node's exact platform default and cutoff remain unmeasured.",
+      "extracted_variables": [
+        {"name": "ok", "json_path": "$.ok"},
+        {"name": "count", "json_path": "$.result.count"},
+        {"name": "patient_first", "json_path": "$.result.patients[0].name_first"},
+        {"name": "patient_id", "json_path": "$.result.patients[0].patient_id"},
+        {"name": "exam_type_id", "json_path": "$.result.exam_type_id"}
+      ],
+      "condition_variables": ["count", "ok", "recall_cell", "recall_patient_id", "store"],
+      "unused_extracted_variables": ["exam_type_id", "patient_first", "patient_id"],
+      "missing_variable_risks": [
+        {"variable": "count", "response_case": "Any error or malformed response without $.result.count", "consequence": "None of the count branches matches; the later ok != true condition should send the conversation to e_safe_failure if $.ok is also absent or non-true, but the export does not define Bland's missing-value semantics.", "severity": "medium"},
+        {"variable": "recall_cell", "response_case": "All /patient-search responses; recall_cell is ambient pathway state, not responseData", "consequence": "Routing tests this upstream value before response-derived fields. If it is absent and Bland treats absence as an empty string, the conversation ends at e_safe_identity and tells the patient it could not safely continue.", "severity": "medium"},
+        {"variable": "recall_patient_id", "response_case": "All /patient-search responses; recall_patient_id is ambient pathway state, not responseData", "consequence": "Routing depends on a request-data value the webhook does not return. If absent is treated as empty, the first matching identity guard ends at e_safe_identity and directs the patient to call the office.", "severity": "medium"},
+        {"variable": "store", "response_case": "All /patient-search responses; store is ambient pathway state, not responseData", "consequence": "The response contract does not supply store. If the upstream value is absent and Bland compares it as empty, routing ends at e_safe_identity before the lookup result can advance the conversation.", "severity": "medium"},
+        {"variable": "ok", "response_case": "Transport, non-JSON, or malformed response without $.ok", "consequence": "The final ok != true guard is intended to catch a missing success flag and route to e_safe_failure, which says scheduling is unavailable and no appointment was booked; exact null comparison behavior is not in the export.", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "n_appt_check",
+      "url": "https://mott-booking-gw.mail.mybcat.com/appt-list",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. The catalog's 10-second default is not encoded here; /appt-list completed in 18.1 to 24.4 seconds under load, indicating a longer practical wait in those measurements, while this node's platform cutoff remains unknown.",
+      "extracted_variables": [
+        {"name": "ok", "json_path": "$.ok"},
+        {"name": "appt_count", "json_path": "$.result.count"}
+      ],
+      "condition_variables": ["appt_count", "ok"],
+      "unused_extracted_variables": [],
+      "missing_variable_risks": [
+        {"variable": "appt_count", "response_case": "Any error or malformed response without $.result.count", "consequence": "The appointment-count branches do not match; if the later ok != true comparison catches the missing or false flag, routing proceeds to n_ask and continues scheduling without establishing whether an appointment already exists.", "severity": "high"},
+        {"variable": "ok", "response_case": "Transport, non-JSON, or malformed response without $.ok", "consequence": "The node is designed to route missing/non-true ok to n_ask, not a safe exit. The patient is asked when they want to come in even though the existing-appointment check was unavailable.", "severity": "high"}
+      ]
+    },
+    {
+      "id": "n_search",
+      "url": "https://mott-booking-gw.mail.mybcat.com/availability",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. Availability calls were measured at 21.5 to 23.8 seconds under load and still supported the incident conversation, so the observed practical wait exceeded the catalog's intended 10 seconds; the platform default is unmeasured.",
+      "extracted_variables": [
+        {"name": "ok", "json_path": "$.ok"},
+        {"name": "slot_count", "json_path": "$.result.count"},
+        {"name": "slot_1_start", "json_path": "$.result.slots[0].start"},
+        {"name": "slot_1_end", "json_path": "$.result.slots[0].end"},
+        {"name": "slot_1_doctor", "json_path": "$.result.slots[0].doctor_id"},
+        {"name": "slot_2_start", "json_path": "$.result.slots[1].start"},
+        {"name": "slot_2_end", "json_path": "$.result.slots[1].end"},
+        {"name": "slot_2_doctor", "json_path": "$.result.slots[1].doctor_id"},
+        {"name": "time_pref_relaxed", "json_path": "$.result.time_pref_relaxed"}
+      ],
+      "condition_variables": ["day_part", "ok", "preference_from", "slot_count"],
+      "unused_extracted_variables": ["slot_1_doctor", "slot_1_end", "slot_1_start", "slot_2_doctor", "slot_2_end", "slot_2_start", "time_pref_relaxed"],
+      "missing_variable_risks": [
+        {"variable": "ok", "response_case": "Transport, non-JSON, or malformed response without $.ok", "consequence": "After the two ambient guards, ok != true is intended to route to n_miss_unread, where the agent says it could not search yet. Missing-value comparison behavior is not documented by the export.", "severity": "medium"},
+        {"variable": "slot_count", "response_case": "Successful or error response without $.result.count", "consequence": "If ok is true but count is absent, neither count condition matches. Depending on ambient day_part, routing may still page to another availability webhook or may have no matching route; Bland's fallback behavior is not in the files.", "severity": "high"},
+        {"variable": "day_part", "response_case": "All /availability responses; day_part is ambient pathway state", "consequence": "The webhook never extracts day_part, yet two routes depend on it. If it is absent, outside/late/afternoon branches do not match and routing falls through to slot_count logic when that value exists.", "severity": "medium"},
+        {"variable": "preference_from", "response_case": "All /availability responses; preference_from is ambient pathway state", "consequence": "The webhook never returns preference_from. If the upstream extractor fails to set literal unclear, this first guard cannot send the patient to n_clarify and the availability response is evaluated without that clarification.", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "n_page_2",
+      "url": "https://mott-booking-gw.mail.mybcat.com/availability",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. The same /availability endpoint was measured at 21.5 to 23.8 seconds under load, beyond the catalog's 10-second intent; no node-specific timeout measurement or Bland platform default is available.",
+      "extracted_variables": [
+        {"name": "ok", "json_path": "$.ok"},
+        {"name": "slot_count", "json_path": "$.result.count"},
+        {"name": "slot_1_start", "json_path": "$.result.slots[8].start"},
+        {"name": "slot_1_end", "json_path": "$.result.slots[8].end"},
+        {"name": "slot_1_doctor", "json_path": "$.result.slots[8].doctor_id"},
+        {"name": "slot_2_start", "json_path": "$.result.slots[9].start"},
+        {"name": "slot_2_end", "json_path": "$.result.slots[9].end"},
+        {"name": "slot_2_doctor", "json_path": "$.result.slots[9].doctor_id"},
+        {"name": "time_pref_relaxed", "json_path": "$.result.time_pref_relaxed"}
+      ],
+      "condition_variables": ["ok", "slot_1_start"],
+      "unused_extracted_variables": ["slot_1_doctor", "slot_1_end", "slot_2_doctor", "slot_2_end", "slot_2_start", "slot_count", "time_pref_relaxed"],
+      "missing_variable_risks": [
+        {"variable": "slot_1_start", "response_case": "Valid availability response containing fewer than nine slots", "consequence": "$.result.slots[8].start is absent by ordinary array cardinality. The == empty condition routes to n_miss_thin, so the agent treats the afternoon as thin rather than offering a nonexistent ninth slot.", "severity": "low"},
+        {"variable": "ok", "response_case": "Transport, non-JSON, or malformed response without $.ok", "consequence": "The first condition is intended to route missing/non-true ok to n_miss_unread instead of using absent slot data. The export does not prove how Bland compares a missing extraction to true.", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "n_page_3",
+      "url": "https://mott-booking-gw.mail.mybcat.com/availability",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. The same /availability endpoint was measured at 21.5 to 23.8 seconds under load, beyond the catalog's 10-second intent; no node-specific timeout measurement or Bland platform default is available.",
+      "extracted_variables": [
+        {"name": "ok", "json_path": "$.ok"},
+        {"name": "slot_count", "json_path": "$.result.count"},
+        {"name": "slot_1_start", "json_path": "$.result.slots[16].start"},
+        {"name": "slot_1_end", "json_path": "$.result.slots[16].end"},
+        {"name": "slot_1_doctor", "json_path": "$.result.slots[16].doctor_id"},
+        {"name": "slot_2_start", "json_path": "$.result.slots[17].start"},
+        {"name": "slot_2_end", "json_path": "$.result.slots[17].end"},
+        {"name": "slot_2_doctor", "json_path": "$.result.slots[17].doctor_id"},
+        {"name": "time_pref_relaxed", "json_path": "$.result.time_pref_relaxed"}
+      ],
+      "condition_variables": ["ok", "slot_1_start"],
+      "unused_extracted_variables": ["slot_1_doctor", "slot_1_end", "slot_2_doctor", "slot_2_end", "slot_2_start", "slot_count", "time_pref_relaxed"],
+      "missing_variable_risks": [
+        {"variable": "slot_1_start", "response_case": "Valid availability response containing fewer than seventeen slots", "consequence": "$.result.slots[16].start is absent by ordinary array cardinality. The == empty condition routes to n_page_near, causing one more availability request for the closest afternoon options.", "severity": "low"},
+        {"variable": "ok", "response_case": "Transport, non-JSON, or malformed response without $.ok", "consequence": "The first condition is intended to route missing/non-true ok to n_miss_unread. Whether Bland makes that comparison true for an absent extraction cannot be determined from the pathway export.", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "n_page_near",
+      "url": "https://mott-booking-gw.mail.mybcat.com/availability",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. The same /availability endpoint was measured at 21.5 to 23.8 seconds under load, beyond the catalog's 10-second intent; no node-specific timeout measurement or Bland platform default is available.",
+      "extracted_variables": [
+        {"name": "ok", "json_path": "$.ok"},
+        {"name": "slot_count", "json_path": "$.result.count"},
+        {"name": "slot_1_start", "json_path": "$.result.slots[8].start"},
+        {"name": "slot_1_end", "json_path": "$.result.slots[8].end"},
+        {"name": "slot_1_doctor", "json_path": "$.result.slots[8].doctor_id"},
+        {"name": "slot_2_start", "json_path": "$.result.slots[9].start"},
+        {"name": "slot_2_end", "json_path": "$.result.slots[9].end"},
+        {"name": "slot_2_doctor", "json_path": "$.result.slots[9].doctor_id"},
+        {"name": "time_pref_relaxed", "json_path": "$.result.time_pref_relaxed"}
+      ],
+      "condition_variables": ["ok", "slot_1_start"],
+      "unused_extracted_variables": ["slot_1_doctor", "slot_1_end", "slot_2_doctor", "slot_2_end", "slot_2_start", "slot_count", "time_pref_relaxed"],
+      "missing_variable_risks": [
+        {"variable": "slot_1_start", "response_case": "Valid availability response containing fewer than nine slots", "consequence": "$.result.slots[8].start is absent by ordinary array cardinality. The == empty condition routes to n_miss_thin, so the agent reports that the requested part of day is thin.", "severity": "low"},
+        {"variable": "ok", "response_case": "Transport, non-JSON, or malformed response without $.ok", "consequence": "The first condition is intended to route missing/non-true ok to n_miss_unread. The response contract does not establish the platform's comparison behavior for a missing extraction.", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "n_verify_1",
+      "url": "https://mott-booking-gw.mail.mybcat.com/conflict-check",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. /conflict-check was measured at 19.3 to 22.0 seconds under load, so observed practical waiting exceeded the catalog's intended 10 seconds; the node's actual Bland timeout and the 48-second reply gap allocation are unknown.",
+      "extracted_variables": [
+        {"name": "ok", "json_path": "$.ok"},
+        {"name": "slot_conflict", "json_path": "$.result.conflict"},
+        {"name": "conflict_reason", "json_path": "$.result.reason"}
+      ],
+      "condition_variables": ["conflict_reason", "ok", "slot_conflict"],
+      "unused_extracted_variables": [],
+      "missing_variable_risks": [
+        {"variable": "slot_conflict", "response_case": "Malformed nominal response with $.ok=true but no $.result.conflict", "consequence": "The final slot_conflict == empty condition routes directly to n_book_1. Thus an incomplete conflict response can fail open into the real /sign write instead of stopping or refreshing availability.", "severity": "critical"},
+        {"variable": "conflict_reason", "response_case": "Response without $.result.reason", "consequence": "A missing reason does not trigger the nonempty blocker. If slot_conflict is also missing while ok remains true, the later empty-conflict branch advances to n_book_1 and attempts the write.", "severity": "high"},
+        {"variable": "ok", "response_case": "Transport, non-JSON, or malformed response without $.ok", "consequence": "The first condition should send missing/non-true ok to e_safe_failure, which tells the patient scheduling was unavailable and no appointment was booked; missing-value semantics remain unverified.", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "n_book_1",
+      "url": "https://mott-booking-gw.mail.mybcat.com/sign",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. The measured /sign 502 arrived after about 28.2 seconds, while YES-to-reply was 48.2 seconds including surrounding work; this suggests a roughly 28-second server-side failure deadline in that run, but Bland's platform timeout is unknown.",
+      "extracted_variables": [
+        {"name": "book_success", "json_path": "$.success"},
+        {"name": "book_http_status", "json_path": "$.http_status"},
+        {"name": "book_error", "json_path": "$.error"},
+        {"name": "new_appt_id", "json_path": "$.new_appt_id"},
+        {"name": "error_status", "json_path": "$.status"}
+      ],
+      "condition_variables": ["book_error", "book_success"],
+      "unused_extracted_variables": ["book_http_status", "error_status", "new_appt_id"],
+      "missing_variable_risks": [
+        {"variable": "book_success", "response_case": "Measured HTTP 502 {error: gateway_unreachable, status: 502}, which omits $.success", "consequence": "The slot_conflict condition does not match, true-success does not match, and book_success != true routes to e_booking_failed. The patient is told the booking could not be confirmed even though the EMR write committed; the outcome was UNKNOWN.", "severity": "critical"},
+        {"variable": "book_success", "response_case": "HTTP 423 {error: write_unverified, ...}, whose documented signer error shape omits $.success", "consequence": "The node collapses an explicitly unverified write into book_success != true and ends at e_booking_failed. A potentially committed appointment is presented as unconfirmed without any read-after-write reconciliation.", "severity": "critical"},
+        {"variable": "book_success", "response_case": "HTTP 403 {error: authorization_denied, ...}, whose documented signer error shape omits $.success", "consequence": "The missing success flag routes to e_booking_failed. This is a denied write rather than an unknown commit, but the node does not distinguish it from transport failure or write_unverified for staff handling.", "severity": "high"},
+        {"variable": "book_error", "response_case": "Successful /sign response; catalog says success has $.success but may omit $.error", "consequence": "The first slot_conflict condition simply does not match, after which book_success == true routes to n_confirm. This omission is expected and does not itself misroute a valid success response.", "severity": "low"}
+      ]
+    },
+    {
+      "id": "n_verify_2",
+      "url": "https://mott-booking-gw.mail.mybcat.com/conflict-check",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. /conflict-check was measured at 19.3 to 22.0 seconds under load, so observed practical waiting exceeded the catalog's intended 10 seconds; the node's actual Bland timeout and the 48-second reply gap allocation are unknown.",
+      "extracted_variables": [
+        {"name": "ok", "json_path": "$.ok"},
+        {"name": "slot_conflict", "json_path": "$.result.conflict"},
+        {"name": "conflict_reason", "json_path": "$.result.reason"}
+      ],
+      "condition_variables": ["conflict_reason", "ok", "slot_conflict"],
+      "unused_extracted_variables": [],
+      "missing_variable_risks": [
+        {"variable": "slot_conflict", "response_case": "Malformed nominal response with $.ok=true but no $.result.conflict", "consequence": "The final slot_conflict == empty condition routes directly to n_book_2. Thus an incomplete conflict response can fail open into the real /sign write instead of stopping or refreshing availability.", "severity": "critical"},
+        {"variable": "conflict_reason", "response_case": "Response without $.result.reason", "consequence": "A missing reason does not trigger the nonempty blocker. If slot_conflict is also missing while ok remains true, the later empty-conflict branch advances to n_book_2 and attempts the write.", "severity": "high"},
+        {"variable": "ok", "response_case": "Transport, non-JSON, or malformed response without $.ok", "consequence": "The first condition should send missing/non-true ok to e_safe_failure, which tells the patient scheduling was unavailable and no appointment was booked; missing-value semantics remain unverified.", "severity": "medium"}
+      ]
+    },
+    {
+      "id": "n_book_2",
+      "url": "https://mott-booking-gw.mail.mybcat.com/sign",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. The measured /sign 502 arrived after about 28.2 seconds, while YES-to-reply was 48.2 seconds including surrounding work; this endpoint suggests a roughly 28-second server-side failure deadline, but this node's Bland timeout is unknown.",
+      "extracted_variables": [
+        {"name": "book_success", "json_path": "$.success"},
+        {"name": "book_http_status", "json_path": "$.http_status"},
+        {"name": "book_error", "json_path": "$.error"},
+        {"name": "new_appt_id", "json_path": "$.new_appt_id"},
+        {"name": "error_status", "json_path": "$.status"}
+      ],
+      "condition_variables": ["book_error", "book_success"],
+      "unused_extracted_variables": ["book_http_status", "error_status", "new_appt_id"],
+      "missing_variable_risks": [
+        {"variable": "book_success", "response_case": "Measured /sign HTTP 502 {error: gateway_unreachable, status: 502}, which omits $.success", "consequence": "The same ordered conditions as n_book_1 route the missing success flag to e_booking_failed. Although measured on slot 1, slot 2 has the identical response mappings and routes, so the same commit-unknown misstatement exists here.", "severity": "critical"},
+        {"variable": "book_success", "response_case": "HTTP 423 {error: write_unverified, ...}, whose documented signer error shape omits $.success", "consequence": "The node treats an explicitly unverified write as book_success != true and ends at e_booking_failed. It does not verify whether the second selected slot was actually created before speaking to the patient.", "severity": "critical"},
+        {"variable": "book_success", "response_case": "HTTP 403 {error: authorization_denied, ...}, whose documented signer error shape omits $.success", "consequence": "The missing success flag routes to e_booking_failed. The conversation does not distinguish a definitive authorization denial from commit-unknown 502 or write_unverified outcomes.", "severity": "high"},
+        {"variable": "book_error", "response_case": "Successful /sign response; catalog says success has $.success but may omit $.error", "consequence": "The slot_conflict branch does not match and book_success == true routes to n_confirm. This expected omission does not itself misroute a valid success response.", "severity": "low"}
+      ]
+    },
+    {
+      "id": "n_suppress_stop",
+      "url": "https://mott-booking-gw.mail.mybcat.com/sms-suppression",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. The catalog intends 10 seconds, but this endpoint is cataloged as missing and returning 404; no latency observation establishes either an effective node timeout or Bland's inherited platform default.",
+      "extracted_variables": [
+        {"name": "suppression_ok", "json_path": "$.ok"}
+      ],
+      "condition_variables": ["suppression_ok"],
+      "unused_extracted_variables": [],
+      "missing_variable_risks": [
+        {"variable": "suppression_ok", "response_case": "Cataloged authenticated 404 from the missing /sms-suppression endpoint, which is not shown to contain $.ok", "consequence": "The != true branch and == true branch both lead to e_stop with identical text. The patient is directed to call the office, but the pathway does not preserve a distinct routing outcome for failed suppression persistence.", "severity": "high"}
+      ]
+    },
+    {
+      "id": "n_suppress_not_me",
+      "url": "https://mott-booking-gw.mail.mybcat.com/sms-suppression",
+      "method": "POST",
+      "retry_attempts": 0,
+      "timeout_field_present": false,
+      "effective_timeout_note": "No timeout key is exported. The catalog intends 10 seconds, but this endpoint is cataloged as missing and returning 404; no latency observation establishes either an effective node timeout or Bland's inherited platform default.",
+      "extracted_variables": [
+        {"name": "suppression_ok", "json_path": "$.ok"}
+      ],
+      "condition_variables": ["suppression_ok"],
+      "unused_extracted_variables": [],
+      "missing_variable_risks": [
+        {"variable": "suppression_ok", "response_case": "Cataloged authenticated 404 from the missing /sms-suppression endpoint, which is not shown to contain $.ok", "consequence": "Both conditions lead to e_not_me with identical text. The patient is directed to call the office, but failed wrong-number suppression is indistinguishable from successful persistence in pathway routing and outcome.", "severity": "high"}
+      ]
+    }
+  ],
+  "catalog_default_note": "The catalog specifies default_node_settings.timeout_seconds = 10 and retry_attempts = 0. Version 87 explicitly exports retryAttempts = 0 for every webhook but exports none of timeout, timeout_seconds, or timeoutSeconds. Observed read calls lasted roughly 18 to 24 seconds and the measured /sign 502 arrived at about 28.2 seconds, while the patient reply gap was 48.2 seconds across surrounding processing. Therefore the 10-second catalog value is intended configuration, not demonstrated runtime behavior; the Bland platform default and exact per-node client cutoff cannot be determined from this export."
+}

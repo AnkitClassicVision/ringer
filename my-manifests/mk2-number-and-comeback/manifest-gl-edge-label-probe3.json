@@ -1,0 +1,24 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD6",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "probe-label-3turn",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": [
+        "capture.log",
+        "graph.json",
+        "create.json",
+        "turn1.json",
+        "turn2.json",
+        "turn3.json"
+      ],
+      "spec": "CAPTURE_TURNS='[\"hi\", \"can we do a different day please\", \"thursday\"]' HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py 102 . > capture.log 2>&1; rc=$?; tail -5 capture.log; exit $rc",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_capture.py . 102",
+      "verified": "Three-turn discriminator: if slot variables populate with real 2026 dates once phrasing matches the edge label, the fix is edge-label enumeration plus extraction discipline."
+    }
+  ]
+}

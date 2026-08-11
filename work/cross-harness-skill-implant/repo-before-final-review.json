@@ -1,0 +1,22 @@
+{
+  "files": {
+    "SKILL.md": "bb22e2a68fdf751d5a4f8aac41c023fd09fda398e2ac5d74085a57f88c219bd6",
+    "assets/implant-manifest.schema.json": "030e1028ca71786bef8edcf4add38fe13634e15abc291330c342f09ffb5cb836",
+    "assets/implant-request.template.json": "af51196f82c3cff573b7e501a0e199ee2cfe6d3cdf82cc76b0e23b2d7b532224",
+    "references/cross-harness-skill-implant.md": "dc97ea220101cacc7fcb68af81d60e25c172fefc2356118f28eb6464bc7ee308",
+    "references/install-upgrade-protocol.md": "bb253876ad3fc14d8ed1d75e20cc80cd0ad5628461a79addaa2057b1714fbd40",
+    "scripts/implant_skill.py": "714c8a41ed5fbfdd49252f96442f51efcafad5ee7f38c8e27519e4f8f6a69eec",
+    "scripts/validate_implant_manifest.py": "ad7e3db087cf1fd26c2707b0fe39741d1875428aceb9cd1eef504107f43c280c",
+    "tests/test_implant_skill.py": "0ab3fc27829fdfb936b3b90c292f55b9fdafc598b22465dab5648f8be5b041f2"
+  },
+  "status": [
+    " M SKILL.md",
+    " M references/install-upgrade-protocol.md",
+    "?? assets/implant-manifest.schema.json",
+    "?? assets/implant-request.template.json",
+    "?? references/cross-harness-skill-implant.md",
+    "?? scripts/implant_skill.py",
+    "?? scripts/validate_implant_manifest.py",
+    "?? tests/"
+  ]
+}

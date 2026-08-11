@@ -1,0 +1,557 @@
+########## PANEL LANE: BUILDER
+Ankit —
+
+CANARY: blue paperclip
+
+## Q1
+
+### Failure 1: `week plus time of day`
+
+VERDICT: REAL DEFECT in agent behavior. The test expectation is correct.
+
+Evidence:
+
+- Owner-defined “next week” is 08/03 through 08/07.
+- The agent offered 08/10, outside that window.
+- The measured pair `from=next week`, `to=friday next week` returns exactly 08/03 through 08/07.
+- Reaching `n_offer` passes the node assertion, but does not cure the failed date assertion.
+
+The exact component attribution remains unproved because the packet omits extracted-variable and gateway-request receipts. If those show the agent sent the correct pair, the defect belongs to the gateway path rather than extraction. The test would still be correct.
+
+What would change my ruling: the owner changes the meaning of “next week,” or a valid receipt proves the offer was actually within 08/03 through 08/07.
+
+### Failure 2: `clock time with no day at all`
+
+VERDICT: INCORRECT TEST EXPECTATION, limited to `expect_node`.
+
+Evidence:
+
+- “after 3pm” deterministically extracts `day_part=late`.
+- `late` routes to `n_offer_3`.
+- The offer was on the correct default Monday and contained 3:00 pm and 3:15 pm.
+- Both times satisfy the scenario’s inclusive `expect_slot_floor: 3pm`.
+
+What would change my ruling: evidence that `n_offer_3` can produce slots below 3:00 pm, or an owner change making “after 3pm” exclusive of 3:00 pm.
+
+## Q2
+
+VERDICT: Extract exactly:
+
+```text
+preference_from = next week
+preference_to   = friday next week
+day_part        = morning
+```
+
+This uses accepted gateway phrases and the measured pair that returns 08/03 through 08/07. The model performs no date arithmetic.
+
+The current guidance is operationally ambiguous because it says to “write next week” but does not explicitly define the paired end value when the same utterance also supplies a day part. It also leaves room for the no-weekday fallback to be applied incorrectly.
+
+Minimal wording change:
+
+> If they asked for next week without naming a weekday, set preference_from to next week and preference_to to friday next week, even when they also gave a part of day.
+
+What would change my ruling: a current gateway probe showing that exact pair no longer spans the owner-target week.
+
+## Q3
+
+VERDICT: Yes, `n_offer_3` is correct behavior.
+
+The exact minimal assertion change is:
+
+```text
+'expect_node': 'n_offer_3',
+```
+
+Replace the existing `['n_offer', 'n_offer_2']` allowance. No change is needed to the weekday variables or 3pm floor assertion.
+
+What would change my ruling: a routing contract where `day_part=late` no longer selects `n_offer_3`, or evidence that this node violates the requested floor.
+
+## Q4
+
+VERDICT:
+
+- Failure 1 has a patient-facing scheduling safety defect. The agent presented 08/10 as satisfying a request for 08/03 through 08/07. That is a date the patient did not request. Because the explicit date was displayed, the patient could catch it, but the offer was still false as a fulfillment of the request. No wrong booking is evidenced by this packet.
+- Failure 2 has no demonstrated patient-safety consequence. The date is correct, the 3pm floor is honored, and the differing node is internal routing only.
+
+A `/sign` or schedule receipt showing that an 08/10 appointment was actually booked would escalate Failure 1 from a wrong offer to a wrong booking.
+
+## Candidate packet
+
+- recommendation: Rule Failure 1 a real defect and block certification on it. Rule Failure 2 a test-expectation defect and change only its allowed node to `n_offer_3`. Keep the separately ruled gateway defect as an independent certification precondition.
+- confidence: 97% on the rulings; 88% on attributing Failure 1 specifically to extraction because raw extracted variables are absent.
+- evidence: binding Monday-anchored semantics; measured gateway phrase probes; exact 08/10 and 3:00/3:15 live results; quoted extraction and routing guidance.
+- assumptions: `expect_slot_floor: 3pm` is inclusive; the scenario stopped at an offer; the supplied gateway receipts are current and authoritative.
+- unique_catches: Failure 1’s test remains correct even if later evidence moves root cause from extraction to gateway. The proposed vague-week pair is receipt-backed for Monday, but does not resolve the standing `X next week` gateway defect generally.
+- risks_or_failure_modes: weakening Failure 2 to allow all three nodes would hide routing regressions; changing only Failure 1’s test would normalize an owner-rule violation; certifying without raw extraction and gateway-request receipts could misattribute the defective component.
+- proof_slots:
+  - Failure 1 extraction receipt showing all three expected fields.
+  - Failure 1 gateway request and returned-slot dates.
+  - Failure 2 extraction receipt showing `monday`, `friday`, and `late`.
+  - Failure 2 route receipt showing `n_offer_3`.
+  - Booking-write receipt or explicit absence of `/sign` if “no wrong booking” must be proved.
+- needs_human_or_owner_gate: Yes for certification or campaign activation. No additional gate is needed to classify these two diagnostics. Judge verdict: `block` certification pending Failure 1 and the already-open gateway precondition.
+
+Changed: no files or external state.
+
+Verified by: supplied gateway probe receipts, quoted candidate guidance, and live scenario results.
+
+Risks left: raw extraction and gateway-request receipts are absent, so Failure 1’s component-level root cause remains unproved.
+
+Next action: have the panel owner reconcile this ruling with the other independent lanes and inspect the missing Failure 1 extraction receipt.
+
+Progress
+- % to true goal: 100%
+- % to current goal: 100%
+- Done: independent Q1-Q4 ruling, candidate packet, safety classification
+- In flight: none
+- Not done: panel reconciliation and owner certification decision
+- Blockers: none for this review; certification remains blocked by Failure 1 and the separately ruled gateway defect
+
+
+########## PANEL LANE: CONTRARIAN
+Ankit —
+
+CANARY: blue paperclip
+
+## Q1
+
+### Failure 1: `week plus time of day`
+
+VERDICT: REAL DEFECT.
+
+Evidence:
+
+- The binding meaning of “next week” is 08/03 through 08/07.
+- The measured pair `from=next week`, `to=friday next week` returns 136 slots across exactly that range.
+- The agent instead presented 08/10 as satisfying the request.
+- The test’s date assertion matches the owner’s rule and verified gateway grammar.
+
+Attribution between extraction and request construction remains unproven without the actual payload, but the end-to-end agent behavior is defective.
+
+What would change my ruling: Evidence that the patient introduced a weekday, that no 08/03 through 08/07 morning slots existed, or that the quoted live result/test receipt is inaccurate.
+
+### Failure 2: `clock time with no day at all`
+
+VERDICT: INCORRECT TEST EXPECTATION.
+
+Evidence:
+
+- The guidance explicitly maps “after 3pm” to `day_part=late`.
+- `n_offer_3` is the late-band offer node.
+- The offered slots were 3:00 pm and 3:15 pm, so the asserted floor was honored.
+- The offered date was correct.
+
+The allowed-node assertion conflicts with the extraction and routing contract.
+
+What would change my ruling: Evidence that `n_offer_3` can expose slots before 3:00 pm, or that “late” is not supposed to route there.
+
+## Q2
+
+VERDICT: Extract exactly:
+
+```text
+preference_from = next week
+preference_to   = friday next week
+day_part        = morning
+```
+
+Evidence:
+
+- This uses all three permitted fields without calculating a date.
+- The measured gateway pair produces exactly 08/03 through 08/07.
+- “Morning” is a day part, not a weekday, so it must not trigger a weekday default.
+
+The quoted `preference_from` instruction is clear by itself. The combined range guidance is underspecified because it does not explicitly state the corresponding end value or say that a day part must not alter the week-only range.
+
+Minimal wording addition:
+
+> If the patient gives a week qualifier but no weekday, set `preference_from` to the qualifier alone and `preference_to` to `friday` followed by that qualifier. A part of day does not count as a weekday and does not change this range.
+
+What would change my ruling: A verified gateway grammar that represents this Monday-anchored week with a different phrase pair.
+
+## Q3
+
+VERDICT: YES, `n_offer_3` is correct behavior.
+
+The literal minimal assertion change is:
+
+```python
+'expect_node': ['n_offer', 'n_offer_2', 'n_offer_3'],
+```
+
+A stronger deterministic test would expect only `n_offer_3`, because the guidance explicitly classifies “after 3pm” as `late`.
+
+What would change my ruling: A routing contract showing that `late` belongs to another node, or evidence that `n_offer_3` does not enforce the 3pm floor.
+
+## Q4
+
+VERDICT:
+
+- Failure 1 has a patient-safety and trust consequence. The agent presented 08/10 as satisfying “next week,” although 08/10 is outside the requested week. Because dates are displayed explicitly, this is a false satisfaction claim and could become a wrong-date booking if accepted.
+- Failure 2 has no demonstrated patient-safety consequence. The offered date was correct and both times honored the requested floor. The unexpected node label is an internal test mismatch, not patient-visible harm.
+
+What would change my ruling: A booking receipt proving Failure 1 could not be accepted, or an offer receipt showing Failure 2 included a time before 3:00 pm.
+
+## Candidate packet
+
+```yaml
+recommendation:
+  failure_1: real_defect
+  failure_2: incorrect_test_expectation
+  certification: blocked_by_existing_gateway_precondition
+
+confidence: 97%
+
+evidence:
+  - Owner defines next week as 2026-08-03 through 2026-08-07.
+  - The verified next-week pair produces exactly that span.
+  - Failure 1 presented 2026-08-10.
+  - Guidance maps after 3pm to late.
+  - Failure 2 reached the late-band node and offered 3:00pm and 3:15pm.
+
+assumptions:
+  - The quoted live results and gateway receipts are accurate.
+  - The 136-slot pair receipt includes available morning slots.
+  - n_offer_3 applies the documented late-band behavior.
+
+unique_catches:
+  - Failure 1 is conclusively defective end to end, but the precise component attribution requires the extraction and gateway-request payloads.
+  - The preference_from sentence is not itself ambiguous. The underspecification is in completing the week-only range and insulating it from the day-part default.
+  - Merely adding n_offer_3 to Failure 2 is minimal, but expecting only n_offer_3 would detect future routing regressions more effectively.
+
+risks_or_failure_modes:
+  - Extracting monday next week invokes the known gateway overshoot and yields 2026-08-10.
+  - Broadening Failure 2 to accept all three nodes can hide a real day-part routing regression.
+  - Fixing only the diagnostic cannot satisfy certification while the separately ruled gateway defect remains open.
+
+proof_slots:
+  - Failure 1 extracted preference_from, preference_to, and day_part
+  - Failure 1 outbound gateway request payload
+  - Failure 1 returned slot dates and morning availability
+  - Failure 2 extracted day_part and node-transition trace
+  - Failure 2 complete displayed offer values
+  - Post-gateway-fix regression probes for today and already-past weekdays
+
+needs_human_or_owner_gate:
+  classification: no
+  semantic_rule_change: yes
+  certification_or_campaign: yes
+  reason: The supervising ruling makes the gateway fix a precondition.
+```
+
+Progress
+- % to true goal: 100%
+- % to current goal: 100%
+- Done: Q1-Q4 ruled, candidate packet supplied
+- In flight: none
+- Not done: underlying implementation and certification work
+- Blockers: existing gateway precondition for certification and campaign
+
+
+########## PANEL LANE: VERIFIER
+Ankit —
+
+CANARY: blue paperclip
+
+## Q1
+
+### Failure 1: `week plus time of day`
+
+**VERDICT: REAL DEFECT in the agent behavior. Confidence: 98%.**
+
+Evidence:
+
+- The binding owner rule defines “next week” as 08/03 through 08/07.
+- The agent presented 08/10, outside that window.
+- The measured gateway pair `from=next week`, `to=friday next week` returns exactly 08/03 through 08/07.
+- Reaching a real offer does not satisfy the scenario’s date assertion.
+
+What would change the ruling:
+
+- Evidence that the owner’s semantic rule was different for this scenario.
+- A transcript proving the patient later changed the requested week. None is supplied.
+
+The precise internal cause remains unproven because the actual extracted `preference_from`, `preference_to`, and `day_part` values were not provided. An extraction trace is required to locate the defect, but not to establish that the externally visible result is defective.
+
+### Failure 2: `clock time with no day at all`
+
+**VERDICT: INCORRECT TEST EXPECTATION. Confidence: 97%.**
+
+Evidence:
+
+- `after 3pm` maps to `day_part=late` under the quoted guidance.
+- `day_part=late` routes to `n_offer_3`.
+- The offers were 3:00 and 3:15 pm, satisfying the scenario’s stated 3pm floor.
+- The date was reported as correct.
+- The failure came solely from excluding the designated late-band node.
+
+What would change the ruling:
+
+- A routing trace showing `day_part` was not `late`.
+- A requirement that “after 3pm” must use an earlier offer band despite the quoted routing contract.
+- An owner ruling that “after 3pm” means strictly later than 3:00, rather than the scenario’s inclusive 3pm floor.
+
+## Q2
+
+**VERDICT: Extract `preference_from=next week`, `preference_to=friday next week`, and `day_part=morning`.**
+
+Evidence:
+
+- That exact gateway pair was measured to return 136 slots spanning 08/03 through 08/07.
+- It preserves the patient’s language without computing a calendar date.
+- `morning` is explicitly accepted by the `day_part` grammar.
+
+The supplied guidance is ambiguous or incomplete because it specifies the start value for a week without a weekday, but does not establish the matching end boundary.
+
+Minimal wording change:
+
+> If they named a week but no weekday, write the week phrase alone in `preference_from` and write `friday` followed by that full week qualifier in `preference_to`. Example: `next week` through `friday next week`. Do not calculate or write a calendar date.
+
+What would change the ruling:
+
+- A measured gateway grammar that provides another phrase pair with the same exact Monday-through-Friday span.
+- Hidden binding guidance for `preference_to` that already mandates the measured pair.
+
+Required proof after any guidance change:
+
+1. Record the extracted three fields.
+2. Send the extracted pair to the gateway.
+3. Assert every returned and displayed date is within 08/03 through 08/07.
+4. Assert the displayed times satisfy the morning policy.
+
+## Q3
+
+**VERDICT: Yes, `n_offer_3` is correct behavior.**
+
+The exact minimal scenario change is:
+
+```python
+'expect_node': ['n_offer', 'n_offer_2', 'n_offer_3'],
+```
+
+A stronger behavioral assertion would expect only `n_offer_3`, because the supplied routing contract deterministically classifies `after 3pm` as `late`. Adding it to the allowed list is the smallest textual correction requested.
+
+What would change the ruling:
+
+- Evidence that `n_offer_3` contains slots below the requested floor.
+- A different binding mapping for `day_part=late`.
+- An owner decision that “after 3pm” excludes exactly 3:00 pm.
+
+## Q4
+
+**VERDICT: Failure 1 has a patient-facing consequence. Failure 2 has none under the stated test contract.**
+
+- Failure 1 presented 08/10 as satisfying “next week,” although the binding meaning was 08/03 through 08/07. That is a false representation of request satisfaction and could cause a wrong booking if accepted. No completed wrong booking is evidenced.
+- Failure 2 presented correct-date slots at or above the scenario’s stated 3pm floor. The late-band node is internal routing and creates no patient harm by itself.
+
+Unique catch: in ordinary language, “after 3pm” can mean strictly later than 3:00. The packet explicitly treats 3:00 as honoring the floor, so I did not override that contract. If the owner requires strict semantics, offering 3:00 would be a patient-facing mismatch and the test needs a greater-than-3:00 assertion.
+
+## Candidate packet
+
+```yaml
+recommendation:
+  failure_1: "Classify as a real agent defect. Require week-only extraction to use the measured next-week range grammar."
+  failure_2: "Classify as an incorrect node expectation. Permit n_offer_3, or preferably assert n_offer_3 exactly."
+
+confidence:
+  failure_1: 98
+  failure_2: 97
+  patient_safety: 94
+
+evidence:
+  - "Owner defines next week as the following Monday-anchored calendar week."
+  - "Measured pair next week through friday next week yields exactly 08/03 through 08/07."
+  - "Failure 1 displayed 08/10."
+  - "Quoted guidance maps after 3pm to late."
+  - "Late routes to n_offer_3."
+  - "Failure 2 displayed 3:00 and 3:15 pm on the correct date."
+
+assumptions:
+  - "The scenario contract treats 3:00 pm as satisfying its 3pm floor."
+  - "No omitted patient turn changed either request."
+  - "The supplied owner semantic rule is binding."
+
+unique_catches:
+  - "Failure 1 proves wrong external behavior but does not identify the internal field that caused it."
+  - "Natural-language after 3pm may be strict, although this scenario defines an inclusive floor."
+  - "The already-ruled gateway weekday-next-week overshoot remains a separate certification precondition."
+
+risks_or_failure_modes:
+  - "Changing only the test could conceal Failure 1's wrong-week offer."
+  - "Testing only the final node could miss incorrect extracted variables."
+  - "Allowing all offer nodes for Failure 2 is weaker than asserting deterministic late routing."
+  - "The gateway's separate X next week defect can still produce wrong dates for named weekdays."
+
+proof_slots:
+  failure_1:
+    - "Capture preference_from, preference_to, and day_part."
+    - "Verify gateway range begins 08/03 and ends 08/07."
+    - "Verify every displayed offer is inside that range and in the morning."
+  failure_2:
+    - "Capture day_part and confirm late."
+    - "Verify route terminates at n_offer_3."
+    - "Verify every displayed slot meets the owner's inclusive or strict time rule."
+  certification:
+    - "Keep the separate gateway next-week defect blocked until its existing precondition is proven."
+
+needs_human_or_owner_gate:
+  - "Owner must resolve whether after 3pm includes exactly 3:00 pm."
+  - "Certification remains gated by the separately ruled gateway defect."
+  - "No patient-facing deployment or campaign should proceed from these panel rulings alone."
+```
+
+Progress
+- % to true goal: 100%
+- % to current goal: 100%
+- Done: Q1-Q4 ruled, evidence sufficiency assessed, proof requirements identified, candidate packet produced
+- In flight: none
+- Not done: execution of the listed
+
+########## PANEL LANE: OPERATOR
+Ankit — CANARY: blue paperclip
+
+## Ruling
+
+### Q1. Defect or incorrect test expectation?
+
+#### Failure 1: REAL DEFECT
+
+**VERDICT:** The agent produced a patient-visible offer outside the binding meaning of “next week.”
+
+**Evidence:**
+
+- Owner rule: “next week” means 08/03 through 08/07.
+- The measured pair `from=next week`, `to=friday next week` returns exactly that range.
+- The agent offered 08/10, which is outside it.
+- Reaching a real offer satisfies the node assertion but does not satisfy the scenario’s date assertion.
+
+**What would change my ruling:** Evidence that the extraction was correct and the already-open gateway defect alone transformed an accepted range into 08/10. That would relocate this specific defect from agent extraction to the gateway. The current packet does not include the actual extracted variable receipt, so component attribution remains unproven, but the end-to-end scenario is genuinely defective.
+
+#### Failure 2: INCORRECT TEST EXPECTATION
+
+**VERDICT:** The node assertion is wrong. The observed behavior matches the stated routing guidance.
+
+**Evidence:**
+
+- Guidance explicitly maps “after 3” and “after 3pm” to `day_part=late`.
+- `late` routes to `n_offer_3`.
+- The agent offered 3:00 pm and 3:15 pm, satisfying the packet’s defined 3pm floor.
+- The date was correct.
+- The only reported failure was that the test allowed `n_offer` and `n_offer_2`, but not the appropriate late-band node.
+
+**What would change my ruling:** Evidence that `n_offer_3` can return slots before 3pm, uses a different date window, or is not the configured destination for `day_part=late`.
+
+### Q2. Correct extraction for failure 1
+
+**VERDICT:** Extract:
+
+```text
+preference_from = next week
+preference_to   = friday next week
+day_part        = morning
+```
+
+This uses accepted gateway phrases without asking the model to calculate dates. The measured pair produces 08/03 through 08/07.
+
+The current guidance is incomplete or ambiguous at the range level. It tells the model what to write for `preference_from`, but the quoted text does not explicitly establish the matching end of the window when a week is named without a weekday and a day part is also present.
+
+Minimal wording clarification:
+
+> If the patient names a week but no weekday, including when they also name a part of day, write `next week` for `preference_from` and `friday next week` for `preference_to`.
+
+**Evidence:**
+
+- The gateway-verified pair returns exactly 08/03 through 08/07.
+- `morning` is one of the accepted `day_part` values.
+- No calendar calculation is required.
+
+**What would change my ruling:** A gateway receipt demonstrating another accepted phrase pair that consistently produces the same Monday-through-Friday window, or complete field guidance showing this pairing is already deterministic.
+
+### Q3. Late-band node for failure 2
+
+**VERDICT:** Correct behavior. Make the assertion:
+
+```text
+'expect_node': 'n_offer_3',
+```
+
+This is tighter than merely adding `n_offer_3` to the existing allowed list because the guidance deterministically classifies “after 3pm” as `late`.
+
+**Evidence:**
+
+- The 3pm boundary is explicitly exact.
+- “After 3” and “after 3pm” explicitly map to `late`.
+- `late` routes to the late-band node.
+- Both displayed openings honored the floor.
+
+**What would change my ruling:** A product-owner decision that natural-language “after 3pm” must mean strictly later than 3:00 pm. Under the supplied contract, however, 3:00 pm is permitted.
+
+### Q4. Patient-safety consequence
+
+**VERDICT:**
+
+- **Failure 1:** Yes, patient-impacting. The agent presented 08/10 as satisfying “next week,” even though the binding range ends 08/07. No completed wrong booking is evidenced, but it is a false fit claim and could lead to a booking outside the patient’s request.
+- **Failure 2:** None evidenced. The offered date was correct, both times met the contract’s 3pm floor, and the late-band node matched the requested time category.
+
+What would change this ruling:
+
+- A booking receipt showing the patient selected or was booked into the incorrect 08/10 offer would raise failure 1 from unsafe presentation to an actual wrong booking.
+- Evidence that either failure displayed a different time or date than reported would require reassessment.
+
+## Candidate packet
+
+```yaml
+recommendation:
+  failure_1: "Treat the end-to-end scenario as a real defect. Require extraction receipts before assigning the defect specifically to agent guidance versus the known gateway defect."
+  failure_2: "Correct the test expectation to require n_offer_3."
+  certification: "Do not ship or certify while failure 1 and the separately ruled gateway precondition remain open."
+
+confidence:
+  q1_failure_1: 0.90
+  q1_failure_2: 0.99
+  q2: 0.94
+  q3: 0.99
+  q4: 0.96
+
+evidence:
+  - "Owner-defined next-week window is 2026-08-03 through 2026-08-07."
+  - "Measured next week to friday next week pair returns exactly that span."
+  - "Failure 1 displayed 2026-08-10."
+  - "Guidance maps after 3pm to late."
+  - "Late routes to n_offer_3."
+  - "Failure 2 displayed 3:00 pm and 3:15 pm on the correct date."
+
+assumptions:
+  - "The supplied gateway probe receipts are authoritative."
+  - "The stated day_part routing accurately describes the deployed candidate."
+  - "The scenario's 3pm floor intentionally includes 3:00 pm."
+  - "No booking occurred beyond the displayed offers."
+
+unique_catches:
+  - "Failure 1 is conclusively an end-to-end defect, but the packet lacks extracted-variable receipts needed to assign root cause between extraction and gateway."
+  - "For failure 2, allowing all three offer nodes would weaken the regression test. n_offer_3 should be required."
+  - "Natural-language 'after 3pm' can imply strictly later than 3:00 pm, but the supplied system contract explicitly treats 3pm as the inclusive boundary."
+
+risks_or_failure_modes:
+  - "A patient may accept 08/10 believing it is within next week."
+  - "Fixing only the test could conceal an incorrect week-range extraction."
+  - "Fixing only extraction cannot overcome the separately confirmed X next week gateway overshoot."
+  - "An overly broad node assertion could permit future routing regressions."
+
+proof_slots:
+  - "Capture preference_from, preference_to, and day_part for both scenarios."
+  - "Execute the extracted failure-1 pair directly against the gateway and record returned date bounds."
+  - "Verify failure 1 displays only dates from 08/03 through 08/07."
+  - "Verify failure 2 terminates at n_offer_3 and every displayed slot is at or after 3:00 pm."
+  - "Run a booking-through confirmation test to ensure the selected slot matches the displayed date and time."
+
+needs_human_or_owner_gate:
+  - "Owner confirmation only if 'after 3pm' should be strict greater-than rather than the currently defined inclusive 3pm floor."
+  - "Release/certification gate remains blocked by the separately ruled gateway precondition and failure-1 end-to-end proof."
+```
+
+Progress
+- % to true goal: 100%
+- % to current goal: 100%
+- Done: ruled Q1

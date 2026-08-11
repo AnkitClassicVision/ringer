@@ -1,0 +1,24 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGates73",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gw-live-gates-56",
+      "engine": "local-shell",
+      "timeout_s": 300,
+      "verified": "The live gateway passes all standing gates plus lane-51 and lane-52 probes after the deploy.",
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates.py > gates.txt 2>&1; rc1=$?; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates51.py > gates51.txt 2>&1; rc2=$?; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates52.py > gates52.txt 2>&1; rc3=$?; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates53.py > gates53.txt 2>&1; rc4=$?; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates54.py > gates54.txt 2>&1; rc5=$?; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates55.py > gates55.txt 2>&1; rc6=$?; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates55.py > gates55.txt 2>&1; rc6=$?; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/gw_gates56.py > gates56.txt 2>&1; rc7=$?; cat gates.txt gates51.txt gates52.txt gates53.txt gates54.txt gates55.txt gates56.txt; exit $((rc1 | rc2 | rc3 | rc4 | rc5 | rc6 | rc7))",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_gw_gates.py gates.txt || exit 1; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_gw_gates51.py gates51.txt || exit 1; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_gw_gates52.py gates52.txt; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_gw_gates53.py gates53.txt; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_gw_gates54.py gates54.txt; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_gw_gates55.py gates55.txt; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_gw_gates56.py gates56.txt",
+      "expect_files": [
+        "gates.txt",
+        "gates51.txt",
+        "gates52.txt",
+        "gates53.txt",
+        "gates54.txt",
+        "gates55.txt",
+        "gates56.txt"
+      ]
+    }
+  ]
+}

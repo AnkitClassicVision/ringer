@@ -1,0 +1,38 @@
+{
+  "verdict": "PASS",
+  "highest_true_state": "READY_FOR_PROJECT_ROOM_REVIEW",
+  "project_room_status": "inventory_review_required",
+  "external_use_authorized": false,
+  "review_count": 3,
+  "all_review_verdicts": "PASS",
+  "fatal_issues": [],
+  "material_issues": [],
+  "minor_issues": [],
+  "onepager_pages": 1,
+  "explainer_pages": 11,
+  "source_count": 25,
+  "score_changes_after_refresh": false,
+  "final_score_map": {
+    "market_demand_supply": 57,
+    "competitive_pressure_internal": 57,
+    "room_to_win": 43,
+    "practice_competitiveness": 58,
+    "client_opportunity": 54,
+    "digital_presence": 57,
+    "specialty_opportunity": {
+      "dry_eye_ocular_surface": 52,
+      "myopia_management": 52,
+      "specialty_contact_lenses": 51
+    },
+    "confidence_grade": "C"
+  },
+  "current_population": 17565,
+  "historical_population": 17557,
+  "route_minutes": 4.07,
+  "onepager_sha256": "b6e18c05cf73987772436ba80c4a9eeb0a3643058f3ddf8b20d41ad6ec789b05",
+  "explainer_sha256": "30bdb7f0aa6196f1081fe5e1b47f89a865c69b97fdb56114151070f98cbe431e",
+  "technical_qa": "PASS",
+  "visual_qa": "PASS",
+  "external_actions": "none",
+  "user_action_required": "Ankit must approve the source inventory before external use."
+}

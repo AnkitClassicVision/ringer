@@ -1,0 +1,37 @@
+{
+  "run_name": "oauth-routing-live-proof-v2",
+  "workdir": "/home/ankit114/.ringer/work/oauth-routing-live-proof-v2",
+  "max_parallel": 3,
+  "tasks": [
+    {
+      "key": "codex-oauth",
+      "engine": "codex",
+      "engine_args": ["-c", "model=gpt-5.6-sol", "-c", "model_reasoning_effort=low"],
+      "spec": "Create ./proof.txt containing exactly OPENAI_OAUTH_OK followed by a newline. Do not inspect credentials, network settings, or unrelated files. Then stop.",
+      "check": "test \"$(cat proof.txt)\" = OPENAI_OAUTH_OK",
+      "expect_files": ["proof.txt"],
+      "timeout_s": 300,
+      "verified": "Codex executed through the ChatGPT OAuth wrapper and wrote the expected bounded sentinel."
+    },
+    {
+      "key": "claude-oauth",
+      "engine": "claude",
+      "model": "fable",
+      "spec": "Create ./proof.txt containing exactly ANTHROPIC_OAUTH_OK followed by a newline. Do not inspect credentials, network settings, or unrelated files. Then stop.",
+      "check": "test \"$(cat proof.txt)\" = ANTHROPIC_OAUTH_OK",
+      "expect_files": ["proof.txt"],
+      "timeout_s": 300,
+      "verified": "Claude Code executed Fable through the claude.ai OAuth wrapper and wrote the expected bounded sentinel."
+    },
+    {
+      "key": "glm-coding-plan",
+      "engine": "glm-coding-plan",
+      "model": "zai-coding-plan/glm-5.2",
+      "spec": "Create ./proof.txt containing exactly GLM_CODING_PLAN_OK followed by a newline. Do not inspect credentials, network settings, or unrelated files. Then stop.",
+      "check": "test \"$(cat proof.txt)\" = GLM_CODING_PLAN_OK",
+      "expect_files": ["proof.txt"],
+      "timeout_s": 300,
+      "verified": "GLM executed only through the pinned Z.AI Coding Plan subscription route and wrote the expected bounded sentinel."
+    }
+  ]
+}

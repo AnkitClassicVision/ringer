@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workLadder105",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-ladder-v105",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 7200,
+      "expect_files": ["ladder.txt"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGL/gl-scenarios-builder/phase_run_goalloop.py 105 > ladder.txt 2>&1; rc=$?; tail -8 ladder.txt; exit $rc",
+      "check": "grep -qE '^RESULT goalloop: passed=[0-9]+ failed=0 waived=0 total=[0-9]+' ladder.txt || { echo 'FAIL: ladder not clean:'; grep -E '^\\[FAIL\\]|^ABORT|RESULT' ladder.txt | head -20; exit 1; }; total=$(grep -oE 'total=[0-9]+' ladder.txt | tail -1 | cut -d= -f2); [ \"$total\" -ge 30 ] || { echo \"FAIL: only $total scenarios ran\"; exit 1; }; echo \"PASS: $(grep -E '^RESULT' ladder.txt | tail -1)\"",
+      "verified": "The full goal-loop scenario ladder (incl. this week's incident replays) runs clean against unattached v105 with the booking guard active: zero failures, no promise copy, no internal field leaks, dated offers where required."
+    }
+  ]
+}

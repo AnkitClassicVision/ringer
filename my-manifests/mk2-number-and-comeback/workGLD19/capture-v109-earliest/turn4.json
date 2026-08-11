@@ -1,0 +1,80 @@
+{
+  "data": {
+    "assistant_responses": [
+      "I have Monday 08/10/2026 11:15 am or Monday 08/10/2026 11:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time."
+    ],
+    "chat_history": [
+      {
+        "content": "hi",
+        "role": "user"
+      },
+      {
+        "content": "Hi RACHEL, this is MK2 Optical.\n\nWe noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.\n\nMany vision insurance benefits renew yearly, so don't let your benefits go unused!\n\nWhen would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.\n\n\u5982\u9700\u4e2d\u6587\u670d\u52a1\uff0c\u8bf7\u76f4\u63a5\u7528\u4e2d\u6587\u56de\u590d\u3002",
+        "role": "assistant"
+      },
+      {
+        "content": "I'm out this week how about in two weeks?",
+        "role": "user"
+      },
+      {
+        "content": "I have Tuesday 08/18/2026 10:30 am or Tuesday 08/18/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.",
+        "role": "assistant"
+      },
+      {
+        "content": "What about Monday that week?",
+        "role": "user"
+      },
+      {
+        "content": "I have Monday 08/17/2026 01:00 pm or Monday 08/17/2026 01:15 pm at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.",
+        "role": "assistant"
+      },
+      {
+        "content": "What's the earliest I can do that day?",
+        "role": "user"
+      },
+      {
+        "content": "I have Monday 08/10/2026 11:15 am or Monday 08/10/2026 11:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.",
+        "role": "assistant"
+      }
+    ],
+    "chat_id": "92d07dd8-dc89-47a4-aa16-6b2b***3960",
+    "completed": false,
+    "current_node_id": "n_goal_response",
+    "current_node_name": "Goal response and offer",
+    "pathway_id": "94abad8b-fbe2-4e67-9c64-d9b586dd2653",
+    "pathway_version": 109,
+    "use_candidate_model": false,
+    "variables": {
+      "BlandStatusCode": 200,
+      "appt_count": 0,
+      "callID": "92d07dd8-dc89-47a4-aa16-6b2b***3960",
+      "campaign": "harness",
+      "channel": "voice",
+      "count": 1,
+      "day_part": "none",
+      "exam_type_id": "***7395",
+      "goal_anchor": null,
+      "ok": true,
+      "patient_first": "RACHEL",
+      "patient_id": "***2466",
+      "preference_from": "monday",
+      "preference_to": "monday",
+      "recall_cell": "***2428",
+      "recall_patient_id": "***2466",
+      "slot_1_day_name": "Monday",
+      "slot_1_doctor": "***7632",
+      "slot_1_end": "08/10/2026 11:30 am",
+      "slot_1_start": "08/10/2026 11:15 am",
+      "slot_2_day_name": "Monday",
+      "slot_2_doctor": "***7632",
+      "slot_2_end": "08/10/2026 12:00 pm",
+      "slot_2_start": "08/10/2026 11:45 am",
+      "slot_count": 23,
+      "store": "711",
+      "time_after": "none",
+      "time_pref_relaxed": "",
+      "user_verbatim": "What's the earliest I can do that day?"
+    }
+  },
+  "errors": null
+}

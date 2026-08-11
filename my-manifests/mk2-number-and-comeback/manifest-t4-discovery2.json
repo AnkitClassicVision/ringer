@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4d2",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "t4-model-discovery2",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["discovery.txt", "pathway.json"],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 - <<'PY' > discovery.txt 2>&1\nimport json, os, re, urllib.error, urllib.request\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nkey = raw\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        key = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\npid = \"94abad8b-fbe2-4e67-9c64-d9b586dd2653\"\nfor name, url in ((\"pathway\", \"https://api.bland.ai/v1/pathway/%s\" % pid), (\"versions\", \"https://api.bland.ai/v1/pathway/%s/versions\" % pid)):\n    try:\n        req = urllib.request.Request(url, headers={\"authorization\": key, \"User-Agent\": \"mybcat-cli\"})\n        with urllib.request.urlopen(req, timeout=60) as r:\n            body = r.read().decode()\n            code = r.status\n    except urllib.error.HTTPError as e:\n        body = e.read().decode(errors=\"replace\")[:300]\n        code = e.code\n    except Exception as e:\n        body = type(e).__name__\n        code = 0\n    open(name + \".json\", \"w\").write(body)\n    print(\"GET_%s_HTTP=%s\" % (name.upper(), code))\n    hits = sorted(set(re.findall(r'\"[^\"]*(?:[Mm]odel|llm|LLM|engine)[^\"]*\"\\s*:\\s*[^,}]{0,80}', body)))\n    print(\"SCAN %s.json:\" % name)\n    for h in hits[:40]:\n        print(\"  \" + h)\n    if not hits:\n        print(\"  NONE-FOUND\")\nprint(\"SCAN_DONE\")\nPY\nrc=$?; tail -25 discovery.txt; exit $rc",
+      "check": "grep -q 'GET_PATHWAY_HTTP=200' discovery.txt || { echo 'FAIL: pathway GET did not return 200 (envelope unwrap or auth still wrong)'; head -8 discovery.txt; exit 1; }; grep -q 'SCAN_DONE' discovery.txt || { echo 'FAIL: key scan did not finish'; exit 1; }; python3 -c \"import json; json.load(open('pathway.json')); print('pathway.json parses')\" || { echo 'FAIL: pathway.json is not valid JSON'; exit 1; }; echo 'PASS: discovery complete'; grep -A40 'SCAN pathway.json' discovery.txt | head -20",
+      "verified": "The Bland pathway object and version list fetched read-only with the JSON-envelope API key correctly unwrapped, surfacing every model/llm/engine-named key so T4 knows where (if anywhere) the node model is configurable via API."
+    }
+  ]
+}

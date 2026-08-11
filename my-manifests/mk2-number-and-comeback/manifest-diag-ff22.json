@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workDiag3",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "diag-de57-live-test",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": ["diag.txt"],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > diag.txt 2>&1\nimport json, os, re, subprocess, urllib.request\nfrom datetime import datetime, timedelta, timezone\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    p = json.loads(raw); raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\nCID = \"ff223c45-36f9-4b99-9fb3-f9b6d739c0b3\"\nreq = urllib.request.Request(\"https://api.bland.ai/v1/sms/conversations/%s\" % CID, headers={\"Authorization\": raw, \"User-Agent\": \"mybcat-cli\"})\nwith urllib.request.urlopen(req, timeout=60) as r:\n    data = json.loads(r.read().decode()).get(\"data\") or {}\nmsgs = data.get(\"messages\") or data.get(\"chat_history\") or []\nprint(\"NODE_NOW=%s VERSION=%s MSGS=%d\" % (data.get(\"current_node_id\"), data.get(\"curr_pathway_version\"), len(msgs)))\nmask = lambda s: re.sub(r\"\\d{5,}\", lambda m: \"***\" + m.group(0)[-4:], str(s))\nfirst_ts = None\nfor m in msgs:\n    ts = str(m.get(\"created_at\", \"\"))\n    if first_ts is None and ts:\n        first_ts = ts\n    body = mask(str(m.get(\"message\", m.get(\"content\", \"\")))[:170]).replace(chr(10), \" \")\n    print(\"MSG %s | %s | %s\" % (ts, str(m.get(\"sender\", m.get(\"role\", \"?\"))).upper()[:5], body))\nvars_ = data.get(\"variables\") or {}\nfor k in sorted(vars_):\n    if re.search(r\"preference|time_pref|appt|slot_0|from|to\", str(k), re.I):\n        print(\"VAR %s=%s\" % (k, mask(str(vars_[k])[:60])))\nif first_ts:\n    start = datetime.fromisoformat(first_ts.replace(\"Z\", \"+00:00\")) - timedelta(minutes=1)\n    end = datetime.now(timezone.utc) + timedelta(minutes=1)\n    out = subprocess.run([\"aws\", \"logs\", \"filter-log-events\", \"--log-group-name\", \"/ecs/mott-booking-gateway\", \"--start-time\", str(int(start.timestamp() * 1000)), \"--end-time\", str(int(end.timestamp() * 1000)), \"--filter-pattern\", \"?raw_gate ?raw_fetch ?raw_resolve ?date_source ?availability ?conflict\", \"--query\", \"events[].message\", \"--output\", \"json\"], capture_output=True, text=True, timeout=120)\n    if out.returncode == 0:\n        events = json.loads(out.stdout or \"[]\")\n        print(\"GWLOG_LINES=%d\" % len(events))\n        for e in events[-60:]:\n            print(\"GW\", mask(str(e).strip()[:200]))\n    else:\n        print(\"GWLOG_ERROR %s\" % out.stderr.strip()[:200])\nprint(\"DIAG_DONE\")\nPY\nrc=$?; cat diag.txt; exit $rc",
+      "check": "grep -q 'DIAG_DONE' diag.txt || { echo 'FAIL: diagnosis did not finish:'; tail -5 diag.txt; exit 1; }; grep -qE '^MSGS=|MSGS=[0-9]+' diag.txt || { echo 'FAIL: no message count'; exit 1; }; m=$(grep -cE '^MSG ' diag.txt); [ \"$m\" -ge 2 ] || { echo \"FAIL: only $m messages retrieved\"; exit 1; }; echo \"PASS: $(grep -m1 'NODE_NOW=' diag.txt); $m messages; $(grep -m1 'GWLOG_LINES=' diag.txt)\"",
+      "verified": "Ankit's live-test conversation reconstructed end to end: every message with timestamp, the pathway's extraction variables, and the gateway's raw_gate/raw_resolve/date_source decisions for the same window."
+    }
+  ]
+}

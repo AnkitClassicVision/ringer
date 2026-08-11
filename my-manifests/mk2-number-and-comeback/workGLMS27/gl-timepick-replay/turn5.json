@@ -1,0 +1,94 @@
+{
+  "data": {
+    "assistant_responses": [
+      "To confirm, your eye exam would be Friday 08/07/2026 11:15 am at MK2 Optical. Reply YES to book it, or NO to look at other times."
+    ],
+    "chat_history": [
+      {
+        "content": "hi",
+        "role": "user"
+      },
+      {
+        "content": "Hi RACHEL, this is MK2 Optical.\n\nWe noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.\n\nMany vision insurance benefits renew yearly, so don't let your benefits go unused!\n\nWhen would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.\n\n\u5982\u9700\u4e2d\u6587\u670d\u52a1\uff0c\u8bf7\u76f4\u63a5\u7528\u4e2d\u6587\u56de\u590d\u3002",
+        "role": "assistant"
+      },
+      {
+        "content": "How about Friday at 1020",
+        "role": "user"
+      },
+      {
+        "content": "That time is unavailable. Would you like to try another day or time?",
+        "role": "assistant"
+      },
+      {
+        "content": "What about 1040?",
+        "role": "user"
+      },
+      {
+        "content": "That time is not available. I have Friday 08/07/2026 11:00 am at MK2 Optical as the closest opening. Would you like that?",
+        "role": "assistant"
+      },
+      {
+        "content": "Lets do 1110",
+        "role": "user"
+      },
+      {
+        "content": "That time is not available. I have Friday 08/07/2026 11:15 am or Friday 08/07/2026 11:30 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.",
+        "role": "assistant"
+      },
+      {
+        "content": "1115",
+        "role": "user"
+      },
+      {
+        "content": "To confirm, your eye exam would be Friday 08/07/2026 11:15 am at MK2 Optical. Reply YES to book it, or NO to look at other times.",
+        "role": "assistant"
+      }
+    ],
+    "chat_id": "***8294f-48fb-4d23-a637-5d***3334d",
+    "completed": false,
+    "current_node_id": "n_gate_1",
+    "current_node_name": "Confirm opening 1",
+    "pathway_id": "94abad8b-fbe2-4e67-9c64-d9b586dd2653",
+    "pathway_version": 122,
+    "use_candidate_model": false,
+    "variables": {
+      "BlandStatusCode": 200,
+      "anchor_exact": true,
+      "anchor_requested": "11:15 am",
+      "anchor_route": "exact",
+      "appt_count": 0,
+      "callID": "***8294f-48fb-4d23-a637-5d***3334d",
+      "campaign": "harness",
+      "channel": "voice",
+      "closed_day": false,
+      "count": 1,
+      "day_part": "none",
+      "exam_type_id": "***7395",
+      "goal_anchor": "11:15 AM",
+      "ok": true,
+      "out_of_hours": false,
+      "patient_first": "RACHEL",
+      "patient_id": "***2466",
+      "preference_from": "friday",
+      "preference_to": "friday",
+      "recall_cell": "***2428",
+      "recall_patient_id": "***2466",
+      "requested_clock": "10:20 AM",
+      "slot_1_day_name": "Friday",
+      "slot_1_doctor": "***1951",
+      "slot_1_end": "08/07/2026 11:30 am",
+      "slot_1_start": "08/07/2026 11:15 am",
+      "slot_2_day_name": "Friday",
+      "slot_2_doctor": "***1951",
+      "slot_2_end": "08/07/2026 11:15 am",
+      "slot_2_start": "08/07/2026 11:00 am",
+      "slot_count": 11,
+      "store": "711",
+      "time_after": "none",
+      "time_pref_relaxed": "",
+      "user_verbatim": "1115"
+    }
+  },
+  "errors": null
+}

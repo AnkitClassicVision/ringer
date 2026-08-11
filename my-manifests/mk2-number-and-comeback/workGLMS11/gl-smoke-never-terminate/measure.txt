@@ -1,0 +1,10 @@
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN=1 WALL_MS=7690 N_MSGS=1 NODE=n_goal_response SAID=Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.
+
+Many vision insurance be
+TURN=2 WALL_MS=6787 N_MSGS=1 NODE=n_goal_response SAID=I have Monday 08/10/2026 11:15 am or Monday 08/10/2026 11:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+TURN=3 WALL_MS=6452 N_MSGS=1 NODE=n_goal_response SAID=I have Tuesday 08/18/2026 10:30 am or Tuesday 08/18/2026 10:45 am at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+RESULT label=gl11-never-term turns=3 total_wall_ms=20929 filler_hits=0 candidate=0

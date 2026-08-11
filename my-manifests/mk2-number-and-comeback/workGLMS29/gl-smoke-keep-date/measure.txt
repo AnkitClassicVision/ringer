@@ -1,0 +1,6 @@
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN=1 WALL_MS=7310 N_MSGS=1 NODE=n_post_booking SAID=Hi Rachel! I'm just calling to confirm that your appointment is all set. Is there anything else I can help you with today?
+TURN=2 WALL_MS=2064 N_MSGS=1 NODE=n_post_booking SAID=That sounds right for your appointment. Just to let you know, if you need to make any changes to that date or time, you'll need to give the office a call at (212) 219-2219. Is there anything else I ca
+TURN=3 WALL_MS=1903 N_MSGS=1 NODE=n_post_booking SAID=I don't have the specific details on the available time slots for that day. For questions about scheduling times or availability, please contact the office directly at (212) 219-2219. They'll be able 
+RESULT label=gl16-keep-date turns=3 total_wall_ms=11277 filler_hits=0 candidate=0

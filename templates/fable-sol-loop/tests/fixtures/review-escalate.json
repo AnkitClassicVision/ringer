@@ -1,0 +1,23 @@
+{
+  "verdict": "ESCALATE",
+  "findings": [],
+  "holds_resolved": [],
+  "question": {
+    "question": "Which visible label should control the final user-facing artifact?",
+    "why_now": "The review found a founder-taste choice that the decision packet cannot settle.",
+    "consequence_if_wrong": "Choosing without founder context would lock the wrong visible contract.",
+    "options_with_default": [
+      {
+        "option": "Ready",
+        "tradeoff": "Clear and conventional, but less distinctive.",
+        "default": true
+      },
+      {
+        "option": "Prepared",
+        "tradeoff": "More distinctive, but slightly less direct.",
+        "default": false
+      }
+    ],
+    "answer_deadline_effect": "Closure remains stopped until Hermes stages the answer for Fable."
+  }
+}

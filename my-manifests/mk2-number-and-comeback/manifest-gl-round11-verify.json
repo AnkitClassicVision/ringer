@@ -1,0 +1,19 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD14v",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-round11-verify",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 600,
+      "expect_files": [
+        "verdict.txt"
+      ],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_round11_fix.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD14/gl-round11-fix/check_goalloop_graph.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD14/gl-round11-fix/pathway-goalloop-draft.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD12/gl-round10-fix/pathway-goalloop-draft.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/capture-v96/graph.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD14/gl-round11-fix/frozen-extractors.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD14/gl-round11-fix/DEBUG.md > verdict.txt 2>&1; rc=$?; cat verdict.txt; exit $rc",
+      "check": "grep -q '^PASS' verdict.txt || { echo 'FAIL:'; cat verdict.txt; exit 1; }; echo \"PASS: $(cat verdict.txt)\"",
+      "verified": "Clean green receipt for the round-11 label fix after the external checker's shadowed-lambda crash was repaired - the artifact itself was always valid."
+    }
+  ]
+}

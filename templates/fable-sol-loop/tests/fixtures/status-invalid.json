@@ -1,0 +1,27 @@
+{
+  "status": "READY",
+  "build_units": [
+    {
+      "id": "U1-output",
+      "state": "COMPLETE",
+      "verification_command": "python3 -c \"from pathlib import Path; assert Path('owned/output.txt').read_text(encoding='utf-8') == 'ready'\"",
+      "verification_result": {
+        "passed": true,
+        "exit_code": 0,
+        "summary": "The owned output matched the expected ready marker."
+      }
+    }
+  ],
+  "deviations": [],
+  "holds": [],
+  "probes": [],
+  "diff_summary": {
+    "paths_touched": [
+      "owned/output.txt"
+    ],
+    "files_changed": 1,
+    "insertions": 1,
+    "deletions": 0
+  },
+  "question": "Sol must not ask Ankit directly."
+}

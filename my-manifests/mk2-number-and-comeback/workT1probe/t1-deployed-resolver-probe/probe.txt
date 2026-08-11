@@ -1,0 +1,5 @@
+DEPLOYED_RESOLVE(thursday)=count=26 dates=08/06/2026
+DEPLOYED_RESOLVE(the following thursday)=HTTP_409 {"ok": false, "exit_code": 1, "error": "bad --from: unrecognized date \"the following thursday\" (want MM/DD/YYYY or YYY
+DEPLOYED_RESOLVE(following thursday)=HTTP_409 {"ok": false, "exit_code": 1, "error": "bad --from: unrecognized date \"following thursday\" (want MM/DD/YYYY or YYYY-MM
+DEPLOYED_RESOLVE(thursday next week)=count=25 dates=08/13/2026
+PROBE_DONE

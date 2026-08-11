@@ -1,0 +1,121 @@
+{
+  "review_type": "logic",
+  "verdict": "PASS",
+  "external_actions_taken": "none",
+  "blocking_findings": [],
+  "reviewed_artifact_hashes": {
+    "onepager_pdf": "e72e6ba5d230e70ad831d0e6d27e1cf4bdc7e1a22f89785b82969375b19e4d70",
+    "template_framed_onepager_pdf": "ecd9f8c1725b1fafc203cc9c334bdb0102a1cc9775256f060d568048e39856a3",
+    "number_explainer_pdf": "1e98ba54b64aa0d1042d006dd87458b318320ac9c1333f3219337349ec079b0f",
+    "scores_json": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c"
+  },
+  "directionality_guard": "Room to Win = 100 - Competitive Pressure Index",
+  "room_to_win_check": "PASS",
+  "preserved_nulls": [
+    "canonical_full_vdu",
+    "canonical_office_count",
+    "rank_grid",
+    "complete_provider_entity_dedupe",
+    "cross_platform_review_total"
+  ],
+  "fix_card_count": 3,
+  "template_framed_fix_card_count": 3,
+  "validator_results": {
+    "build": "PASS",
+    "render": "PASS",
+    "template_render": "PASS"
+  },
+  "contradictions": [
+    {
+      "contradiction": "Birdeye Google components differ from the dated direct Google counts.",
+      "resolution": "The package preserves both observations by source, shows the differences, and does not promote the aggregator components as direct Google truth.",
+      "status": "resolved_nonblocking"
+    },
+    {
+      "contradiction": "A legacy address appears in the aggregator evidence while the direct Google observation identifies the current routing origin.",
+      "resolution": "The direct Google pin is used for the current route, while the legacy citation remains a bounded observation with no operating-status claim.",
+      "status": "resolved_nonblocking"
+    },
+    {
+      "contradiction": "NPPES reports 40 results while 39 candidate records materialize.",
+      "resolution": "Both counts remain visible, the one-record deficit is disclosed, and neither count becomes a canonical office census.",
+      "status": "resolved_nonblocking"
+    },
+    {
+      "contradiction": "Earlier route lineage differs from the corrected direct-pin route.",
+      "resolution": "The corrected direct-pin route is the only current route display, prior values are absent, and the correction does not change the approved score band.",
+      "status": "resolved_nonblocking"
+    }
+  ],
+  "disconfirmers": [
+    {
+      "claim_at_risk": "Supply and pressure bands",
+      "evidence_that_could_disconfirm": "A complete active-office census, provider-entity dedupe, and full VDU denominator could move Supply Balance, Supply Saturation, Competitive Pressure, and Room to Win in either direction."
+    },
+    {
+      "claim_at_risk": "Bounded review advantage",
+      "evidence_that_could_disconfirm": "A rank grid and complete, comparable peer-review export could reverse the current same-page sample ordering or weaken its relevance."
+    },
+    {
+      "claim_at_risk": "Nearby-peer relevance",
+      "evidence_that_could_disconfirm": "Patient-origin, trip-tolerance, and traffic-aware evidence could change whether the routed alternatives represent realistic patient choices."
+    },
+    {
+      "claim_at_risk": "Actionability and specialty-lane direction",
+      "evidence_that_could_disconfirm": "Authorized conversion, capacity, referral, outcome, payer, and economics evidence could change the actionability and specialty bands."
+    }
+  ],
+  "remaining_risks": [
+    "The weakest changed bands are Review Trust vs Peers and Digital Presence Reputation at 65 because they rely on one dated same-page Google sample without a rank grid, complete peer export, review themes, recency distribution, or response analysis.",
+    "Observed village population and district enrollment changes support a directional growth proxy only. They do not establish catchment growth, patient growth, realized demand, or a forecast.",
+    "Neutral manual bands attached to unresolved supply and patient-choice inputs are approved scoring states, not measured office saturation or measured patient choice. Complete evidence may move them.",
+    "The template-framed headline uses patient-dollar framing, but it provides no dollar amount, projection, open revenue lane, or guaranteed result. Its safe use depends on the visible internal-only, measurement-first, and Project Room boundaries remaining attached."
+  ],
+  "logic_checks": [
+    {
+      "check": "candidate_supply_not_canonicalized",
+      "result": "PASS",
+      "basis": "NPPES reported, materialized, location-candidate, matched, and no-match counts remain candidate coverage facts. The package explicitly states that they are not an active-office census and keeps canonical office count null."
+    },
+    {
+      "check": "review_sources_separated",
+      "result": "PASS",
+      "basis": "Direct Google observations and Birdeye components remain source-specific. Ratings are not averaged, counts are not summed, and cross-platform review total remains null."
+    },
+    {
+      "check": "growth_not_forecast",
+      "result": "PASS",
+      "basis": "Population and enrollment changes are labeled observed context. The package excludes forecast, patient-growth, catchment-growth, and realized-demand interpretations."
+    },
+    {
+      "check": "routes_not_patient_choice",
+      "result": "PASS",
+      "basis": "OSRM results are limited to modeled route duration and distance between stated pins, with no live traffic. Patient origins, willingness to travel, patient choice, capacity, and draw remain unproven."
+    },
+    {
+      "check": "unknown_not_zero",
+      "result": "PASS",
+      "basis": "Missing denominators and evidence remain null, missing, not run, unavailable, or not calculable. The package expressly rejects interpreting unknown as zero, average, normal, no demand, no competition, or no problem."
+    },
+    {
+      "check": "three_fix_cards_only",
+      "result": "PASS",
+      "basis": "The retained one-pager contains exactly Fix Cards 1, 2, and 3. The template-framed page contains exactly three First 30 Days measurement moves and no fourth Fix Card."
+    },
+    {
+      "check": "internal_only_boundary",
+      "result": "PASS",
+      "basis": "Both one-pagers and the number explainer remain visibly internal-only and require human Project Room approval before any external use."
+    },
+    {
+      "check": "score_band_changes_evidence_supported",
+      "result": "PASS",
+      "basis": "Changed components map to rubric-defined inputs: observed population and school change support Growth / Future Demand; completed fixed-window demographics support market and specialty evidence confidence; and the bounded direct Google sample supports only bounded review and reputation changes. No changed component receives credit merely because more rows were collected, and no changed band reaches the top band."
+    },
+    {
+      "check": "template_framed_claim_boundary",
+      "result": "PASS",
+      "basis": "The four proof-to-unlock rows are measurement tests for visibility, source-specific reputation, booking completion, and specialty evidence. The page contains no dollar amount or projection, open-lane claim, moat claim, competitor-weakness claim, patient-choice claim, or guaranteed-growth claim. Modeled population and observed growth remain bounded context rather than realized or service-line demand. The review wedge is limited to one same-page Google sample, and the call to action authorizes only an internal 30-day measurement sprint subject to human Project Room approval."
+    }
+  ]
+}

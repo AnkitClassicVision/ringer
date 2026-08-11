@@ -1,0 +1,22 @@
+Hi Charles,
+
+Your Charles-specific charles.env is ready in the MyBCAT AWS account.
+
+1. Sign in to the existing MyBCAT AWS Console account.
+2. Switch to us-east-1 and open Secrets Manager.
+3. Find ob-company/ingest/charles-env.
+4. Choose Retrieve secret value and save the complete value on your Mac as ~/.config/ob_company/charles.env. Do not paste the value into email or chat.
+5. Run:
+
+mkdir -p ~/.config/ob_company
+chmod 700 ~/.config/ob_company
+chmod 600 ~/.config/ob_company/charles.env
+
+6. From the extracted charles-claude-code-capture-v5 package, rerun:
+
+python3 staff/charles/install_charles_claude_capture.py --dry-run
+
+If it passes, run the install command from SETUP.md. If it fails, reply with only the short error code, not the env contents.
+
+Thanks,
+Ankit

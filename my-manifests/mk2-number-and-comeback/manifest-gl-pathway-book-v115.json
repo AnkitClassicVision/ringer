@@ -1,0 +1,19 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workBookPath115",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-pathway-book-v115",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": [
+        "probe.txt"
+      ],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD21/gl-round15-fix/post_booking_probe.py 115 > probe.txt 2>&1; rc=$?; cat probe.txt; exit $rc",
+      "check": "grep -qi 'PROBE_RESULT booked_then_alive=true cleanup_count=0' probe.txt || { echo 'FAIL: pathway booking did not land or cleanup failed:'; tail -8 probe.txt; exit 1; }; echo \"PASS: $(grep -i PROBE_RESULT probe.txt)\"",
+      "verified": "A full pathway-level booking on v115 (book, then keep texting, then cancel) proves whether bookings made THROUGH the pathway land in the practice system on this version - the check fails if the booking cannot be found and cancelled."
+    }
+  ]
+}

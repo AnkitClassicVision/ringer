@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4docs",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "t4-docs-research",
+      "engine": "codex",
+      "task_type": "research",
+      "timeout_s": 1800,
+      "expect_files": ["report.md"],
+      "spec": "You are a documentation research worker. Network reads of public documentation are ALLOWED and required; no git, no MCP, no skills; write only ./report.md in your working directory.\n\nQUESTION: For a Bland AI Conversational Pathway (SMS use), how is the LLM model selected - per node, per pathway, or platform-fixed - and can it be set to a smarter model (Anthropic Sonnet-class or equivalent) through the API?\n\nMEASURED CONTEXT you must reconcile with the docs: a GET of our production pathway object (API v1) shows per-node modelOptions blocks containing ONLY retryAttempts, skipUserResponse, and in one case newTemperature - no model-name field is present anywhere in the object. Versions are created via POST /v1/pathway/{id}/version with a nodes/edges graph body.\n\nRESEARCH: read the official Bland docs (docs.bland.ai - pathways API reference, node configuration, model options, any model-selection or fine-tuned-model pages) and any official Bland changelog/blog. Determine: (a) the exact field name and location (node-level modelOptions? pathway-level? account-level) that selects the model, if any; (b) the allowed values and whether any Anthropic Sonnet-class or comparable smarter tier is offered; (c) plan/beta/enterprise gating; (d) whether POST /v1/pathway/{id}/version accepts that field in the graph body; (e) SMS-pathway-specific constraints if documented.\n\nWRITE ./report.md: sections ANSWER, FIELD DETAILS, ALLOWED VALUES, HOW TO SET IT VIA VERSION-CREATE, CONSTRAINTS, CITATIONS. CITATIONS must list every claim-bearing URL and QUOTE the exact doc sentence(s) naming the field or values - never paraphrase a field name into existence; if the docs do not name a field, say so. Include exactly one machine line: 'FEASIBLE: YES field=<exact.field.path> values=<comma-list>' if a smarter model can be set via the API we use, 'FEASIBLE: NO reason=<one line>' if it cannot, or 'FEASIBLE: UNKNOWN reason=<one line>' if the docs are silent or ambiguous. UNKNOWN with a precise gap statement beats a guessed YES. Final message <=15 lines.",
+      "check": "grep -qE '^FEASIBLE: (YES field=|NO reason=|UNKNOWN reason=)' report.md || { echo 'FAIL: no FEASIBLE machine line'; exit 1; }; c=$(grep -cE 'https?://[a-z]' report.md); [ \"$c\" -ge 2 ] || { echo \"FAIL: only $c cited URLs, need at least 2\"; exit 1; }; grep -qi 'citation' report.md || { echo 'FAIL: no CITATIONS section'; exit 1; }; echo \"PASS: $(grep -m1 '^FEASIBLE:' report.md); $c URLs cited\"",
+      "verified": "An answer from official Bland documentation on whether the node model is API-selectable (exact field, allowed values, gating), with quoted citations, deciding whether the T4 Sonnet-class bakeoff is even mintable."
+    }
+  ]
+}

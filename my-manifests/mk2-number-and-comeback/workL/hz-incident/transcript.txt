@@ -1,0 +1,21 @@
+GW_COUNT_BEFORE=0
+TURN 'hi' -> node=n_ask
+  SAID Hi RACHEL, this is MK2 Optical.
+
+We noticed that it's been awhile since your last visit with us. Staying on top of your eye health with a comprehensive eye exam is important.
+
+Many vision insurance benefits renew yearly, so don't let your benefits go unused!
+
+When would you like to come in? Just reply with a day and a time that works for you and I will check what we have. Reply STOP to opt out.
+
+如需中文服务，请直接用中文回复。
+TURN 'Friday afternoon' -> node=n_offer_2
+  SAID I have Friday 08/07/2026 12:00 pm or Friday 08/07/2026 12:15 pm at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+OFFER_FIRST=08/07/2026 12:00 pm | 08/07/2026 12:15 pm
+TURN 'Any later time?' -> node=n_offer_3
+  SAID I have Friday 08/07/2026 03:00 pm or Friday 08/07/2026 03:15 pm at MK2 Optical. Reply 1 or 2 to take one, or tell me another day or time.
+OFFER_LATER=08/07/2026 03:00 pm | 08/07/2026 03:15 pm
+LATER_STRICTLY_GREATER=True
+OFFERS_IN_INVENTORY=True
+NEVER_DENIED=True
+VERDICT: PASS mode=incident

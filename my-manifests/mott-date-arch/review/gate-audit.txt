@@ -1,0 +1,1256 @@
+Reading additional input from stdin...
+OpenAI Codex v0.145.0
+--------
+workdir: /mnt/d_drive/repos/mott/gw-temporal-check
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: medium
+reasoning summaries: none
+session id: 019fa529-90e3-7f91-adbc-22dee1789bba
+--------
+user
+DO NOT modify any files. Analyze only, output text only. Role: adversarial GATE AUDITOR. A 4-line fix was added to an SMS booking gateway resolver and it passed a differential check. Your job is to decide whether the SAFETY PROOF can be trusted, not just whether the check printed PASS. Files (all absolute): ORIGINAL resolver = /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py ; PATCHED resolver = /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py ; the CHECK = ./check_gateway_datefix.py ; the CORPUS+baseline generator = ./gen_golden.py ; the frozen baseline = ./golden_baseline.json . The change: added module const _DATE_ORDINAL_FALLBACK = _env_bool('ECP_DATE_ORDINAL_FALLBACK', False), and immediately before resolve_relative_date's FINAL return None inserted: if _DATE_ORDINAL_FALLBACK: stripped = re.sub(r'\b(\d{1,2})(st|nd|rd|th)\b', r'\1', t); if stripped != t: return resolve_relative_date(stripped). Audit these, grounded in the actual files: 1) DIFF SAFETY: is it truly additive and legacy-first (runs only after every existing branch failed)? Any input where the ordinal strip changes a phrase the ORIGINAL already resolved, or causes wrong/inflated results, or infinite recursion? Consider inputs like '22nd', '1st', 'the 2nd tuesday', '3rd week', 'in 2 days' interaction, and multi-ordinal strings. 2) GATE TRUSTWORTHINESS (most important): could a SUBTLY WRONG change still pass ./check_gateway_datefix.py? Is flag-OFF genuinely compared against the real original behavior (is golden_baseline.json generated from the ORIGINAL at a frozen Eastern clock, and does the check freeze the same clock)? Does the check's flag on/off loading actually toggle the behavior, or could the env/setattr handling mask a real flag bug? 3) CORPUS GAPS: name any phrase family the ORIGINAL resolver accepts (English or Chinese, in bland_gateway.py lines ~504-602) that the corpus in gen_golden.py does NOT cover, so a drift there would be invisible to the gate. 4) Residual CVC risk given Mott and CVC run the same code but deploy as separate processes with a per-process TENANT_ID and this flag default OFF. Return a packet: verdict (ship | hold | revise), confidence 0-1, gate_trustworthy (yes/no + why), diff_safe (yes/no + any counterexample), corpus_gaps (concrete list), edge_or_recursion_risks, residual_cvc_risk, needs_owner_gate.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+codex
+Ankit — I’ll audit the actual resolver, generator, frozen baseline, and checker without modifying anything. I’m using the codex operating card plus the serious-work proof standard because this is a repo safety gate; the review packet will include `CANARY: blue paperclip`.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "rg -n \"mott-date-arch|gateway-ordinal|golden_baseline|ringer|verification-gap|premature-conclusion|harness-config\" /home/ankit114/.codex/memories/MEMORY.md | head -80
+wc -l /home/ankit114/.agents/skills/codex-operating-card/SKILL.md /home/ankit114/.agents/skills/compound-engineering-primitives/SKILL.md
+sed -n '1,240p' /home/ankit114/.agents/skills/codex-operating-card/SKILL.md
+sed -n '1,320p' /home/ankit114/.agents/skills/compound-engineering-primitives/SKILL.md
+if [ -f MODULE_MAP.md ]; then printf 'MODULE_MAP_PRESENT\\n'; fi" in /mnt/d_drive/repos/mott/gw-temporal-check
+ succeeded in 0ms:
+309:- automation-discovery, ringer, corpus.db, BUILD_RECEIPT.md, evidence-bundle, allow-review, receipts, sources=21 events_checked=2120 candidates=14 offers=5 receipts=20
+323:- when the user says, "use $automation-discovery and $ringer To aceeaa all my data and connectiongs and fan out and tice me automations" -> treat it as a request to audit real traces and build proof from evidence, not brainstorm from memory [Task 1]
+  43 /home/ankit114/.agents/skills/codex-operating-card/SKILL.md
+  87 /home/ankit114/.agents/skills/compound-engineering-primitives/SKILL.md
+ 130 total
+---
+name: codex-operating-card
+description: "Operate Codex with Nate-style project induction, read-only-first task starts, one-thread-one-outcome discipline, UI/browser evidence, self-review gates, and durable-rule extraction. Use when working in Codex on a repo, starting a new Codex thread, doing project induction, implementing or reviewing code, doing frontend/UI QA, or deciding whether to promote a prompt pattern into AGENTS.md or a skill."
+---
+
+# Codex Operating Card
+
+Purpose: make Codex behave like a repo worker with a tight work contract, not a wandering owner. These prompts are operating defaults, not safety gates. For production writes, deploys, PHI/PII, secrets, CRM/EHR/finance writes, external sends, or autonomy changes, follow the relevant deterministic gate and human approval rules.
+
+## Default behavior
+
+Use this operating card unless the user explicitly overrides it:
+
+1. Read first. Do not edit until you can explain the current project shape.
+2. One thread = one outcome. If a new goal appears, propose a new thread.
+3. Prefer read-only or sandbox mode unless write access is explicitly intended.
+4. Before changes, state likely files, risk, test plan, and rollback path.
+5. Treat AGENTS.md and project docs as local law. If missing, infer lightly and flag gaps.
+6. For UI work, use browser or visual evidence rather than guessing.
+7. Verify with actual command output, visual check, or a named source before claiming done.
+8. End with: Changed, Verified by, Risks left, Next action.
+9. If the task reveals a reusable rule, propose AGENTS.md or skill capture, but do not write it without approval.
+
+## Prompt pack
+
+For exact copy/paste prompts, read `references/prompt-pack.md` and choose the smallest prompt that matches the work:
+
+- Project induction prompt: first pass on a repo.
+- Task starter prompt: normal implementation.
+- UI/browser evidence prompt: frontend or visual QA.
+- Review gate prompt: before accepting Codex output.
+- Durable-rule extraction prompt: after a repeated pattern appears.
+
+## Output contract
+
+For routine work, keep the final terse:
+
+- Changed: files/behavior changed.
+- Verified by: real command, screenshot/visual check, or source.
+- Risks left: only what matters.
+- Next action: one step.
+
+Do not call work complete if verification did not run. Say `Partial` or `Blocked` instead.
+---
+name: compound-engineering-primitives
+description: Use for serious non-PHI code/repo/agentic engineering tasks, repo-agent run cards, code-agent standards, Cross-Review QA, completion claims, or when applying the Every/Compound Engineering GO-now pattern. Requires plan/spec yardsticks, unitized proof, report-only fresh review, durable artifacts, user-directive precedence, behavior verification before done, and post-solve learning capture. Do not use for tiny edits, PHI/client-sensitive raw plugin use, or installing the Every plugin.
+---
+
+# Compound Engineering Primitives
+
+Use this as Ankit's owned version of the Compound Engineering GO-now. It is a standards implant, not a third-party plugin adoption.
+
+## Fire conditions
+
+Apply for serious non-PHI code/repo/agentic engineering work when any of these are true:
+- a task involves implementation across multiple files, repo changes, tests, PRs, deployment prep, or agent-generated code;
+- a worker is about to claim fixed/done/complete/ready;
+- a fresh-context review, Cross-Review QA, or Hermes Kanban review-required handoff is needed;
+- a reusable lesson appears that should compound into a skill, runbook, solution note, or sanitized OB/Work Ledger capture.
+
+Skip for tiny one-line edits, routine lookups, disposable scratch scripts, or any raw PHI/client-sensitive workflow. This skill does not authorize external sends, CRM/EHR/finance writes, deploys, merges, public uploads, or autonomous commit/push/PR loops.
+
+## Core loop
+
+Run: **Plan -> Work -> Review -> Compound -> Repeat**.
+
+### 1. Plan
+
+Before implementation, create or identify a durable yardstick:
+- product/requirements contract separated from implementation plan;
+- implementation units with stable IDs (`U1`, `U2`, ...);
+- expected proof/test for each unit;
+- acceptance criteria and explicit non-goals;
+- the three decision-residue questions:
+  1. What was the hardest decision made?
+  2. What alternatives were rejected?
+  3. What assumption is least confident?
+
+If no yardstick exists for serious work, make one before changing code.
+
+### 2. Work
+
+Implement against unit IDs. Keep each proof attached to the unit it validates. Prefer the smallest safe diff that satisfies the yardstick.
+
+### 3. Review
+
+Run report-only review by default:
+- fresh context when possible;
+- reviewer findings cite the original plan/spec/unit, not the builder's narrative;
+- reviewer/subagent outputs land in durable artifacts or run comments, not chat-only prose;
+- user directives outrank reviewer best judgment; if a reviewer disagrees, it must flag rather than override;
+- no auto-apply, merge, deploy, external send, or public upload from review alone.
+
+### 4. Compound
+
+Before saying done, classify the highest true state reached and attach evidence:
+- local artifact only / tests passed / committed / pushed / PR opened / merged / deployed / live action taken / blocked / review-required;
+- exact commands/tests/evidence;
+- missing proof or skipped checks;
+- changed files/artifacts;
+- reusable lesson, if any.
+
+If the lesson is reusable, update the smallest durable surface: skill patch, run-card line, solution note, or sanitized Work Ledger/OB capture. Do not capture raw secrets, PHI, client-sensitive details, raw IDs, or raw message bodies.
+
+## Hard no's
+
+- Do not raw-install the Every Compound Engineering plugin by default.
+- Do not use `bunx @every-env/compound-plugin` unless version parity with the current repo/release is proven.
+- Do not trust stale article/install claims without checking the repo/package state.
+- Do not use side-effect-heavy flows such as autonomous commit/push/PR/CI as defaults.
+- Do not use in PHI/client-sensitive contexts without explicit HIPAA/BAA/data-flow review.
+- Do not upload proof/demo artifacts publicly without explicit user approval.
+
+## Required handoff block for serious work
+
+End serious code/repo work with:
+
+```text
+Compound proof:
+- Plan/spec yardstick: <path/ref or none + why acceptable>
+- Units proved: <U-IDs + proof>
+- Review: <fresh/report-only review artifact or why skipped>
+- Highest true state: <local/tested/committed/pushed/PR/merged/deployed/blocked/review-required>
+- Behavior verification: <command/output/ref>
+- Decision residue: hardest decision / alternatives rejected / least-confident assumption
+- Compound capture: <skill/runbook/OB/none + reason>
+```
+
+## See also
+
+Read `references/ce-addendum.md` for the compact run-card checklist to paste into project-local standards.
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+The proof yardstick is narrow: U1 confirm exact diff placement and recursion behavior; U2 prove the baseline and clock provenance; U3 test whether the checker can be fooled by loader/env mechanics; U4 inventory resolver branches against corpus coverage; U5 assess tenant/process isolation. Risk is a false “safe to ship” caused by a weak oracle, not the four-line code alone.
+hook: PreToolUse
+hook: PreToolUse Completed
+mcp: ob_mybcat/search_thoughts started
+mcp: ob_mybcat/search_thoughts (completed)
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "pwd
+ls -la
+sha256sum /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py ./check_gateway_datefix.py ./gen_golden.py ./golden_baseline.json
+diff -u /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py || true
+nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py | sed -n '470,630p'
+nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py | sed -n '470,635p'
+nl -ba ./check_gateway_datefix.py | sed -n '1,320p'
+nl -ba ./gen_golden.py | sed -n '1,320p'" in /mnt/d_drive/repos/mott/gw-temporal-check
+ succeeded in 0ms:
+/mnt/d_drive/repos/mott/gw-temporal-check
+total 60
+drwxr-xr-x 1 ankit114 ankit114 4096 Jul 27 15:54 .
+drwxr-xr-x 1 ankit114 ankit114 4096 Jul 27 15:38 ..
+drwxr-xr-x 1 ankit114 ankit114    0 Jul 27 15:53 __pycache__
+-rw-r--r-- 1 ankit114 ankit114 1996 Jul 27 15:27 check_date_design.py
+-rw-r--r-- 1 ankit114 ankit114 5376 Jul 27 15:54 check_gateway_datefix.py
+-rw-r--r-- 1 ankit114 ankit114 5453 Jul 27 08:54 check_gw_temporal.py
+-rw-r--r-- 1 ankit114 ankit114 3113 Jul 27 12:45 check_help_node.py
+-rw-r--r-- 1 ankit114 ankit114 3830 Jul 27 13:29 check_send_success.py
+-rw-r--r-- 1 ankit114 ankit114 3174 Jul 27 12:33 check_suppression_read.py
+-rw-r--r-- 1 ankit114 ankit114 1783 Jul 27 14:36 check_throttle.py
+-rw-r--r-- 1 ankit114 ankit114 5500 Jul 27 15:51 gen_golden.py
+-rw-r--r-- 1 ankit114 ankit114 3169 Jul 27 15:52 golden_baseline.json
+-rw-r--r-- 1 ankit114 ankit114 3804 Jul 27 08:57 monday_anchor.patch
+a7fae4d895e3952fbcebf5c58e0f883736b01619ceefda1dd6525b6e89f12757  /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py
+9e9f74453c9002f79297d4effe67173ddb961702213e70ba39f4d6ee62d35415  /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py
+d341206aaf77be62abf6efea26877149a217cdd76eba1427e3bdbaf77a3a13fb  ./check_gateway_datefix.py
+b11b5ac8b4ec58108edc24270f2e05f10681cf80b48ce2c7f1f1ea89d58fdcf4  ./gen_golden.py
+2c4e50cc230f3a1bc93d89e4a117d7ea3a88fd3535320eb8f860adbe3f450a06  ./golden_baseline.json
+--- /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py	2026-07-27 15:55:40.247916734 -0400
++++ /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py	2026-07-27 15:57:29.863552528 -0400
+@@ -156,6 +156,7 @@
+     _CONSUMER_CREDENTIALS_RAW
+ )
+ CONSUMER_ACCEPT_LEGACY = _env_bool("ECP_CONSUMER_ACCEPT_LEGACY", True)
++_DATE_ORDINAL_FALLBACK = _env_bool("ECP_DATE_ORDINAL_FALLBACK", False)
+ CAPABILITY_MANIFEST = load_manifest()
+ 
+ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+@@ -600,6 +601,10 @@
+             except ValueError:  # Feb 29
+                 d = d.replace(month=2, day=28, year=d.year + 1)
+         return d.strftime("%m/%d/%Y")
++    if _DATE_ORDINAL_FALLBACK:
++        stripped = re.sub(r"\b(\d{1,2})(st|nd|rd|th)\b", r"\1", t)
++        if stripped != t:
++            return resolve_relative_date(stripped)
+     return None
+ 
+ 
+   470	    "wednesday": 2, "wed": 2, "thursday": 3, "thu": 3, "thur": 3, "thurs": 3,
+   471	    "friday": 4, "fri": 4, "saturday": 5, "sat": 5, "sunday": 6, "sun": 6,
+   472	}
+   473	
+   474	
+   475	def resolve_relative_date(raw) -> str | None:
+   476	    # Dates reach us from LLM-extracted variables; the CLI only accepts
+   477	    # MM/DD/YYYY or YYYY-MM-DD, so anything else must be resolved here, not
+   478	    # left for the model to format (live failure 2026-07-21: "Friday" reached
+   479	    # the CLI verbatim -> 409). Bare/this/next weekday means the next future
+   480	    # occurrence (Eastern, never today). "Next week" means the next calendar
+   481	    # week's Monday. English and Chinese weekday-plus-week phrases use that
+   482	    # weekday in the next/second-next Monday-anchored calendar week.
+   483	    # Explicit-year dates pass through unmodified; rewriting a year the caller
+   484	    # stated would surprise them.
+   485	    from datetime import datetime, timedelta
+   486	
+   487	    today = _eastern_today().date()
+   488	    t = re.sub(r"[.,!?]", "", str(raw or "").strip().lower())
+   489	    t = re.sub(r"\s+", " ", t)
+   490	    if not t:
+   491	        return None
+   492	
+   493	    def emit(day):
+   494	        return day.strftime("%m/%d/%Y")
+   495	
+   496	    def next_weekday(weekday):
+   497	        ahead = (weekday - today.weekday()) % 7 or 7
+   498	        return today + timedelta(days=ahead)
+   499	
+   500	    def calendar_weekday(weekday, weeks_ahead):
+   501	        monday = today - timedelta(days=today.weekday())
+   502	        return monday + timedelta(weeks=weeks_ahead, days=weekday)
+   503	
+   504	    simple_days = {
+   505	        "today": 0, "tomorrow": 1, "tmrw": 1, "tmr": 1,
+   506	        "day after tomorrow": 2,
+   507	        "今天": 0, "明天": 1, "后天": 2, "大后天": 3,
+   508	    }
+   509	    if t in simple_days:
+   510	        return emit(today + timedelta(days=simple_days[t]))
+   511	
+   512	    if t in ("next week", "下周"):
+   513	        return emit(calendar_weekday(0, 1))
+   514	
+   515	    # "Coming weekend" follows the existing bare-weekday rule: it is always
+   516	    # the next future Saturday, even when today is Saturday.
+   517	    if t in ("weekend", "this weekend", "周末", "这周末"):
+   518	        return emit(next_weekday(5))
+   519	    if t == "next weekend":
+   520	        return emit(next_weekday(5) + timedelta(days=7))
+   521	    if t == "下周末":
+   522	        return emit(calendar_weekday(5, 1))
+   523	
+   524	    match = re.fullmatch(r"(?:in )?(\d+) days(?: from now)?", t)
+   525	    if not match:
+   526	        match = re.fullmatch(r"(\d+) days from now", t)
+   527	    if match:
+   528	        return emit(today + timedelta(days=int(match.group(1))))
+   529	
+   530	    number_words = {
+   531	        "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+   532	        "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+   533	        "couple": 2,
+   534	    }
+   535	    match = re.fullmatch(r"in (?:a|a (couple)|(\d+|one|two|three|four|five|six|seven|eight|nine|ten|couple)) weeks?", t)
+   536	    if match:
+   537	        count_text = match.group(1) or match.group(2)
+   538	        count = 1 if count_text is None else number_words.get(
+   539	            count_text, int(count_text) if count_text.isdigit() else None
+   540	        )
+   541	        return emit(today + timedelta(days=7 * count))
+   542	    match = re.fullmatch(r"(\d+) weeks (?:from now|out)", t)
+   543	    if match:
+   544	        return emit(today + timedelta(days=7 * int(match.group(1))))
+   545	
+   546	    zh_numbers = {
+   547	        "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5,
+   548	        "六": 6, "七": 7, "八": 8, "九": 9, "十": 10,
+   549	    }
+   550	    match = re.fullmatch(r"(\d+|[一二两三四五六七八九十])天后", t)
+   551	    if match:
+   552	        count = int(match.group(1)) if match.group(1).isdigit() else zh_numbers[match.group(1)]
+   553	        return emit(today + timedelta(days=count))
+   554	    match = re.fullmatch(r"(\d+|[一二两三四五六七八九十])(?:周|个星期)后", t)
+   555	    if match:
+   556	        count = int(match.group(1)) if match.group(1).isdigit() else zh_numbers[match.group(1)]
+   557	        return emit(today + timedelta(days=7 * count))
+   558	
+   559	    zh_weekdays = {"一": 0, "二": 1, "三": 2, "四": 3, "五": 4, "六": 5, "日": 6, "天": 6}
+   560	    match = re.fullmatch(r"(下下|下|这|本)?(?:周|星期|礼拜)([一二三四五六日天])", t)
+   561	    if match:
+   562	        prefix, day_text = match.groups()
+   563	        weekday = zh_weekdays[day_text]
+   564	        if prefix == "下":
+   565	            return emit(calendar_weekday(weekday, 1))
+   566	        if prefix == "下下":
+   567	            return emit(calendar_weekday(weekday, 2))
+   568	        return emit(next_weekday(weekday))
+   569	
+   570	    weekday_pattern = "|".join(sorted(_WEEKDAYS, key=len, reverse=True))
+   571	    match = re.fullmatch(rf"(?:day after next|the day after) ({weekday_pattern})", t)
+   572	    if match:
+   573	        return emit(next_weekday(_WEEKDAYS[match.group(1)]) + timedelta(days=1))
+   574	    match = re.fullmatch(rf"({weekday_pattern}) after next", t)
+   575	    if match:
+   576	        return emit(calendar_weekday(_WEEKDAYS[match.group(1)], 2))
+   577	    match = re.fullmatch(rf"(?:a week from ({weekday_pattern})|({weekday_pattern}) next week)", t)
+   578	    if match:
+   579	        weekday_text = match.group(1) or match.group(2)
+   580	        return emit(calendar_weekday(_WEEKDAYS[weekday_text], 1))
+   581	
+   582	    weekday_text = re.sub(r"^(this|next|on|coming)\s+", "", t)
+   583	    if weekday_text in _WEEKDAYS:
+   584	        return emit(next_weekday(_WEEKDAYS[weekday_text]))
+   585	    for fmt in ("%m/%d/%Y", "%Y-%m-%d", "%m-%d-%Y", "%B %d %Y", "%b %d %Y"):
+   586	        try:
+   587	            return datetime.strptime(t, fmt).date().strftime("%m/%d/%Y")
+   588	        except ValueError:
+   589	            continue
+   590	    # Yearless dates: the year is ours to pick, so a day that already passed
+   591	    # this year means the next occurrence.
+   592	    for fmt in ("%m/%d", "%B %d", "%b %d"):
+   593	        try:
+   594	            d = datetime.strptime(t, fmt).date().replace(year=today.year)
+   595	        except ValueError:
+   596	            continue
+   597	        if d < today:
+   598	            try:
+   599	                d = d.replace(year=d.year + 1)
+   600	            except ValueError:  # Feb 29
+   601	                d = d.replace(month=2, day=28, year=d.year + 1)
+   602	        return d.strftime("%m/%d/%Y")
+   603	    return None
+   604	
+   605	
+   606	def clamp_availability_range(body: dict) -> None:
+   607	    # first_available=1 replaces from/to with tomorrow..+6 days (Eastern) —
+   608	    # closed days simply return no slots, so no business-day logic is needed.
+   609	    # Otherwise from/to go through resolve_relative_date; bad/inverted "to"
+   610	    # collapses to same-day; spans are capped at 14 days.
+   611	    from datetime import datetime, timedelta
+   612	
+   613	    first = str(body.pop("first_available", "")).strip().lower()
+   614	    if first in ("1", "true", "yes"):
+   615	        start = _eastern_today() + timedelta(days=1)
+   616	        body["from"] = start.strftime("%m/%d/%Y")
+   617	        body["to"] = (start + timedelta(days=6)).strftime("%m/%d/%Y")
+   618	        return
+   619	
+   620	    def parse(v):
+   621	        try:
+   622	            return datetime.strptime(str(v).strip(), "%m/%d/%Y")
+   623	        except ValueError:
+   624	            return None
+   625	
+   626	    resolved = resolve_relative_date(body.get("from"))
+   627	    if resolved is None:
+   628	        return
+   629	    body["from"] = resolved
+   630	    frm = parse(resolved)
+   470	    "monday": 0, "mon": 0, "tuesday": 1, "tue": 1, "tues": 1,
+   471	    "wednesday": 2, "wed": 2, "thursday": 3, "thu": 3, "thur": 3, "thurs": 3,
+   472	    "friday": 4, "fri": 4, "saturday": 5, "sat": 5, "sunday": 6, "sun": 6,
+   473	}
+   474	
+   475	
+   476	def resolve_relative_date(raw) -> str | None:
+   477	    # Dates reach us from LLM-extracted variables; the CLI only accepts
+   478	    # MM/DD/YYYY or YYYY-MM-DD, so anything else must be resolved here, not
+   479	    # left for the model to format (live failure 2026-07-21: "Friday" reached
+   480	    # the CLI verbatim -> 409). Bare/this/next weekday means the next future
+   481	    # occurrence (Eastern, never today). "Next week" means the next calendar
+   482	    # week's Monday. English and Chinese weekday-plus-week phrases use that
+   483	    # weekday in the next/second-next Monday-anchored calendar week.
+   484	    # Explicit-year dates pass through unmodified; rewriting a year the caller
+   485	    # stated would surprise them.
+   486	    from datetime import datetime, timedelta
+   487	
+   488	    today = _eastern_today().date()
+   489	    t = re.sub(r"[.,!?]", "", str(raw or "").strip().lower())
+   490	    t = re.sub(r"\s+", " ", t)
+   491	    if not t:
+   492	        return None
+   493	
+   494	    def emit(day):
+   495	        return day.strftime("%m/%d/%Y")
+   496	
+   497	    def next_weekday(weekday):
+   498	        ahead = (weekday - today.weekday()) % 7 or 7
+   499	        return today + timedelta(days=ahead)
+   500	
+   501	    def calendar_weekday(weekday, weeks_ahead):
+   502	        monday = today - timedelta(days=today.weekday())
+   503	        return monday + timedelta(weeks=weeks_ahead, days=weekday)
+   504	
+   505	    simple_days = {
+   506	        "today": 0, "tomorrow": 1, "tmrw": 1, "tmr": 1,
+   507	        "day after tomorrow": 2,
+   508	        "今天": 0, "明天": 1, "后天": 2, "大后天": 3,
+   509	    }
+   510	    if t in simple_days:
+   511	        return emit(today + timedelta(days=simple_days[t]))
+   512	
+   513	    if t in ("next week", "下周"):
+   514	        return emit(calendar_weekday(0, 1))
+   515	
+   516	    # "Coming weekend" follows the existing bare-weekday rule: it is always
+   517	    # the next future Saturday, even when today is Saturday.
+   518	    if t in ("weekend", "this weekend", "周末", "这周末"):
+   519	        return emit(next_weekday(5))
+   520	    if t == "next weekend":
+   521	        return emit(next_weekday(5) + timedelta(days=7))
+   522	    if t == "下周末":
+   523	        return emit(calendar_weekday(5, 1))
+   524	
+   525	    match = re.fullmatch(r"(?:in )?(\d+) days(?: from now)?", t)
+   526	    if not match:
+   527	        match = re.fullmatch(r"(\d+) days from now", t)
+   528	    if match:
+   529	        return emit(today + timedelta(days=int(match.group(1))))
+   530	
+   531	    number_words = {
+   532	        "one": 1, "two": 2, "three": 3, "four": 4, "five": 5,
+   533	        "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10,
+   534	        "couple": 2,
+   535	    }
+   536	    match = re.fullmatch(r"in (?:a|a (couple)|(\d+|one|two|three|four|five|six|seven|eight|nine|ten|couple)) weeks?", t)
+   537	    if match:
+   538	        count_text = match.group(1) or match.group(2)
+   539	        count = 1 if count_text is None else number_words.get(
+   540	            count_text, int(count_text) if count_text.isdigit() else None
+   541	        )
+   542	        return emit(today + timedelta(days=7 * count))
+   543	    match = re.fullmatch(r"(\d+) weeks (?:from now|out)", t)
+   544	    if match:
+   545	        return emit(today + timedelta(days=7 * int(match.group(1))))
+   546	
+   547	    zh_numbers = {
+   548	        "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5,
+   549	        "六": 6, "七": 7, "八": 8, "九": 9, "十": 10,
+   550	    }
+   551	    match = re.fullmatch(r"(\d+|[一二两三四五六七八九十])天后", t)
+   552	    if match:
+   553	        count = int(match.group(1)) if match.group(1).isdigit() else zh_numbers[match.group(1)]
+   554	        return emit(today + timedelta(days=count))
+   555	    match = re.fullmatch(r"(\d+|[一二两三四五六七八九十])(?:周|个星期)后", t)
+   556	    if match:
+   557	        count = int(match.group(1)) if match.group(1).isdigit() else zh_numbers[match.group(1)]
+   558	        return emit(today + timedelta(days=7 * count))
+   559	
+   560	    zh_weekdays = {"一": 0, "二": 1, "三": 2, "四": 3, "五": 4, "六": 5, "日": 6, "天": 6}
+   561	    match = re.fullmatch(r"(下下|下|这|本)?(?:周|星期|礼拜)([一二三四五六日天])", t)
+   562	    if match:
+   563	        prefix, day_text = match.groups()
+   564	        weekday = zh_weekdays[day_text]
+   565	        if prefix == "下":
+   566	            return emit(calendar_weekday(weekday, 1))
+   567	        if prefix == "下下":
+   568	            return emit(calendar_weekday(weekday, 2))
+   569	        return emit(next_weekday(weekday))
+   570	
+   571	    weekday_pattern = "|".join(sorted(_WEEKDAYS, key=len, reverse=True))
+   572	    match = re.fullmatch(rf"(?:day after next|the day after) ({weekday_pattern})", t)
+   573	    if match:
+   574	        return emit(next_weekday(_WEEKDAYS[match.group(1)]) + timedelta(days=1))
+   575	    match = re.fullmatch(rf"({weekday_pattern}) after next", t)
+   576	    if match:
+   577	        return emit(calendar_weekday(_WEEKDAYS[match.group(1)], 2))
+   578	    match = re.fullmatch(rf"(?:a week from ({weekday_pattern})|({weekday_pattern}) next week)", t)
+   579	    if match:
+   580	        weekday_text = match.group(1) or match.group(2)
+   581	        return emit(calendar_weekday(_WEEKDAYS[weekday_text], 1))
+   582	
+   583	    weekday_text = re.sub(r"^(this|next|on|coming)\s+", "", t)
+   584	    if weekday_text in _WEEKDAYS:
+   585	        return emit(next_weekday(_WEEKDAYS[weekday_text]))
+   586	    for fmt in ("%m/%d/%Y", "%Y-%m-%d", "%m-%d-%Y", "%B %d %Y", "%b %d %Y"):
+   587	        try:
+   588	            return datetime.strptime(t, fmt).date().strftime("%m/%d/%Y")
+   589	        except ValueError:
+   590	            continue
+   591	    # Yearless dates: the year is ours to pick, so a day that already passed
+   592	    # this year means the next occurrence.
+   593	    for fmt in ("%m/%d", "%B %d", "%b %d"):
+   594	        try:
+   595	            d = datetime.strptime(t, fmt).date().replace(year=today.year)
+   596	        except ValueError:
+   597	            continue
+   598	        if d < today:
+   599	            try:
+   600	                d = d.replace(year=d.year + 1)
+   601	            except ValueError:  # Feb 29
+   602	                d = d.replace(month=2, day=28, year=d.year + 1)
+   603	        return d.strftime("%m/%d/%Y")
+   604	    if _DATE_ORDINAL_FALLBACK:
+   605	        stripped = re.sub(r"\b(\d{1,2})(st|nd|rd|th)\b", r"\1", t)
+   606	        if stripped != t:
+   607	            return resolve_relative_date(stripped)
+   608	    return None
+   609	
+   610	
+   611	def clamp_availability_range(body: dict) -> None:
+   612	    # first_available=1 replaces from/to with tomorrow..+6 days (Eastern) —
+   613	    # closed days simply return no slots, so no business-day logic is needed.
+   614	    # Otherwise from/to go through resolve_relative_date; bad/inverted "to"
+   615	    # collapses to same-day; spans are capped at 14 days.
+   616	    from datetime import datetime, timedelta
+   617	
+   618	    first = str(body.pop("first_available", "")).strip().lower()
+   619	    if first in ("1", "true", "yes"):
+   620	        start = _eastern_today() + timedelta(days=1)
+   621	        body["from"] = start.strftime("%m/%d/%Y")
+   622	        body["to"] = (start + timedelta(days=6)).strftime("%m/%d/%Y")
+   623	        return
+   624	
+   625	    def parse(v):
+   626	        try:
+   627	            return datetime.strptime(str(v).strip(), "%m/%d/%Y")
+   628	        except ValueError:
+   629	            return None
+   630	
+   631	    resolved = resolve_relative_date(body.get("from"))
+   632	    if resolved is None:
+   633	        return
+   634	    body["from"] = resolved
+   635	    frm = parse(resolved)
+     1	#!/usr/bin/env python3
+     2	"""Differential safety gate for the Mott ordinal date fix in bland_gateway.py.
+     3	
+     4	Proves three things against the frozen golden baseline (Mon 2026-07-27 Eastern):
+     5	
+     6	  1. FLAG OFF  -> the resolver is byte-identical to the OLD behavior for EVERY
+     7	     phrase, including the new ordinal ones (they stay None). This is the
+     8	     CVC-untouched proof: the shared code is inert until Mott turns the flag on.
+     9	  2. FLAG ON, legacy phrases -> byte-identical to OLD (zero drift). No existing
+    10	     phrase, English or Chinese, changes. This is the no-regression proof.
+    11	  3. FLAG ON, new ordinal month-day phrases -> resolve to the intended date,
+    12	     AND were None before (genuinely new). Bare ordinals / bad calendar dates /
+    13	     compounds stay None (fail closed).
+    14	
+    15	RED (this check has teeth): run it against the CURRENT unfixed gateway and it
+    16	FAILS, because the new ordinal phrases stay None and the flag does not exist.
+    17	
+    18	Usage:
+    19	  python3 check_gateway_datefix.py --gateway <edited bland_gateway.py> --golden golden_baseline.json
+    20	"""
+    21	import argparse
+    22	import importlib.util
+    23	import json
+    24	import os
+    25	import pathlib
+    26	import sys
+    27	import types
+    28	from datetime import datetime
+    29	
+    30	# Make gen_golden importable no matter the caller's cwd (a Ringer worker runs
+    31	# the check from its own task dir).
+    32	sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    33	from gen_golden import CORPUS  # single source of truth for the corpus split
+    34	
+    35	FLAG_ENV = "ECP_DATE_ORDINAL_FALLBACK"
+    36	FLAG_CONST = "_DATE_ORDINAL_FALLBACK"
+    37	
+    38	
+    39	def load_gateway(path, flag_on, frozen):
+    40	    """Fresh import of the gateway with the ordinal flag on/off, clock frozen."""
+    41	    if "capability_registry" not in sys.modules:
+    42	        stub = types.ModuleType("capability_registry")
+    43	
+    44	        class QueryError(Exception):
+    45	            pass
+    46	
+    47	        stub.QueryError = QueryError
+    48	        stub.load_manifest = lambda *a, **k: {}
+    49	        stub.prepare_query = lambda *a, **k: {}
+    50	        stub.render_query_result = lambda *a, **k: {}
+    51	        sys.modules["capability_registry"] = stub
+    52	    gw_dir = str(pathlib.Path(path).resolve().parent)
+    53	    if gw_dir not in sys.path:
+    54	        sys.path.insert(0, gw_dir)
+    55	
+    56	    prev = os.environ.get(FLAG_ENV)
+    57	    os.environ[FLAG_ENV] = "1" if flag_on else "0"
+    58	    try:
+    59	        name = f"cand_{'on' if flag_on else 'off'}"
+    60	        spec = importlib.util.spec_from_file_location(name, path)
+    61	        mod = importlib.util.module_from_spec(spec)
+    62	        sys.modules[name] = mod
+    63	        spec.loader.exec_module(mod)
+    64	    finally:
+    65	        if prev is None:
+    66	            os.environ.pop(FLAG_ENV, None)
+    67	        else:
+    68	            os.environ[FLAG_ENV] = prev
+    69	
+    70	    if not hasattr(mod, "_eastern_today"):
+    71	        raise SystemExit("gateway has no _eastern_today to freeze")
+    72	    mod._eastern_today = lambda: frozen
+    73	    # Belt-and-suspenders: if the module exposes the flag constant, force it to
+    74	    # match, so the test is correct whether the flag is read at import or call.
+    75	    if hasattr(mod, FLAG_CONST):
+    76	        setattr(mod, FLAG_CONST, flag_on)
+    77	    return mod
+    78	
+    79	
+    80	def main():
+    81	    ap = argparse.ArgumentParser()
+    82	    ap.add_argument("--gateway", required=True)
+    83	    ap.add_argument("--golden", required=True)
+    84	    args = ap.parse_args()
+    85	
+    86	    gdoc = json.loads(pathlib.Path(args.golden).read_text(encoding="utf-8"))
+    87	    golden = gdoc["results"]
+    88	    y, m, d = (int(x) for x in gdoc["date"].split("-"))
+    89	    frozen = datetime(y, m, d, 12, 0, 0)
+    90	
+    91	    problems = []
+    92	    try:
+    93	        cand_off = load_gateway(args.gateway, False, frozen)
+    94	        cand_on = load_gateway(args.gateway, True, frozen)
+    95	    except SystemExit as exc:
+    96	        print(f"CHECK FAILED\n\n  - could not load gateway: {exc}")
+    97	        return 1
+    98	
+    99	    # 1. FLAG OFF: byte-identical to OLD for every phrase (CVC-untouched proof).
+   100	    for p, old in golden.items():
+   101	        got = cand_off.resolve_relative_date(p)
+   102	        if got != old:
+   103	            problems.append(f"[flag OFF] {p!r}: flag-off must equal OLD "
+   104	                            f"behavior; expected {old!r}, got {got!r}")
+   105	
+   106	    # 2. FLAG ON, legacy phrases: zero drift vs OLD.
+   107	    for p in CORPUS["legacy"]:
+   108	        old = golden.get(p)
+   109	        got = cand_on.resolve_relative_date(p)
+   110	        if got != old:
+   111	            problems.append(f"[flag ON, legacy] {p!r}: regression, expected "
+   112	                            f"{old!r} (unchanged), got {got!r}")
+   113	
+   114	    # 3. FLAG ON, new ordinal phrases: resolve as intended AND were None before.
+   115	    for p, exp in CORPUS["new_resolve"].items():
+   116	        if golden.get(p) is not None:
+   117	            problems.append(f"[new] {p!r}: golden shows {golden.get(p)!r}, "
+   118	                            f"expected it to be genuinely new (None before)")
+   119	        got = cand_on.resolve_relative_date(p)
+   120	        if got != exp:
+   121	            problems.append(f"[flag ON, new] {p!r}: expected {exp!r}, got {got!r}")
+   122	
+   123	    if problems:
+   124	        print("CHECK FAILED\n")
+   125	        for p in problems:
+   126	            print(f"  - {p}")
+   127	        print(f"\n{len(problems)} problem(s).")
+   128	        return 1
+   129	    print(f"CHECK PASSED: flag-off byte-identical to OLD across {len(golden)} "
+   130	          f"phrases (CVC untouched); flag-on zero drift on "
+   131	          f"{len(CORPUS['legacy'])} legacy phrases; "
+   132	          f"{len(CORPUS['new_resolve'])} new ordinal phrases resolve correctly "
+   133	          f"and were None before; bad/bare/compound stay fail-closed.")
+   134	    return 0
+   135	
+   136	
+   137	if __name__ == "__main__":
+   138	    sys.exit(main())
+     1	#!/usr/bin/env python3
+     2	"""Freeze the CURRENT gateway resolver's output over a broad phrase corpus at a
+     3	fixed Eastern date (Mon 2026-07-27). This golden file is the differential
+     4	baseline: after the fix, every LEGACY phrase must resolve byte-identically to
+     5	this, and only the intended new ordinal-month-day phrases may change None->date.
+     6	
+     7	Run from anywhere:
+     8	  python3 gen_golden.py --gateway /mnt/d_drive/repos/cvc-booking-gateway/container/bland_gateway.py \
+     9	      --out golden_baseline.json
+    10	"""
+    11	import argparse
+    12	import importlib.util
+    13	import json
+    14	import pathlib
+    15	import sys
+    16	import types
+    17	from datetime import datetime
+    18	
+    19	
+    20	CORPUS = {
+    21	    # LEGACY: phrases the current resolver already handles or intentionally
+    22	    # rejects. The fix MUST leave every one of these byte-identical.
+    23	    "legacy": [
+    24	        "today", "tomorrow", "tmrw", "tmr", "day after tomorrow",
+    25	        "今天", "明天", "后天", "大后天",
+    26	        "next week", "下周",
+    27	        "weekend", "this weekend", "周末", "这周末", "next weekend", "下周末",
+    28	        "in 3 days", "3 days from now", "in 10 days", "in 1 days",
+    29	        "in a week", "in 2 weeks", "in a couple weeks", "in three weeks",
+    30	        "in couple weeks",
+    31	        "2 weeks from now", "3 weeks out",
+    32	        "三天后", "2天后", "两周后", "3周后", "十天后",
+    33	        "周一", "周二", "周三", "周四", "周五", "周六", "周日",
+    34	        "下周三", "下下周五", "这周一", "本周二",
+    35	        "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
+    36	        "mon", "tue", "tues", "wed", "thu", "thur", "thurs", "fri", "sat", "sun",
+    37	        "next tuesday", "this friday", "on wednesday", "coming saturday",
+    38	        "monday after next", "friday after next",
+    39	        "the day after friday", "day after next tuesday",
+    40	        "a week from tuesday", "tuesday next week",
+    41	        "07/28/2026", "2026-07-28", "07-28-2026", "july 28 2026", "jul 28 2026",
+    42	        "07/28", "july 28", "jul 28", "12/03", "december 3", "august 5",
+    43	        # currently-None junk that must stay None
+    44	        "", "sometime soon", "next month maybe", "asap", "nonsense",
+    45	        "the 28th", "sometime next week or so",
+    46	        # compound: model will no longer send these, but gateway must still
+    47	        # not invent a date from them -> must stay None (fail closed)
+    48	        "tomorrow july 28th", "july 28th july 29th",
+    49	        # bad calendar dates -> must stay None
+    50	        "february 30th", "july 32nd", "april 31st",
+    51	        # bare ordinal with no month -> must stay None (fail closed)
+    52	        "28th", "3rd",
+    53	    ],
+    54	    # NEW: today these return None (409). After the fix (flag ON) they must
+    55	    # resolve to the listed date. Generator records their CURRENT (old) value
+    56	    # so the check can prove they were genuinely None before.
+    57	    "new_resolve": {
+    58	        "july 28th": "07/28/2026",
+    59	        "JULY 28TH": "07/28/2026",
+    60	        "July 28th,": "07/28/2026",
+    61	        "jul 28th": "07/28/2026",
+    62	        "july 27th": "07/27/2026",
+    63	        "august 1st": "08/01/2026",
+    64	        "september 2nd": "09/02/2026",
+    65	        "december 3rd": "12/03/2026",
+    66	        "july 28th 2026": "07/28/2026",
+    67	        "july 26th": "07/26/2027",
+    68	    },
+    69	}
+    70	
+    71	
+    72	def load_gateway(path):
+    73	    # Stub the gateway's local dependency so the module imports offline.
+    74	    if "capability_registry" not in sys.modules:
+    75	        stub = types.ModuleType("capability_registry")
+    76	
+    77	        class QueryError(Exception):
+    78	            pass
+    79	
+    80	        stub.QueryError = QueryError
+    81	        stub.load_manifest = lambda *a, **k: {}
+    82	        stub.prepare_query = lambda *a, **k: {}
+    83	        stub.render_query_result = lambda *a, **k: {}
+    84	        sys.modules["capability_registry"] = stub
+    85	    gw_dir = str(pathlib.Path(path).resolve().parent)
+    86	    if gw_dir not in sys.path:
+    87	        sys.path.insert(0, gw_dir)
+    88	    spec = importlib.util.spec_from_file_location("bland_gateway_frozen", path)
+    89	    mod = importlib.util.module_from_spec(spec)
+    90	    sys.modules["bland_gateway_frozen"] = mod
+    91	    spec.loader.exec_module(mod)
+    92	    return mod
+    93	
+    94	
+    95	def main():
+    96	    ap = argparse.ArgumentParser()
+    97	    ap.add_argument("--gateway", required=True)
+    98	    ap.add_argument("--out", required=True)
+    99	    ap.add_argument("--date", default="2026-07-27")  # Monday
+   100	    args = ap.parse_args()
+   101	
+   102	    mod = load_gateway(args.gateway)
+   103	    y, m, d = (int(x) for x in args.date.split("-"))
+   104	    frozen = datetime(y, m, d, 12, 0, 0)
+   105	    if not hasattr(mod, "_eastern_today"):
+   106	        print("ERROR: gateway has no _eastern_today to freeze", file=sys.stderr)
+   107	        return 2
+   108	    mod._eastern_today = lambda: frozen  # freeze the clock
+   109	
+   110	    golden = {}
+   111	    all_phrases = list(CORPUS["legacy"]) + list(CORPUS["new_resolve"].keys())
+   112	    for p in all_phrases:
+   113	        golden[p] = mod.resolve_relative_date(p)
+   114	
+   115	    pathlib.Path(args.out).write_text(
+   116	        json.dumps({"date": args.date, "results": golden}, ensure_ascii=False, indent=2),
+   117	        encoding="utf-8",
+   118	    )
+   119	    # Human sanity print
+   120	    print(f"Froze {len(golden)} phrases at {args.date} (Eastern).")
+   121	    print("\nNEW_RESOLVE phrases (must be None now, resolve after fix):")
+   122	    for p in CORPUS["new_resolve"]:
+   123	        print(f"  {p!r:24} old={golden[p]!r}  intended={CORPUS['new_resolve'][p]!r}")
+   124	    print("\nSample legacy resolutions:")
+   125	    for p in ("tomorrow", "next tuesday", "day after tomorrow", "tuesday next week",
+   126	              "july 28", "07/28", "下周三", "in a couple weeks"):
+   127	        print(f"  {p!r:24} -> {golden[p]!r}")
+   128	    return 0
+   129	
+   130	
+   131	if __name__ == "__main__":
+   132	    sys.exit(main())
+
+hook: PostToolUse
+hook: PostToolUse Completed
+codex
+Initial finding: the code placement is genuinely legacy-first, but the checker is not yet a trustworthy deployment/configuration proof. It mutates the module’s flag after import, so a candidate with a broken env binding or the wrong default could still pass. I’m now separating “current patched behavior passes” from “the gate would reject subtly wrong implementations.”
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py | sed -n '1,190p'
+nl -ba ./golden_baseline.json | sed -n '1,240p'
+python3 ./check_gateway_datefix.py --gateway /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py --golden ./golden_baseline.json
+python3 ./check_gateway_datefix.py --gateway /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py --golden ./golden_baseline.json; true" in /mnt/d_drive/repos/mott/gw-temporal-check
+hook: PostToolUse
+ succeeded in 633ms:
+CHECK PASSED: flag-off byte-identical to OLD across 106 phrases (CVC untouched); flag-on zero drift on 96 legacy phrases; 10 new ordinal phrases resolve correctly and were None before; bad/bare/compound stay fail-closed.
+CHECK FAILED
+
+  - [flag ON, new] 'july 28th': expected '07/28/2026', got None
+  - [flag ON, new] 'JULY 28TH': expected '07/28/2026', got None
+  - [flag ON, new] 'July 28th,': expected '07/28/2026', got None
+  - [flag ON, new] 'jul 28th': expected '07/28/2026', got None
+  - [flag ON, new] 'july 27th': expected '07/27/2026', got None
+  - [flag ON, new] 'august 1st': expected '08/01/2026', got None
+  - [flag ON, new] 'september 2nd': expected '09/02/2026', got None
+  - [flag ON, new] 'december 3rd': expected '12/03/2026', got None
+  - [flag ON, new] 'july 28th 2026': expected '07/28/2026', got None
+  - [flag ON, new] 'july 26th': expected '07/26/2027', got None
+
+10 problem(s).
+
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "PYTHONDONTWRITEBYTECODE=1 python3 -B - <<'PY'
+import importlib.util, json, os, pathlib, sys, types
+from datetime import datetime
+orig='/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py'
+patched='/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py'
+stub=types.ModuleType('capability_registry')
+class QueryError(Exception): pass
+stub.QueryError=QueryError; stub.load_manifest=lambda *a,**k:{}; stub.prepare_query=lambda *a,**k:{}; stub.render_query_result=lambda *a,**k:{}
+sys.modules['capability_registry']=stub
+
+def load(path,name,env=None):
+    old=os.environ.get('ECP_DATE_ORDINAL_FALLBACK')
+    if env is None: os.environ.pop('ECP_DATE_ORDINAL_FALLBACK',None)
+    else: os.environ['ECP_DATE_ORDINAL_FALLBACK']=env
+    try:
+        spec=importlib.util.spec_from_file_location(name,path); m=importlib.util.module_from_spec(spec); sys.modules[name]=m; spec.loader.exec_module(m)
+    finally:
+        if old is None: os.environ.pop('ECP_DATE_ORDINAL_FALLBACK',None)
+        else: os.environ['ECP_DATE_ORDINAL_FALLBACK']=old
+    m._eastern_today=lambda: datetime(2026,7,27,12,0,0)
+    return m
+old=load(orig,'audit_orig')
+off=load(patched,'audit_off','0')
+on=load(patched,'audit_on','1')
+default=load(patched,'audit_default',None)
+golden=json.loads(pathlib.Path('golden_baseline.json').read_text())['results']
+actual={p:old.resolve_relative_date(p) for p in golden}
+print('BASELINE_EXACT_CURRENT_ORIGINAL', actual==golden, 'mismatches', sum(actual[p]"'!=golden[p] for p in golden))
+print('"'FLAG_IMPORT_VALUES', 'default=',default._DATE_ORDINAL_FALLBACK,'env0=',off._DATE_ORDINAL_FALLBACK,'env1=',on._DATE_ORDINAL_FALLBACK)
+phrases=['22nd','1st','the 2nd tuesday','3rd week','in 2 days','in 2nd days','28th days from now','2nd weeks from now','july 11st','july 22th','07th/28th','07th/28th/2026','2026th-07th-28th','july 28th july 29th','july 28th 2026 1st','in 2nd days 3rd']
+for p in phrases:
+    print(repr(p), 'old=',old.resolve_relative_date(p),'off=',off.resolve_relative_date(p),'on=',on.resolve_relative_date(p))
+PY
+rg -n \"ECP_DATE_ORDINAL_FALLBACK|ECP_TENANT_ID|TENANT_ID\" /home/ankit114/repos/ringer/my-manifests/mott-date-arch -g '"'!*.pyc'"' | head -200" in /mnt/d_drive/repos/mott/gw-temporal-check
+hook: PostToolUse
+ succeeded in 323ms:
+BASELINE_EXACT_CURRENT_ORIGINAL True mismatches 0
+FLAG_IMPORT_VALUES default= False env0= False env1= True
+'22nd' old= None off= None on= None
+'1st' old= None off= None on= None
+'the 2nd tuesday' old= None off= None on= None
+'3rd week' old= None off= None on= None
+'in 2 days' old= 07/29/2026 off= 07/29/2026 on= 07/29/2026
+'in 2nd days' old= None off= None on= 07/29/2026
+'28th days from now' old= None off= None on= 08/24/2026
+'2nd weeks from now' old= None off= None on= 08/10/2026
+'july 11st' old= None off= None on= 07/11/2027
+'july 22th' old= None off= None on= 07/22/2027
+'07th/28th' old= None off= None on= 07/28/2026
+'07th/28th/2026' old= None off= None on= 07/28/2026
+'2026th-07th-28th' old= None off= None on= None
+'july 28th july 29th' old= None off= None on= None
+'july 28th 2026 1st' old= None off= None on= None
+'in 2nd days 3rd' old= None off= None on= None
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-manifest.json:17:      "spec": "You are making a surgical, additive edit to ONE Python file for an SMS booking gateway. BOUNDARY: write only inside your task directory. You own exactly two output files: ./bland_gateway.py and ./report.md. Do NOT touch any other file, do NOT git commit, do NOT run the gateway, do NOT call any network/API/MCP, do NOT load skills.\n\nSTEP 1. Copy /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py to ./bland_gateway.py. It is a 2116-line file. You will change exactly ONE function (resolve_relative_date) plus add ONE module-level flag. Every other byte stays identical.\n\nTHE GOAL. Today the resolver only accepts clean date phrases and returns None for anything carrying an English ordinal suffix, so \"july 28th\" returns None. That caused a real patient to be offered the wrong date. Add a legacy-first ordinal fallback, OFF by default, that strips an ordinal suffix from a day number and re-resolves through the existing grammar. It must be structurally impossible for this to change any phrase the resolver already handles, because you only edit the FINAL return None (reached only after every existing branch has already failed).\n\nEDIT 1 - add the flag. There is a helper def _env_bool(name, default) near line 141 and a line CONSUMER_ACCEPT_LEGACY = _env_bool(\"ECP_CONSUMER_ACCEPT_LEGACY\", True) near line 158. Right after that line, add exactly:\n    _DATE_ORDINAL_FALLBACK = _env_bool(\"ECP_DATE_ORDINAL_FALLBACK\", False)\nUse that exact env name, that exact constant name, default False.\n\nEDIT 2 - add the fallback. Inside def resolve_relative_date(raw) -> str | None:, find its FINAL return None. That is the LAST line of the function, immediately after the loop `for fmt in (\"%m/%d\", \"%B %d\", \"%b %d\"):` and its body (currently around line 603). It is NOT the early `if not t: return None` near the top. Replace ONLY that final `return None` with exactly:\n    if _DATE_ORDINAL_FALLBACK:\n        stripped = re.sub(r\"\\b(\\d{1,2})(st|nd|rd|th)\\b\", r\"\\1\", t)\n        if stripped != t:\n            return resolve_relative_date(stripped)\n    return None\nNotes: `t` is the already lowercased, punctuation-stripped, whitespace-collapsed string built at the top of the function. `re` is already imported at module top. The recursion terminates because the stripped string has no ordinal, so on the re-entry `stripped != t` is False and it returns None.\n\nHARD RULES.\n- Legacy-first is the whole point. Your new code runs ONLY after every existing branch failed. Do not move it earlier, do not add an else, do not touch any earlier branch, the early `if not t` return, the Chinese branches, the weekday branches, the \"in N days/weeks\" branches, or the explicit-date strptime loops.\n- Do NOT add compound parsing, multi-cue handling, conflict/\"explicit date wins\" logic, or bare-day-with-month-context. Only the ordinal strip and single re-resolve.\n- Do NOT change the pre-existing yearless Feb-29 -> Feb-28 line inside the yearless loop.\n- Do NOT change resolve_relative_date's signature or its str | None return type.\n\nVERIFY - run this yourself; it is exactly how you are graded:\n    python3 /mnt/d_drive/repos/mott/gw-temporal-check/check_gateway_datefix.py --gateway ./bland_gateway.py --golden /mnt/d_drive/repos/mott/gw-temporal-check/golden_baseline.json\nIt must print CHECK PASSED and exit 0. It proves: with the flag OFF the resolver is byte-identical to the original across 106 phrases (CVC untouched); with the flag ON, 96 legacy phrases are unchanged and 10 new ordinal phrases (july 28th -> 07/28/2026, august 1st -> 08/01/2026, etc.) resolve, while bare ordinals (\"28th\"), bad calendar dates (\"february 30th\"), and compounds (\"tomorrow july 28th\") stay None.\n\nOUTPUT CONTRACT for ./report.md: start with \"# Gateway Ordinal Fix\", then \"## Summary\" (max 3 bullets), \"## The Diff\" (show ONLY the added flag line and the replaced final-return block), \"## Verify\" (paste the exact CHECK PASSED line), \"## Additive Proof\" (state how you confirmed only those two spots changed, e.g. a diff against impl-src/bland_gateway.py shows only these hunks). Under 400 words."
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/DESIGN-v2.md:25:- Mott and CVC are **separate deployments of the same code**. `TENANT_ID` is a
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/DESIGN-v2.md:34:Add one env flag `ECP_DATE_ORDINAL_FALLBACK` (module constant
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/DESIGN-v2.md:86:4. Rollback: gateway is a flag flip (turn `ECP_DATE_ORDINAL_FALLBACK` off) or an
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/build_impl_manifest.py:15:    _DATE_ORDINAL_FALLBACK = _env_bool("ECP_DATE_ORDINAL_FALLBACK", False)
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/report.md:5:- Added an opt-in `ECP_DATE_ORDINAL_FALLBACK` flag, disabled by default.
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/report.md:12:_DATE_ORDINAL_FALLBACK = _env_bool("ECP_DATE_ORDINAL_FALLBACK", False)
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/gate-audit.txt:14:DO NOT modify any files. Analyze only, output text only. Role: adversarial GATE AUDITOR. A 4-line fix was added to an SMS booking gateway resolver and it passed a differential check. Your job is to decide whether the SAFETY PROOF can be trusted, not just whether the check printed PASS. Files (all absolute): ORIGINAL resolver = /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py ; PATCHED resolver = /home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py ; the CHECK = ./check_gateway_datefix.py ; the CORPUS+baseline generator = ./gen_golden.py ; the frozen baseline = ./golden_baseline.json . The change: added module const _DATE_ORDINAL_FALLBACK = _env_bool('ECP_DATE_ORDINAL_FALLBACK', False), and immediately before resolve_relative_date's FINAL return None inserted: if _DATE_ORDINAL_FALLBACK: stripped = re.sub(r'\b(\d{1,2})(st|nd|rd|th)\b', r'\1', t); if stripped != t: return resolve_relative_date(stripped). Audit these, grounded in the actual files: 1) DIFF SAFETY: is it truly additive and legacy-first (runs only after every existing branch failed)? Any input where the ordinal strip changes a phrase the ORIGINAL already resolved, or causes wrong/inflated results, or infinite recursion? Consider inputs like '22nd', '1st', 'the 2nd tuesday', '3rd week', 'in 2 days' interaction, and multi-ordinal strings. 2) GATE TRUSTWORTHINESS (most important): could a SUBTLY WRONG change still pass ./check_gateway_datefix.py? Is flag-OFF genuinely compared against the real original behavior (is golden_baseline.json generated from the ORIGINAL at a frozen Eastern clock, and does the check freeze the same clock)? Does the check's flag on/off loading actually toggle the behavior, or could the env/setattr handling mask a real flag bug? 3) CORPUS GAPS: name any phrase family the ORIGINAL resolver accepts (English or Chinese, in bland_gateway.py lines ~504-602) that the corpus in gen_golden.py does NOT cover, so a drift there would be invisible to the gate. 4) Residual CVC risk given Mott and CVC run the same code but deploy as separate processes with a per-process TENANT_ID and this flag default OFF. Return a packet: verdict (ship | hold | revise), confidence 0-1, gate_trustworthy (yes/no + why), diff_safe (yes/no + any counterexample), corpus_gaps (concrete list), edge_or_recursion_risks, residual_cvc_risk, needs_owner_gate.
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/gate-audit.txt:220:+_DATE_ORDINAL_FALLBACK = _env_bool("ECP_DATE_ORDINAL_FALLBACK", False)
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/gate-audit.txt:596:    35	FLAG_ENV = "ECP_DATE_ORDINAL_FALLBACK"
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/gate-audit.txt:881:    old=os.environ.get('ECP_DATE_ORDINAL_FALLBACK')
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/gate-audit.txt:882:    if env is None: os.environ.pop('ECP_DATE_ORDINAL_FALLBACK',None)
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/gate-audit.txt:883:    else: os.environ['ECP_DATE_ORDINAL_FALLBACK']=env
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/gate-audit.txt:887:        if old is None: os.environ.pop('ECP_DATE_ORDINAL_FALLBACK',None)
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/gate-audit.txt:888:        else: os.environ['ECP_DATE_ORDINAL_FALLBACK']=old
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/gate-audit.txt:903:rg -n \"ECP_DATE_ORDINAL_FALLBACK|ECP_TENANT_ID|TENANT_ID\" /home/ankit114/repos/ringer/my-manifests/mott-date-arch -g '"'!*.pyc'"' | head -200" in /mnt/d_drive/repos/mott/gw-temporal-check
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py:52:TENANT_ID = os.environ.get("ECP_TENANT_ID", "cvc")
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py:159:_DATE_ORDINAL_FALLBACK = _env_bool("ECP_DATE_ORDINAL_FALLBACK", False)
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py:928:    if matched["tenant"] != TENANT_ID or matched["principal"] != READ_PRINCIPAL:
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-work/gateway-ordinal-fix/bland_gateway.py:963:        or record["tenant"] != TENANT_ID
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py:52:TENANT_ID = os.environ.get("ECP_TENANT_ID", "cvc")
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py:923:    if matched["tenant"] != TENANT_ID or matched["principal"] != READ_PRINCIPAL:
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py:958:        or record["tenant"] != TENANT_ID
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/contrarian.txt:414:    52	TENANT_ID = os.environ.get("ECP_TENANT_ID", "cvc")
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/operator.txt:2251:    52	TENANT_ID = os.environ.get("ECP_TENANT_ID", "cvc")
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/operator.txt:3122:   923	    if matched["tenant"] != TENANT_ID or matched["principal"] != READ_PRINCIPAL:
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/operator.txt:3157:   958	        or record["tenant"] != TENANT_ID
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/review/verifier.txt:1062:    52	TENANT_ID = os.environ.get("ECP_TENANT_ID", "cvc")
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:52:TENANT_ID = os.environ.get("ECP_TENANT_ID", "cvc")
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:923:    if matched["tenant"] != TENANT_ID or matched["principal"] != READ_PRINCIPAL:
+/home/ankit114/repos/ringer/my-manifests/mott-date-arch/date-design/source/bland_gateway.py:958:        or record["tenant"] != TENANT_ID
+
+hook: PostToolUse Completed
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "nl -ba /home/ankit114/repos/ringer/my-manifests/mott-date-arch/DESIGN-v2.md | sed -n '1,110p'
+PYTHONDONTWRITEBYTECODE=1 python3 -B - <<'PY'
+import importlib.util, os, sys, types
+from datetime import datetime
+path='/home/ankit114/repos/ringer/my-manifests/mott-date-arch/impl-src/bland_gateway.py'
+stub=types.ModuleType('capability_registry')
+class QueryError(Exception): pass
+stub.QueryError=QueryError; stub.load_manifest=lambda *a,**k:{}; stub.prepare_query=lambda *a,**k:{}; stub.render_query_result=lambda *a,**k:{}
+sys.modules['capability_registry']=stub
+spec=importlib.util.spec_from_file_location('gap_orig',path); m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); m._eastern_today=lambda:datetime(2026,7,27,12)
+phrases=['3 days','in 3 days from now','in one week','in ten weeks','in a couple week','in couple week','4 weeks from now','4 weeks out','三周后','三星期后','三个星期后','3个星期后','星期一','礼拜天','下星期三','下下礼拜日','这星期五','本礼拜六','next mon','this tue','on thurs','coming fri','mon after next','the day after thu','a week from fri','fri next week','TOMORROW','tomorrow"'!'"','  next   tuesday  ','july 26','07/26','Jul 26']
+for p in phrases:
+ print(repr(p), '->', m.resolve_relative_date(p))
+PY" in /mnt/d_drive/repos/mott/gw-temporal-check
+hook: PostToolUse
+ succeeded in 316ms:
+'3 days' -> 07/30/2026
+'in 3 days from now' -> 07/30/2026
+'in one week' -> 08/03/2026
+'in ten weeks' -> 10/05/2026
+'in a couple week' -> 08/10/2026
+'in couple week' -> 08/10/2026
+'4 weeks from now' -> 08/24/2026
+'4 weeks out' -> 08/24/2026
+'三周后' -> 08/17/2026
+'三星期后' -> None
+'三个星期后' -> 08/17/2026
+'3个星期后' -> 08/17/2026
+'星期一' -> 08/03/2026
+'礼拜天' -> 08/02/2026
+'下星期三' -> 08/05/2026
+'下下礼拜日' -> 08/16/2026
+'这星期五' -> 07/31/2026
+'本礼拜六' -> 08/01/2026
+'next mon' -> 08/03/2026
+'this tue' -> 07/28/2026
+'on thurs' -> 07/30/2026
+'coming fri' -> 07/31/2026
+'mon after next' -> 08/10/2026
+'the day after thu' -> 07/31/2026
+'a week from fri' -> 08/07/2026
+'fri next week' -> 08/07/2026
+'TOMORROW' -> 07/28/2026
+'tomorrow!' -> 07/28/2026
+'  next   tuesday  ' -> 07/28/2026
+'july 26' -> 07/26/2027
+'07/26' -> 07/26/2027
+'Jul 26' -> 07/26/2027
+
+hook: PostToolUse Completed
+codex
+Ankit — CANARY: blue paperclip
+
+```text
+verdict: revise
+confidence: 0.97
+gate_trustworthy: no
+diff_safe: no
+needs_owner_gate: yes
+```
+
+### Gate assessment
+
+`gate_trustworthy: no`
+
+The current candidate passes, and the check fails against the original, but the printed PASS overstates what was proven.
+
+- The checker does not load the original resolver. It compares against [golden_baseline.json](/mnt/d_drive/repos/mott/gw-temporal-check/golden_baseline.json:1), whose metadata contains only the date, not the original path or hash.
+- I independently reproduced all 106 baseline outputs from the specified original at the frozen date. Result: `BASELINE_EXACT_CURRENT_ORIGINAL True`, zero mismatches. So the baseline contents are currently correct, but their provenance is not self-verifying.
+- The generator and checker freeze `_eastern_today` to the same date at noon. That is sufficient here because the resolver uses only `.date()`. “Eastern” is descriptive, however; both inject a naive `datetime`, not a `ZoneInfo` Eastern clock.
+- Most importantly, [check_gateway_datefix.py](/mnt/d_drive/repos/mott/gw-temporal-check/check_gateway_datefix.py:73) forcibly overwrites `_DATE_ORDINAL_FALLBACK` after import. A candidate with a broken environment binding, ignored environment variable, or wrong default could still pass. The current implementation independently loaded correctly as default `False`, env `0` → `False`, env `1` → `True`, but the gate itself does not prove that.
+- The check verifies outputs for 106 inputs. It neither verifies the approved two-hunk source diff nor behavioral equivalence for other inputs. A substantially altered resolver could pass by preserving those cases.
+- Missing baseline keys are not rejected as a schema error. `golden.get(p)` can silently treat missing expected-`None` cases as valid.
+
+### Diff safety
+
+`diff_safe: no`, despite being structurally legacy-first.
+
+The actual diff contains only the flag and fallback hunks. The fallback is after every existing successful return, so no input the original already resolves can change. Flag OFF is also inert.
+
+The problem is unintended expansion when flag ON. The regex strips ordinal suffixes anywhere, not only from a month-day expression:
+
+| Input | Original | Flag ON |
+|---|---:|---:|
+| `22nd` | `None` | `None` |
+| `1st` | `None` | `None` |
+| `the 2nd tuesday` | `None` | `None` |
+| `3rd week` | `None` | `None` |
+| `in 2 days` | `07/29/2026` | unchanged |
+| `in 2nd days` | `None` | `07/29/2026` |
+| `28th days from now` | `None` | `08/24/2026` |
+| `2nd weeks from now` | `None` | `08/10/2026` |
+| `july 11st` | `None` | `07/11/2027` |
+| `july 22th` | `None` | `07/22/2027` |
+| `07th/28th` | `None` | `07/28/2026` |
+| `07th/28th/2026` | `None` | `07/28/2026` |
+
+Therefore, the claim that only intended ordinal month-day phrases become accepted is false. The implementation accepts malformed suffixes, ordinalized relative counts, and ordinalized numeric dates.
+
+### Corpus gaps
+
+Original-accepted forms missing from `gen_golden.py` include:
+
+- Day-count variants: `3 days`, `in 3 days from now`, `in 0 days`.
+- Week variants: `in one week`, `in ten weeks`, `in a couple week`, `in couple week`.
+- Chinese `个星期` forms: `三个星期后`, `3个星期后`, `十个星期后`.
+- Chinese weekday carriers other than `周`: `星期一`, `礼拜天`, `下星期三`, `下下礼拜日`, `本礼拜六`.
+- English abbreviated compound forms: `next mon`, `mon after next`, `the day after thu`, `a week from fri`, `fri next week`.
+- Normalization behavior: `TOMORROW`, `tomorrow!`, and repeated/outer whitespace.
+- Past yearless rollover: `july 26`, `07/26`, `Jul 26`, which resolve into 2027 at the frozen date.
+
+A drift limited to any of these forms could pass the existing gate.
+
+### Edge and recursion risks
+
+- Infinite recursion: no. One substitution removes every matching suffix in the string. The recursive call cannot perform the same substitution again, so depth is at most two calls.
+- Multi-ordinal strings: all matching ordinals are stripped simultaneously. The tested compound `july 28th july 29th` remains `None`, but `07th/28th` and `07th/28th/2026` become accepted.
+- Wrong-result risk: material. Ordinal count phrases and malformed suffixes can silently turn a rejected input into a booking date.
+- Inflation risk is bounded to two-digit stripped counts, but up to 99 days or weeks can still be introduced.
+
+### Residual CVC risk
+
+CVC runtime risk is low only if CVC is not redeployed or its process lacks the flag. Separate processes and default OFF provide useful isolation.
+
+However:
+
+- `TENANT_ID` does not guard this fallback. The resolver checks only the flag.
+- A shared task-definition variable, configuration mistake, future default change, or accidental CVC flag enablement exposes CVC.
+- The current checker’s post-import override would not catch several of those configuration failures.
+- I did not inspect live CVC/Mott task definitions, image revisions, or process environments, so actual deployment isolation remains unverified.
+
+### Required revision
+
+Before shipping:
+
+1. Restrict the fallback to an anchored month-name plus valid ordinal day plus optional year grammar.
+2. Reject suffix/day mismatches such as `11st`, `22th`, and `23nd`.
+3. Add the counterexamples above to the fail-closed corpus.
+4. Make the checker load the specified original directly at the same frozen clock.
+5. Test env-absent, env-false, and env-true imports without `setattr`.
+6. Record the original file hash and corpus hash in the baseline.
+7. Owner approves the exact Mott image and verifies CVC’s process has the flag absent/OFF.
+
+Changed: no files modified.
+
+Verified by: exact source diff, checker PASS/RED runs, independent baseline reproduction, independent env-import checks, and adversarial resolver probes.
+
+Risks left: actual deployment configuration and full model-to-gateway-to-confirmation behavior were not inspected.
+
+Next action: revise the parser and gate before authorizing the Mott flag.
+
+Compound proof:
+- Plan/spec yardstick: U1–U5 audit contract stated before inspection.
+- Units proved: U1 diff/recursion, U2 baseline/clock, U3 loader mechanics, U4 corpus gaps, U5 tenant isolation analysis.
+- Review: report-only adversarial review; no subagent or file artifact created due the text-only constraint.
+- Highest true state: review-required.
+- Behavior verification: current candidate passes the supplied check, while direct probes demonstrate unintended accepted inputs.
+- Decision residue: hardest decision was separating legacy no-drift from new-input safety; rejected “PASS means safe”; least-confident assumption is live deployment isolation.
+- Compound capture: none, because the request prohibited writes.
+
+Status
+- % to true goal: 100% (97%)
+- % to current goal: 100% (99%)
+- Done / ready: the safety proof is audited and the current candidate is classified revise, not ready to ship (97%)
+- In flight: nothing (100%)
+- Not done: live Mott/CVC deployment-environment verification and the corrected implementation are not started (99%)
+- Blocked: shipping confidence is blocked by the overbroad fallback and configuration-masking checker (97%)
+- Needs you: require the parser and gate revisions before approving the Mott deployment (97%)
+
+Assumptions: Confidence rests on the exact supplied files, executed frozen-clock comparisons, and direct adversarial inputs; no live infrastructure was inspected.
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Completed
+tokens used
+79,719
+Ankit — CANARY: blue paperclip
+
+```text
+verdict: revise
+confidence: 0.97
+gate_trustworthy: no
+diff_safe: no
+needs_owner_gate: yes
+```
+
+### Gate assessment
+
+`gate_trustworthy: no`
+
+The current candidate passes, and the check fails against the original, but the printed PASS overstates what was proven.
+
+- The checker does not load the original resolver. It compares against [golden_baseline.json](/mnt/d_drive/repos/mott/gw-temporal-check/golden_baseline.json:1), whose metadata contains only the date, not the original path or hash.
+- I independently reproduced all 106 baseline outputs from the specified original at the frozen date. Result: `BASELINE_EXACT_CURRENT_ORIGINAL True`, zero mismatches. So the baseline contents are currently correct, but their provenance is not self-verifying.
+- The generator and checker freeze `_eastern_today` to the same date at noon. That is sufficient here because the resolver uses only `.date()`. “Eastern” is descriptive, however; both inject a naive `datetime`, not a `ZoneInfo` Eastern clock.
+- Most importantly, [check_gateway_datefix.py](/mnt/d_drive/repos/mott/gw-temporal-check/check_gateway_datefix.py:73) forcibly overwrites `_DATE_ORDINAL_FALLBACK` after import. A candidate with a broken environment binding, ignored environment variable, or wrong default could still pass. The current implementation independently loaded correctly as default `False`, env `0` → `False`, env `1` → `True`, but the gate itself does not prove that.
+- The check verifies outputs for 106 inputs. It neither verifies the approved two-hunk source diff nor behavioral equivalence for other inputs. A substantially altered resolver could pass by preserving those cases.
+- Missing baseline keys are not rejected as a schema error. `golden.get(p)` can silently treat missing expected-`None` cases as valid.
+
+### Diff safety
+
+`diff_safe: no`, despite being structurally legacy-first.
+
+The actual diff contains only the flag and fallback hunks. The fallback is after every existing successful return, so no input the original already resolves can change. Flag OFF is also inert.
+
+The problem is unintended expansion when flag ON. The regex strips ordinal suffixes anywhere, not only from a month-day expression:
+
+| Input | Original | Flag ON |
+|---|---:|---:|
+| `22nd` | `None` | `None` |
+| `1st` | `None` | `None` |
+| `the 2nd tuesday` | `None` | `None` |
+| `3rd week` | `None` | `None` |
+| `in 2 days` | `07/29/2026` | unchanged |
+| `in 2nd days` | `None` | `07/29/2026` |
+| `28th days from now` | `None` | `08/24/2026` |
+| `2nd weeks from now` | `None` | `08/10/2026` |
+| `july 11st` | `None` | `07/11/2027` |
+| `july 22th` | `None` | `07/22/2027` |
+| `07th/28th` | `None` | `07/28/2026` |
+| `07th/28th/2026` | `None` | `07/28/2026` |
+
+Therefore, the claim that only intended ordinal month-day phrases become accepted is false. The implementation accepts malformed suffixes, ordinalized relative counts, and ordinalized numeric dates.
+
+### Corpus gaps
+
+Original-accepted forms missing from `gen_golden.py` include:
+
+- Day-count variants: `3 days`, `in 3 days from now`, `in 0 days`.
+- Week variants: `in one week`, `in ten weeks`, `in a couple week`, `in couple week`.
+- Chinese `个星期` forms: `三个星期后`, `3个星期后`, `十个星期后`.
+- Chinese weekday carriers other than `周`: `星期一`, `礼拜天`, `下星期三`, `下下礼拜日`, `本礼拜六`.
+- English abbreviated compound forms: `next mon`, `mon after next`, `the day after thu`, `a week from fri`, `fri next week`.
+- Normalization behavior: `TOMORROW`, `tomorrow!`, and repeated/outer whitespace.
+- Past yearless rollover: `july 26`, `07/26`, `Jul 26`, which resolve into 2027 at the frozen date.
+
+A drift limited to any of these forms could pass the existing gate.
+
+### Edge and recursion risks
+
+- Infinite recursion: no. One substitution removes every matching suffix in the string. The recursive call cannot perform the same substitution again, so depth is at most two calls.
+- Multi-ordinal strings: all matching ordinals are stripped simultaneously. The tested compound `july 28th july 29th` remains `None`, but `07th/28th` and `07th/28th/2026` become accepted.
+- Wrong-result risk: material. Ordinal count phrases and malformed suffixes can silently turn a rejected input into a booking date.
+- Inflation risk is bounded to two-digit stripped counts, but up to 99 days or weeks can still be introduced.
+
+### Residual CVC risk
+
+CVC runtime risk is low only if CVC is not redeployed or its process lacks the flag. Separate processes and default OFF provide useful isolation.
+
+However:
+
+- `TENANT_ID` does not guard this fallback. The resolver checks only the flag.
+- A shared task-definition variable, configuration mistake, future default change, or accidental CVC flag enablement exposes CVC.
+- The current checker’s post-import override would not catch several of those configuration failures.
+- I did not inspect live CVC/Mott task definitions, image revisions, or process environments, so actual deployment isolation remains unverified.
+
+### Required revision
+
+Before shipping:
+
+1. Restrict the fallback to an anchored month-name plus valid ordinal day plus optional year grammar.
+2. Reject suffix/day mismatches such as `11st`, `22th`, and `23nd`.
+3. Add the counterexamples above to the fail-closed corpus.
+4. Make the checker load the specified original directly at the same frozen clock.
+5. Test env-absent, env-false, and env-true imports without `setattr`.
+6. Record the original file hash and corpus hash in the baseline.
+7. Owner approves the exact Mott image and verifies CVC’s process has the flag absent/OFF.
+
+Changed: no files modified.
+
+Verified by: exact source diff, checker PASS/RED runs, independent baseline reproduction, independent env-import checks, and adversarial resolver probes.
+
+Risks left: actual deployment configuration and full model-to-gateway-to-confirmation behavior were not inspected.
+
+Next action: revise the parser and gate before authorizing the Mott flag.
+
+Compound proof:
+- Plan/spec yardstick: U1–U5 audit contract stated before inspection.
+- Units proved: U1 diff/recursion, U2 baseline/clock, U3 loader mechanics, U4 corpus gaps, U5 tenant isolation analysis.
+- Review: report-only adversarial review; no subagent or file artifact created due the text-only constraint.
+- Highest true state: review-required.
+- Behavior verification: current candidate passes the supplied check, while direct probes demonstrate unintended accepted inputs.
+- Decision residue: hardest decision was separating legacy no-drift from new-input safety; rejected “PASS means safe”; least-confident assumption is live deployment isolation.
+- Compound capture: none, because the request prohibited writes.
+
+Status
+- % to true goal: 100% (97%)
+- % to current goal: 100% (99%)
+- Done / ready: the safety proof is audited and the current candidate is classified revise, not ready to ship (97%)
+- In flight: nothing (100%)
+- Not done: live Mott/CVC deployment-environment verification and the corrected implementation are not started (99%)
+- Blocked: shipping confidence is blocked by the overbroad fallback and configuration-masking checker (97%)
+- Needs you: require the parser and gate revisions before approving the Mott deployment (97%)
+
+Assumptions: Confidence rests on the exact supplied files, executed frozen-clock comparisons, and direct adversarial inputs; no live infrastructure was inspected.

@@ -1,0 +1,27 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT6m3",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "t6-measure2-control",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"do you have anything on friday afternoon?\", \"is there anything later that day?\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", \"92\", \"script.json\", \"control\"]))\nPY\nrc=$?; tail -6 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 TURN lines, got $t\"; tail -5 measure.txt; exit 1; }; grep -qE '^RESULT label=control turns=3 total_wall_ms=[0-9]+ filler_hits=[0-9]+ candidate=0' measure.txt || { echo 'FAIL: no well-formed control RESULT line:'; grep '^RESULT' measure.txt; exit 1; }; echo \"PASS: $(grep -m1 '^RESULT' measure.txt)\"",
+      "verified": "Three scripted non-booking turns timed against current v92 with real subject context and unwrapped auth: per-turn wall time, message count, node id, and filler count on record as the A/B control."
+    },
+    {
+      "key": "t6-measure2-nofiller",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT6mint/t6-mint-nofiller/minted.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || { echo 'no minted version number found'; exit 1; }; echo \"MEASURING_VERSION=$V\"; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_NOFILLER_VERSION=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"do you have anything on friday afternoon?\", \"is there anything later that day?\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_NOFILLER_VERSION\"], \"script.json\", \"nofiller\"]))\nPY\nrc=$?; tail -6 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 TURN lines, got $t\"; tail -5 measure.txt; exit 1; }; grep -qE '^RESULT label=nofiller turns=3 total_wall_ms=[0-9]+ filler_hits=0 candidate=0' measure.txt || { echo \"FAIL: RESULT must show filler_hits=0 on the stripped mint, got: $(grep -m1 '^RESULT' measure.txt)\"; exit 1; }; echo \"PASS: $(grep -m1 '^RESULT' measure.txt)\"",
+      "verified": "The same three turns timed against the filler-stripped unattached mint (version read from the mint record): zero filler messages proven with subject context, completing the A/B treatment side."
+    }
+  ]
+}

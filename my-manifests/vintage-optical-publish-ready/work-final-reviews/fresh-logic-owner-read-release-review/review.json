@@ -1,0 +1,34 @@
+{
+  "verdict": "FAIL",
+  "readiness": "NOT_READY_FOR_PROJECT_ROOM_REVIEW",
+  "external_use_authorized": false,
+  "project_room_status": "inventory_review_required",
+  "fatal_issues": [],
+  "material_issues": [],
+  "minor_issues": [
+    {
+      "id": "MINOR-001",
+      "check": "logic_reconciled",
+      "issue": "scores.json contains conflicting Project Room states. project_room.status is inventory_review_required, while data_quality.project_room_status is EMPTY.",
+      "impact": "The external-use boundary remains blocked either way, but the machine-readable artifact does not present one current state.",
+      "required_fix": "Replace the stale EMPTY value with inventory_review_required or label it explicitly as a historical preflight state."
+    },
+    {
+      "id": "MINOR-002",
+      "check": "source_dictionary_complete",
+      "issue": "The historical 17,557 value is preserved in a frozen 2024 PEP receipt, but that receipt has no source registry ID. evidence.md cites S17 for the historical value even though S17 registers only the 2025 PEP file and 17,565.",
+      "impact": "The narrative lineage is understandable and the value is auditable from the receipt manifest, but the source-ID trail for this specifically requested historical number is incomplete.",
+      "required_fix": "Register the frozen 2024 PEP file under its own source ID and cite that ID wherever 17,557 is asserted."
+    }
+  ],
+  "checks": {
+    "plain_language_explanations": "PASS",
+    "logic_reconciled": "FAIL",
+    "unknowns_neutral": "PASS",
+    "no_overclaim": "PASS",
+    "score_direction": "PASS",
+    "limitations_visible": "PASS",
+    "owner_actionability": "PASS",
+    "source_dictionary_complete": "FAIL"
+  }
+}

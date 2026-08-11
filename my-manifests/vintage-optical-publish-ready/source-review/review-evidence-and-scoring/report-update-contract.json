@@ -1,0 +1,365 @@
+{
+  "status": "APPROVED_FOR_INTERNAL_REBUILD_ONLY",
+  "external_delivery_authorized": false,
+  "highest_truthful_state": "EVIDENCE_REVIEWED_REPORT_REBUILD_REQUIRED",
+  "external_actions_taken": "none",
+  "required_outputs": [
+    "onepager.html",
+    "onepager.pdf",
+    "number-explainer.md",
+    "number-explainer.html",
+    "number-explainer.pdf"
+  ],
+  "required_updates": [
+    {
+      "update_id": "UPDATE_CATCHMENT_TABLE",
+      "target_files": [
+        "onepager.html",
+        "number-explainer.md",
+        "number-explainer.html"
+      ],
+      "exact_facts_or_score_decisions": [
+        "FACT_CATCHMENT_05: 5 minutes, population 6,624, households 2,722, under 18 1,712, age 40-64 1,811, age 65+ 1,311, diabetes context 9.6%",
+        "FACT_CATCHMENT_10: 10 minutes, population 19,322, households 7,873, under 18 4,571, age 40-64 5,843, age 65+ 4,291, diabetes context 10.9%",
+        "FACT_CATCHMENT_15: 15 minutes, population 54,768, households 23,793, under 18 11,707, age 40-64 17,431, age 65+ 10,939, diabetes context 12.4%",
+        "FACT_CATCHMENT_20: 20 minutes, population 173,058, households 75,244, under 18 38,652, age 40-64 53,102, age 65+ 32,473, diabetes context 13.2%",
+        "FACT_CATCHMENT_30: 30 minutes, population 283,661, households 120,940, under 18 64,831, age 40-64 86,558, age 65+ 53,258, diabetes context 12.3%"
+      ],
+      "source_ids": [
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025"
+      ],
+      "numbers_to_replace_or_remove": [
+        "Remove statements that 5-, 10-, 15-, 20-, and 30-minute population, households, and age bands remain null.",
+        "Do not replace canonical full VDU, canonical office count, population per office, or VDU per office; those fields stay null."
+      ],
+      "limitations": [
+        "Area-weighted block-group aggregate estimates inside modeled drive-time polygons.",
+        "ACS survey estimates and modeled tract diabetes prevalence.",
+        "No live traffic and no patient-origin evidence.",
+        "Canonical full VDU remains null."
+      ],
+      "verification": [
+        "All five rows match the approved display values exactly across HTML, Markdown, and both PDFs.",
+        "Each row resolves to all five source IDs and frozen receipts.",
+        "No catchment value is labeled patient count, patient origin, exact median, or full VDU."
+      ]
+    },
+    {
+      "update_id": "UPDATE_GROWTH_EVIDENCE",
+      "target_files": [
+        "onepager.html",
+        "number-explainer.md",
+        "number-explainer.html"
+      ],
+      "exact_facts_or_score_decisions": [
+        "FACT_MORTON_POP_GROWTH: Morton village 17,172 in 2020 to 17,565 in 2025, +393, +2.29%.",
+        "FACT_SCHOOL_ENROLLMENT_GROWTH: Morton CUSD 709 3,238 in 2022-2023 to 3,365 in 2025-26, +127, +3.92%; 2023-24 remains missing and uninterpolated.",
+        "Growth / Future Demand band changes from 50 to 65."
+      ],
+      "source_ids": [
+        "CENSUS_PEP_2025",
+        "MORTON709_FIRST_PARTY_ARCHIVE"
+      ],
+      "numbers_to_replace_or_remove": [
+        "Remove the statement that no growth evidence was collected.",
+        "Preserve 17,565 as the current 2025 Morton village display.",
+        "Do not call either series catchment growth, forecast growth, patient growth, or realized demand."
+      ],
+      "limitations": [
+        "Population is village-level and subject to later Census revision.",
+        "Enrollment is a district proxy and lacks an observed 2023-24 value.",
+        "Both series are observed public changes only."
+      ],
+      "verification": [
+        "Recompute 393 / 17,172 * 100 as 2.2886093641%, displayed 2.29%.",
+        "Recompute 127 / 3,238 * 100 as 3.9221741816%, displayed 3.92%.",
+        "Confirm 2023-24 is labeled missing and is never interpolated."
+      ]
+    },
+    {
+      "update_id": "UPDATE_ROUTE_LINEAGE",
+      "target_files": [
+        "onepager.html",
+        "number-explainer.md",
+        "number-explainer.html"
+      ],
+      "exact_facts_or_score_decisions": [
+        "FACT_FOCUS_ROUTE_CORRECTED: Focus On Eyes route is 233.4 seconds, 3.89 minutes, and 1.53 miles using direct Google listing pins.",
+        "The route correction has no scoring effect because the peer remains nearby within the same rubric-defined state."
+      ],
+      "source_ids": [
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "OSRM_FOCUS_GOOGLE_PINS_20260730"
+      ],
+      "numbers_to_replace_or_remove": [
+        "Replace every 4.07 routed minutes display with 3.89 modeled driving minutes.",
+        "Replace every 1.56 route miles display with 1.53 miles.",
+        "Replace the old 244.3-second derivation with 233.4 seconds.",
+        "Remove the old route URL or source reference from the current route's lineage; retain it only in an explicit supersession record if needed."
+      ],
+      "limitations": [
+        "No live traffic or time-of-day model.",
+        "No patient-origin, patient-choice, capacity, or draw evidence.",
+        "The named direct-pin route supersedes the candidate-geocoder route for the Focus comparison."
+      ],
+      "verification": [
+        "Recompute 233.4 / 60 = 3.89.",
+        "Search all rebuilt outputs and confirm zero current 4.07, 1.56, or 244.3 route claims remain.",
+        "Confirm the direct-pin endpoint basis and three source IDs appear in the explainer."
+      ]
+    },
+    {
+      "update_id": "UPDATE_REVIEW_EVIDENCE",
+      "target_files": [
+        "onepager.html",
+        "number-explainer.md",
+        "number-explainer.html"
+      ],
+      "exact_facts_or_score_decisions": [
+        "FACT_GOOGLE_REVIEW_SAMPLE: one dated same-page direct Google comparison shows Vintage Optical 4.9 and 348, Focus On Eyes 4.8 and 182, Tri-County Eye Center 4.9 and 271, Walmart Vision & Glasses 3.5 and 8.",
+        "FACT_BIRDEYE_COUNT_DISCREPANCY: Birdeye Google components exceed direct Google by 50 for Vintage Optical and 28 for Focus On Eyes.",
+        "Review Trust vs Peers changes from 50 to 65.",
+        "Digital Presence Reputation changes from 50 to 65."
+      ],
+      "source_ids": [
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "BIRDEYE_AGGREGATOR_20260730",
+        "DATAFORSEO_PREFLIGHT_20260730"
+      ],
+      "numbers_to_replace_or_remove": [
+        "Replace generalized statements that no review count or comparison exists with a bounded same-page comparison.",
+        "Do not overwrite the separate original Vintage direct-listing observation, which displayed no review count.",
+        "Do not promote Birdeye 398 or 210 as direct current Google counts.",
+        "Do not create a cross-platform total, average ratings, or sum review counts."
+      ],
+      "limitations": [
+        "One dated page observation, not a complete peer export.",
+        "No review text, theme, response, velocity, outcome, or clinical-quality analysis.",
+        "DataForSEO remains unavailable and rank grid remains not run.",
+        "Aggregator composition and direct Google counts remain source-separated."
+      ],
+      "verification": [
+        "Recompute 398 - 348 = 50 and 210 - 182 = 28.",
+        "Confirm the report says bounded comparison and does not say complete peer export or rank grid.",
+        "Confirm DataForSEO status is unavailable_missing_credentials, request_sent is false, cost_incurred is 0, and rank_grid status is not_run."
+      ]
+    },
+    {
+      "update_id": "UPDATE_SCORE_RECOMPUTATION",
+      "target_files": [
+        "onepager.html",
+        "number-explainer.md",
+        "number-explainer.html"
+      ],
+      "exact_facts_or_score_decisions": [
+        "Market Demand-Supply 57 -> 61; full precision 60.50; Mixed market.",
+        "Competitive Pressure Index stays 57; full precision 56.75; High pressure.",
+        "Room to Win stays 43 and equals 100 - 57.",
+        "Practice Competitiveness 58 -> 61; full precision 60.50; Mixed.",
+        "Client Opportunity stays 54; full precision changes to 54.45; At Risk.",
+        "Digital Presence 57 -> 60; full precision 59.75; Mixed.",
+        "Dry eye / ocular surface 52 -> 53; full precision 53.00; Research next.",
+        "Myopia management 52 -> 53; full precision 53.00; Research next.",
+        "Specialty contact lenses stays 51; full precision 50.75; Research next."
+      ],
+      "source_ids": [
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025",
+        "CENSUS_PEP_2025",
+        "MORTON709_FIRST_PARTY_ARCHIVE",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "BIRDEYE_AGGREGATOR_20260730",
+        "DATAFORSEO_PREFLIGHT_20260730",
+        "NPPES_CURRENT_20260730",
+        "CENSUS_GEOCODER_20260730"
+      ],
+      "numbers_to_replace_or_remove": [
+        "Replace headline and repeated Market Demand-Supply 57 with 61.",
+        "Replace headline and repeated Practice Competitiveness 58 with 61.",
+        "Replace headline and repeated Digital Presence 57 with 60.",
+        "Replace dry eye 52 with 53.",
+        "Replace myopia 52 with 53.",
+        "Preserve Competitive Pressure 57, Room to Win 43, Client Opportunity 54, and specialty contact lenses 51.",
+        "Replace old full-precision component tables and narrative explanations with the approved recomputations."
+      ],
+      "limitations": [
+        "Do not change weights, formulas, base-band scale, or half-up rounding.",
+        "Do not assign a supply or saturation band from NPPES candidate counts.",
+        "Do not independently band Room to Win.",
+        "Changed point values do not change the final rubric labels for Market Demand-Supply, Practice Competitiveness, Digital Presence, dry eye, or myopia."
+      ],
+      "verification": [
+        "Recompute every component contribution as value times weight.",
+        "Confirm weights total 1.00 for every weighted score.",
+        "Confirm full-precision totals are 60.50, 56.75, 60.50, 54.45, 59.75, 53.00, 53.00, and 50.75 as applicable.",
+        "Confirm half-up or nearest-whole displays are 61, 57, 61, 54, 60, 53, 53, and 51.",
+        "Confirm Room to Win = 100 - Competitive Pressure Index exactly."
+      ]
+    },
+    {
+      "update_id": "UPDATE_WHAT_WE_DO_NOT_KNOW",
+      "target_files": [
+        "onepager.html",
+        "number-explainer.md",
+        "number-explainer.html"
+      ],
+      "exact_facts_or_score_decisions": [
+        "canonical_full_vdu remains null",
+        "canonical_office_count remains null",
+        "rank_grid remains null and not_run",
+        "complete_provider_entity_dedupe remains null",
+        "patient-origin choice, live traffic, conversion, capacity, outcomes, economics, and cross-platform review total remain unknown"
+      ],
+      "source_ids": [
+        "CATCHMENT_DEMOGRAPHICS_20260730",
+        "NPPES_CURRENT_20260730",
+        "CENSUS_GEOCODER_20260730",
+        "DATAFORSEO_PREFLIGHT_20260730",
+        "VALHALLA_20260730",
+        "OSRM_FOCUS_GOOGLE_PINS_20260730"
+      ],
+      "numbers_to_replace_or_remove": [
+        "Remove only the obsolete claims that catchment demographics and all growth evidence are missing.",
+        "Preserve nulls and no-claim boundaries for full VDU, offices, ratios, rank, patient choice, traffic, conversion, capacity, outcomes, and economics.",
+        "Do not turn unknown into zero, average, normal, no demand, no competition, or no problem."
+      ],
+      "limitations": [
+        "Public-only evidence supports directional reporting with caveats.",
+        "No patient, private operational, or financial data was used."
+      ],
+      "verification": [
+        "The What we do not know section separates resolved catchment and growth gaps from unresolved null fields.",
+        "Every unresolved denominator remains null or not calculable.",
+        "No patient or revenue forecast appears."
+      ]
+    },
+    {
+      "update_id": "UPDATE_SOURCE_DICTIONARY",
+      "target_files": [
+        "number-explainer.md",
+        "number-explainer.html"
+      ],
+      "exact_facts_or_score_decisions": [
+        "Add or reconcile the direct source dictionary entries used by all accepted facts and changed score components.",
+        "Mark old route lineage as superseded.",
+        "Mark Exa and Perplexity summaries as discovery-only when referenced for coverage."
+      ],
+      "source_ids": [
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025",
+        "CENSUS_PEP_2025",
+        "MORTON709_FIRST_PARTY_ARCHIVE",
+        "NPPES_CURRENT_20260730",
+        "CENSUS_GEOCODER_20260730",
+        "OSRM_TABLE_20260730",
+        "OSRM_FOCUS_GOOGLE_PINS_20260730",
+        "DATAFORSEO_PREFLIGHT_20260730",
+        "BIRDEYE_AGGREGATOR_20260730",
+        "CATCHMENT_DEMOGRAPHICS_20260730"
+      ],
+      "numbers_to_replace_or_remove": [
+        "Replace current route source linkage that supports 4.07 with the direct-pin route linkage supporting 3.89.",
+        "Do not delete historical source entries needed to explain supersession, but do not present them as current."
+      ],
+      "limitations": [
+        "Every source entry must state authority, observation date or vintage, claim supported, and limitation.",
+        "Discovery summaries cannot be publication authorities."
+      ],
+      "verification": [
+        "Every source ID used by a substantive number resolves to exactly one dictionary entry and at least one frozen receipt.",
+        "No source dictionary entry contains an internal absolute path in client-visible output.",
+        "Superseded and current route sources are distinguishable."
+      ]
+    },
+    {
+      "update_id": "UPDATE_RECEIPT_MANIFEST",
+      "target_files": [
+        "number-explainer.md",
+        "number-explainer.html"
+      ],
+      "exact_facts_or_score_decisions": [
+        "Add package-relative receipt entries for catchment polygons, ACS/TIGER inputs, CDC context, PEP growth, first-party school observations, reconciled Google review sample, Birdeye observations, NPPES coverage, Census geocoder results, OSRM routes, and DataForSEO preflight.",
+        "Every promotable fact must resolve to a frozen receipt."
+      ],
+      "source_ids": [
+        "GOOGLE_MAPS_SAMPLE_20260730",
+        "GOOGLE_MAPS_FOCUS_SAMPLE_20260730",
+        "VALHALLA_20260730",
+        "TIGER2024_BG",
+        "ACS2024_BG",
+        "CDC_PLACES_2025",
+        "CENSUS_PEP_2025",
+        "MORTON709_FIRST_PARTY_ARCHIVE",
+        "NPPES_CURRENT_20260730",
+        "CENSUS_GEOCODER_20260730",
+        "OSRM_TABLE_20260730",
+        "OSRM_FOCUS_GOOGLE_PINS_20260730",
+        "DATAFORSEO_PREFLIGHT_20260730",
+        "BIRDEYE_AGGREGATOR_20260730"
+      ],
+      "numbers_to_replace_or_remove": [
+        "Remove stale current-receipt statements that only support the 4.07-minute route.",
+        "Do not expose internal absolute filesystem paths in the report or PDFs."
+      ],
+      "limitations": [
+        "Receipt paths in the explainer must be package-relative audit references.",
+        "The receipt manifest documents evidence lineage and does not authorize external delivery."
+      ],
+      "verification": [
+        "Verify each manifest receipt exists in the rebuilt package and its checksum matches the registered value.",
+        "Confirm no internal absolute paths appear in HTML, Markdown, or PDFs.",
+        "Confirm accepted facts use direct or official receipts rather than discovery summaries."
+      ]
+    }
+  ],
+  "release_checks": [
+    {
+      "check": "100% substantive-number lineage",
+      "pass_condition": "Every substantive number in onepager.html, onepager.pdf, number-explainer.md, number-explainer.html, and number-explainer.pdf maps to a source ID or a fully recomputable formula."
+    },
+    {
+      "check": "zero unexplained substantive numbers",
+      "pass_condition": "The number map reports zero substantive numbers without a source, derivation, meaning, direction, confidence, and limitation."
+    },
+    {
+      "check": "Room to Win = 100 - Competitive Pressure Index",
+      "pass_condition": "Competitive Pressure Index is 57 and every Room to Win display and derivation is exactly 43."
+    },
+    {
+      "check": "both-PDF visual QA",
+      "pass_condition": "Fresh visual inspection confirms onepager.pdf is one page and both PDFs have no clipping, overflow, missing text, broken tables, or stale render content."
+    },
+    {
+      "check": "no internal paths",
+      "pass_condition": "No client-visible HTML, Markdown, or PDF contains an internal absolute filesystem path or receipt location."
+    },
+    {
+      "check": "fresh numeric review",
+      "pass_condition": "A fresh report-only reviewer verifies every accepted fact, component contribution, full-precision total, rounding result, and cross-document repeated value."
+    },
+    {
+      "check": "fresh logic review",
+      "pass_condition": "A fresh report-only reviewer verifies score direction, unchanged-band decisions, null handling, contradictions, limitations, disconfirmers, and the Room to Win inversion."
+    },
+    {
+      "check": "fresh technical review",
+      "pass_condition": "A fresh report-only reviewer verifies source resolution, receipt integrity, required files, fresh render timestamps, PDF page count, visual QA evidence, and path leakage."
+    },
+    {
+      "check": "human Project Room approval",
+      "pass_condition": "The human Project Room owner approves the exact rebuilt package after all machine and reviewer checks pass."
+    }
+  ],
+  "delivery_gate": "Internal rebuild is allowed. External delivery, publishing, upload, CRM write, outreach, or any other external action is not authorized."
+}

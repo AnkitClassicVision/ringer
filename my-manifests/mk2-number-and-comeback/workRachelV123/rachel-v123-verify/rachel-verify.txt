@@ -1,0 +1,14 @@
+=== RACHEL THREAD ===
+LIST HTTP 200 rachel_convs=1
+CONV ...145b16 status=None node=n_goal_ask updated=2026-08-05T22:19:22
+  MESSAGES: 1
+  [2026-08-05T22:19:34] AGENT: 
+RACHEL_THREAD_DONE
+=== RACHEL APPTS (patient 4376662466 store 711) ===
+HTTP 200
+ok: True count: 0
+RACHEL_APPTS_DONE
+=== ANKIT APPTS (patient 4362694474 store 711) ===
+HTTP 200
+ok: True count: 0
+ANKIT_APPTS_DONE

@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-canonical-grow",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/work-finalize",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "close-canonical-internal-release",
+      "engine": "local-shell",
+      "task_type": "release-gate",
+      "timeout_s": 180,
+      "expect_files": ["release_receipt.txt"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/checks/finalize_release.py --dest /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30 --old /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29 --route-run vintage-optical-canonical-grow-20260730T013520Z-p1074813 --evidence-run vintage-optical-canonical-grow-20260730T013733Z-p1090231 --scoring-run vintage-optical-canonical-grow-20260730T014642Z-p1159031 --build-run vintage-optical-canonical-grow-20260730T015648Z-p1238202 --render-run vintage-optical-canonical-grow-20260730T022324Z-p1444935 --review-run vintage-optical-canonical-grow-20260730T022717Z-p1473468 --review /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/work-review-v3/fresh-process-and-release-review-v3/review.md --visual-qa 'Final Chrome render inspected at 150 dpi; no overlap, clipping, bad wrap, broken logo, page-edge violation, score-direction ambiguity, or unreadable section; exactly three Fix Cards and both boundary labels are visible.' --receipt release_receipt.txt",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/checks/validate_final_release.py --dest /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30 --old /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29",
+      "verified": "all Ringer run receipts, final visual QA, fresh READY_INTERNAL review, highest true state, and final PDF hash are closed into the canonical runlog, while the prior noncanonical one-pager is reversibly quarantined and the full report remains unchanged"
+    }
+  ]
+}

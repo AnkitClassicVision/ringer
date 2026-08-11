@@ -1,0 +1,123 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS16",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-validate-mint",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": [
+        "mint.txt"
+      ],
+      "spec": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD23/gl-round16-fix/check_goalloop_graph.py --draft /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD23/gl-round16-fix/pathway-goalloop-draft.json > mint.txt 2>&1 || { echo 'REFUSED: goal-loop validation failed - not minting' >> mint.txt; cat mint.txt; exit 2; }; python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/mott-v21-snap/scripts/mint_graph_version.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD23/gl-round16-fix/pathway-goalloop-draft.json >> mint.txt 2>&1; rc=$?; tail -6 mint.txt; exit $rc",
+      "check": "grep -qi 'PASS' mint.txt || { echo 'FAIL: validation did not pass before mint'; head -5 mint.txt; exit 1; }; grep -q 'REFUSED' mint.txt && { echo 'FAIL: refusal recorded'; exit 1; }; grep -qE 'VERSION=[0-9]+' mint.txt || { echo 'FAIL: no minted version:'; tail -6 mint.txt; exit 1; }; if grep -qiE 'attached' mint.txt && ! grep -qiE 'no numbers attached|not attached|unattached' mint.txt; then echo 'FAIL: attachment suspected'; grep -i attached mint.txt; exit 1; fi; echo \"PASS: goal-loop validated then minted unattached - $(grep -m1 -E 'VERSION=[0-9]+' mint.txt)\"",
+      "verified": "The round-15 goal-loop graph minted UNATTACHED strictly after its own six-assertion validator passed in the same task (validate-then-mint discipline), version on record, live line untouched."
+    },
+    {
+      "key": "gl-wrongdate-replay",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": [
+        "capture.log",
+        "turn6.json",
+        "turns.json"
+      ],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS16/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || exit 1; echo REPLAY_VERSION=$V; python3 -c \"import json;json.dump(['hi','cant this week how about in 3 weeks','How late can I come in that Thursday','No Thursday the 27','How late can I come?','Ok I will take 430'],open('turns.json','w'))\" && CAPTURE_TURNS=\"$(cat turns.json)\" HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/capture_envelope.py $V . > capture.log 2>&1; rc=$?; tail -8 capture.log; exit $rc",
+      "check": "grep -q 'CAPTURE_COMPLETE' capture.log || { echo 'FAIL: capture incomplete'; tail -5 capture.log; exit 1; }; PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_spoken_vs_slots.py . > cmp.txt 2>&1; rc=$?; cat cmp.txt; [ $rc -eq 0 ] || exit 1; grep -q 'TURN=4 .*spoken=.\\{0,4\\}08/27/2026' cmp.txt || { echo 'FAIL: the date correction (No Thursday the 27) did not produce 08/27 offers'; exit 1; }; echo 'PASS: correction re-searched and every spoken date is variable-backed'",
+      "verified": "Ankit's wrong-date sequence on the new mint: the 'No Thursday the 27' correction re-searches to real 08/27 inventory, and every spoken date at every turn is backed by the live slot variables - the wrong-date booking class proven dead end to end."
+    },
+    {
+      "key": "gl-post-booking-probe",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": [
+        "probe.txt"
+      ],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS16/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || { echo 'no minted version'; exit 1; }; echo PROBING_VERSION=$V; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland --secret-env GW_TOKEN=conductor/agents/bland-mott/api-key -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD23/gl-round16-fix/post_booking_probe.py $V > probe.txt 2>&1; rc=$?; tail -8 probe.txt; exit $rc",
+      "check": "grep -q 'PROBE_RESULT booked_then_alive=True cleanup_count=0' probe.txt || { echo 'FAIL: probe result line missing or red:'; tail -12 probe.txt; exit 1; }; grep -E '^TURN=' probe.txt | grep -q 'OK=False' && { echo 'FAIL: a turn failed:'; grep 'OK=False' probe.txt; exit 1; }; echo \"PASS: $(grep PROBE_RESULT probe.txt)\"",
+      "verified": "The exact live defect replayed and killed: book, ask to change, keep texting - every message gets a live reply with the office referral, no re-booking language, and the probe's own cleanup leaves zero appointments."
+    },
+    {
+      "key": "gl-smoke-keep-date",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": [
+        "measure.txt",
+        "script.json"
+      ],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS16/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || { echo 'no minted version'; exit 1; }; echo \"SMOKING_VERSION=$V\"; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_V=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"Tuesday the 18th\", \"What's the latest time I can come in?\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_V\"], \"script.json\", \"gl16-keep-date\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 turns, got $t\"; tail -5 measure.txt; exit 1; }; last=$(grep -E '^TURN=3' measure.txt); echo \"$last\" | grep -q '08/18/2026' || { echo \"FAIL: established date 08/18 lost on day-less latest ask: $last\"; exit 1; }; echo \"$last\" | grep -qE '0[45]:[0-9]{2} pm' || { echo \"FAIL: not late-day times: $last\"; exit 1; }; echo \"$last\" | grep -q '{{' && { echo \"FAIL: unrendered template: $last\"; exit 1; }; echo \"PASS: date kept with true-latest - $last\" | head -c 300",
+      "verified": "Ankit's live D2 replay: with 08/18 established, a day-less latest ask stays on 08/18 and answers with true late-day slots - the offered-date pin working."
+    },
+    {
+      "key": "gl-smoke-clock-pick",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": [
+        "measure.txt",
+        "script.json"
+      ],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS16/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || { echo 'no minted version'; exit 1; }; echo \"SMOKING_VERSION=$V\"; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_V=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"thursday please\", \"Let's do 1030\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_V\"], \"script.json\", \"gl16-clock-pick\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 turns, got $t\"; tail -5 measure.txt; exit 1; }; last=$(grep -E '^TURN=3' measure.txt); echo \"$last\" | grep -q '10:30' || { echo \"FAIL: clock pick 1030 not confirmed as 10:30: $last\"; exit 1; }; echo \"$last\" | grep -qi 'yes' || { echo \"FAIL: no booking confirmation gate reached: $last\"; exit 1; }; echo \"$last\" | grep -q '10:45' && { echo \"FAIL: confirm quotes the wrong slot (10:45): $last\"; exit 1; }; echo \"PASS: clock-time pick routed to the right slot - $last\" | head -c 300",
+      "verified": "Ankit's live D3 replay: naming a slot's clock time routes to THAT slot's gate and the confirm quotes the same time - stops before booking (no yes sent)."
+    },
+    {
+      "key": "gl-smoke-away-sentence",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": [
+        "measure.txt",
+        "script.json"
+      ],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS16/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || { echo 'no minted version'; exit 1; }; echo \"SMOKING_VERSION=$V\"; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_V=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"I'm leaving town today and won't be back for 2 weeks about then?\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_V\"], \"script.json\", \"gl16-away-sentence\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 2 ] || { echo \"FAIL: expected 2 turns, got $t\"; tail -4 measure.txt; exit 1; }; last=$(grep -E '^TURN=2' measure.txt); echo \"$last\" | grep -q '08/04/2026' && { echo \"FAIL: offered TODAY to a patient who said they are leaving town today: $last\"; exit 1; }; echo \"$last\" | grep -qE '08/1[6-9]/2026' || { echo \"FAIL: no ~2-weeks-out offer: $last\"; exit 1; }; echo \"$last\" | grep -q '{{' && { echo \"FAIL: unrendered template: $last\"; exit 1; }; slow=$(grep -oE 'WALL_MS=[0-9]+' measure.txt | cut -d= -f2 | awk '$1>15000'); [ -z \"$slow\" ] || { echo \"FAIL: turn exceeded 15s ruling: $slow ms\"; exit 1; }; echo \"PASS: whole-sentence comprehension - $last\" | head -c 300",
+      "verified": "Ankit's live compound sentence replayed: 'leaving town today, back in 2 weeks' offers ~two weeks out, never today, within the 15-second ruling."
+    },
+    {
+      "key": "gl-smoke-mixed-intent",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": [
+        "measure.txt",
+        "script.json"
+      ],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS16/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || { echo 'no minted version'; exit 1; }; echo \"SMOKING_VERSION=$V\"; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_V=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"thursday please\", \"I'll take the second one - actually, do you have anything Wednesday?\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_V\"], \"script.json\", \"gl16-mixed\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 turns, got $t\"; tail -4 measure.txt; exit 1; }; last=$(grep -E '^TURN=3' measure.txt); echo \"$last\" | grep -q 'NODE=n_mixed_intent' || { echo \"FAIL: mixed intent did not route to the clarify node: $last\"; exit 1; }; echo \"$last\" | grep -qE '08/05/2026 [0-9]' && { echo \"FAIL: silently offered Wednesday instead of clarifying: $last\"; exit 1; }; echo \"$last\" | grep -q '?' || { echo \"FAIL: clarify asked no question: $last\"; exit 1; }; echo \"PASS: mixed intent clarified once - $last\" | head -c 300",
+      "verified": "The consent-sensitive mixed reply routes to the derived clarify node and asks one question instead of silently searching Wednesday."
+    },
+    {
+      "key": "gl-smoke-week-anaphora",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": [
+        "measure.txt",
+        "script.json"
+      ],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS16/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || { echo 'no minted version'; exit 1; }; echo \"SMOKING_VERSION=$V\"; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_V=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"I'm out this week how about in two weeks?\", \"What about Monday that week?\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_V\"], \"script.json\", \"gl16-anaphora\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 turns, got $t\"; tail -4 measure.txt; exit 1; }; last=$(grep -E '^TURN=3' measure.txt); echo \"$last\" | grep -q '08/17/2026' || { echo \"FAIL: Monday-that-week did not resolve to 08/17: $last\"; exit 1; }; echo \"$last\" | grep -q '08/10/2026' && { echo \"FAIL: still offering the wrong Monday (08/10): $last\"; exit 1; }; echo \"$last\" | grep -q '{{' && { echo \"FAIL: template: $last\"; exit 1; }; echo \"PASS: anaphoric week resolved - $last\" | head -c 300",
+      "verified": "Ankit's live sequence: 'Monday that week' after 08/18 offers resolves to Monday 08/17, never the nearer wrong Monday."
+    },
+    {
+      "key": "gl-smoke-earliest-real",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 1200,
+      "expect_files": [
+        "measure.txt",
+        "script.json"
+      ],
+      "spec": "V=$(grep -oE 'VERSION=[0-9]+' /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLMS16/gl-validate-mint/mint.txt | head -1 | cut -d= -f2); [ -n \"$V\" ] || { echo 'no minted version'; exit 1; }; echo \"SMOKING_VERSION=$V\"; HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 MOTT_V=$V python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"I'm out this week how about in two weeks?\", \"What about Monday that week?\", \"What's the earliest I can do that day?\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", os.environ[\"MOTT_V\"], \"script.json\", \"gl16-earliest\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 4 ] || { echo \"FAIL: expected 4 turns, got $t\"; tail -5 measure.txt; exit 1; }; last=$(grep -E '^TURN=4' measure.txt); echo \"$last\" | grep -q '08/17/2026' || { echo \"FAIL: earliest-that-day left the established date: $last\"; exit 1; }; echo \"$last\" | grep -qiE '[0-9]{2}:[0-9]{2} am' && { echo \"FAIL: offered a morning time that does not exist on 08/17 (fabrication class): $last\"; exit 1; }; echo \"$last\" | grep -q '/2026' || { echo \"FAIL: not real 2026 data: $last\"; exit 1; }; echo \"PASS: earliest stayed on real inventory - $last\" | head -c 300",
+      "verified": "Ankit's fabrication sequence: 'earliest that day' answers only from real 08/17 inventory (afternoon-only) - invented morning times are dead."
+    }
+  ]
+}

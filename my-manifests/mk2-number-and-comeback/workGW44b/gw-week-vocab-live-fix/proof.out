@@ -1,0 +1,21 @@
+2026-08-04 16:44:25,992 INFO live_text_shape=plain marks=0
+2026-08-04 16:44:25,993 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 16:44:25,993 INFO raw_fetch msgs=none
+2026-08-04 16:44:25,993 INFO live_text=current residue_len=29
+2026-08-04 16:44:25,999 INFO raw_resolve from=08/17/2026
+2026-08-04 16:44:25,999 INFO date_source=raw
+2026-08-04 16:44:25,999 INFO live_text_shape=plain marks=0
+2026-08-04 16:44:25,999 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 16:44:25,999 INFO raw_fetch msgs=none
+2026-08-04 16:44:25,999 INFO live_text=current residue_len=21
+2026-08-04 16:44:26,003 INFO raw_resolve from=None
+2026-08-04 16:44:26,003 INFO date_source=fallback
+2026-08-04 16:44:26,003 INFO live_text_shape=plain marks=0
+2026-08-04 16:44:26,003 INFO raw_gate flag=True tenant=mott call_id_len=0 first_req=False
+2026-08-04 16:44:26,003 INFO raw_fetch msgs=none
+2026-08-04 16:44:26,003 INFO live_text=current residue_len=16
+2026-08-04 16:44:26,004 INFO raw_resolve from=08/10/2026
+2026-08-04 16:44:26,004 INFO date_source=raw
+CASE=week-of-18th FROM=2026-08-17
+CASE=gibberish UNRESOLVED=true
+CASE=monday-next-week FROM=2026-08-10

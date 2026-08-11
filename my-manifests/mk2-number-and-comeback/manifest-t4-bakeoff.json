@@ -1,0 +1,67 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4run",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "bake-daypart-cur",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 USE_CANDIDATE=0 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"i need an eye exam\", \"morning or mid afternoon\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", \"92\", \"script.json\", \"daypart-cur\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 TURN lines, got $t\"; tail -5 measure.txt; exit 1; }; grep -qE '^RESULT label=daypart-cur turns=3 total_wall_ms=[0-9]+ filler_hits=[0-9]+ candidate=0' measure.txt || { echo 'FAIL: no well-formed RESULT:'; grep '^RESULT' measure.txt; exit 1; }; echo \"PASS: $(grep -m1 '^RESULT' measure.txt)\"",
+      "verified": "The measured day-part-only misroute case (morning or mid afternoon with no day) executed against v92 on the current model, per-turn node routing and latency on record."
+    },
+    {
+      "key": "bake-daypart-cand",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 USE_CANDIDATE=1 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"i need an eye exam\", \"morning or mid afternoon\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", \"92\", \"script.json\", \"daypart-cand\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 TURN lines, got $t\"; tail -5 measure.txt; exit 1; }; grep -qE '^RESULT label=daypart-cand turns=3 total_wall_ms=[0-9]+ filler_hits=[0-9]+ candidate=1' measure.txt || { echo 'FAIL: no well-formed RESULT with candidate=1:'; grep '^RESULT' measure.txt; exit 1; }; echo \"PASS: $(grep -m1 '^RESULT' measure.txt)\"",
+      "verified": "The same day-part-only case with use_candidate_model enabled at chat create, routing and latency on record for the candidate side."
+    },
+    {
+      "key": "bake-asap-cur",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 USE_CANDIDATE=0 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"the first available time works\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", \"92\", \"script.json\", \"asap-cur\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 2 ] || { echo \"FAIL: expected 2 TURN lines, got $t\"; tail -5 measure.txt; exit 1; }; grep -qE '^RESULT label=asap-cur turns=2 total_wall_ms=[0-9]+ filler_hits=[0-9]+ candidate=0' measure.txt || { echo 'FAIL: no well-formed RESULT:'; grep '^RESULT' measure.txt; exit 1; }; echo \"PASS: $(grep -m1 '^RESULT' measure.txt)\"",
+      "verified": "The ASAP-phrasing case (the rev-4 D5 family) executed against v92 on the current model, routing and latency on record."
+    },
+    {
+      "key": "bake-asap-cand",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 USE_CANDIDATE=1 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"the first available time works\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", \"92\", \"script.json\", \"asap-cand\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 2 ] || { echo \"FAIL: expected 2 TURN lines, got $t\"; tail -5 measure.txt; exit 1; }; grep -qE '^RESULT label=asap-cand turns=2 total_wall_ms=[0-9]+ filler_hits=[0-9]+ candidate=1' measure.txt || { echo 'FAIL: no well-formed RESULT with candidate=1:'; grep '^RESULT' measure.txt; exit 1; }; echo \"PASS: $(grep -m1 '^RESULT' measure.txt)\"",
+      "verified": "The ASAP-phrasing case with the candidate model enabled, routing and latency on record."
+    },
+    {
+      "key": "bake-correction-cur",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 USE_CANDIDATE=0 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"thursday please\", \"No the following Thursday\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", \"92\", \"script.json\", \"correction-cur\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 TURN lines, got $t\"; tail -5 measure.txt; exit 1; }; grep -qE '^RESULT label=correction-cur turns=3 total_wall_ms=[0-9]+ filler_hits=[0-9]+ candidate=0' measure.txt || { echo 'FAIL: no well-formed RESULT:'; grep '^RESULT' measure.txt; exit 1; }; echo \"PASS: $(grep -m1 '^RESULT' measure.txt)\"",
+      "verified": "Tonight's exact correction case executed against v92 on the current model - pathway extraction and node routing on record (gateway-side date defect is T1's, already closed)."
+    },
+    {
+      "key": "bake-correction-cand",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["measure.txt", "script.json"],
+      "spec": "HARNESS_PATIENT_ID=4376662466 HARNESS_PATIENT_CELL=6468942428 HARNESS_STORE=711 USE_CANDIDATE=1 python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > measure.txt 2>&1\nimport json, os, subprocess, sys\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    try:\n        p = json.loads(raw)\n        raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\n    except Exception:\n        pass\nos.environ[\"BLAND_API_KEY\"] = raw\nwith open(\"script.json\", \"w\") as f:\n    json.dump({\"turns\": [\"hi\", \"thursday please\", \"No the following Thursday\"]}, f)\nsys.exit(subprocess.call([\"python3\", \"-u\", \"/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT4t3/t4-timer3-fixer/turn_timer3.py\", \"92\", \"script.json\", \"correction-cand\"]))\nPY\nrc=$?; tail -5 measure.txt; exit $rc",
+      "check": "t=$(grep -cE '^TURN=' measure.txt); [ \"$t\" -eq 3 ] || { echo \"FAIL: expected 3 TURN lines, got $t\"; tail -5 measure.txt; exit 1; }; grep -qE '^RESULT label=correction-cand turns=3 total_wall_ms=[0-9]+ filler_hits=[0-9]+ candidate=1' measure.txt || { echo 'FAIL: no well-formed RESULT with candidate=1:'; grep '^RESULT' measure.txt; exit 1; }; echo \"PASS: $(grep -m1 '^RESULT' measure.txt)\"",
+      "verified": "The correction case with the candidate model enabled, completing the three-scenario current-vs-candidate record."
+    }
+  ]
+}

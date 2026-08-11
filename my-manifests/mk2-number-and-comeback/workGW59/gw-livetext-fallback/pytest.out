@@ -1,0 +1,31 @@
+............................................. [ 24%]
+........................................................................ [ 64%]
+.................................................................        [100%]
+=============================== warnings summary ===============================
+tests/test_bland_gateway.py: 33 warnings
+tests/test_vocab3.py: 42 warnings
+  /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW59/gw-livetext-fallback/gwtest/container/bland_gateway.py:922: DeprecationWarning: Parsing dates involving a day of month without a year specified is ambiguous
+  and fails to parse leap day. The default behavior will change in Python 3.15
+  to either always raise an exception or to use a different default year (TBD).
+  To avoid trouble, add a specific year to the input & format.
+  See https://github.com/python/cpython/issues/70647.
+    d = datetime.strptime(t, fmt).date().replace(year=today.year)
+
+tests/test_vocab4.py::test_anaphor_without_context_falls_through
+tests/test_vocab4.py::test_anaphor_without_context_falls_through
+tests/test_vocab4.py::test_anaphor_without_context_falls_through
+tests/test_vocab4.py::test_explicit_extraction_wins
+tests/test_vocab4.py::test_explicit_extraction_wins
+tests/test_vocab4.py::test_explicit_extraction_wins
+tests/test_vocab4.py::test_anchor_outranks_daypart
+tests/test_vocab4.py::test_anchor_outranks_daypart
+tests/test_vocab4.py::test_anchor_outranks_daypart
+  /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGW59/gw-livetext-fallback/fixed-bland_gateway.py:1056: DeprecationWarning: Parsing dates involving a day of month without a year specified is ambiguous
+  and fails to parse leap day. The default behavior will change in Python 3.15
+  to either always raise an exception or to use a different default year (TBD).
+  To avoid trouble, add a specific year to the input & format.
+  See https://github.com/python/cpython/issues/70647.
+    d = datetime.strptime(t, fmt).date().replace(year=today.year)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+182 passed, 84 warnings, 27 subtests passed in 0.74s

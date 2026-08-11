@@ -1,0 +1,23 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD25",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-round18-fix",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 2400,
+      "expect_files": [
+        "build_goalloop.py",
+        "check_goalloop_graph.py",
+        "pathway-goalloop-draft.json",
+        "frozen-extractors.json",
+        "DEBUG.md"
+      ],
+      "spec": "ROLE: fix worker for the Mott goal-loop Bland pathway, round 18 - deterministic single-slot time picks. Work entirely inside your CWD; never modify anything outside it; no network, no git, no MCP/Apps/skills; do not mint, attach, deploy, or call any API. CONTEXT - measured live on v113: with offers of 11:15 am (slot 1) and 11:30 am (slot 2), the patient typed '1115' and the gate confirmed 11:30 - the wrong opening. The patient's correction ('I said 1115') was caught by the BOOKING-INTEGRITY guard and the gate re-stated 11:15, so nothing wrong was booked, but the patient had to repeat themselves. Root cause: choosing between n_gate_1 and n_gate_2 from a bare clock time is a semantic router judgement and it is unreliable. Ankit's decision (do not re-litigate): make it deterministic by routing a named clock time through the existing anchor search, which returns slots ordered nearest-to-anchor, and then offering that ONE slot for a single confirm. THE FIX - copy every artifact from /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD24/gl-round17-fix/ into CWD and change: (1) ADD an edge n_goal_response -> n_goal_search_anchor labeled exactly 'names a specific clock time to take, including bare digit forms like 1115, 11 15, or 11:15, rather than replying 1 or 2' (mirror in description). Keep the existing gate edges for 'reply 1'/'reply 2' style picks and for naming the time when it is unambiguous; this new edge takes precedence for a bare named time. The goal_anchor extractor already captures the named clock time - confirm it fires for bare digit forms and, if its description does not already cover them, extend ONLY that extractor's description in frozen-extractors.json to include bare 3-4 digit times (1115, 1015, 930) mapping to HH:MM am/pm, applied identically on every wait node that carries goal_anchor. (2) SINGLE-SLOT rule: add to the n_goal_response prompt a block starting with the exact marker 'SINGLE-SLOT:' stating: when the search was run for a time the patient specifically named and the first slot matches that time, offer ONLY that one opening using the literal {{slot_1_day_name}} {{slot_1_start}} values and ask them to reply 1 to take it (do not list a second option); if the first slot does NOT match the named time, say that exact time is not available and offer the two real slots verbatim as usual. Keep TIME-GRID, OFFER-INTEGRITY, NO-BOOKING-CLAIM and every other block intact; prompt may grow to 5,000 characters. (3) Nothing else changes - the anchor search body, gates, confirms, post-booking node, and all prior guards stay exactly as they are. (4) VALIDATOR: add ASSERTION 18 keeping 1-17 intact: the named-time-pick edge exists from n_goal_response to n_goal_search_anchor with a label naming clock times and containing a bare-digit example; the n_goal_response prompt contains SINGLE-SLOT; the anchor search still pins time_pref anchor={{goal_anchor}} and its success path reaches n_goal_response. Structured FAIL citing 'assertion 18'; must PASS your draft and FAIL the untouched round-17 draft at /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD24/gl-round17-fix/pathway-goalloop-draft.json citing assertion 18. (5) build_goalloop.py regenerates deterministically; fixture-conformant.json updated. (6) DEBUG.md: the live evidence, the decision, the changes, regeneration command; mention extract/prompt/compress context as before.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_round18_fix.py ./check_goalloop_graph.py ./pathway-goalloop-draft.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD24/gl-round17-fix/pathway-goalloop-draft.json",
+      "verified": "A named clock time routes deterministically through the anchor search and is offered as a single confirmable opening, so the router never has to guess between two gates - with every booking-safety guard from rounds 8 through 17 still asserted."
+    }
+  ]
+}

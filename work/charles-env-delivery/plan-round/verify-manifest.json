@@ -1,0 +1,19 @@
+{
+  "run_name": "charles-env-delivery",
+  "workdir": "/mnt/d_drive/ringer-work/charles-env-delivery/plan-verify",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "delivery-plan-verify",
+      "task_type": "probe",
+      "engine": "local-shell",
+      "timeout_s": 300,
+      "spec": "set -euo pipefail; cp /mnt/d_drive/ringer-work/charles-env-delivery/plan-round-v3/delivery-plan/delivery-plan.md ./delivery-plan.md; printf '%s\\n' 'Copied the worker-produced plan into a fresh verification task directory.'",
+      "check": "python3 /mnt/d_drive/repos/ringer/work/charles-env-delivery/plan-round/checks/validate_delivery_plan.py --plan delivery-plan.md --evidence /mnt/d_drive/repos/ringer/work/charles-env-delivery/plan-round/source-evidence.json --body /mnt/d_drive/repos/ringer/work/charles-env-delivery/plan-round/locked_email_body.txt && cmp -- delivery-plan.md /mnt/d_drive/ringer-work/charles-env-delivery/plan-round-v3/delivery-plan/delivery-plan.md && printf '%s\\n' 'PASS: fresh verification copy is byte-identical to the worker-produced plan'",
+      "expect_files": [
+        "delivery-plan.md"
+      ],
+      "verified": "the corrected executable validator passes against an unmodified copy of the already worker-produced plan, proving the prior red was checker formatting drift rather than a plan defect"
+    }
+  ]
+}

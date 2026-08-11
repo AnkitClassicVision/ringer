@@ -1,0 +1,27 @@
+CASE=1 mode=raw ctx=corr got=NONE want=08/13/2026 ok=0 lat_ms=NA phrase=No the following Thursday
+CASE=2 mode=raw ctx=plain got=08/06/2026 want=08/13/2026 ok=0 lat_ms=NA phrase=the following Thursday
+CASE=3 mode=raw ctx=plain got=08/06/2026 want=08/13/2026 ok=0 lat_ms=NA phrase=following Thursday
+CASE=4 mode=raw ctx=plain got=08/10/2026 want=08/10/2026 ok=1 lat_ms=NA phrase=the following Monday
+CASE=5 mode=raw ctx=plain got=08/11/2026 want=08/11/2026 ok=1 lat_ms=NA phrase=following Tuesday
+CASE=6 mode=raw ctx=plain got=08/07/2026 want=08/14/2026 ok=0 lat_ms=NA phrase=the following Friday
+CASE=7 mode=raw ctx=plain got=08/12/2026 want=08/12/2026 ok=1 lat_ms=NA phrase=following Wednesday
+CASE=8 mode=raw ctx=corr got=08/03/2026 want=08/10/2026 ok=0 lat_ms=NA phrase=No, the following Monday
+CASE=9 mode=raw ctx=corr got=NONE want=08/11/2026 ok=0 lat_ms=NA phrase=No the following Tuesday
+CASE=10 mode=raw ctx=corr got=08/07/2026 want=08/14/2026 ok=0 lat_ms=NA phrase=No, following Friday
+CASE=11 mode=raw ctx=plain got=08/09/2026 want=08/16/2026 ok=0 lat_ms=NA phrase=the following Sunday
+CASE=12 mode=raw ctx=plain got=08/15/2026 want=08/15/2026 ok=1 lat_ms=NA phrase=following Saturday
+TOTAL mode=raw model=none ok=4/12 median_lat_ms=NA
+2026-08-03 19:30:22,171 INFO Found credentials in shared credentials file: ~/.aws/credentials
+CASE=1 mode=llm ctx=corr got=NONE want=08/13/2026 ok=0 lat_ms=849 phrase=No the following Thursday
+CASE=2 mode=llm ctx=plain got=NONE want=08/13/2026 ok=0 lat_ms=918 phrase=the following Thursday
+CASE=3 mode=llm ctx=plain got=NONE want=08/13/2026 ok=0 lat_ms=1226 phrase=following Thursday
+CASE=4 mode=llm ctx=plain got=NONE want=08/10/2026 ok=0 lat_ms=746 phrase=the following Monday
+CASE=5 mode=llm ctx=plain got=NONE want=08/11/2026 ok=0 lat_ms=1163 phrase=following Tuesday
+CASE=6 mode=llm ctx=plain got=NONE want=08/14/2026 ok=0 lat_ms=762 phrase=the following Friday
+CASE=7 mode=llm ctx=plain got=NONE want=08/12/2026 ok=0 lat_ms=1048 phrase=following Wednesday
+CASE=8 mode=llm ctx=corr got=NONE want=08/10/2026 ok=0 lat_ms=1239 phrase=No, the following Monday
+CASE=9 mode=llm ctx=corr got=NONE want=08/11/2026 ok=0 lat_ms=1223 phrase=No the following Tuesday
+CASE=10 mode=llm ctx=corr got=NONE want=08/14/2026 ok=0 lat_ms=1424 phrase=No, following Friday
+CASE=11 mode=llm ctx=plain got=NONE want=08/16/2026 ok=0 lat_ms=723 phrase=the following Sunday
+CASE=12 mode=llm ctx=plain got=NONE want=08/15/2026 ok=0 lat_ms=690 phrase=following Saturday
+TOTAL mode=llm model=us.anthropic.claude-haiku-4-5-20251001-v1:0 ok=0/12 median_lat_ms=983

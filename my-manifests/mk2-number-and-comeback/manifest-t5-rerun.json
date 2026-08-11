@@ -1,0 +1,27 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT5r2",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "t5-eval-haiku2",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["haiku.txt"],
+      "spec": "MODE=both ECP_LLM_INTENT=authoritative ECP_LLM_MODEL_ID=us.anthropic.claude-haiku-4-5-20251001-v1:0 PYTHONDONTWRITEBYTECODE=1 python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT5/t5-eval-builder/eval_ext.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT1r3/t1-final-analysis/eval_cases.json > haiku.txt 2>&1; rc=$?; grep '^TOTAL' haiku.txt; exit $rc",
+      "check": "c=$(grep -cE '^CASE=' haiku.txt); [ \"$c\" -ge 20 ] || { echo \"FAIL: only $c CASE lines\"; tail -6 haiku.txt; exit 1; }; grep -qE '^TOTAL mode=raw' haiku.txt || { echo 'FAIL: no raw TOTAL'; exit 1; }; grep -qE '^TOTAL mode=llm model=us.anthropic.claude-haiku' haiku.txt || { echo 'FAIL: no Haiku llm TOTAL'; exit 1; }; m=$(grep -oE '^TOTAL mode=llm.*median_lat_ms=[0-9]+' haiku.txt | grep -oE '[0-9]+$'); [ -n \"$m\" ] && [ \"$m\" -ge 300 ] || { echo \"FAIL: llm median latency ${m}ms is too fast to be a real Bedrock call - the LLM layer is still gated off or erroring instantly\"; grep -m3 'mode=llm' haiku.txt; exit 1; }; echo \"PASS: $(grep '^TOTAL' haiku.txt | tr '\\n' ' ')\"",
+      "verified": "The corpus scored through Haiku 4.5 with the intent layer actually enabled (ECP_LLM_INTENT=authoritative), proven live by a Bedrock-plausible median latency, alongside the raw-path baseline."
+    },
+    {
+      "key": "t5-eval-sonnet2",
+      "engine": "local-shell",
+      "task_type": "bakeoff",
+      "timeout_s": 1200,
+      "expect_files": ["sonnet.txt"],
+      "spec": "MODE=llm ECP_LLM_INTENT=authoritative MODEL_CANDIDATES=us.anthropic.claude-sonnet-5-20251101-v1:0,us.anthropic.claude-sonnet-4-5-20250929-v1:0 PYTHONDONTWRITEBYTECODE=1 python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT5/t5-eval-builder/eval_ext.py /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT1r3/t1-final-analysis/eval_cases.json > sonnet.txt 2>&1; rc=$?; grep -E '^MODEL_USED|^MODEL_PROBE|^TOTAL' sonnet.txt; exit $rc",
+      "check": "grep -qE '^MODEL_USED=us.anthropic.claude-sonnet' sonnet.txt || { echo 'FAIL: no Sonnet-class model responded to the probe - if MODEL_PROBE_FAILED, local AWS credentials may lack access to Sonnet on Bedrock:'; head -6 sonnet.txt; exit 1; }; c=$(grep -cE '^CASE=.*mode=llm' sonnet.txt); [ \"$c\" -ge 10 ] || { echo \"FAIL: only $c llm CASE lines\"; tail -6 sonnet.txt; exit 1; }; m=$(grep -oE '^TOTAL mode=llm.*median_lat_ms=[0-9]+' sonnet.txt | grep -oE '[0-9]+$'); [ -n \"$m\" ] && [ \"$m\" -ge 300 ] || { echo \"FAIL: llm median latency ${m}ms too fast to be real Bedrock calls\"; grep -m3 'mode=llm' sonnet.txt; exit 1; }; echo \"PASS: $(grep -m1 '^MODEL_USED' sonnet.txt); $(grep -m1 '^TOTAL' sonnet.txt)\"",
+      "verified": "The same corpus scored through a Sonnet-class phrase-picker with the intent layer enabled and Bedrock-plausible latency, completing the raw vs Haiku vs Sonnet comparison."
+    }
+  ]
+}

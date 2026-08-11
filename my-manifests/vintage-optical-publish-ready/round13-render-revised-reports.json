@@ -1,0 +1,19 @@
+{
+  "run_name": "vintage-optical-source-refresh-report",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-render",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "render-revised-report-documents",
+      "engine": "local-shell",
+      "task_type": "site-build",
+      "timeout_s": 900,
+      "expect_files": [
+        "render_receipt.json"
+      ],
+      "spec": "set -euo pipefail; target=/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents; PYTHONDONTWRITEBYTECODE=1 python3 \"$target/render_report.py\" --dir \"$target\"; cp \"$target/render_receipt.json\" \"$PWD/render_receipt.json\"",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_rendered_report.py --dir /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-build/build-revised-report-documents --receipt ./render_receipt.json",
+      "verified": "Google Chrome freshly renders the one-page Letter report and complete Letter explainer, page images and text extracts reconcile, no page is blank, all required facts survive rendering, stale route values and internal paths are absent, and visual QA remains a separate pending gate"
+    }
+  ]
+}

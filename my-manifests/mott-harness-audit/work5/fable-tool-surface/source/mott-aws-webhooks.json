@@ -1,0 +1,1761 @@
+{
+  "schema_version": "1.1.0",
+  "catalog_id": "mott-aws-webhooks",
+  "tenant": "mott",
+  "base_url": "https://mott-booking-gw.mail.mybcat.com",
+  "verified_at": "2026-07-24",
+  "reviewed_state": "catalogs/mott-aws-gateway-reviewed-state.json",
+  "default_node_settings": {
+    "method": "POST",
+    "timeout_seconds": 10,
+    "retry_attempts": 0,
+    "skip_user_response": true
+  },
+  "authorization": {
+    "type": "bearer",
+    "ui_instruction": "Reuse the approved Mott bearer authorization from an existing live Mott Webhook node. Never expose or place the bearer in pathway variables.",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  },
+  "disallowed_endpoints": [
+    {
+      "path": "/book",
+      "reason": "Legacy direct EyeCloud write that bypasses conductor scope and kill-switch controls."
+    },
+    {
+      "path": "/reschedule",
+      "reason": "Legacy direct EyeCloud write. Use a governed /sign operation only after scope approval."
+    },
+    {
+      "path": "/cancel",
+      "reason": "Legacy direct EyeCloud write. Use a governed /sign operation only after scope approval."
+    },
+    {
+      "path": "/book-new-patient",
+      "reason": "Direct patient creation is disabled and has no approved governed Bland write path."
+    }
+  ],
+  "operations": [
+    {
+      "id": "patient.lookup.recall",
+      "aliases": [
+        "look up recall patient",
+        "find campaign patient",
+        "patient search from recall id",
+        "identify outbound recall patient"
+      ],
+      "purpose": "Resolve the campaign-pinned recall patient without asking the model to guess identity.",
+      "status": "ready",
+      "effect": "read_phi",
+      "path": "/patient-search",
+      "body": {
+        "phone": "{{to}}",
+        "patient_id": "{{recall_patient_id}}"
+      },
+      "upstream_variables": [
+        {
+          "name": "to",
+          "required": true,
+          "meaning": "Patient recipient phone for the outbound Bland conversation.",
+          "safe_source": "Bland outbound conversation variable; confirm direction before using in an inbound pathway."
+        },
+        {
+          "name": "recall_patient_id",
+          "required": true,
+          "meaning": "Trusted EyeCloud patient ID pinned to the approved campaign row.",
+          "safe_source": "Approved recall feed request_data; never model-generated."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "gw_ok",
+          "json_path": "$.ok",
+          "description": "Gateway success flag."
+        },
+        {
+          "name": "match_count",
+          "json_path": "$.result.count",
+          "description": "Number of safe matches."
+        },
+        {
+          "name": "patient_id",
+          "json_path": "$.result.patients[0].patient_id",
+          "description": "Resolved EyeCloud patient ID."
+        },
+        {
+          "name": "patient_first",
+          "json_path": "$.result.patients[0].name_first",
+          "description": "Minimum-necessary first name for conversation."
+        },
+        {
+          "name": "patient_last",
+          "json_path": "$.result.patients[0].name_last",
+          "description": "Last name only when a later identity gate needs it."
+        },
+        {
+          "name": "returned_store",
+          "json_path": "$.result.patients[0].home_store",
+          "description": "Patient home store returned for comparison; never overwrite trusted upstream store."
+        },
+        {
+          "name": "exam_type_id",
+          "json_path": "$.result.exam_type_id",
+          "description": "Trusted appointment type selected by server-side recall context."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "gw_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Lookup unavailable / safe exit"
+        },
+        {
+          "variable": "match_count",
+          "operator": "==",
+          "value": 1,
+          "destination_role": "Continue to availability"
+        },
+        {
+          "variable": "match_count",
+          "operator": ">",
+          "value": 1,
+          "destination_role": "Ask the texter to identify themselves; never select the first record"
+        },
+        {
+          "variable": "match_count",
+          "operator": "==",
+          "value": 0,
+          "destination_role": "No-match handoff"
+        }
+      ],
+      "warnings": [
+        "Do not use the first returned patient's name as the texter-provided disambiguation answer.",
+        "Do not expose patient DOB or phone in patient-facing copy or logs."
+      ],
+      "evidence": {
+        "live_pathway_version": 19,
+        "live_node_role": "Recall token lookup",
+        "aws_contract": "Python gateway /patient-search"
+      }
+    },
+    {
+      "id": "patient.search.name_dob",
+      "aliases": [
+        "find patient by name and dob",
+        "patient search by last name",
+        "look up a patient without recall id",
+        "identify patient from demographics"
+      ],
+      "purpose": "Find an existing patient after the person supplies and confirms identity factors.",
+      "status": "limited",
+      "effect": "read_phi",
+      "path": "/patient-search",
+      "body": {
+        "last": "{{patient_last}}",
+        "dob": "{{patient_dob}}"
+      },
+      "upstream_variables": [
+        {
+          "name": "patient_last",
+          "required": true,
+          "meaning": "Last name supplied by the patient.",
+          "safe_source": "A prior identity-collection node."
+        },
+        {
+          "name": "patient_dob",
+          "required": true,
+          "meaning": "DOB in MM/DD/YYYY.",
+          "safe_source": "A prior identity-collection node; do not repeat it in patient-facing confirmation."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "gw_ok",
+          "json_path": "$.ok",
+          "description": "Gateway success flag."
+        },
+        {
+          "name": "match_count",
+          "json_path": "$.result.count",
+          "description": "Number of safe matches."
+        },
+        {
+          "name": "patient_id",
+          "json_path": "$.result.patients[0].patient_id",
+          "description": "Resolved patient ID only when match_count is exactly one."
+        },
+        {
+          "name": "patient_first",
+          "json_path": "$.result.patients[0].name_first",
+          "description": "First name for minimum-necessary personalization."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "gw_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Lookup unavailable / safe exit"
+        },
+        {
+          "variable": "match_count",
+          "operator": "==",
+          "value": 1,
+          "destination_role": "Continue"
+        },
+        {
+          "variable": "match_count",
+          "operator": "!=",
+          "value": 1,
+          "destination_role": "Human identity handoff; never guess"
+        }
+      ],
+      "warnings": [
+        "Mott gateway test mode currently filters general search results. Campaign-pinned lookup is the proven route.",
+        "Do not proceed on zero or multiple matches."
+      ],
+      "unblock_requirements": [
+        "Remove or deliberately reconfigure the Mott test-mode patient prefix only after the real-patient identity gate is approved and tested."
+      ],
+      "evidence": {
+        "live_pathway_version": 19,
+        "live_node_role": "Patient search family",
+        "aws_contract": "Python gateway /patient-search"
+      }
+    },
+    {
+      "id": "patient.disambiguate.first_name",
+      "aliases": [
+        "disambiguate shared phone by first name",
+        "ask which patient is texting",
+        "shared number patient choice"
+      ],
+      "purpose": "Narrow a shared-phone match using the texter-provided first name.",
+      "status": "limited",
+      "effect": "read_phi",
+      "path": "/patient-search",
+      "body": {
+        "phone": "{{to}}",
+        "first": "{{provided_first_name}}"
+      },
+      "upstream_variables": [
+        {
+          "name": "to",
+          "required": true,
+          "meaning": "Patient recipient phone for the outbound conversation.",
+          "safe_source": "Bland outbound conversation variable."
+        },
+        {
+          "name": "provided_first_name",
+          "required": true,
+          "meaning": "First name typed by the texter in response to an identity question.",
+          "safe_source": "Dedicated extraction from the patient's reply, not a prior search result."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "gw_ok",
+          "json_path": "$.ok",
+          "description": "Gateway success flag."
+        },
+        {
+          "name": "match_count",
+          "json_path": "$.result.count",
+          "description": "Number of safe matches."
+        },
+        {
+          "name": "patient_id",
+          "json_path": "$.result.patients[0].patient_id",
+          "description": "Resolved patient only when count is exactly one."
+        },
+        {
+          "name": "patient_first",
+          "json_path": "$.result.patients[0].name_first",
+          "description": "The exactly resolved patient's first name."
+        },
+        {
+          "name": "returned_store",
+          "json_path": "$.result.patients[0].home_store",
+          "description": "The exactly resolved patient's home store for comparison; never overwrite trusted upstream store."
+        },
+        {
+          "name": "exam_type_id",
+          "json_path": "$.result.exam_type_id",
+          "description": "Trusted appointment type selected by server-side context."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "gw_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Lookup unavailable / safe exit"
+        },
+        {
+          "variable": "match_count",
+          "operator": "==",
+          "value": 1,
+          "destination_role": "Continue"
+        },
+        {
+          "variable": "match_count",
+          "operator": "!=",
+          "value": 1,
+          "destination_role": "Human identity handoff"
+        }
+      ],
+      "warnings": [
+        "The version 19 test-line node now uses a dedicated texter-provided first-name variable; preserve that separation.",
+        "Do not promote this beyond the test line until zero, one, and multiple-match behavior passes with synthetic/test records."
+      ],
+      "unblock_requirements": [
+        "Prove zero, one, and multiple-match behavior with synthetic/test records."
+      ],
+      "evidence": {
+        "live_pathway_version": 19,
+        "live_node_role": "Recall first-name disambiguation",
+        "aws_contract": "Python gateway /patient-search"
+      }
+    },
+    {
+      "id": "availability.first_available",
+      "aliases": [
+        "find first available appointment",
+        "find next appointment",
+        "get earliest opening",
+        "show the next available slots",
+        "first available slot"
+      ],
+      "purpose": "Fetch the first available Mott openings across the gateway's bounded search window.",
+      "status": "ready",
+      "effect": "read_scheduler",
+      "path": "/availability",
+      "body": {
+        "store": "{{store}}",
+        "first_available": "1",
+        "slot_minutes": "15"
+      },
+      "upstream_variables": [
+        {
+          "name": "store",
+          "required": true,
+          "meaning": "Mott EyeCloud store ID or resolvable store name.",
+          "safe_source": "Pinned patient lookup, approved campaign data, or practice config."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "gw_ok",
+          "json_path": "$.ok",
+          "description": "Gateway success flag."
+        },
+        {
+          "name": "slot_count",
+          "json_path": "$.result.count",
+          "description": "Number of openings returned."
+        },
+        {
+          "name": "slot_start",
+          "json_path": "$.result.first_start",
+          "description": "First slot start."
+        },
+        {
+          "name": "slot_end",
+          "json_path": "$.result.first_end",
+          "description": "First slot end."
+        },
+        {
+          "name": "slot_doctor",
+          "json_path": "$.result.first_doctor",
+          "description": "First slot doctor ID."
+        },
+        {
+          "name": "slot_2_start",
+          "json_path": "$.result.slots[1].start",
+          "description": "Second slot start when present."
+        },
+        {
+          "name": "slot_2_end",
+          "json_path": "$.result.slots[1].end",
+          "description": "Second slot end when present."
+        },
+        {
+          "name": "slot_2_doctor",
+          "json_path": "$.result.slots[1].doctor_id",
+          "description": "Second slot doctor ID when present."
+        },
+        {
+          "name": "slot_3_start",
+          "json_path": "$.result.slots[2].start",
+          "description": "Third slot start when present."
+        },
+        {
+          "name": "slot_3_end",
+          "json_path": "$.result.slots[2].end",
+          "description": "Third slot end when present."
+        },
+        {
+          "name": "slot_3_doctor",
+          "json_path": "$.result.slots[2].doctor_id",
+          "description": "Third slot doctor ID when present."
+        },
+        {
+          "name": "alt_store",
+          "json_path": "$.result.alt_store",
+          "description": "Alternate store name when configured."
+        },
+        {
+          "name": "alt_count",
+          "json_path": "$.result.alt_count",
+          "description": "Alternate store opening count."
+        },
+        {
+          "name": "alt_first_start",
+          "json_path": "$.result.alt_first_start",
+          "description": "First alternate-store opening."
+        },
+        {
+          "name": "returned_store",
+          "json_path": "$.result.slots[0].store_id",
+          "description": "Returned store for diagnostics; do not overwrite upstream store."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "gw_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Safe exit / gateway unavailable"
+        },
+        {
+          "variable": "slot_count",
+          "operator": "==",
+          "value": 1,
+          "destination_role": "Send one opening"
+        },
+        {
+          "variable": "slot_count",
+          "operator": ">=",
+          "value": 2,
+          "destination_role": "Send two openings"
+        },
+        {
+          "variable": "slot_count",
+          "operator": "<",
+          "value": 1,
+          "destination_role": "Ask date/time preference"
+        }
+      ],
+      "warnings": [
+        "Mott alternate-store mapping is not configured, so alt fields normally remain empty.",
+        "Do not map returned_store back into store because slots[0] is absent when no slots exist."
+      ],
+      "evidence": {
+        "live_pathway_version": 19,
+        "live_node_role": "Recall availability",
+        "aws_contract": "Python gateway /availability"
+      }
+    },
+    {
+      "id": "availability.specific_date",
+      "aliases": [
+        "find appointments on a date",
+        "check a requested day",
+        "find morning appointments",
+        "availability for specific date",
+        "check time preference"
+      ],
+      "purpose": "Fetch openings for one requested date and optional time-of-day preference.",
+      "status": "ready",
+      "effect": "read_scheduler",
+      "path": "/availability",
+      "body": {
+        "store": "{{store}}",
+        "from": "{{appt_date}}",
+        "to": "{{appt_date}}",
+        "slot_minutes": "15",
+        "time_pref": "{{time_pref}}"
+      },
+      "upstream_variables": [
+        {
+          "name": "store",
+          "required": true,
+          "meaning": "Mott EyeCloud store ID or resolvable store name.",
+          "safe_source": "Pinned patient lookup or practice config."
+        },
+        {
+          "name": "appt_date",
+          "required": true,
+          "meaning": "Requested date.",
+          "safe_source": "A date-collection node; use MM/DD/YYYY or YYYY-MM-DD until the active gateway rollout is confirmed."
+        },
+        {
+          "name": "time_pref",
+          "required": false,
+          "meaning": "morning, afternoon, evening, or blank.",
+          "safe_source": "Patient preference extraction."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "gw_ok",
+          "json_path": "$.ok",
+          "description": "Gateway success flag."
+        },
+        {
+          "name": "slot_count",
+          "json_path": "$.result.count",
+          "description": "Number of openings returned."
+        },
+        {
+          "name": "slot_start",
+          "json_path": "$.result.first_start",
+          "description": "First slot start."
+        },
+        {
+          "name": "slot_end",
+          "json_path": "$.result.first_end",
+          "description": "First slot end."
+        },
+        {
+          "name": "slot_doctor",
+          "json_path": "$.result.first_doctor",
+          "description": "First slot doctor ID."
+        },
+        {
+          "name": "slot_2_start",
+          "json_path": "$.result.slots[1].start",
+          "description": "Second slot start when present."
+        },
+        {
+          "name": "slot_2_end",
+          "json_path": "$.result.slots[1].end",
+          "description": "Second slot end when present."
+        },
+        {
+          "name": "slot_2_doctor",
+          "json_path": "$.result.slots[1].doctor_id",
+          "description": "Second slot doctor ID when present."
+        },
+        {
+          "name": "time_pref_relaxed",
+          "json_path": "$.result.time_pref_relaxed",
+          "description": "Original preference when the gateway returned unfiltered openings instead."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "gw_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Safe exit / gateway unavailable"
+        },
+        {
+          "variable": "slot_count",
+          "operator": ">=",
+          "value": 1,
+          "destination_role": "Offer openings"
+        },
+        {
+          "variable": "slot_count",
+          "operator": "<",
+          "value": 1,
+          "destination_role": "Ask for another date or preference"
+        }
+      ],
+      "warnings": [
+        "Do not promise that a slot exists before this webhook succeeds.",
+        "If time_pref_relaxed is present, explain that the requested time was unavailable before offering another time."
+      ],
+      "evidence": {
+        "live_pathway_version": 19,
+        "live_node_role": "Specific-date availability",
+        "aws_contract": "Python gateway /availability"
+      }
+    },
+    {
+      "id": "availability.conflict_check",
+      "aliases": [
+        "check slot conflict",
+        "verify appointment is still open",
+        "check if time overlaps",
+        "precheck booking slot"
+      ],
+      "purpose": "Read the scheduler and determine whether a proposed slot conflicts before booking.",
+      "status": "ready",
+      "effect": "read_scheduler",
+      "path": "/conflict-check",
+      "body": {
+        "store": "{{store}}",
+        "doctor": "{{slot_doctor}}",
+        "start": "{{slot_start}}",
+        "end": "{{slot_end}}"
+      },
+      "upstream_variables": [
+        {
+          "name": "store",
+          "required": true,
+          "meaning": "Store for the offered slot.",
+          "safe_source": "Availability request context."
+        },
+        {
+          "name": "slot_doctor",
+          "required": true,
+          "meaning": "Doctor ID returned by availability.",
+          "safe_source": "Availability response."
+        },
+        {
+          "name": "slot_start",
+          "required": true,
+          "meaning": "Proposed slot start.",
+          "safe_source": "Availability response."
+        },
+        {
+          "name": "slot_end",
+          "required": true,
+          "meaning": "Proposed slot end.",
+          "safe_source": "Availability response."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "gw_ok",
+          "json_path": "$.ok",
+          "description": "Gateway success flag."
+        },
+        {
+          "name": "slot_conflict",
+          "json_path": "$.result.conflict",
+          "description": "True when the slot collides or is outside the schedule."
+        },
+        {
+          "name": "conflict_reason",
+          "json_path": "$.result.reason",
+          "description": "Non-PHI reason for the conflict."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "gw_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Safe exit / gateway unavailable"
+        },
+        {
+          "variable": "slot_conflict",
+          "operator": "==",
+          "value": true,
+          "destination_role": "Refresh availability"
+        },
+        {
+          "variable": "slot_conflict",
+          "operator": "==",
+          "value": false,
+          "destination_role": "Continue to human confirmation or booking"
+        }
+      ],
+      "warnings": [
+        "This is advisory. The governed /sign booking performs its own conflict check again."
+      ],
+      "evidence": {
+        "live_pathway_version": null,
+        "live_node_role": "Not currently used",
+        "aws_contract": "Python gateway /conflict-check"
+      }
+    },
+    {
+      "id": "appointment.list",
+      "aliases": [
+        "show upcoming appointments",
+        "find existing appointment",
+        "list patient appointments",
+        "does patient already have an appointment"
+      ],
+      "purpose": "Return the resolved patient's upcoming appointments without notes or demographics.",
+      "status": "ready",
+      "effect": "read_phi",
+      "path": "/appt-list",
+      "body": {
+        "patient_id": "{{patient_id}}",
+        "store": "{{store}}"
+      },
+      "upstream_variables": [
+        {
+          "name": "patient_id",
+          "required": true,
+          "meaning": "Exactly resolved EyeCloud patient ID.",
+          "safe_source": "A one-match identity lookup."
+        },
+        {
+          "name": "store",
+          "required": false,
+          "meaning": "Optional store filter.",
+          "safe_source": "Patient lookup or practice config."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "gw_ok",
+          "json_path": "$.ok",
+          "description": "Gateway success flag."
+        },
+        {
+          "name": "appt_count",
+          "json_path": "$.result.count",
+          "description": "Upcoming appointment count."
+        },
+        {
+          "name": "appt_id",
+          "json_path": "$.result.appointments[0].appointment_id",
+          "description": "First upcoming appointment ID."
+        },
+        {
+          "name": "appt_start",
+          "json_path": "$.result.appointments[0].start",
+          "description": "First upcoming appointment start."
+        },
+        {
+          "name": "appt_end",
+          "json_path": "$.result.appointments[0].end",
+          "description": "First upcoming appointment end."
+        },
+        {
+          "name": "appt_doctor",
+          "json_path": "$.result.appointments[0].doctor_id",
+          "description": "First upcoming appointment doctor ID."
+        },
+        {
+          "name": "appt_store",
+          "json_path": "$.result.appointments[0].store_id",
+          "description": "First upcoming appointment store ID."
+        },
+        {
+          "name": "appt_status",
+          "json_path": "$.result.appointments[0].status",
+          "description": "First upcoming appointment status."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "gw_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Safe exit / gateway unavailable"
+        },
+        {
+          "variable": "appt_count",
+          "operator": "==",
+          "value": 0,
+          "destination_role": "No upcoming appointment"
+        },
+        {
+          "variable": "appt_count",
+          "operator": "==",
+          "value": 1,
+          "destination_role": "Confirm the appointment"
+        },
+        {
+          "variable": "appt_count",
+          "operator": ">",
+          "value": 1,
+          "destination_role": "Ask which appointment"
+        }
+      ],
+      "warnings": [
+        "Do not map notes, demographics, or appointment identifiers unless a later node requires them.",
+        "Do not cancel or reschedule from this result without a separate human confirmation and governed scope."
+      ],
+      "evidence": {
+        "live_pathway_version": null,
+        "live_node_role": "Not currently used",
+        "aws_contract": "Python gateway /appt-list"
+      }
+    },
+    {
+      "id": "appointment.book.slot_1",
+      "aliases": [
+        "book first slot",
+        "book selected appointment",
+        "confirm first opening",
+        "schedule the first option"
+      ],
+      "purpose": "Book the first offered slot through the governed conductor signer after explicit patient confirmation.",
+      "status": "limited",
+      "effect": "write_eyecloud",
+      "path": "/sign",
+      "body": {
+        "verb": "appt.book",
+        "target": "{{patient_id}}",
+        "store": "{{store}}",
+        "reason": "new-booking",
+        "params": {
+          "doctor": "{{slot_doctor}}",
+          "start": "{{slot_start}}",
+          "end": "{{slot_end}}",
+          "type": "{{exam_type_id}}"
+        }
+      },
+      "upstream_variables": [
+        {
+          "name": "patient_id",
+          "required": true,
+          "meaning": "Exactly resolved and currently conductor-allowlisted patient ID.",
+          "safe_source": "One-match patient lookup."
+        },
+        {
+          "name": "store",
+          "required": true,
+          "meaning": "Scoped Mott store.",
+          "safe_source": "Patient lookup or approved practice config."
+        },
+        {
+          "name": "slot_doctor",
+          "required": true,
+          "meaning": "Doctor ID from availability.",
+          "safe_source": "Availability response."
+        },
+        {
+          "name": "slot_start",
+          "required": true,
+          "meaning": "Selected slot start.",
+          "safe_source": "Availability response."
+        },
+        {
+          "name": "slot_end",
+          "required": true,
+          "meaning": "Selected slot end.",
+          "safe_source": "Availability response."
+        },
+        {
+          "name": "exam_type_id",
+          "required": true,
+          "meaning": "Approved Mott appointment type ID.",
+          "safe_source": "Server-side patient lookup context or approved campaign configuration; never model-generated."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "book_success",
+          "json_path": "$.success",
+          "description": "True only when the booking write reports success."
+        },
+        {
+          "name": "new_appt_id",
+          "json_path": "$.new_appt_id",
+          "description": "New EyeCloud appointment ID."
+        },
+        {
+          "name": "book_action",
+          "json_path": "$.action",
+          "description": "Confirmed conductor action."
+        },
+        {
+          "name": "book_http_status",
+          "json_path": "$.http_status",
+          "description": "Successful signer HTTP status."
+        },
+        {
+          "name": "book_error",
+          "json_path": "$.error",
+          "description": "Stable conductor error code."
+        },
+        {
+          "name": "error_status",
+          "json_path": "$.status",
+          "description": "Error-only signer status; never use it to route success."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "book_success",
+          "operator": "==",
+          "value": true,
+          "destination_role": "Patient-facing booked confirmation"
+        },
+        {
+          "variable": "book_error",
+          "operator": "==",
+          "value": "slot_conflict",
+          "destination_role": "Refresh availability"
+        },
+        {
+          "variable": "book_success",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Booking failed / staff handoff"
+        }
+      ],
+      "warnings": [
+        "This is a real write and has no confirm flag.",
+        "Conductor scope must be re-verified before any write; do not infer current grants from this catalog.",
+        "The version 19 test-line booking node still uses a fixed appointment type; add and prove the upstream exam_type_id extraction before replacing that body with this portable packet.",
+        "Never add allow_conflict and never retry automatically.",
+        "Only send patient-facing confirmation after book_success equals true."
+      ],
+      "unblock_requirements": [
+        "For general production use, complete the approved real-patient conductor cutover and remove the temporary patient allowlist through the normal human gate."
+      ],
+      "node_settings": {
+        "retry_attempts": 0
+      },
+      "evidence": {
+        "live_pathway_version": 19,
+        "live_node_role": "Book slot 1",
+        "aws_contract": "Conductor signer /sign, verb appt.book"
+      }
+    },
+    {
+      "id": "appointment.book.slot_2",
+      "aliases": [
+        "book second slot",
+        "book option two",
+        "confirm second opening",
+        "schedule the second option"
+      ],
+      "purpose": "Book the second offered slot through the governed conductor signer after explicit patient confirmation.",
+      "status": "limited",
+      "effect": "write_eyecloud",
+      "path": "/sign",
+      "body": {
+        "verb": "appt.book",
+        "target": "{{patient_id}}",
+        "store": "{{store}}",
+        "reason": "new-booking",
+        "params": {
+          "doctor": "{{slot_2_doctor}}",
+          "start": "{{slot_2_start}}",
+          "end": "{{slot_2_end}}",
+          "type": "{{exam_type_id}}"
+        }
+      },
+      "upstream_variables": [
+        {
+          "name": "patient_id",
+          "required": true,
+          "meaning": "Exactly resolved and currently conductor-allowlisted patient ID.",
+          "safe_source": "One-match patient lookup."
+        },
+        {
+          "name": "store",
+          "required": true,
+          "meaning": "Scoped Mott store.",
+          "safe_source": "Patient lookup or approved practice config."
+        },
+        {
+          "name": "slot_2_doctor",
+          "required": true,
+          "meaning": "Second slot doctor ID.",
+          "safe_source": "Availability response."
+        },
+        {
+          "name": "slot_2_start",
+          "required": true,
+          "meaning": "Second slot start.",
+          "safe_source": "Availability response."
+        },
+        {
+          "name": "slot_2_end",
+          "required": true,
+          "meaning": "Second slot end.",
+          "safe_source": "Availability response."
+        },
+        {
+          "name": "exam_type_id",
+          "required": true,
+          "meaning": "Approved Mott appointment type ID.",
+          "safe_source": "Server-side patient lookup context or approved campaign configuration; never model-generated."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "book_success",
+          "json_path": "$.success",
+          "description": "True only when the booking write reports success."
+        },
+        {
+          "name": "new_appt_id",
+          "json_path": "$.new_appt_id",
+          "description": "New EyeCloud appointment ID."
+        },
+        {
+          "name": "book_action",
+          "json_path": "$.action",
+          "description": "Confirmed conductor action."
+        },
+        {
+          "name": "book_http_status",
+          "json_path": "$.http_status",
+          "description": "Successful signer HTTP status."
+        },
+        {
+          "name": "book_error",
+          "json_path": "$.error",
+          "description": "Stable conductor error code."
+        },
+        {
+          "name": "error_status",
+          "json_path": "$.status",
+          "description": "Error-only signer status; never use it to route success."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "book_success",
+          "operator": "==",
+          "value": true,
+          "destination_role": "Patient-facing booked confirmation"
+        },
+        {
+          "variable": "book_error",
+          "operator": "==",
+          "value": "slot_conflict",
+          "destination_role": "Refresh availability"
+        },
+        {
+          "variable": "book_success",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Booking failed / staff handoff"
+        }
+      ],
+      "warnings": [
+        "This is a real write and has no confirm flag.",
+        "Conductor scope must be re-verified before any write; do not infer current grants from this catalog.",
+        "The version 19 test-line booking node still uses a fixed appointment type; add and prove the upstream exam_type_id extraction before replacing that body with this portable packet.",
+        "Never add allow_conflict and never retry automatically.",
+        "Only send patient-facing confirmation after book_success equals true."
+      ],
+      "unblock_requirements": [
+        "For general production use, complete the approved real-patient conductor cutover and remove the temporary patient allowlist through the normal human gate."
+      ],
+      "node_settings": {
+        "retry_attempts": 0
+      },
+      "evidence": {
+        "live_pathway_version": 19,
+        "live_node_role": "Book slot 2",
+        "aws_contract": "Conductor signer /sign, verb appt.book"
+      }
+    },
+    {
+      "id": "suppression.stop",
+      "aliases": [
+        "opt patient out",
+        "handle stop reply",
+        "suppress phone number",
+        "save sms opt out"
+      ],
+      "purpose": "Persist a STOP suppression before telling the patient the opt-out was saved.",
+      "status": "missing",
+      "effect": "write_suppression",
+      "path": "/sms-suppression",
+      "body": {
+        "phone_e164": "{{to}}",
+        "reason": "stop",
+        "source": "sms_reply"
+      },
+      "upstream_variables": [
+        {
+          "name": "to",
+          "required": true,
+          "meaning": "Outbound recipient number in E.164.",
+          "safe_source": "Bland outbound conversation variable."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "suppression_ok",
+          "json_path": "$.ok",
+          "description": "True only when persistence succeeds."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "suppression_ok",
+          "operator": "==",
+          "value": true,
+          "destination_role": "Opt-out confirmed"
+        },
+        {
+          "variable": "suppression_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Suppression failed / operator alert"
+        }
+      ],
+      "warnings": [
+        "The authenticated Mott gateway currently returns 404 for this path.",
+        "Do not tell the patient the preference was persisted unless suppression_ok equals true."
+      ],
+      "unblock_requirements": [
+        "Implement an idempotent suppression store and /sms-suppression handler.",
+        "Add audit, no-PHI logs, authenticated route tests, and end-to-end Bland success/failure proof."
+      ],
+      "evidence": {
+        "live_pathway_version": 19,
+        "live_node_role": "STOP suppression",
+        "aws_contract": "Missing; credentialed probe returned 404"
+      }
+    },
+    {
+      "id": "suppression.wrong_number",
+      "aliases": [
+        "mark wrong number",
+        "suppress wrong recipient",
+        "handle not me reply"
+      ],
+      "purpose": "Persist a wrong-number suppression before ending the conversation.",
+      "status": "missing",
+      "effect": "write_suppression",
+      "path": "/sms-suppression",
+      "body": {
+        "phone_e164": "{{to}}",
+        "reason": "wrong_number",
+        "source": "sms_reply"
+      },
+      "upstream_variables": [
+        {
+          "name": "to",
+          "required": true,
+          "meaning": "Outbound recipient number in E.164.",
+          "safe_source": "Bland outbound conversation variable."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "suppression_ok",
+          "json_path": "$.ok",
+          "description": "True only when persistence succeeds."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "suppression_ok",
+          "operator": "==",
+          "value": true,
+          "destination_role": "Wrong-number confirmation"
+        },
+        {
+          "variable": "suppression_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Suppression failed / operator alert"
+        }
+      ],
+      "warnings": [
+        "The authenticated Mott gateway currently returns 404 for this path.",
+        "Do not mark the number suppressed in outcome reporting unless persistence succeeds."
+      ],
+      "unblock_requirements": [
+        "Implement the same idempotent suppression contract used by STOP, with reason=wrong_number."
+      ],
+      "evidence": {
+        "live_pathway_version": 19,
+        "live_node_role": "Wrong-number suppression",
+        "aws_contract": "Missing; credentialed probe returned 404"
+      }
+    },
+    {
+      "id": "staff.message",
+      "aliases": [
+        "send message to staff",
+        "leave callback request",
+        "deliver voicemail",
+        "notify front desk"
+      ],
+      "purpose": "Deliver a patient callback request to the approved staff channel.",
+      "status": "blocked",
+      "effect": "external_send_phi",
+      "path": "/message",
+      "body": {
+        "message": "{{message}}",
+        "store": "{{store}}",
+        "caller_name": "{{name_first}}",
+        "callback_phone": "{{callback_phone}}",
+        "intent": "{{description}}"
+      },
+      "upstream_variables": [
+        {
+          "name": "message",
+          "required": true,
+          "meaning": "Patient-provided callback message.",
+          "safe_source": "Dedicated message-collection node."
+        },
+        {
+          "name": "store",
+          "required": true,
+          "meaning": "Office receiving the request.",
+          "safe_source": "Patient lookup or practice config."
+        },
+        {
+          "name": "name_first",
+          "required": false,
+          "meaning": "Caller first name.",
+          "safe_source": "Patient-provided or resolved minimum-necessary field."
+        },
+        {
+          "name": "callback_phone",
+          "required": true,
+          "meaning": "Patient-confirmed callback number.",
+          "safe_source": "Dedicated confirmation node."
+        },
+        {
+          "name": "description",
+          "required": false,
+          "meaning": "Short non-diagnostic intent label.",
+          "safe_source": "Bounded intent classification."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "msg_ok",
+          "json_path": "$.ok",
+          "description": "True only when staff delivery succeeds."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "msg_ok",
+          "operator": "==",
+          "value": true,
+          "destination_role": "Message received confirmation"
+        },
+        {
+          "variable": "msg_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Message delivery failed / alternate handoff"
+        }
+      ],
+      "warnings": [
+        "Mott staff delivery configuration is absent and the route currently returns 503.",
+        "This can carry PHI and is an external send. Do not test with real patient content."
+      ],
+      "unblock_requirements": [
+        "Configure a Mott-owned approved inbox/channel and sender identity.",
+        "Run a synthetic no-PHI delivery test and verify staff receipt before enabling the pathway."
+      ],
+      "evidence": {
+        "live_pathway_version": 19,
+        "live_node_role": "Deliver message to staff",
+        "aws_contract": "Python gateway /message; Mott config absent"
+      }
+    },
+    {
+      "id": "hours.state",
+      "aliases": [
+        "check if office is open",
+        "get office hours state",
+        "after hours routing"
+      ],
+      "purpose": "Return deterministic open, about-to-close, or after-hours state.",
+      "status": "blocked",
+      "effect": "read_config",
+      "path": "/hours-state",
+      "body": {
+        "store": "{{store}}"
+      },
+      "upstream_variables": [
+        {
+          "name": "store",
+          "required": true,
+          "meaning": "Mott store ID or configured alias.",
+          "safe_source": "Patient lookup or practice config."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "hours_ok",
+          "json_path": "$.ok",
+          "description": "Gateway success flag."
+        },
+        {
+          "name": "hours_state",
+          "json_path": "$.state",
+          "description": "open, about_to_close, or after_hours."
+        },
+        {
+          "name": "closes_at",
+          "json_path": "$.closes_at",
+          "description": "Current close time when open."
+        },
+        {
+          "name": "first_am_start",
+          "json_path": "$.first_am_start",
+          "description": "Next opening time."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "hours_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Hours unavailable / conservative handoff"
+        },
+        {
+          "variable": "hours_state",
+          "operator": "==",
+          "value": "open",
+          "destination_role": "Open-hours lane"
+        },
+        {
+          "variable": "hours_state",
+          "operator": "!=",
+          "value": "open",
+          "destination_role": "After-hours lane"
+        }
+      ],
+      "warnings": [
+        "Mott hours configuration is currently empty, so this returns an unknown-store validation failure."
+      ],
+      "unblock_requirements": [
+        "Add owner-approved Mott store hours, holidays, and store aliases.",
+        "Test open, about-to-close, holiday, and after-hours cases."
+      ],
+      "evidence": {
+        "live_pathway_version": null,
+        "live_node_role": "Not currently used",
+        "aws_contract": "Python gateway /hours-state; Mott hours empty"
+      }
+    },
+    {
+      "id": "urgent.availability",
+      "aliases": [
+        "find urgent eye appointment",
+        "same day emergency slot",
+        "first morning urgent slot"
+      ],
+      "purpose": "Find the urgent same-day or first-morning slot window without making the clinical triage decision.",
+      "status": "blocked",
+      "effect": "read_scheduler_high_risk",
+      "path": "/urgent-availability",
+      "body": {
+        "store": "{{store}}",
+        "slot_mode": "{{urgent_slot_mode}}"
+      },
+      "upstream_variables": [
+        {
+          "name": "store",
+          "required": true,
+          "meaning": "Mott store ID or configured alias.",
+          "safe_source": "Practice config or patient lookup."
+        },
+        {
+          "name": "urgent_slot_mode",
+          "required": true,
+          "meaning": "same_day or first_am after deterministic triage.",
+          "safe_source": "Approved emergency-routing gate, not free-form model judgment."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "urgent_ok",
+          "json_path": "$.ok",
+          "description": "Gateway success flag."
+        },
+        {
+          "name": "urgent_slot_count",
+          "json_path": "$.result.count",
+          "description": "Open urgent slot count."
+        },
+        {
+          "name": "urgent_slot_start",
+          "json_path": "$.result.slot_start",
+          "description": "Urgent slot start or double-book target."
+        },
+        {
+          "name": "urgent_slot_end",
+          "json_path": "$.result.slot_end",
+          "description": "Urgent slot end."
+        },
+        {
+          "name": "urgent_slot_doctor",
+          "json_path": "$.result.slot_doctor",
+          "description": "Urgent doctor ID."
+        },
+        {
+          "name": "urgent_double_book",
+          "json_path": "$.result.double_book",
+          "description": "True only when the gateway proposes a double-book target."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "urgent_ok",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Human/doctor escalation"
+        },
+        {
+          "variable": "urgent_double_book",
+          "operator": "==",
+          "value": true,
+          "destination_role": "Human approval required; never auto-book"
+        },
+        {
+          "variable": "urgent_slot_count",
+          "operator": ">=",
+          "value": 1,
+          "destination_role": "Offer approved urgent opening"
+        }
+      ],
+      "warnings": [
+        "Mott hours and provider mapping are not configured.",
+        "The endpoint does not perform clinical triage and must never replace 911/red-flag escalation.",
+        "A double-book recommendation requires human/doctor approval."
+      ],
+      "unblock_requirements": [
+        "Configure Mott hours and provider mapping.",
+        "Approve deterministic red-flag and after-hours policy.",
+        "Prove that double-book output cannot trigger an automatic write."
+      ],
+      "evidence": {
+        "live_pathway_version": null,
+        "live_node_role": "Not currently used",
+        "aws_contract": "Python gateway /urgent-availability; Mott config absent"
+      }
+    },
+    {
+      "id": "appointment.cancel.governed",
+      "aliases": [
+        "cancel appointment",
+        "remove scheduled appointment",
+        "cancel existing booking"
+      ],
+      "purpose": "Cancel a confirmed appointment through the governed conductor path.",
+      "status": "blocked",
+      "effect": "write_eyecloud",
+      "path": "/sign",
+      "body": {
+        "verb": "appt.cancel",
+        "target": "{{appt_id}}",
+        "store": "{{appt_store}}",
+        "reason": "patient-request",
+        "params": {
+          "appt_id": "{{appt_id}}",
+          "day": "{{appt_day}}"
+        }
+      },
+      "upstream_variables": [
+        {
+          "name": "appt_id",
+          "required": true,
+          "meaning": "Appointment selected from an exact appointment-list result.",
+          "safe_source": "Appointment-list response plus patient confirmation."
+        },
+        {
+          "name": "appt_store",
+          "required": true,
+          "meaning": "Store holding the appointment.",
+          "safe_source": "Appointment-list response."
+        },
+        {
+          "name": "appt_day",
+          "required": true,
+          "meaning": "Current appointment day.",
+          "safe_source": "Appointment-list response."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "cancel_success",
+          "json_path": "$.success",
+          "description": "True only after governed cancel success."
+        },
+        {
+          "name": "cancel_error",
+          "json_path": "$.error",
+          "description": "Stable conductor error."
+        },
+        {
+          "name": "error_status",
+          "json_path": "$.status",
+          "description": "Error-only signer status."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "cancel_success",
+          "operator": "==",
+          "value": true,
+          "destination_role": "Patient-facing cancellation confirmation"
+        },
+        {
+          "variable": "cancel_success",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Staff handoff"
+        }
+      ],
+      "warnings": [
+        "Current Mott conductor grant does not allow cancel.",
+        "A trajectory-changing appointment write requires explicit patient confirmation and a verified target."
+      ],
+      "unblock_requirements": [
+        "Approve and add appt.cancel to the Mott conductor grant.",
+        "Complete dry-run, test-patient, shadow, human-cutover, and rollback proof.",
+        "Add an explicit confirmation node immediately before the webhook."
+      ],
+      "node_settings": {
+        "retry_attempts": 0
+      },
+      "evidence": {
+        "live_pathway_version": null,
+        "live_node_role": "Not currently used",
+        "aws_contract": "Conductor signer supports appt.cancel; current grant blocks it"
+      }
+    },
+    {
+      "id": "appointment.reschedule.governed",
+      "aliases": [
+        "reschedule appointment",
+        "move existing appointment",
+        "change appointment time"
+      ],
+      "purpose": "Move a confirmed appointment through the governed conductor path.",
+      "status": "blocked",
+      "effect": "write_eyecloud",
+      "path": "/sign",
+      "body": {
+        "verb": "appt.reschedule",
+        "target": "{{appt_id}}",
+        "store": "{{appt_store}}",
+        "reason": "patient-request",
+        "params": {
+          "appt_id": "{{appt_id}}",
+          "day": "{{appt_day}}",
+          "new_start": "{{slot_start}}",
+          "new_end": "{{slot_end}}",
+          "new_doctor": "{{slot_doctor}}"
+        }
+      },
+      "upstream_variables": [
+        {
+          "name": "appt_id",
+          "required": true,
+          "meaning": "Appointment selected from an exact appointment-list result.",
+          "safe_source": "Appointment-list response plus patient confirmation."
+        },
+        {
+          "name": "appt_store",
+          "required": true,
+          "meaning": "Current appointment store.",
+          "safe_source": "Appointment-list response."
+        },
+        {
+          "name": "appt_day",
+          "required": true,
+          "meaning": "Current appointment day.",
+          "safe_source": "Appointment-list response."
+        },
+        {
+          "name": "slot_start",
+          "required": true,
+          "meaning": "New slot start.",
+          "safe_source": "Fresh availability response."
+        },
+        {
+          "name": "slot_end",
+          "required": true,
+          "meaning": "New slot end.",
+          "safe_source": "Fresh availability response."
+        },
+        {
+          "name": "slot_doctor",
+          "required": true,
+          "meaning": "New doctor ID.",
+          "safe_source": "Fresh availability response."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "reschedule_success",
+          "json_path": "$.success",
+          "description": "True only after governed reschedule success."
+        },
+        {
+          "name": "reschedule_error",
+          "json_path": "$.error",
+          "description": "Stable conductor error."
+        },
+        {
+          "name": "error_status",
+          "json_path": "$.status",
+          "description": "Error-only signer status."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "reschedule_success",
+          "operator": "==",
+          "value": true,
+          "destination_role": "Patient-facing reschedule confirmation"
+        },
+        {
+          "variable": "reschedule_error",
+          "operator": "==",
+          "value": "slot_conflict",
+          "destination_role": "Refresh availability"
+        },
+        {
+          "variable": "reschedule_success",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Staff handoff"
+        }
+      ],
+      "warnings": [
+        "Current Mott conductor grant does not allow reschedule.",
+        "Only same-store reschedule is supported by conductor v1."
+      ],
+      "unblock_requirements": [
+        "Approve and add appt.reschedule to the Mott conductor grant.",
+        "Complete test-patient, conflict, verification, rollback, and human-cutover proof.",
+        "Add an explicit confirmation node immediately before the webhook."
+      ],
+      "node_settings": {
+        "retry_attempts": 0
+      },
+      "evidence": {
+        "live_pathway_version": null,
+        "live_node_role": "Not currently used",
+        "aws_contract": "Conductor signer supports appt.reschedule; current grant blocks it"
+      }
+    },
+    {
+      "id": "appointment.modify.governed",
+      "aliases": [
+        "change appointment type",
+        "change appointment doctor",
+        "modify existing appointment"
+      ],
+      "purpose": "Change an appointment type or provider without moving its time.",
+      "status": "blocked",
+      "effect": "write_eyecloud",
+      "path": "/sign",
+      "body": {
+        "verb": "appt.modify",
+        "target": "{{appt_id}}",
+        "store": "{{appt_store}}",
+        "reason": "patient-request",
+        "params": {
+          "appt_id": "{{appt_id}}",
+          "day": "{{appt_day}}",
+          "type": "{{exam_type_id}}",
+          "doctor": "{{slot_doctor}}"
+        }
+      },
+      "upstream_variables": [
+        {
+          "name": "appt_id",
+          "required": true,
+          "meaning": "Appointment selected from an exact appointment-list result.",
+          "safe_source": "Appointment-list response plus patient confirmation."
+        },
+        {
+          "name": "appt_store",
+          "required": true,
+          "meaning": "Current appointment store.",
+          "safe_source": "Appointment-list response."
+        },
+        {
+          "name": "appt_day",
+          "required": true,
+          "meaning": "Current appointment day.",
+          "safe_source": "Appointment-list response."
+        },
+        {
+          "name": "exam_type_id",
+          "required": false,
+          "meaning": "Approved replacement appointment type.",
+          "safe_source": "Approved server-side type map."
+        },
+        {
+          "name": "slot_doctor",
+          "required": false,
+          "meaning": "Approved replacement doctor ID.",
+          "safe_source": "Practice config or verified schedule data."
+        }
+      ],
+      "response_data": [
+        {
+          "name": "modify_success",
+          "json_path": "$.success",
+          "description": "True only after governed modify success."
+        },
+        {
+          "name": "modify_error",
+          "json_path": "$.error",
+          "description": "Stable conductor error."
+        },
+        {
+          "name": "error_status",
+          "json_path": "$.status",
+          "description": "Error-only signer status."
+        }
+      ],
+      "pathways": [
+        {
+          "variable": "modify_success",
+          "operator": "==",
+          "value": true,
+          "destination_role": "Patient-facing modification confirmation"
+        },
+        {
+          "variable": "modify_success",
+          "operator": "!=",
+          "value": true,
+          "destination_role": "Staff handoff"
+        }
+      ],
+      "warnings": [
+        "Current Mott conductor grant does not allow modify.",
+        "At least one of type or doctor must be deliberately selected."
+      ],
+      "unblock_requirements": [
+        "Approve and add appt.modify to the Mott conductor grant.",
+        "Define which fields Bland may change and prove verification/rollback."
+      ],
+      "node_settings": {
+        "retry_attempts": 0
+      },
+      "evidence": {
+        "live_pathway_version": null,
+        "live_node_role": "Not currently used",
+        "aws_contract": "Conductor signer supports appt.modify; current grant blocks it"
+      }
+    },
+    {
+      "id": "patient.book_new",
+      "aliases": [
+        "create new patient and book",
+        "book a brand new patient",
+        "register new patient"
+      ],
+      "purpose": "Create an EyeCloud patient and appointment in one operation.",
+      "status": "blocked",
+      "effect": "write_eyecloud_phi",
+      "path": "/book-new-patient",
+      "body": {},
+      "upstream_variables": [],
+      "response_data": [],
+      "pathways": [],
+      "warnings": [
+        "Mott patient creation is disabled.",
+        "This is a legacy direct write route and there is no approved governed Bland patient-creation path.",
+        "Do not collect or send a full demographic packet until the HIPAA-safe data flow and human gate are approved."
+      ],
+      "unblock_requirements": [
+        "Design a governed new-patient contract with minimum necessary demographics, duplicate detection, human review, audit, verification, and rollback.",
+        "Complete explicit compliance and owner approval before enabling patient creation."
+      ],
+      "evidence": {
+        "live_pathway_version": null,
+        "live_node_role": "Not currently used",
+        "aws_contract": "Python gateway route exists; Mott patient creation flag is disabled"
+      }
+    }
+  ]
+}

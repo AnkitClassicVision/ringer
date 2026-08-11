@@ -1,0 +1,27 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT6run",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "t6-timing-fixer",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1800,
+      "expect_files": ["timing_report.py"],
+      "spec": "You are a fix worker revising a latency-decomposition script before its first credentialed run. OFFLINE: no network, no git, no MCP, no skills; write only in your working directory.\n\nLATENT DEFECT (proven by a sibling task's failure): the previous version at /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT46prep/t6-timing-builder/timing_report.py (read it - it passed compile and usage checks) imports /home/ankit114/repos/ringer/my-manifests/mott-raw-text/work2/raw-text-authority-v2/bland_gateway_live.py via importlib with no protection against that module's top-level 'from capability_registry import QueryError, load_manifest, prepare_query, render_query_result'. That sibling exists only in the deployed ECS image, so the import raises ModuleNotFoundError - the exact failure that killed the T1 reproduction run (FETCH_FAILURE=ModuleNotFoundError: No module named 'capability_registry').\n\nWRITE ./timing_report.py: a revised full copy with these changes and nothing else structural: (1) a load_live_module() function that registers lightweight stub modules in sys.modules for any missing sibling import BEFORE importing the gateway module (at minimum capability_registry with QueryError as an Exception subclass and the other three names as no-op callables), retrying on further ModuleNotFoundError siblings up to 5 distinct modules, returning the module; (2) all fetch paths obtain the module via load_live_module(); (3) a __main__ guard. PRESERVE the original contract exactly: usage timing_report.py <conversation_id>; env BLAND_API_KEY, WINDOW_START, WINDOW_END; CloudWatch log group /ecs/mott-booking-gateway in us-east-1; outputs ./waterfall.csv (columns turn, patient_ts, gw_first_log_ts, gw_last_log_ts, agent_msg1_ts, agent_msg2_ts, gap_patient_to_msg1_s, gap_msg1_to_msg2_s, msg_class) and stdout machine lines WATERFALL turn=... / TWO_MSG_TURNS=<n>/<total> / SUMMARY median_reply_s=... p95_reply_s=... / UNMEASURED: ... for unmeasurable segments; never interpolate invented times; mask digit runs 5+ to last 4; fetch failure prints why and exits 1.\n\nVERIFY before finishing: PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile timing_report.py passes; no-args run exits nonzero printing usage; and this offline command prints True: python3 -c \"import sys; sys.path.insert(0,'.'); import timing_report; m=timing_report.load_live_module(); print(hasattr(m,'resolve_relative_date'))\". Final message <=15 lines.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 -m py_compile timing_report.py || exit 1; if python3 timing_report.py >/dev/null 2>&1; then echo 'CHECK FAILED: no-args run must exit nonzero with usage'; exit 1; fi; PYTHONDONTWRITEBYTECODE=1 python3 -c \"import sys; sys.path.insert(0,'.'); import timing_report; m=timing_report.load_live_module(); assert hasattr(m,'resolve_relative_date'), 'live module loaded but resolve_relative_date missing'; print('live module import OK with stubbed siblings')\" || { echo 'CHECK FAILED: offline import of the gateway module still fails'; exit 1; }; echo 'PASS: compiles; usage guard; live-module import proven offline'",
+      "verified": "The timing script now survives the deployed-only sibling import, proven by executing the import offline before any credentialed run is spent."
+    },
+    {
+      "key": "t6-timing-run",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 900,
+      "expect_files": ["timing.txt", "waterfall.csv"],
+      "spec": "WINDOW_START=2026-08-03T20:35:00Z WINDOW_END=2026-08-03T21:05:00Z python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workT6run/t6-timing-fixer/timing_report.py 782f4dce-5e90-446f-a886-c000f1c240b7 > timing.txt 2>&1; rc=$?; tail -10 timing.txt; exit $rc",
+      "check": "w=$(grep -cE '^WATERFALL turn=' timing.txt); [ \"$w\" -ge 3 ] || { echo \"FAIL: only $w WATERFALL turns, expected 3+ for an 11-message conversation\"; tail -6 timing.txt; exit 1; }; grep -qE '^TWO_MSG_TURNS=[0-9]+/[0-9]+' timing.txt || { echo 'FAIL: no TWO_MSG_TURNS line'; exit 1; }; grep -qE '^SUMMARY median_reply_s=' timing.txt || { echo 'FAIL: no SUMMARY line'; exit 1; }; rows=$(tail -n +2 waterfall.csv | grep -c .); [ \"$rows\" -ge 3 ] || { echo \"FAIL: waterfall.csv has only $rows data rows\"; exit 1; }; echo \"PASS: $w turns decomposed; $(grep -m1 '^TWO_MSG_TURNS=' timing.txt); $(grep -m1 '^SUMMARY' timing.txt)\"",
+      "verified": "Tonight's real conversation decomposed into a per-turn latency waterfall from Bland message timestamps plus gateway logs, with the two-message pattern counted and unmeasurable segments named - the truthful decomposition of the perceived 40s."
+    }
+  ]
+}

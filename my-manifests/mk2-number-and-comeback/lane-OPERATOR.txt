@@ -1,0 +1,1151 @@
+Reading additional input from stdin...
+OpenAI Codex v0.146.0
+--------
+workdir: /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+model: gpt-5.6-luna
+provider: openai
+approval: never
+sandbox: read-only
+reasoning effort: xhigh
+reasoning summaries: none
+session id: 019fc836-5a64-73f0-8db6-7322cc9534bd
+--------
+user
+DO NOT modify any files. Analyze only. Role: OPERATOR. Read the evidence packet at /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md in full. Question: produce a remediation plan for the commit-despite-502 booking defect described there. As OPERATOR, do the job that role implies: BUILDER gives the best direct plan; CONTRARIAN attacks what is wrong, risky, brittle, or missing in the evidence and in the proposed fixes; VERIFIER says exactly what must be measured or proven and how, cheapest first, with what result confirms versus refutes; OPERATOR gives owner, outcome, date, risk, visibility, sequencing, and the single next action. Pay particular attention to the unresolved objection: read nodes at the same latency did not time out but the write did. Return a candidate packet with these keys: recommendation, confidence (0-1), evidence, assumptions, unique_catches, risks_or_failure_modes, proof_slots, needs_human_or_owner_gate. Be blunt and specific. No padding.
+2026-08-03T15:20:38.488737Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://gtdtkzjikmsaskyouyin.supabase.co/functions/v1/ob-graph?key=lOCVvO2nAyhULM8X9UMkUcnpQLbYmk6riCcxIJn9354)")))
+2026-08-03T15:20:38.500394Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when Client(HttpRequest(HttpRequest("http/request failed: error sending request for url (https://gtdtkzjikmsaskyouyin.supabase.co/functions/v1/open-brain-unified?key=2f00597aa5407164628928fceb6fce58903799e4ccdcc26125bf14f788b48a6a)")))
+warning: Skill descriptions were shortened to fit the 2% skills context budget. Codex can still see every skill, but some descriptions are shorter. Disable unused skills or plugins to leave more room for the rest.
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart
+hook: SessionStart Completed
+hook: SessionStart Completed
+hook: SessionStart Completed
+codex
+Ankit — I’ll read the full evidence packet, load the required repo/planning guidance, check relevant prior context, then return a blunt operator packet. I will not modify files.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+mcp: ob_mybcat/search_thoughts started
+exec
+/bin/bash -lc "sed -n '1,320p' /home/ankit114/.agents/skills/compound-engineering-primitives/SKILL.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+---
+name: compound-engineering-primitives
+description: Use for serious non-PHI code/repo/agentic engineering tasks, repo-agent run cards, code-agent standards, Cross-Review QA, completion claims, or when applying the Every/Compound Engineering GO-now pattern. Requires plan/spec yardsticks, unitized proof, report-only fresh review, durable artifacts, user-directive precedence, behavior verification before done, and post-solve learning capture. Do not use for tiny edits, PHI/client-sensitive raw plugin use, or installing the Every plugin.
+---
+
+# Compound Engineering Primitives
+
+Use this as Ankit's owned version of the Compound Engineering GO-now. It is a standards implant, not a third-party plugin adoption.
+
+## Fire conditions
+
+Apply for serious non-PHI code/repo/agentic engineering work when any of these are true:
+- a task involves implementation across multiple files, repo changes, tests, PRs, deployment prep, or agent-generated code;
+- a worker is about to claim fixed/done/complete/ready;
+- a fresh-context review, Cross-Review QA, or Hermes Kanban review-required handoff is needed;
+- a reusable lesson appears that should compound into a skill, runbook, solution note, or sanitized OB/Work Ledger capture.
+
+Skip for tiny one-line edits, routine lookups, disposable scratch scripts, or any raw PHI/client-sensitive workflow. This skill does not authorize external sends, CRM/EHR/finance writes, deploys, merges, public uploads, or autonomous commit/push/PR loops.
+
+## Core loop
+
+Run: **Plan -> Work -> Review -> Compound -> Repeat**.
+
+### 1. Plan
+
+Before implementation, create or identify a durable yardstick:
+- product/requirements contract separated from implementation plan;
+- implementation units with stable IDs (`U1`, `U2`, ...);
+- expected proof/test for each unit;
+- acceptance criteria and explicit non-goals;
+- the three decision-residue questions:
+  1. What was the hardest decision made?
+  2. What alternatives were rejected?
+  3. What assumption is least confident?
+
+If no yardstick exists for serious work, make one before changing code.
+
+### 2. Work
+
+Implement against unit IDs. Keep each proof attached to the unit it validates. Prefer the smallest safe diff that satisfies the yardstick.
+
+### 3. Review
+
+Run report-only review by default:
+- fresh context when possible;
+- reviewer findings cite the original plan/spec/unit, not the builder's narrative;
+- reviewer/subagent outputs land in durable artifacts or run comments, not chat-only prose;
+- user directives outrank reviewer best judgment; if a reviewer disagrees, it must flag rather than override;
+- no auto-apply, merge, deploy, external send, or public upload from review alone.
+
+### 4. Compound
+
+Before saying done, classify the highest true state reached and attach evidence:
+- local artifact only / tests passed / committed / pushed / PR opened / merged / deployed / live action taken / blocked / review-required;
+- exact commands/tests/evidence;
+- missing proof or skipped checks;
+- changed files/artifacts;
+- reusable lesson, if any.
+
+If the lesson is reusable, update the smallest durable surface: skill patch, run-card line, solution note, or sanitized Work Ledger/OB capture. Do not capture raw secrets, PHI, client-sensitive details, raw IDs, or raw message bodies.
+
+## Hard no's
+
+- Do not raw-install the Every Compound Engineering plugin by default.
+- Do not use `bunx @every-env/compound-plugin` unless version parity with the current repo/release is proven.
+- Do not trust stale article/install claims without checking the repo/package state.
+- Do not use side-effect-heavy flows such as autonomous commit/push/PR/CI as defaults.
+- Do not use in PHI/client-sensitive contexts without explicit HIPAA/BAA/data-flow review.
+- Do not upload proof/demo artifacts publicly without explicit user approval.
+
+## Required handoff block for serious work
+
+End serious code/repo work with:
+
+```text
+Compound proof:
+- Plan/spec yardstick: <path/ref or none + why acceptable>
+- Units proved: <U-IDs + proof>
+- Review: <fresh/report-only review artifact or why skipped>
+- Highest true state: <local/tested/committed/pushed/PR/merged/deployed/blocked/review-required>
+- Behavior verification: <command/output/ref>
+- Decision residue: hardest decision / alternatives rejected / least-confident assumption
+- Compound capture: <skill/runbook/OB/none + reason>
+```
+
+## See also
+
+Read `references/ce-addendum.md` for the compact run-card checklist to paste into project-local standards.
+hook: PostToolUse
+exec
+/bin/bash -lc "wc -l EVIDENCE-502.md && sed -n '1,260p' EVIDENCE-502.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+132 EVIDENCE-502.md
+# Evidence packet: booking commits but the patient is told it failed
+
+All identifiers below are scrubbed. The test subject is a SYNTHETIC dummy record, not a real
+patient. No PHI appears in this file.
+
+## The defect
+
+An SMS AI agent (vendor: **Bland AI**) runs a conversational "pathway" that books eye-exam
+appointments into an EMR (Eye Cloud Pro) through a self-hosted booking gateway. On 2026-08-03 a
+test conversation confirmed a slot, the agent replied **"I couldn't confirm that booking. Please
+call the office so they can check it for you"**, and the appointment **was created in the EMR
+anyway**.
+
+This is live on a production phone line today.
+
+## Architecture
+
+- Pathway version **87**, 42 nodes, of which **12 are Webhook nodes**.
+- A dump of all 12 webhook nodes shows **no `timeout`, `retry`, or `retryCount` field set on any
+  of them**. They inherit the platform default, whose value is unmeasured.
+- The vendor catalog for these nodes specifies `default_node_settings: {"timeout_seconds": 10,
+  "retry_attempts": 0}`. So either the nodes drifted from catalog intent, or the export hides UI
+  defaults. Unreconciled.
+- Gateway: `https://<gw-host>`, edge is **nginx** (response headers: `Server: nginx`,
+  `Connection: close`, no CDN headers, so nginx is the edge directly, nothing in front).
+- Endpoints, all POST JSON with a bearer token: `/patient-search`, `/appt-list`, `/availability`,
+  `/conflict-check`, `/sign`.
+- `/sign` is the governed write path: `{"verb":"appt.book"|"appt.cancel","target":...,"store":...,
+  "reason":...,"params":{...}}`.
+- Booking node order: `n_verify_1` (POST /conflict-check) then `n_book_1` (POST /sign).
+- Pathway routes on `book_success` from `$.success`. Non-success routes to End node
+  `e_booking_failed`.
+- A July snapshot of the gateway source shows Python **`ThreadingHTTPServer` +
+  `BaseHTTPRequestHandler`** behind nginx (NOT gunicorn/uwsgi, so no worker-timeout reaper),
+  `ECP_CLI_TIMEOUT_S` default **90**, and **every internal timeout path returns 504**, never 502.
+  nginx's own read timeout also emits 504. The EMR is driven by shelling out to a CLI; the EMR
+  keeps ONE session per user, logins serialize behind an exclusive lock with a 30s re-login
+  cooldown and up to a 120s login budget. **Caveat: that snapshot predates `/sign` and may not
+  match the deployed build.**
+
+## Incident timeline (UTC, 2026-08-03)
+
+```
+14:47:22.797  USER   "1"      (picks offered slot 1)
+14:47:26.083  AGENT  "To confirm, your eye exam would be 08/04/2026 01:00 pm. Reply YES to book it"
+14:49:09.678  USER   "Yes"
+14:49:57.901  AGENT  "I couldn't confirm that booking. Please call the office..."
+```
+
+Gap from YES to failure message: **48.2 seconds**.
+
+End state: `current_node_id: e_booking_failed`, `ended_by_end_call_node: true`,
+`is_active: false`, **`BlandStatusCode: 502`**, `appt_count: 0`, `slot_conflict: false`,
+`slot_count: 25`, `ok: true`, `conflict_reason: ""`.
+
+## Proof the write committed
+
+`/appt-list` afterward returned exactly one upcoming appointment matching the confirmed slot.
+Cancelling it returned `pre_state` with `start "08/04/2026 01:00:00 pm"`, `status "created"` —
+byte-for-byte the slot the patient confirmed.
+
+## Measurement lane 1: direct reproduction (operator workstation)
+
+Posted the identical `/sign` appt.book body directly:
+
+- **HTTP 200, `success: true`, in 16.0s.** Rolled back cleanly.
+- A second independent direct book also returned 200.
+- **Two out of two direct books succeeded. Zero 502s reproduced.**
+
+## Measurement lane 2: latency, idle vs under load
+
+Idle gateway:
+```
+/appt-list        7.9s
+/sign appt.book   16.0s
+/sign appt.cancel 17.1s / 17.5s
+```
+
+Under load (while a 33-scenario live test harness hammered the SAME gateway), twice each:
+```
+/patient-search   22.0s / 21.9s      /appt-list        24.4s / 18.1s
+/availability     21.5s / 23.8s      /conflict-check   19.3s / 22.0s
+```
+
+**Latency roughly triples under load, uniformly across every endpoint, including 84-byte and
+121-byte responses.** That uniformity appears to rule out payload-size and buffering
+explanations.
+
+**Critical timeline overlap:** the harness run that saturated the gateway ran **14:39:06 to
+~14:54**. The patient's YES was at **14:49:09**. The live booking happened inside the load window
+created by our own test harness. The direct reproduction that returned 200 in 16.0s ran later,
+against an idle gateway.
+
+## Measurement lane 3: the analyst brief (a separate model lane already run)
+
+Its leading conclusion, ~60% confidence: a **client-side webhook timeout** on the book node,
+which the platform records as a synthetic 502. Its key argument is that the non-reproduction is a
+**prediction** of that theory, not a puzzle: a client that waits indefinitely is structurally
+incapable of reproducing a client-timeout 502, so n could be 200 and prove nothing.
+
+It also argues that with this stack, "caller sees error, write commits" is the DEFAULT outcome
+for any client less patient than the gateway: when the platform aborts, nginx logs 499 and may
+close the upstream connection, but the Python handler thread only notices at response-write time
+while the EMR subprocess runs to completion. Nothing has to "break."
+
+Its ranked alternatives: genuine nginx 502 from gateway process death mid-request (~20%);
+platform-internal egress blip (~10%); everything else under 5%.
+
+Its fix ranking, lowest risk first: (1) reword the failure message so it stops asserting a
+failure that did not happen; (2) set explicit timeouts of 45-60s on the book and verify nodes;
+(3) add a verify-on-failure branch that calls `/appt-list` and confirms whether the slot exists,
+converting commit-plus-timeout into a truthful confirmation **without retrying the write**;
+(4) keep the EMR session warm to cut p95 latency; (5) REFUSE automatic retry, because `/sign` has
+no idempotency key and no dedupe on (patient, slot), so retry in exactly this state double-books.
+
+## The strongest open objection, unresolved
+
+If a flat webhook timeout were the whole story, the earlier read nodes in the SAME conversation
+(`/patient-search`, `/appt-list`, and several `/availability` calls) were also running at ~20s
+under the same load and should have timed out too. **They did not.** The conversation negotiated
+normally through three rounds of availability and only the write failed. That argues against a
+simple flat timeout applied uniformly to all nodes, and it is not yet explained.
+
+## Constraints on any fix
+
+- `/sign` has **no idempotency key**; the gateway has no visible dedupe on (patient, slot).
+- The vendor catalog says "Never add allow_conflict and never retry automatically."
+- Changing pathway node config requires the vendor dashboard for some operations; the
+  `/v1/sms/update` API returns 500 for every payload including a no-op, so repointing a line is
+  dashboard-only.
+- The test harness and the live patient line **share one gateway**, so running the harness during
+  business hours degrades the live booking path.
+
+hook: PostToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "sed -n '1,260p' /home/ankit114/.agents/skills/codex-operating-card/SKILL.md" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+---
+name: codex-operating-card
+description: "Operate Codex with Nate-style project induction, read-only-first task starts, one-thread-one-outcome discipline, UI/browser evidence, self-review gates, and durable-rule extraction. Use when working in Codex on a repo, starting a new Codex thread, doing project induction, implementing or reviewing code, doing frontend/UI QA, or deciding whether to promote a prompt pattern into AGENTS.md or a skill."
+---
+
+# Codex Operating Card
+
+Purpose: make Codex behave like a repo worker with a tight work contract, not a wandering owner. These prompts are operating defaults, not safety gates. For production writes, deploys, PHI/PII, secrets, CRM/EHR/finance writes, external sends, or autonomy changes, follow the relevant deterministic gate and human approval rules.
+
+## Default behavior
+
+Use this operating card unless the user explicitly overrides it:
+
+1. Read first. Do not edit until you can explain the current project shape.
+2. One thread = one outcome. If a new goal appears, propose a new thread.
+3. Prefer read-only or sandbox mode unless write access is explicitly intended.
+4. Before changes, state likely files, risk, test plan, and rollback path.
+5. Treat AGENTS.md and project docs as local law. If missing, infer lightly and flag gaps.
+6. For UI work, use browser or visual evidence rather than guessing.
+7. Verify with actual command output, visual check, or a named source before claiming done.
+8. End with: Changed, Verified by, Risks left, Next action.
+9. If the task reveals a reusable rule, propose AGENTS.md or skill capture, but do not write it without approval.
+
+## Prompt pack
+
+For exact copy/paste prompts, read `references/prompt-pack.md` and choose the smallest prompt that matches the work:
+
+- Project induction prompt: first pass on a repo.
+- Task starter prompt: normal implementation.
+- UI/browser evidence prompt: frontend or visual QA.
+- Review gate prompt: before accepting Codex output.
+- Durable-rule extraction prompt: after a repeated pattern appears.
+
+## Output contract
+
+For routine work, keep the final terse:
+
+- Changed: files/behavior changed.
+- Verified by: real command, screenshot/visual check, or source.
+- Risks left: only what matters.
+- Next action: one step.
+
+Do not call work complete if verification did not run. Say `Partial` or `Blocked` instead.
+
+hook: PostToolUse
+hook: PreToolUse Completed
+mcp: ob_mybcat/search_thoughts started
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "if test -f /home/ankit114/.claude/skills/fable-proof-run/SKILL.md; then sed -n '1,300p' /home/ankit114/.claude/skills/fable-proof-run/SKILL.md; else echo FABLE_SKILL_MISSING; fi" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+---
+name: fable-proof-run
+description: Auto-load by default for Ankit’s non-trivial code/repo build, fix, debug, implementation, or verification tasks where real execution proof matters—not only when he explicitly says Fable. Use the Fable-lite empirical loop for “run the real thing,” “don’t stop at compile,” same-commit model comparison, visual/stateful UI bugs, integration failures, flaky tests, unclear root cause, or any task likely to fail if the agent guesses. Do not use for simple edits, copywriting, routine lookups, PHI/client-sensitive work, CRM/EHR/finance writes, external sends/publishes, deploys, commits, pushes, migrations, or browser/computer control unless explicitly scoped and approved.
+---
+
+# Fable Proof Run
+
+Run the useful part of Fable: empirical, tool-driven, runtime-verified work. Do **not** copy the unsafe part: unconstrained “find a way” autonomy.
+
+## Hermes less-work default
+
+For Ankit, treat this as an internal auto-routing pattern, not a command he needs to remember. If the request is a non-trivial code/repo build, fix, debug, implementation, or verification task where real execution proof matters, load/apply this skill automatically. Do not ask him to choose a Fable lane or say `/fable-proof-run` first.
+
+Use the structure mostly silently: baseline, reproduce/probe, smallest reversible change, verify, and report baseline → delta. Show the full opening packet only when the task is high-blast, ambiguous, or needs approval; otherwise keep the user-facing response short.
+
+## First decision: mode
+
+- **Actual Fable:** keep instructions minimal; constrain blast radius, require proof, and cap tools/cost.
+- **Fable-lite:** when running Opus/Sonnet/Codex/Hermes/other non-Fable models, imitate Fable’s empirical loop: reproduce, instrument, probe, observe, verify, and report deltas.
+
+If the task does not need this extra machinery, do the normal smaller workflow instead.
+
+## Mandatory opening packet
+
+Internally assemble this packet before non-trivial runs. Show it to Ankit only when it materially reduces risk or clarifies scope; otherwise keep it as your private operating checklist and proceed.
+
+```text
+Fable-proof mode: actual-fable | fable-lite
+Stakes: low | medium | high blast
+Scope:
+Non-goals:
+Allowed tools:
+Forbidden actions:
+Baseline gate:
+Stop condition:
+Repo hook: loaded .ai/fable-proof-run.md | none/fallback
+```
+
+If the repo contains `.ai/fable-proof-run.md`, read it before running. If absent, use conservative defaults.
+
+## Default forbidden actions
+
+Stop for explicit approval before any of these, even if tests are green:
+
+- PHI, patient data, client-sensitive raw data, secrets, tokens, credentials, or payment IDs
+- CRM/EHR/finance writes or updates
+- external sends, publishes, ads, posts, or messages
+- deploys, migrations, prod writes, protected-page edits, cron autonomy
+- `git commit`, `git push`, merge, release, or tag
+- destructive deletes/resets or package-patch/global-state writes
+- browser/computer-control automation unless the task explicitly needs it and the repo hook allows it
+
+This skill is not authorization. It only makes investigation more empirical.
+
+## Empirical loop
+
+1. **Frame the failure.** Restate the exact symptom and what would prove it fixed.
+2. **Capture baseline.** Record starting test/build/runtime state before changing anything. No “no regressions” without a baseline.
+3. **Reproduce or simulate minimally.** Prefer the real failing path; use a small scratch repro only when the real path is too slow or unsafe.
+4. **Rank hypotheses.** Keep 2–5 likely causes. Mark each as confirmed/inferred/unknown.
+5. **Probe one axis at a time.** Inspect source, logs, runtime state, browser output, or generated artifacts. Do not stack fixes on a broken base.
+6. **Change the smallest reversible thing.** If the change regresses behavior, revert to known-good before trying the next path.
+7. **Run the full gate again.** Report baseline → delta with exit codes/counts and what changed.
+8. **Close with proof state.** Confirmed / inferred / unverified, dirty/committed/pushed state, and the claim most likely to be wrong.
+
+## Fable-like tactics to use when safe
+
+- Run real commands instead of guessing from memory.
+- Inspect dependency/source code when the bug likely lives there.
+- For long-lived Python gateways/processes that fail after source updates, check process start time vs source mtime, prove fresh imports work, and distinguish session reset from process restart. Use `references/long-lived-python-gateway-import-drift.md` for the stale-module import-drift debug and hardening pattern.
+- Create throwaway local repros under `/tmp` or an approved scratch directory.
+- Add temporary instrumentation only if it is easy to remove and clearly marked.
+- Use browser/runtime screenshots or DOM inspection for visual/stateful issues when allowed.
+- Spawn subagents only for separable hypotheses; verify their claims yourself before acting.
+- Read generated/compiled artifacts when the build output matters.
+- Log discarded hypotheses so they are not re-litigated.
+
+## Fable-like tactics to avoid
+
+- Do not invent new ways around permission, accessibility, sandbox, or browser restrictions.
+- Do not turn one debug request into broad refactoring.
+- Do not preserve raw sensitive data in notes, captures, artifacts, or final replies.
+- Do not claim a root cause from one sample; rank causes until evidence proves one.
+- Do not treat subagent “done” as done.
+
+## Output shape
+
+```text
+Result: fixed | partially fixed | not fixed | blocked
+Baseline:
+Delta:
+What I changed:
+What I verified:
+Confirmed:
+Inferred:
+Unverified / user must check:
+Dirty/committed/pushed state:
+Risk notes:
+Next step:
+```
+
+## Optional audit script
+
+For analyzing Claude Code Fable sessions, run `scripts/analyze_claude_fable_sessions.py`. It scans local Claude JSONL metadata, rolls up subagents, and exports sanitized aggregate counts without raw prompts, raw tool outputs, secrets, or CRM/message bodies.
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+mcp: ob_mybcat/search_thoughts started
+exec
+/bin/bash -lc 'rg -n -i "502|commit|booking|ringer|EVIDENCE-502|timeout|write" /home/ankit114/.codex/memories/MEMORY.md || true' in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+53:- Measure throughput, cycle time, blocked time, rework, failed runs, human acceptance rate, and evidence freshness; do not score agents by message volume. Keep the first workflow shadow-only: no publishing, CRM writes, or outbound sends. [Task 1]
+85:- Podcast, SEO/Blog, Sales, handoff card, receipt, shadow mode, duplicate rejection, CRM writes, outbound messages, accepted:true
+98:- The first proof is a shadow Podcast-to-Sales handoff with zero CRM writes/sends, single acceptance, duplicate rejection, and receipt return. Existing Podcast seam: `server/pipeline/sales_handoff.py`, `server/pipeline/schemas/handoff_packet.schema.json`, and `tests/test_sales_handoff_packet.py`. [Task 1][Task 2]
+103:- symptom: cross-department work drifts into shared state or direct writes -> cause: Buzz was treated as authoritative rather than a routing surface -> fix: retain department ownership and use sanitized, receipt-backed handoffs. [Task 1][Task 2]
+233:applies_to: cwd=/mnt/d_drive/repos/bland; reuse_rule=safe for this CVC Bland / EyeCloud / conductor lane, but treat live rollout state, Project Room freshness, and provider/write authorization as time-specific
+243:- bland, eyecloud, cvc, reschedule, same-day, live, conductor, appt.reschedule, project-room, staff-confirmed cancellation, verify-after-write
+253:- Same-office rescheduling with exact patient identity, exactly one eligible appointment, explicit old-to-new readback, signed `appt.reschedule`, and EyeCloud read-after-write verification is the intended first live scope [Task 1]
+255:- The stored live goal does not itself authorize a deployment, provider mutation, or live patient appointment write. Staff fallback covers zero or multiple appointments, cross-office changes, cancellation, conflicts, elapsed/invalid slots, gateway failures, and unverified outcomes. [Task 1] [ad-hoc note]
+256:- The safer write boundary is the conductor `appt.reschedule` path in `internal/cli/gateway_dispatch_prod.go`, not the older Python `/reschedule` path [Task 1]
+257:- The conductor dispatcher resolves the target appointment and verifies the write back with `productionVerify` / `verifyWrite` [Task 1]
+357:- firewall-cmd, FedoraWorkstation, tailscale status, tailscale ip -4, runtime=yes, permanent=no, rich-rule, timeout=10m
+370:- Temporary Fedora firewall rules can be time-bound and source-restricted with `firewall-cmd --zone=FedoraWorkstation --add-rich-rule=... --timeout=10m`; success should be `runtime=yes`, `permanent=no` [Task 2]
+483:- automation-discovery, ringer, corpus.db, BUILD_RECEIPT.md, evidence-bundle, allow-review, receipts, sources=21 events_checked=2120 candidates=14 offers=5 receipts=20
+497:- when the user says, "use $automation-discovery and $ringer To aceeaa all my data and connectiongs and fan out and tice me automations" -> treat it as a request to audit real traces and build proof from evidence, not brainstorm from memory [Task 1]
+504:- The reliable closure sequence for this stack was: corrected tests -> strict validator -> Ringer PASS -> two fresh ALLOW reviews -> receipt merge -> corpus validation -> backup/export -> continuity capture [Task 1]
+506:- Final validated local state was five built offers and 20 receipts, with corpus validation `sources=21 events_checked=2120 candidates=14 offers=5 receipts=20`; no external send/deploy/commit/schedule action happened [Task 1]
+514:- symptom: `resume` / `handoff` pair leaves a main artifact behind when a sidecar write fails -> cause: partial write treated as success -> fix: treat any nonzero exit as failure and retry in a clean output directory [Task 1]
+603:- Steam, ARC Raiders, ntfs3, kernel BUG, iomap_write_end, ntfs_file_write_iter, /mnt/d_drive, journalctl -k, appmanifest_1808500.acf
+624:- The decisive kernel evidence was `kernel BUG at fs/iomap/buffered-io.c:1061!`, `iomap_write_end+0x1b4/0x1c0`, and `ntfs_file_write_iter+0x250/0x2f0 [ntfs3]` [Task 1]
+726:- Enforced behaviors from the local proof: `n_hours` authoritative for `open` / `about_to_close` / `after_hours`; `{{now_utc}}` labeled UTC; open urgent flow uses `urgent_slot_mode=same_day`; closed or unconfirmed-hours flow uses `urgent_slot_mode=first_am`; ER/911 language is gated on explicit severe/worsening symptoms and is non-repeating; booking claims require `book_success == true`; booking failure says nothing is booked, confirms callback readback, then promises one callback [Task 2]
+728:- The handoff state was intentionally paused after local verification and documentation, before provider version creation, attachment, call, booking, message, alert, or live voice proof [Task 3]
+
+hook: PostToolUse
+exec
+/bin/bash -lc "if test -f /home/ankit114/.agents/skills/wayfinder/SKILL.md; then sed -n '1,320p' /home/ankit114/.agents/skills/wayfinder/SKILL.md; else echo WAYFINDER_MISSING; fi" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+---
+name: wayfinder
+description: Plan a huge chunk of work — more than one agent session can hold — as a shared map of decision tickets on your issue tracker, and resolve them one at a time until the way to the destination is clear.
+disable-model-invocation: true
+---
+
+A loose idea has arrived — too big for one agent session, and wrapped in fog: the way from here to the **destination** isn't visible yet. Wayfinding is about finding that way, not charging at the destination. This skill charts the way as a **shared map** on the repo's issue tracker, then works its **decision tickets** — questions whose resolution is a decision, not slices of a build to execute — one at a time until the route is clear.
+
+The destination varies per effort, and naming it is the first act of charting — it shapes every ticket. It might be a spec to hand off and iterate on, a decision to lock before planning starts, or a change made in place like a data-structure migration. The map is domain-agnostic — engineering work, course content, whatever fits the shape.
+
+## Plan, don't do
+
+Wayfinder is **planning** by default: each ticket resolves a decision, and the map is done when the way is clear — nothing left to decide before someone goes and does the thing. The pull to just do the work is usually the signal you've reached the edge of the map and it's time to hand off. An effort can override this in its **Notes** — carrying execution into the map itself — but absent that, produce decisions, not deliverables.
+
+## Refer by name
+
+Every map and ticket is an issue, so it has a **name** — its title. In everything the human reads — narration, the map's Decisions-so-far — refer to it by that name, never by a bare id, number, or slug. A wall of `#42, #43, #44` is illegible; names read at a glance. The id and URL don't vanish — a name wraps its link — but they ride *inside* the name, never stand in for it.
+
+## The Map
+
+The map is a single issue on this repo's issue tracker, labelled `wayfinder:map` — the canonical artifact. Its tickets are child issues of the map.
+
+The map is an **index**, not a store. It lists the decisions made and points at the tickets that hold their detail; a decision lives in exactly one place — its ticket — so the map never restates it, only gists it and links.
+
+**Where the map, its child tickets, blocking, and frontier queries physically live is tracker-specific.** The issue tracker should have been provided to you — run `/setup-matt-pocock-skills` if not. Consult the tracker doc's "Wayfinding operations" section for how _this_ repo expresses them. If no tracker has been provided, default to the local-markdown tracker.
+
+### The map body
+
+The whole map at low resolution, loaded once per session. Open tickets are **not** listed — they are open child issues, found by query.
+
+```markdown
+## Destination
+
+<what reaching the end of this map looks like — the spec, decision, or change this effort is finding its way to. One or two lines; every session orients to it before choosing a ticket.>
+
+## Notes
+
+<domain; skills every session should consult; standing preferences for this effort>
+
+## Decisions so far
+
+<!-- the index — one line per closed ticket: enough to judge relevance, then zoom the link for the detail the ticket holds -->
+
+- [<closed ticket title>](link) — <one-line gist of the answer>
+
+## Not yet specified
+
+<!-- see "Fog of war": in-scope fog you can't ticket yet; graduates as the frontier advances -->
+
+## Out of scope
+
+<!-- see "Out of scope": work ruled beyond the destination; closed, never graduates -->
+```
+
+### Tickets
+
+Each ticket is a **child issue** of the map; the tracker's issue id is its identity. Its body is the question, sized to one 100K token agent session:
+
+```markdown
+## Question
+
+<the decision or investigation this ticket resolves>
+```
+
+Each ticket carries a `wayfinder:<type>` label — one of `research`, `prototype`, `grilling`, `task` (see [Ticket Types](#ticket-types)).
+
+A session **claims** a ticket by assigning it to the dev driving the map, **first**, before any work, so concurrent sessions skip it. That assignee _is_ the claim: an open, unassigned ticket is unclaimed.
+
+Blocking uses the tracker's **native** dependency relationship — essential because it renders the frontier _visually_ in the tracker's own UI, so the human sees what's takeable without opening the map. Only a tracker that lacks native blocking falls back to a body convention. A ticket is **unblocked** when every ticket blocking it is closed; the **frontier** is the open, unblocked, unclaimed children — the edge of the known.
+
+The answer isn't part of the body — it's recorded on resolution (see [Work through the map](#work-through-the-map)). Assets created while resolving a ticket are linked from the issue, not pasted in.
+
+## Ticket Types
+
+Every ticket is either **HITL** — human in the loop, worked *with* a human who speaks for themselves — or **AFK**, driven by the agent alone. A HITL ticket only resolves through that live exchange; the agent never stands in for the human's side of it (a grilling agent that answers its own questions has broken this).
+
+- **Research** (AFK): Reading documentation, third-party APIs, or local resources like knowledge bases to surface a fact a decision waits on. Resolved by a `/research` **subagent**. Use when knowledge outside the current working directory is required.
+- **Prototype** (HITL): Raise the fidelity of the discussion by making a cheap, rough, concrete artifact to react to — an outline, a rough take, a stub, or UI/logic code via the /prototype skill. Links the prototype as an asset. Use when "how should it look" or "how should it behave" is the key question.
+- **Grilling** (HITL): Conversation via the /grilling and /domain-modeling skills, one question at a time. The default case.
+- **Task** (HITL or AFK): Manual work that must happen before a *decision* can be made — nothing to decide, prototype, or research, but the discussion is blocked until it's done. Signing up for a service so its API can be judged, provisioning access, moving data so its shape can be seen. This is the one type that *does* rather than decides — and it earns its place by unblocking a decision, not by delivering the destination. The agent drives it alone where it can (AFK); otherwise it hands the human a precise checklist (HITL). Resolved when the work is done; the answer records what was done and any resulting facts (credentials location, new URLs, row counts) later tickets depend on.
+
+## Fog of war
+
+The map is _deliberately_ incomplete: don't chart what you can't yet see. Beyond the live tickets lies the **fog of war** — the dim view of decisions and investigations you can tell are coming but can't yet pin down, because they hang on questions still open. Resolving a ticket clears the fog ahead of it, graduating whatever's now specifiable into fresh tickets — one at a time, until the way to the destination is clear and no tickets remain.
+
+The map's **Not yet specified** section is where that dim view is written down: the suspected question, the area to revisit later. It's the undiscovered frontier _toward_ the destination — everything here is in scope, just not sharp enough to ticket. Write as loosely or as fully as the view allows; it doubles as a signpost for collaborators reading where the effort is headed.
+
+**Fog or ticket?** The test is whether you can state the question precisely now — _not_ whether you can answer it now.
+
+- **Ticket when** the question is already sharp — even if it's blocked and you can't act on it yet.
+- **Not yet specified when** you can't yet phrase it that sharply. Don't pre-slice the fog into ticket-sized pieces: it's coarser than a ticket, and one patch may graduate into several tickets, or none, once the frontier reaches it.
+
+**Not yet specified** excludes what's already decided (Decisions so far), what's already a live ticket, and what's out of scope (the next section).
+
+## Out of scope
+
+Fog only ever gathers _toward_ the destination. The destination fixes the scope, so work beyond it is **out of scope** — it isn't fog, and it doesn't belong in **Not yet specified**. It gets its own **Out of scope** section on the map: work you've consciously ruled out of _this_ effort. Scope, not sharpness, lands it here.
+
+Out-of-scope work never graduates — the frontier stops at the destination — so it returns only if the destination is redrawn, and then as a fresh effort, not a resumption.
+
+Ruling something out of scope is a scoping act, not a step on the route. When a ticket that already exists turns out to sit past the destination — mis-scoped in while charting, or exposed by a resolution — **close it** (a closed ticket is unambiguously off the frontier) and leave one line in the **Out of scope** section: the gist plus why it's out of scope, linking the closed ticket. It stays out of **Decisions so far**, which records the route actually walked — a scope boundary isn't a step on it.
+
+## Invocation
+
+Two modes. Either way, **never resolve more than one ticket per session** — with the exception of research tickets.
+
+### Chart the map
+
+User invokes with a loose idea.
+
+1. **Name the destination.** Run a `/grilling` and `/domain-modeling` session to pin down what this map is finding its way to — the spec, decision, or change. The destination fixes the scope, so it's settled first.
+2. **Map the frontier.** Grill again, **breadth-first** this time: fan out across the whole space rather than deep on any one thread, surfacing the open decisions and the first steps takeable now. **If this surfaces no fog** — the way to the destination is already clear, the whole journey small enough for one session — you don't need a map. Stop and ask the user how they'd like to proceed.
+3. **Create the map** (label `wayfinder:map`): Destination and Notes filled in, Decisions-so-far empty, the fog sketched into **Not yet specified**.
+4. **Create the tickets you can specify now** as child issues of the map — then wire blocking edges in a **second pass** (issues need ids before they can reference each other). Wiring sorts them into the frontier and the blocked; everything you can't yet specify stays in the fog — the **Not yet specified** section.
+5. **Fire the research subagents.** For each `research` ticket you just created, spin up a `/research` subagent to resolve it in parallel, capturing its findings on a throwaway `research/<name>` branch with a context pointer from the ticket.
+6. Stop — charting is one session's work; it hand-resolves nothing.
+
+### Work through the map
+
+User invokes with a map (URL or number). A ticket is **optional** — without one, you pick the next decision, not the user.
+
+1. Load the **map** — the low-res view, not every ticket body.
+2. Choose the ticket. If the user named one, use it. Otherwise take the first frontier ticket in order. **Claim it**: assign it to yourself before any work.
+3. Resolve it — **zoom as needed**: fetch the full body of any related or closed ticket on demand; invoke the skills the `## Notes` block names. If in doubt, use `/grilling` and `/domain-modeling`.
+4. Record the resolution: post the answer as a **resolution comment**, **close** the issue, and **append a context pointer** to the map's Decisions-so-far.
+5. Add newly-surfaced tickets (create-then-wire); graduate any fog the answer has made specifiable, clearing each graduated patch from **Not yet specified** so it lives only as its new ticket. If the answer reveals a ticket — this one or another — sits beyond the destination, **rule it out of scope** rather than resolving it on the route. If the decision invalidates other parts of the map, update or delete those tickets.
+
+The user may run unblocked tickets in parallel, so expect other sessions to be editing the tracker concurrently.
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+mcp: ob_mybcat/search_thoughts (completed)
+mcp: ob_mybcat/search_thoughts (completed)
+mcp: ob_mybcat/search_thoughts (completed)
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+Ankit — the packet is 132 lines and the first read shows the key split: the write committed, the caller reported synthetic 502, and the only live reproduction occurred while the shared gateway was under harness load. I’m checking the tail and exact line evidence now; I’m treating the same-latency read-node objection as unresolved, not as proof of a flat timeout.
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+hook: PreToolUse Completed
+exec
+/bin/bash -lc "rg --files -g '.ai/fable-proof-run.md' -g 'AGENTS.md' -g '*plan*' -g '*spec*' -g '*runbook*' . /home/ankit114/repos/ringer/my-manifests 2>/dev/null | head -100" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/plan.md
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/plan.md
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/plan.md
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/work-runbook-upgrade/logs/upgrade-source-fallback-and-number-explainer-runbook.worker.log
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/runbook-update-plan.md
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_competitive_runbook_upgrade.py
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_runbook_patch_review.py
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/google-serp-specialty-contacts.json
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/round7b-review-runbook-source-explainer-upgrade.json
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/round7-runbook-source-explainer-upgrade.json
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/artifacts/runbook-source-explainer-upgrade.patch
+/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/artifacts/runbook-source-explainer-upgrade-summary.md
+
+hook: PostToolUse
+exec
+/bin/bash -lc "sed -n '1,360p' /home/ankit114/.claude/skills/fable-proof-run/SKILL.md 2>/dev/null || true" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+---
+name: fable-proof-run
+description: Auto-load by default for Ankit’s non-trivial code/repo build, fix, debug, implementation, or verification tasks where real execution proof matters—not only when he explicitly says Fable. Use the Fable-lite empirical loop for “run the real thing,” “don’t stop at compile,” same-commit model comparison, visual/stateful UI bugs, integration failures, flaky tests, unclear root cause, or any task likely to fail if the agent guesses. Do not use for simple edits, copywriting, routine lookups, PHI/client-sensitive work, CRM/EHR/finance writes, external sends/publishes, deploys, commits, pushes, migrations, or browser/computer control unless explicitly scoped and approved.
+---
+
+# Fable Proof Run
+
+Run the useful part of Fable: empirical, tool-driven, runtime-verified work. Do **not** copy the unsafe part: unconstrained “find a way” autonomy.
+
+## Hermes less-work default
+
+For Ankit, treat this as an internal auto-routing pattern, not a command he needs to remember. If the request is a non-trivial code/repo build, fix, debug, implementation, or verification task where real execution proof matters, load/apply this skill automatically. Do not ask him to choose a Fable lane or say `/fable-proof-run` first.
+
+Use the structure mostly silently: baseline, reproduce/probe, smallest reversible change, verify, and report baseline → delta. Show the full opening packet only when the task is high-blast, ambiguous, or needs approval; otherwise keep the user-facing response short.
+
+## First decision: mode
+
+- **Actual Fable:** keep instructions minimal; constrain blast radius, require proof, and cap tools/cost.
+- **Fable-lite:** when running Opus/Sonnet/Codex/Hermes/other non-Fable models, imitate Fable’s empirical loop: reproduce, instrument, probe, observe, verify, and report deltas.
+
+If the task does not need this extra machinery, do the normal smaller workflow instead.
+
+## Mandatory opening packet
+
+Internally assemble this packet before non-trivial runs. Show it to Ankit only when it materially reduces risk or clarifies scope; otherwise keep it as your private operating checklist and proceed.
+
+```text
+Fable-proof mode: actual-fable | fable-lite
+Stakes: low | medium | high blast
+Scope:
+Non-goals:
+Allowed tools:
+Forbidden actions:
+Baseline gate:
+Stop condition:
+Repo hook: loaded .ai/fable-proof-run.md | none/fallback
+```
+
+If the repo contains `.ai/fable-proof-run.md`, read it before running. If absent, use conservative defaults.
+
+## Default forbidden actions
+
+Stop for explicit approval before any of these, even if tests are green:
+
+- PHI, patient data, client-sensitive raw data, secrets, tokens, credentials, or payment IDs
+- CRM/EHR/finance writes or updates
+- external sends, publishes, ads, posts, or messages
+- deploys, migrations, prod writes, protected-page edits, cron autonomy
+- `git commit`, `git push`, merge, release, or tag
+- destructive deletes/resets or package-patch/global-state writes
+- browser/computer-control automation unless the task explicitly needs it and the repo hook allows it
+
+This skill is not authorization. It only makes investigation more empirical.
+
+## Empirical loop
+
+1. **Frame the failure.** Restate the exact symptom and what would prove it fixed.
+2. **Capture baseline.** Record starting test/build/runtime state before changing anything. No “no regressions” without a baseline.
+3. **Reproduce or simulate minimally.** Prefer the real failing path; use a small scratch repro only when the real path is too slow or unsafe.
+4. **Rank hypotheses.** Keep 2–5 likely causes. Mark each as confirmed/inferred/unknown.
+5. **Probe one axis at a time.** Inspect source, logs, runtime state, browser output, or generated artifacts. Do not stack fixes on a broken base.
+6. **Change the smallest reversible thing.** If the change regresses behavior, revert to known-good before trying the next path.
+7. **Run the full gate again.** Report baseline → delta with exit codes/counts and what changed.
+8. **Close with proof state.** Confirmed / inferred / unverified, dirty/committed/pushed state, and the claim most likely to be wrong.
+
+## Fable-like tactics to use when safe
+
+- Run real commands instead of guessing from memory.
+- Inspect dependency/source code when the bug likely lives there.
+- For long-lived Python gateways/processes that fail after source updates, check process start time vs source mtime, prove fresh imports work, and distinguish session reset from process restart. Use `references/long-lived-python-gateway-import-drift.md` for the stale-module import-drift debug and hardening pattern.
+- Create throwaway local repros under `/tmp` or an approved scratch directory.
+- Add temporary instrumentation only if it is easy to remove and clearly marked.
+- Use browser/runtime screenshots or DOM inspection for visual/stateful issues when allowed.
+- Spawn subagents only for separable hypotheses; verify their claims yourself before acting.
+- Read generated/compiled artifacts when the build output matters.
+- Log discarded hypotheses so they are not re-litigated.
+
+## Fable-like tactics to avoid
+
+- Do not invent new ways around permission, accessibility, sandbox, or browser restrictions.
+- Do not turn one debug request into broad refactoring.
+- Do not preserve raw sensitive data in notes, captures, artifacts, or final replies.
+- Do not claim a root cause from one sample; rank causes until evidence proves one.
+- Do not treat subagent “done” as done.
+
+## Output shape
+
+```text
+Result: fixed | partially fixed | not fixed | blocked
+Baseline:
+Delta:
+What I changed:
+What I verified:
+Confirmed:
+Inferred:
+Unverified / user must check:
+Dirty/committed/pushed state:
+Risk notes:
+Next step:
+```
+
+## Optional audit script
+
+For analyzing Claude Code Fable sessions, run `scripts/analyze_claude_fable_sessions.py`. It scans local Claude JSONL metadata, rolls up subagents, and exports sanitized aggregate counts without raw prompts, raw tool outputs, secrets, or CRM/message bodies.
+
+hook: PostToolUse
+exec
+/bin/bash -lc "nl -ba EVIDENCE-502.md | sed -n '81,160p'" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+exec
+/bin/bash -lc "nl -ba EVIDENCE-502.md | sed -n '1,80p'" in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 11ms:
+     1	# Evidence packet: booking commits but the patient is told it failed
+     2	
+     3	All identifiers below are scrubbed. The test subject is a SYNTHETIC dummy record, not a real
+     4	patient. No PHI appears in this file.
+     5	
+     6	## The defect
+     7	
+     8	An SMS AI agent (vendor: **Bland AI**) runs a conversational "pathway" that books eye-exam
+     9	appointments into an EMR (Eye Cloud Pro) through a self-hosted booking gateway. On 2026-08-03 a
+    10	test conversation confirmed a slot, the agent replied **"I couldn't confirm that booking. Please
+    11	call the office so they can check it for you"**, and the appointment **was created in the EMR
+    12	anyway**.
+    13	
+    14	This is live on a production phone line today.
+    15	
+    16	## Architecture
+    17	
+    18	- Pathway version **87**, 42 nodes, of which **12 are Webhook nodes**.
+    19	- A dump of all 12 webhook nodes shows **no `timeout`, `retry`, or `retryCount` field set on any
+    20	  of them**. They inherit the platform default, whose value is unmeasured.
+    21	- The vendor catalog for these nodes specifies `default_node_settings: {"timeout_seconds": 10,
+    22	  "retry_attempts": 0}`. So either the nodes drifted from catalog intent, or the export hides UI
+    23	  defaults. Unreconciled.
+    24	- Gateway: `https://<gw-host>`, edge is **nginx** (response headers: `Server: nginx`,
+    25	  `Connection: close`, no CDN headers, so nginx is the edge directly, nothing in front).
+    26	- Endpoints, all POST JSON with a bearer token: `/patient-search`, `/appt-list`, `/availability`,
+    27	  `/conflict-check`, `/sign`.
+    28	- `/sign` is the governed write path: `{"verb":"appt.book"|"appt.cancel","target":...,"store":...,
+    29	  "reason":...,"params":{...}}`.
+    30	- Booking node order: `n_verify_1` (POST /conflict-check) then `n_book_1` (POST /sign).
+    31	- Pathway routes on `book_success` from `$.success`. Non-success routes to End node
+    32	  `e_booking_failed`.
+    33	- A July snapshot of the gateway source shows Python **`ThreadingHTTPServer` +
+    34	  `BaseHTTPRequestHandler`** behind nginx (NOT gunicorn/uwsgi, so no worker-timeout reaper),
+    35	  `ECP_CLI_TIMEOUT_S` default **90**, and **every internal timeout path returns 504**, never 502.
+    36	  nginx's own read timeout also emits 504. The EMR is driven by shelling out to a CLI; the EMR
+    37	  keeps ONE session per user, logins serialize behind an exclusive lock with a 30s re-login
+    38	  cooldown and up to a 120s login budget. **Caveat: that snapshot predates `/sign` and may not
+    39	  match the deployed build.**
+    40	
+    41	## Incident timeline (UTC, 2026-08-03)
+    42	
+    43	```
+    44	14:47:22.797  USER   "1"      (picks offered slot 1)
+    45	14:47:26.083  AGENT  "To confirm, your eye exam would be 08/04/2026 01:00 pm. Reply YES to book it"
+    46	14:49:09.678  USER   "Yes"
+    47	14:49:57.901  AGENT  "I couldn't confirm that booking. Please call the office..."
+    48	```
+    49	
+    50	Gap from YES to failure message: **48.2 seconds**.
+    51	
+    52	End state: `current_node_id: e_booking_failed`, `ended_by_end_call_node: true`,
+    53	`is_active: false`, **`BlandStatusCode: 502`**, `appt_count: 0`, `slot_conflict: false`,
+    54	`slot_count: 25`, `ok: true`, `conflict_reason: ""`.
+    55	
+    56	## Proof the write committed
+    57	
+    58	`/appt-list` afterward returned exactly one upcoming appointment matching the confirmed slot.
+    59	Cancelling it returned `pre_state` with `start "08/04/2026 01:00:00 pm"`, `status "created"` —
+    60	byte-for-byte the slot the patient confirmed.
+    61	
+    62	## Measurement lane 1: direct reproduction (operator workstation)
+    63	
+    64	Posted the identical `/sign` appt.book body directly:
+    65	
+    66	- **HTTP 200, `success: true`, in 16.0s.** Rolled back cleanly.
+    67	- A second independent direct book also returned 200.
+    68	- **Two out of two direct books succeeded. Zero 502s reproduced.**
+    69	
+    70	## Measurement lane 2: latency, idle vs under load
+    71	
+    72	Idle gateway:
+    73	```
+    74	/appt-list        7.9s
+    75	/sign appt.book   16.0s
+    76	/sign appt.cancel 17.1s / 17.5s
+    77	```
+    78	
+    79	Under load (while a 33-scenario live test harness hammered the SAME gateway), twice each:
+    80	```
+
+ succeeded in 25ms:
+    81	/patient-search   22.0s / 21.9s      /appt-list        24.4s / 18.1s
+    82	/availability     21.5s / 23.8s      /conflict-check   19.3s / 22.0s
+    83	```
+    84	
+    85	**Latency roughly triples under load, uniformly across every endpoint, including 84-byte and
+    86	121-byte responses.** That uniformity appears to rule out payload-size and buffering
+    87	explanations.
+    88	
+    89	**Critical timeline overlap:** the harness run that saturated the gateway ran **14:39:06 to
+    90	~14:54**. The patient's YES was at **14:49:09**. The live booking happened inside the load window
+    91	created by our own test harness. The direct reproduction that returned 200 in 16.0s ran later,
+    92	against an idle gateway.
+    93	
+    94	## Measurement lane 3: the analyst brief (a separate model lane already run)
+    95	
+    96	Its leading conclusion, ~60% confidence: a **client-side webhook timeout** on the book node,
+    97	which the platform records as a synthetic 502. Its key argument is that the non-reproduction is a
+    98	**prediction** of that theory, not a puzzle: a client that waits indefinitely is structurally
+    99	incapable of reproducing a client-timeout 502, so n could be 200 and prove nothing.
+   100	
+   101	It also argues that with this stack, "caller sees error, write commits" is the DEFAULT outcome
+   102	for any client less patient than the gateway: when the platform aborts, nginx logs 499 and may
+   103	close the upstream connection, but the Python handler thread only notices at response-write time
+   104	while the EMR subprocess runs to completion. Nothing has to "break."
+   105	
+   106	Its ranked alternatives: genuine nginx 502 from gateway process death mid-request (~20%);
+   107	platform-internal egress blip (~10%); everything else under 5%.
+   108	
+   109	Its fix ranking, lowest risk first: (1) reword the failure message so it stops asserting a
+   110	failure that did not happen; (2) set explicit timeouts of 45-60s on the book and verify nodes;
+   111	(3) add a verify-on-failure branch that calls `/appt-list` and confirms whether the slot exists,
+   112	converting commit-plus-timeout into a truthful confirmation **without retrying the write**;
+   113	(4) keep the EMR session warm to cut p95 latency; (5) REFUSE automatic retry, because `/sign` has
+   114	no idempotency key and no dedupe on (patient, slot), so retry in exactly this state double-books.
+   115	
+   116	## The strongest open objection, unresolved
+   117	
+   118	If a flat webhook timeout were the whole story, the earlier read nodes in the SAME conversation
+   119	(`/patient-search`, `/appt-list`, and several `/availability` calls) were also running at ~20s
+   120	under the same load and should have timed out too. **They did not.** The conversation negotiated
+   121	normally through three rounds of availability and only the write failed. That argues against a
+   122	simple flat timeout applied uniformly to all nodes, and it is not yet explained.
+   123	
+   124	## Constraints on any fix
+   125	
+   126	- `/sign` has **no idempotency key**; the gateway has no visible dedupe on (patient, slot).
+   127	- The vendor catalog says "Never add allow_conflict and never retry automatically."
+   128	- Changing pathway node config requires the vendor dashboard for some operations; the
+   129	  `/v1/sms/update` API returns 500 for every payload including a no-op, so repointing a line is
+   130	  dashboard-only.
+   131	- The test harness and the live patient line **share one gateway**, so running the harness during
+   132	  business hours degrades the live booking path.
+
+hook: PostToolUse
+hook: PostToolUse
+exec
+/bin/bash -lc 'rg -n -i "502|commit|booking|sign|timeout|same latency|read nodes|write" /home/ankit114/.codex/memories/MEMORY.md || true' in /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback
+ succeeded in 0ms:
+31:# Task Group: Buzz visual factory / `/seeit` workflow design
+53:- Measure throughput, cycle time, blocked time, rework, failed runs, human acceptance rate, and evidence freshness; do not score agents by message volume. Keep the first workflow shadow-only: no publishing, CRM writes, or outbound sends. [Task 1]
+59:- symptom: context reports `NO_PRODUCT_MD` in a sparse project -> cause: product context and the required user-answer round are missing -> fix: obtain the three design choices and complete the product-context interview before generating the artifact; do not claim `/seeit` completion. [Task 1]
+64:scope: Map existing Podcast, SEO/Blog, Sales, and other loops into Buzz without replacing their runtimes; design safe human-gate and handoff interfaces.
+77:## Task 2: Design and publish Podcast → SEO/Blog → Sales workflow, success
+85:- Podcast, SEO/Blog, Sales, handoff card, receipt, shadow mode, duplicate rejection, CRM writes, outbound messages, accepted:true
+98:- The first proof is a shadow Podcast-to-Sales handoff with zero CRM writes/sends, single acceptance, duplicate rejection, and receipt return. Existing Podcast seam: `server/pipeline/sales_handoff.py`, `server/pipeline/schemas/handoff_packet.schema.json`, and `tests/test_sales_handoff_packet.py`. [Task 1][Task 2]
+102:- symptom: a design is described as live Buzz-to-loop approval integration -> cause: the estate router/adapter and round-trip tests were not built -> fix: state the integration is partial; build and prove the adapter before claiming approval application is complete. [Task 1]
+103:- symptom: cross-department work drifts into shared state or direct writes -> cause: Buzz was treated as authoritative rather than a routing surface -> fix: retain department ownership and use sanitized, receipt-backed handoffs. [Task 1][Task 2]
+162:- Buzz records exact agent mentions; `buzz-acp` routes the event and thread context to matching agent sessions, and each session decides whether to publish a signed reply. Channels are the interface, the harness is the connector, and agent sessions are workers. [Task 4]
+233:applies_to: cwd=/mnt/d_drive/repos/bland; reuse_rule=safe for this CVC Bland / EyeCloud / conductor lane, but treat live rollout state, Project Room freshness, and provider/write authorization as time-specific
+243:- bland, eyecloud, cvc, reschedule, same-day, live, conductor, appt.reschedule, project-room, staff-confirmed cancellation, verify-after-write
+253:- Same-office rescheduling with exact patient identity, exactly one eligible appointment, explicit old-to-new readback, signed `appt.reschedule`, and EyeCloud read-after-write verification is the intended first live scope [Task 1]
+255:- The stored live goal does not itself authorize a deployment, provider mutation, or live patient appointment write. Staff fallback covers zero or multiple appointments, cross-office changes, cancellation, conflicts, elapsed/invalid slots, gateway failures, and unverified outcomes. [Task 1] [ad-hoc note]
+256:- The safer write boundary is the conductor `appt.reschedule` path in `internal/cli/gateway_dispatch_prod.go`, not the older Python `/reschedule` path [Task 1]
+257:- The conductor dispatcher resolves the target appointment and verifies the write back with `productionVerify` / `verifyWrite` [Task 1]
+264:- symptom: broad EyeCloud tests look red and make the lane seem blocked -> cause: unrelated PracticeCanopy gating in the wider CLI suite -> fix: use the focused reschedule/conductor tests as the signal for this lane [Task 1]
+265:- symptom: implementation drifts toward the older Python reschedule path -> cause: it appears available and simpler -> fix: prefer the signed conductor route for the first live version because it already matches the stronger auth/verify model [Task 1]
+290:- The highest-signal local evidence lived in `~/.zoom/logs/zoom_stdout_stderr.log`: repeated `zoom was exited due to a handled signal: 11`, `XIO: fatal IO error 110 (Connection timed out) on X server ":0"`, `webviewClientIpcChannel:ReceiveError`, and `The X11 connection broke: I/O error (code 1)` [Task 1]
+357:- firewall-cmd, FedoraWorkstation, tailscale status, tailscale ip -4, runtime=yes, permanent=no, rich-rule, timeout=10m
+370:- Temporary Fedora firewall rules can be time-bound and source-restricted with `firewall-cmd --zone=FedoraWorkstation --add-rich-rule=... --timeout=10m`; success should be `runtime=yes`, `permanent=no` [Task 2]
+462:- symptom: first fix opens a new pane -> cause: launcher design assumed managed-pane flow -> fix: default to same-pane registration unless the user explicitly asks for a new pane [Task 1]
+506:- Final validated local state was five built offers and 20 receipts, with corpus validation `sources=21 events_checked=2120 candidates=14 offers=5 receipts=20`; no external send/deploy/commit/schedule action happened [Task 1]
+514:- symptom: `resume` / `handoff` pair leaves a main artifact behind when a sidecar write fails -> cause: partial write treated as success -> fix: treat any nonzero exit as failure and retry in a clean output directory [Task 1]
+519:scope: Storage safety checks, cleanup execution, Dropbox/Carbonite compatibility, backup design, and layout planning for this Fedora machine; use when the user asks what can be deleted safely, what belongs on `/home` vs D drive, or how to reclaim space without losing data.
+557:- when the user asks for "super reliablity" -> recommend a redundancy-first design, not a one-drive convenience story [Task 2]
+603:- Steam, ARC Raiders, ntfs3, kernel BUG, iomap_write_end, ntfs_file_write_iter, /mnt/d_drive, journalctl -k, appmanifest_1808500.acf
+624:- The decisive kernel evidence was `kernel BUG at fs/iomap/buffered-io.c:1061!`, `iomap_write_end+0x1b4/0x1c0`, and `ntfs_file_write_iter+0x250/0x2f0 [ntfs3]` [Task 1]
+668:- `@app.route('/webhook', methods=['POST'], strict_slashes=False)` let `/webhook` and `/webhook/` both work. Auth precedence on the deployed implementation was header secret -> HMAC signature -> query secret fallback [Task 1]
+671:- Caddy log redaction used `format filter` to replace query secrets and delete sensitive headers such as `X-Webhook-Secret`, `X-Webhook-Signature`, `X-Bland-Token`, and `X-Admin-Key` [Task 1]
+726:- Enforced behaviors from the local proof: `n_hours` authoritative for `open` / `about_to_close` / `after_hours`; `{{now_utc}}` labeled UTC; open urgent flow uses `urgent_slot_mode=same_day`; closed or unconfirmed-hours flow uses `urgent_slot_mode=first_am`; ER/911 language is gated on explicit severe/worsening symptoms and is non-repeating; booking claims require `book_success == true`; booking failure says nothing is booked, confirms callback readback, then promises one callback [Task 2]
+728:- The handoff state was intentionally paused after local verification and documentation, before provider version creation, attachment, call, booking, message, alert, or live voice proof [Task 3]
+732:- symptom: crash recovery shows many unrelated breadcrumbs -> cause: session history is noisy -> fix: use the v31 smooth-delta spec and repo artifacts as the durable signal for this lane [Task 1]
+763:- when the user asks, "whats causign my screen reader to turn on and off?" -> identify the concrete cause, not just explain accessibility features [Task 1]
+769:- High-signal failure strings were `AT-SPI: Unable to open bus connection`, `Fatal Python error: Aborted`, `orca.service: Main process exited, code=dumped, status=6/ABRT`, and a high restart counter [Task 1]
+
+hook: PostToolUse
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+hook: PostToolUse Completed
+codex
+Ankit — I loaded the Codex operating card, Compound Engineering primitives, and Fable-lite proof loop. Wayfinder: skip, because this is an analysis-only packet that fits one session and the immediate route is bounded: contain, correlate, reproduce the write path, then add ambiguity-safe reconciliation. No files have been changed.
+codex
+Ankit —  
+CANARY: blue paperclip
+
+recommendation:
+  decision: "Contain now. Do not ship a blind timeout increase as the fix."
+  plan:
+    - "On any /sign 502, timeout, or connection failure: never retry the write."
+    - "Run a read-only exact-slot reconciliation. Exact match means patient, store, provider, appointment type, and start/end all match."
+    - "Match found: confirm booking. No match or read failure: report status as unverified and route to staff. Tell the patient not to retry."
+    - "Instrument n_book_1 under controlled load, then set explicit timeouts from measured p99 plus margin."
+    - "Isolate the test harness from the production gateway. Add idempotency/dedupe before permitting any retry."
+  owner: "Gateway owner for trace, reconciliation, and idempotency. Pathway owner for dashboard config, routing, and copy. Office operations owner for ambiguous-booking callbacks."
+  outcome: "Zero false failure messages, zero blind rebooks, and a verifiable final booking state."
+  target_dates: "Containment and trace on 2026-08-03; causal reproduction by 2026-08-04; staging proof before any production change."
+  visibility: "Correlation ID, pathway/node ID, effective deadline, gateway receive/start/commit/response times, nginx status, client disconnect, EMR result, reconciliation result."
+  single_next_action: "Pull one correlated trace for the 14:49:09 UTC incident and record the effective timeout for n_verify_1 and n_book_1 before changing config."
+
+confidence: 0.84
+  note: "Confidence is high in this remediation sequence, but only about 0.35 in the analyst's flat client-timeout diagnosis."
+
+evidence:
+  - "The patient saw failure while the exact appointment existed afterward: [lines 8-14](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:8), [lines 58-60](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:58)."
+  - "The live failure occurred during shared-gateway load; idle direct /sign succeeded twice: [lines 64-68](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:64), [lines 89-92](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:89)."
+  - "The analyst's timeout theory is inference, not incident-level proof: [lines 96-107](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:96)."
+  - "Read nodes completed at roughly 20 seconds while the write path failed: [lines 118-122](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:118)."
+  - "Automatic retry is unsafe because /sign has no idempotency or dedupe: [lines 126-127](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:126)."
+
+assumptions:
+  - "The July gateway snapshot may be stale; deployed /sign behavior must be checked."
+  - "Bland can route a failed webhook into a reconciliation node. If it cannot, reconciliation must move into the gateway."
+  - "Exact-slot reads are sufficiently fresh, or can be polled within a bounded window."
+  - "Synthetic test bookings can be isolated and cancelled without using the shared production load path."
+
+unique_catches:
+  - "The 48.2-second interval is end-to-end from YES to the failure message. It is not proof that n_book_1 timed out at 48 seconds; conflict-check and booking are sequential."
+  - "No under-load /sign measurement exists. The read-node results do not test the write's queue, session lock, CLI work, or response path."
+  - "Idle direct HTTP success bypasses both Bland and production load."
+  - "The committed appointment proves the write happened, but not whether it committed before or after the caller gave up. Commit time is required."
+  - "The current failure End node may be terminal. Verify that a 502 can actually reach reconciliation."
+  - "A timeout increase can worsen thread and gateway saturation. Forty-five to sixty seconds is not evidence-based yet."
+  - "A single matching appointment can be a false confirmation if it pre-existed. Reconcile against pre-state and exact fields; otherwise escalate."
+
+risks_or_failure_modes:
+  - "Retrying an ambiguous write double-books."
+  - "A stale /appt-list response creates a false failure or false confirmation."
+  - "Changing copy without reconciliation only hides the defect."
+  - "Keeping the EMR session warm may increase lock contention or reuse stale state."
+  - "Running the harness against the shared gateway can recreate the incident on the live line."
+  - "Exported node settings may hide effective dashboard defaults."
+  - "Gateway-side idempotency implemented without durable dedupe is fake safety."
+
+proof_slots:
+  1:
+    measure: "Bland execution trace plus dashboard values for n_verify_1 and n_book_1."
+    confirms: "A node-specific deadline or vendor timeout event explains the write failure."
+    refutes: "Read and write nodes share the same effective deadline and no timeout event exists."
+  2:
+    measure: "Correlate nginx and gateway logs from 14:47:00 to 14:51:30 UTC."
+    confirms: "Client disconnect/499 occurs while /sign continues to commit."
+    refutes: "nginx emits a genuine 502 because the gateway dies or returns an upstream error before commit."
+  3:
+    measure: "Synthetic /sign books under isolated concurrency levels, with EMR readback after every attempt."
+    confirms: "Write-only latency or failure rises under load while reads remain successful."
+    refutes: "The same failures occur idle, or reads and writes fail together."
+  4:
+    measure: "Run the same synthetic booking through Bland with the actual node configuration."
+    confirms: "Direct gateway calls succeed but Bland fails at a repeatable node deadline."
+    refutes: "Bland reports success/failure inconsistently with the gateway trace."
+  5:
+    measure: "Contract-test reconciliation for committed-before-timeout, not-committed, stale-read, read-failure, and pre-existing-slot cases."
+    pass: "No write retry; confirmation only after exact readback; every unresolved case reaches staff fallback."
+    fail: "Any duplicate booking, unsupported branch, or patient-facing claim without proof."
+
+needs_human_or_owner_gate:
+  - "Gateway owner must provide deployed /sign source/build identity and the correlated logs."
+  - "Pathway owner must inspect and change live Bland settings through the dashboard; the broken update API is not a recovery path."
+  - "Office operations must approve the callback/hold procedure for ambiguous bookings."
+  - "No live pathway edit, gateway deploy, synthetic EMR write/cancel, or production canary without explicit owner approval."
+  - "Vendor confirmation is required if Bland's 502 semantics or failure-branch behavior is undocumented."
+
+Changed: none.  
+Verified by: full read of all 132 lines of `EVIDENCE-502.md`.  
+Risks left: causal mechanism remains unproven until the correlated trace is pulled.  
+Next action: obtain that trace before changing timeout, retry, or pathway behavior.
+
+Status
+- % to true goal: 30% (90%)
+- % to current goal: 100% (98%)
+- Done / ready: Candidate remediation packet with containment, proof order, owners, and gates
+- In flight: nothing
+- Not done: Causal trace, implementation, staging proof, production verification
+- Blocked: No technical blocker; live changes require owner approval
+- Needs you: Assign the gateway owner to pull the correlated incident trace
+Assumptions: The incident logs and Bland execution trace are still available
+hook: Stop
+hook: Stop
+hook: Stop Completed
+hook: Stop Completed
+tokens used
+67,905
+Ankit —  
+CANARY: blue paperclip
+
+recommendation:
+  decision: "Contain now. Do not ship a blind timeout increase as the fix."
+  plan:
+    - "On any /sign 502, timeout, or connection failure: never retry the write."
+    - "Run a read-only exact-slot reconciliation. Exact match means patient, store, provider, appointment type, and start/end all match."
+    - "Match found: confirm booking. No match or read failure: report status as unverified and route to staff. Tell the patient not to retry."
+    - "Instrument n_book_1 under controlled load, then set explicit timeouts from measured p99 plus margin."
+    - "Isolate the test harness from the production gateway. Add idempotency/dedupe before permitting any retry."
+  owner: "Gateway owner for trace, reconciliation, and idempotency. Pathway owner for dashboard config, routing, and copy. Office operations owner for ambiguous-booking callbacks."
+  outcome: "Zero false failure messages, zero blind rebooks, and a verifiable final booking state."
+  target_dates: "Containment and trace on 2026-08-03; causal reproduction by 2026-08-04; staging proof before any production change."
+  visibility: "Correlation ID, pathway/node ID, effective deadline, gateway receive/start/commit/response times, nginx status, client disconnect, EMR result, reconciliation result."
+  single_next_action: "Pull one correlated trace for the 14:49:09 UTC incident and record the effective timeout for n_verify_1 and n_book_1 before changing config."
+
+confidence: 0.84
+  note: "Confidence is high in this remediation sequence, but only about 0.35 in the analyst's flat client-timeout diagnosis."
+
+evidence:
+  - "The patient saw failure while the exact appointment existed afterward: [lines 8-14](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:8), [lines 58-60](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:58)."
+  - "The live failure occurred during shared-gateway load; idle direct /sign succeeded twice: [lines 64-68](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:64), [lines 89-92](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:89)."
+  - "The analyst's timeout theory is inference, not incident-level proof: [lines 96-107](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:96)."
+  - "Read nodes completed at roughly 20 seconds while the write path failed: [lines 118-122](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:118)."
+  - "Automatic retry is unsafe because /sign has no idempotency or dedupe: [lines 126-127](/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/EVIDENCE-502.md:126)."
+
+assumptions:
+  - "The July gateway snapshot may be stale; deployed /sign behavior must be checked."
+  - "Bland can route a failed webhook into a reconciliation node. If it cannot, reconciliation must move into the gateway."
+  - "Exact-slot reads are sufficiently fresh, or can be polled within a bounded window."
+  - "Synthetic test bookings can be isolated and cancelled without using the shared production load path."
+
+unique_catches:
+  - "The 48.2-second interval is end-to-end from YES to the failure message. It is not proof that n_book_1 timed out at 48 seconds; conflict-check and booking are sequential."
+  - "No under-load /sign measurement exists. The read-node results do not test the write's queue, session lock, CLI work, or response path."
+  - "Idle direct HTTP success bypasses both Bland and production load."
+  - "The committed appointment proves the write happened, but not whether it committed before or after the caller gave up. Commit time is required."
+  - "The current failure End node may be terminal. Verify that a 502 can actually reach reconciliation."
+  - "A timeout increase can worsen thread and gateway saturation. Forty-five to sixty seconds is not evidence-based yet."
+  - "A single matching appointment can be a false confirmation if it pre-existed. Reconcile against pre-state and exact fields; otherwise escalate."
+
+risks_or_failure_modes:
+  - "Retrying an ambiguous write double-books."
+  - "A stale /appt-list response creates a false failure or false confirmation."
+  - "Changing copy without reconciliation only hides the defect."
+  - "Keeping the EMR session warm may increase lock contention or reuse stale state."
+  - "Running the harness against the shared gateway can recreate the incident on the live line."
+  - "Exported node settings may hide effective dashboard defaults."
+  - "Gateway-side idempotency implemented without durable dedupe is fake safety."
+
+proof_slots:
+  1:
+    measure: "Bland execution trace plus dashboard values for n_verify_1 and n_book_1."
+    confirms: "A node-specific deadline or vendor timeout event explains the write failure."
+    refutes: "Read and write nodes share the same effective deadline and no timeout event exists."
+  2:
+    measure: "Correlate nginx and gateway logs from 14:47:00 to 14:51:30 UTC."
+    confirms: "Client disconnect/499 occurs while /sign continues to commit."
+    refutes: "nginx emits a genuine 502 because the gateway dies or returns an upstream error before commit."
+  3:
+    measure: "Synthetic /sign books under isolated concurrency levels, with EMR readback after every attempt."
+    confirms: "Write-only latency or failure rises under load while reads remain successful."
+    refutes: "The same failures occur idle, or reads and writes fail together."
+  4:
+    measure: "Run the same synthetic booking through Bland with the actual node configuration."
+    confirms: "Direct gateway calls succeed but Bland fails at a repeatable node deadline."
+    refutes: "Bland reports success/failure inconsistently with the gateway trace."
+  5:
+    measure: "Contract-test reconciliation for committed-before-timeout, not-committed, stale-read, read-failure, and pre-existing-slot cases."
+    pass: "No write retry; confirmation only after exact readback; every unresolved case reaches staff fallback."
+    fail: "Any duplicate booking, unsupported branch, or patient-facing claim without proof."
+
+needs_human_or_owner_gate:
+  - "Gateway owner must provide deployed /sign source/build identity and the correlated logs."
+  - "Pathway owner must inspect and change live Bland settings through the dashboard; the broken update API is not a recovery path."
+  - "Office operations must approve the callback/hold procedure for ambiguous bookings."
+  - "No live pathway edit, gateway deploy, synthetic EMR write/cancel, or production canary without explicit owner approval."
+  - "Vendor confirmation is required if Bland's 502 semantics or failure-branch behavior is undocumented."
+
+Changed: none.  
+Verified by: full read of all 132 lines of `EVIDENCE-502.md`.  
+Risks left: causal mechanism remains unproven until the correlated trace is pulled.  
+Next action: obtain that trace before changing timeout, retry, or pathway behavior.
+
+Status
+- % to true goal: 30% (90%)
+- % to current goal: 100% (98%)
+- Done / ready: Candidate remediation packet with containment, proof order, owners, and gates
+- In flight: nothing
+- Not done: Causal trace, implementation, staging proof, production verification
+- Blocked: No technical blocker; live changes require owner approval
+- Needs you: Assign the gateway owner to pull the correlated incident trace
+Assumptions: The incident logs and Bland execution trace are still available

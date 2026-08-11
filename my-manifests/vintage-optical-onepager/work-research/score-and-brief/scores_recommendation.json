@@ -1,0 +1,408 @@
+{
+  "schema_version": "2.0",
+  "analysis_product": "single_practice",
+  "data_mode": "public_only",
+  "report_visibility": "client_safe_with_caveats",
+  "practice": {
+    "name": "Vintage Optical",
+    "address": "605 S Main St, Morton, IL 61550",
+    "website": "https://www.vintageopt.com/"
+  },
+  "market": {
+    "market_type": "small_town_directional",
+    "primary_catchment_minutes": null,
+    "extended_catchment_minutes": null,
+    "geography_note": "No drive-time catchment was established. Public evidence covers Morton demographics and approximate straight-line competitor bands only. [E029, E030, E037]",
+    "confidence": "low"
+  },
+  "scores": {
+    "market_demand_supply_score": 59,
+    "market_demand_supply_label": "mixed_market",
+    "market_demand_supply_direction": "higher_is_better",
+    "market_demand_supply_rationale": {
+      "verified_fact": "Morton has 16,595 residents, median household income of 94,402, 25.9% under age 18, and 23.1% age 65 or older. [E029, E030]",
+      "inference": "The income and age mix support a cautious demand-fit hypothesis, but supply balance, growth, payer mix, and a true catchment were not measured.",
+      "confidence": "low"
+    },
+    "competitive_pressure_index": 56,
+    "competitive_pressure_label": "high_pressure_lower_band",
+    "competitive_pressure_direction": "higher_is_more_pressure",
+    "competitive_pressure_rationale": {
+      "verified_fact": "The public scan found a nearby direct peer, regional specialty overlap, retail substitution, and a medical/surgical system; approximate distances are straight-line rather than drive time. [E021, E022, E023, E024, E025, E026, E027, E037]",
+      "inference": "Pressure is likely meaningful but cannot be quantified with confidence without a deduplicated provider set, drive times, patient-choice counts, and comparable reputation data.",
+      "confidence": "low"
+    },
+    "room_to_win_score": 44,
+    "room_to_win_label": "tight_but_winnable",
+    "room_to_win_direction": "higher_is_better",
+    "room_to_win_rationale": {
+      "verified_fact": "This score is the required inverse of the Competitive Pressure Index: 100 minus 56.",
+      "inference": "The number describes room relative to the public pressure read, not measured market share or demand.",
+      "confidence": "low"
+    },
+    "practice_competitiveness_score": 72,
+    "practice_competitiveness_label": "competitive",
+    "practice_competitiveness_direction": "higher_is_better",
+    "practice_competitiveness_rationale": {
+      "verified_fact": "Vintage has specific specialty pages, three listed optometrists, an on-site lab, a linked booking flow, sound crawl hygiene, and first placement in seven sampled searches. [E002, E003, E004, E005, E006, E008, E012, E013, E014, E015, E016, E017, E018, E019, E020]",
+      "inference": "Those signals justify a competitive public-position band, not a market-leader claim; the search sample is not a rank grid and peer review volume was unavailable.",
+      "confidence": "medium"
+    },
+    "client_opportunity_score": 66,
+    "client_opportunity_label": "vulnerable_actionable_upside",
+    "client_opportunity_direction": "higher_is_better",
+    "client_opportunity_rationale": {
+      "verified_fact": "Vintage already presents multiple specialty capabilities, credible professional authority, online booking, and directional search visibility. [E002, E003, E004, E005, E009, E010, E012, E013, E014, E015, E016, E017, E018, E020]",
+      "inference": "The most actionable upside is to test conversion, access, and trust loops before adding services or broad awareness spend.",
+      "confidence": "medium"
+    },
+    "confidence_grade": "C"
+  },
+  "subscores": {
+    "market_demand_supply": {
+      "demand_strength": 66,
+      "supply_balance": 42,
+      "payer_income_fit": 72,
+      "growth_future_demand": 45,
+      "specialty_demand_load": 72,
+      "market_data_confidence": 55,
+      "method_note": "Qualitative-band allowance used because peer percentiles, growth measures, payer evidence, and supply denominators are incomplete. [E029, E030, E037]"
+    },
+    "competitive_pressure": {
+      "supply_saturation": 55,
+      "patient_choice_pressure": 58,
+      "competitor_strength": 65,
+      "access_differentiation_pressure": 40,
+      "method_note": "Conservative qualitative bands from visible alternatives and capabilities; no office-density or reachable-choice calculation. [E021, E022, E023, E024, E025, E026, E027, E037]"
+    },
+    "practice_competitiveness": {
+      "visibility_vs_peers": 82,
+      "access_booking_vs_peers": 72,
+      "review_trust_vs_peers": 50,
+      "service_line_differentiation": 88,
+      "website_conversion_clarity": 82,
+      "location_convenience": 55,
+      "method_note": "Qualitative bands, not peer percentiles. Review trust and convenience are deliberately neutral-to-cautious because counts, themes, drive times, parking, and comparative friction were not measured. [E002, E003, E004, E005, E011, E012, E013, E014, E015, E016, E017, E018, E019, E020, E037]"
+    },
+    "client_opportunity": {
+      "market_demand": 59,
+      "competitive_pressure_opportunity": 66,
+      "practice_differentiation_upside": 78,
+      "access_fixability": 65,
+      "digital_visibility_fixability": 58,
+      "execution_simplicity": 72,
+      "method_note": "Opportunity reflects small diagnostic tests and existing assets, not measured leakage or a revenue forecast. [E009, E010, E020, E031, E032, E033, E034, E035]"
+    }
+  },
+  "competitor_tiers": {
+    "tier_1_direct_peers": [
+      {
+        "name": "Focus On Eyes",
+        "category": "independent_optometry",
+        "distance": "approximately 1.0 straight-line mile",
+        "match_basis": "Morton routine and family eye-care overlap, long local tenure, and published weekday/Saturday access. [E021, E022, E037]",
+        "verified_fact": "The practice publicly describes comprehensive care and Saturday hours. [E021, E022]",
+        "inference": "It is the clearest nearby direct peer in the reviewed public set.",
+        "source_confidence": "medium"
+      },
+      {
+        "name": "Vision Care Center, Washington",
+        "category": "regional_optometry_specialty_peer",
+        "distance": "approximately 7.7 straight-line miles",
+        "match_basis": "Documented dry-eye and myopia overlap. [E024, E025, E037]",
+        "verified_fact": "Its public pages name Keratograph, IPL, thermal dry-eye care, atropine, multifocal options, and Ortho-K. [E024, E025]",
+        "inference": "It is the strongest documented specialty-overlap peer in the reviewed set.",
+        "source_confidence": "medium"
+      },
+      {
+        "name": "Tri-County Eye Center",
+        "category": "regional_eye_care_specialty_peer",
+        "distance": "approximately 7.1 straight-line miles",
+        "match_basis": "Publicly promotes a Dry Eye Clinic and Center for Macular Health. [E023, E037]",
+        "verified_fact": "The Washington-location site names both specialty centers. [E023]",
+        "inference": "It may compete for some specialty and medical eye-care demand.",
+        "source_confidence": "medium"
+      }
+    ],
+    "tier_2_substitutes": [
+      {
+        "name": "Walmart Vision Center",
+        "category": "retail_optical_substitute",
+        "distance": "approximately 1.8 straight-line miles",
+        "match_basis": "Nearby retail substitute; its local service offer was not evaluated. [E037]",
+        "verified_fact": "The geocoding sample placed it inside a two-mile straight-line band. [E037]",
+        "inference": "Possible convenience substitution only.",
+        "source_confidence": "low"
+      },
+      {
+        "name": "Bard Optical, East Peoria",
+        "category": "retail_optical_with_eye_care",
+        "distance": "approximately 8.2 straight-line miles",
+        "match_basis": "Exam, contact-lens, disease-management, optical, weekday, and Saturday offer. [E027, E037]",
+        "verified_fact": "The public location page lists broad services and Saturday hours. [E027]",
+        "inference": "It can substitute on convenience and retail breadth.",
+        "source_confidence": "medium"
+      },
+      {
+        "name": "Illinois Eye Center",
+        "category": "ophthalmology_medical_surgical_substitute",
+        "distance": "not established in the ledger",
+        "match_basis": "Multi-location continuum from routine exams to advanced surgery and same-day urgent care. [E026]",
+        "verified_fact": "Its public site describes that continuum and multiple locations. [E026]",
+        "inference": "It can substitute for medical and urgent eye-care needs while also serving as a co-management destination.",
+        "source_confidence": "medium"
+      }
+    ],
+    "tier_3_optional_appendix": {
+      "included": false,
+      "reason_hidden": "Tier 3 benchmark/reference competitors are hidden from this client-safe output."
+    }
+  },
+  "specialty_options": [
+    {
+      "lane": "specialty_conversion_system",
+      "specialty_opportunity_score": 76,
+      "direction": "higher_is_better",
+      "read": "build_test",
+      "verified_fact": "Vintage publicly offers dry-eye modalities, myopia management, specialty contacts, and Neurolens. [E002, E003, E004, E005]",
+      "inference": "Measure the existing lanes together before choosing which one merits more capacity or promotion.",
+      "why": "Capability is visible; conversion, capacity, continuation, and economics are unknown.",
+      "source_strength": "medium",
+      "confidence": "medium",
+      "disconfirmers": [
+        "Existing specialty conversion and capacity may already meet owner-set thresholds.",
+        "Regional competitors may own referral relationships that public pages do not reveal. [E023, E024, E025]"
+      ]
+    },
+    {
+      "lane": "dry_eye_ocular_surface",
+      "specialty_opportunity_score": 68,
+      "direction": "higher_is_better",
+      "read": "build_test",
+      "verified_fact": "Vintage names IPL, radiofrequency, and low-level light therapy; regional competitors also show dry-eye programs. [E002, E023, E024]",
+      "inference": "A credible existing lane with demand-fit proxies, but not proven white space.",
+      "why": "The 65-plus share supports a demand hypothesis, while competitor overlap argues for conversion testing rather than an ownership claim. [E030]",
+      "source_strength": "medium",
+      "confidence": "medium",
+      "disconfirmers": [
+        "Local treatment demand may be lower than the age proxy suggests.",
+        "Competitors may have stronger capacity, outcomes, pricing, or referrals."
+      ]
+    },
+    {
+      "lane": "myopia_management",
+      "specialty_opportunity_score": 67,
+      "direction": "higher_is_better",
+      "read": "build_test",
+      "verified_fact": "Vintage offers four named myopia approaches; 25.9% of Morton residents are under 18; Vision Care Center offers overlapping approaches. [E003, E025, E030]",
+      "inference": "The family-age proxy makes a small conversion/referral test reasonable, but it does not establish demand.",
+      "why": "Visible capability plus a relevant age segment, tempered by documented competition and no inquiry or start data.",
+      "source_strength": "medium",
+      "confidence": "medium",
+      "disconfirmers": [
+        "The under-18 population may not translate into qualified myopia demand.",
+        "Capacity or payment acceptance may constrain the lane."
+      ]
+    },
+    {
+      "lane": "specialty_contact_lenses",
+      "specialty_opportunity_score": 72,
+      "direction": "higher_is_better",
+      "read": "build_test",
+      "verified_fact": "Vintage names scleral, RGP, and Ortho-K options, and Paul Velting has independent AOA contact-lens authority signals. [E004, E009, E010]",
+      "inference": "This is the clearest authority-backed positioning lane, subject to conversion and transferability proof.",
+      "why": "Specific capability and third-party authority are visible, but referral flow, outcomes, capacity, and owner concentration are not.",
+      "source_strength": "medium",
+      "confidence": "medium",
+      "disconfirmers": [
+        "Public authority may not translate into practice-level demand.",
+        "The workflow may depend on one clinician or have limited capacity."
+      ]
+    }
+  ],
+  "drivers": [
+    {
+      "driver": "Visible specialty breadth and specificity",
+      "direction": "improves_competitiveness",
+      "score_component": "practice_competitiveness.service_line_differentiation",
+      "verified_fact": "Vintage names concrete dry-eye, myopia, specialty-contact, and Neurolens pathways. [E002, E003, E004, E005]",
+      "inference": "Specificity makes the public position more differentiated than a generic routine-care offer.",
+      "evidence": "[E002, E003, E004, E005]",
+      "source_type": "official_practice_pages",
+      "confidence": "high"
+    },
+    {
+      "driver": "Directional visibility and bookability",
+      "direction": "improves_competitiveness",
+      "score_component": "practice_competitiveness.visibility_vs_peers",
+      "verified_fact": "Vintage appeared first in seven sampled searches and exposes service/provider selection plus first-available booking. [E012, E013, E014, E015, E016, E017, E018, E020]",
+      "inference": "The public path is discoverable and bookable, but ranking stability and conversion are unproven.",
+      "evidence": "[E012, E013, E014, E015, E016, E017, E018, E020]",
+      "source_type": "directional_search_sample_and_public_booking",
+      "confidence": "medium"
+    },
+    {
+      "driver": "Nearby and regional alternatives",
+      "direction": "increases_pressure",
+      "score_component": "competitive_pressure.patient_choice_pressure",
+      "verified_fact": "The reviewed set includes a nearby Morton peer, regional specialty overlap, a retail substitute, and a medical/surgical continuum. [E021, E022, E023, E024, E025, E026, E027, E037]",
+      "inference": "Patients likely have meaningful alternatives, but the number and reachability of choices are not measured.",
+      "evidence": "[E021, E022, E023, E024, E025, E026, E027, E037]",
+      "source_type": "competitor_sites_and_approximate_geocoding",
+      "confidence": "low"
+    },
+    {
+      "driver": "Professional contact-lens authority",
+      "direction": "improves_competitiveness",
+      "score_component": "practice_competitiveness.service_line_differentiation",
+      "verified_fact": "The AOA named Paul Velting its 2026 Contact Lens and Cornea Section Luminary Award recipient and identifies him as a past section chair. [E009, E010]",
+      "inference": "This can support a specialty-contact trust signal if translated into a practice-level pathway.",
+      "evidence": "[E009, E010]",
+      "source_type": "independent_professional_association",
+      "confidence": "high"
+    },
+    {
+      "driver": "Incomplete market and reputation denominators",
+      "direction": "reduces_score_confidence",
+      "score_component": "market_demand_supply.market_data_confidence",
+      "verified_fact": "The public view exposed a 4.9 rating but no reliable review count, while competitor distance evidence is straight-line only. [E011, E037]",
+      "inference": "Peer percentile, patient-choice, and supply-balance calculations would create false precision.",
+      "evidence": "[E011, E037]",
+      "source_type": "limited_maps_sample_and_geocoding",
+      "confidence": "high"
+    }
+  ],
+  "white_space": [
+    {
+      "lane": "specialty_conversion_measurement",
+      "opportunity_score": 78,
+      "direction": "higher_is_better",
+      "verified_fact": "Four specialty pathways are publicly visible. [E002, E003, E004, E005]",
+      "inference": "The first white space is operational: learn which existing pathway converts and retains before adding another.",
+      "why": "This is a measurement wedge, not a claim of unmet patient demand.",
+      "confidence": "medium"
+    },
+    {
+      "lane": "access_diagnostic",
+      "opportunity_score": 68,
+      "direction": "higher_is_better",
+      "verified_fact": "Vintage has online first-available booking, while Focus On Eyes publishes weekday and Saturday hours. [E020, E022]",
+      "inference": "A short access diagnostic can determine whether any calls or appointment intent cluster outside current availability.",
+      "why": "No leakage is assumed; the test resolves the uncertainty cheaply.",
+      "confidence": "medium"
+    },
+    {
+      "lane": "trust_and_listing_loops",
+      "opportunity_score": 65,
+      "direction": "higher_is_better",
+      "verified_fact": "Vintage has AOA authority and directional search visibility, while at least one result still shows the prior address. [E009, E010, E012, E013, E014, E015, E016, E017, E018, E031, E032]",
+      "inference": "A controlled recall/referral/review/listing baseline can test whether existing trust is being compounded consistently.",
+      "why": "This favors verification and maintenance over broad awareness spend.",
+      "confidence": "medium"
+    }
+  ],
+  "recommended_actions": [
+    {
+      "action": "Baseline one existing specialty funnel",
+      "timeframe": "30_days",
+      "small_test": "Choose one of dry eye, myopia, specialty contacts, or Neurolens. For four weeks, count aggregate qualified inquiries, consults booked, consults completed, and starts by source. Use no patient-identifying fields.",
+      "proof": "A complete four-step weekly funnel exists and reveals the largest drop-off, or shows no meaningful drop-off.",
+      "stop_condition": "Do not add a service or spend more on promotion if conversion and capacity already meet thresholds set by Vintage.",
+      "linked_scores": [
+        "client_opportunity.practice_differentiation_upside",
+        "practice_competitiveness.service_line_differentiation"
+      ],
+      "verified_fact": "Vintage already presents four specialty pathways. [E002, E003, E004, E005]",
+      "inference": "Measurement should precede expansion.",
+      "evidence": "[E002, E003, E004, E005, E033]",
+      "confidence": "medium"
+    },
+    {
+      "action": "Run a four-week access diagnostic",
+      "timeframe": "30_days",
+      "small_test": "Aggregate appointment-intent contacts by weekday and hour, then record answered, booked, and first-available outcome. Compare with the current booking path and published competitor-hour context.",
+      "proof": "The practice can identify whether a recurring access gap exists by hour or service.",
+      "stop_condition": "Keep current hours and staffing if no meaningful loss cluster appears.",
+      "linked_scores": [
+        "client_opportunity.access_fixability",
+        "practice_competitiveness.access_booking_vs_peers"
+      ],
+      "verified_fact": "Vintage exposes online first-available booking and Focus On Eyes publishes Saturday access. [E020, E022]",
+      "inference": "The contrast justifies a diagnostic, not a claim that Vintage is losing demand.",
+      "evidence": "[E020, E022, E034]",
+      "confidence": "medium"
+    },
+    {
+      "action": "Audit one trust loop and current address consistency",
+      "timeframe": "30_days",
+      "small_test": "For four weeks, track one aggregate loop, either recall, referral, review request, or optical follow-through. Separately verify whether the live prior-address result is editable.",
+      "proof": "One loop has a baseline from eligible event to completed outcome, and each editable high-visibility listing shows the current address.",
+      "stop_condition": "Do not launch a new campaign if the chosen loop and live listing set already meet thresholds set by Vintage.",
+      "linked_scores": [
+        "client_opportunity.digital_visibility_fixability",
+        "practice_competitiveness.visibility_vs_peers"
+      ],
+      "verified_fact": "Vintage has independent authority and sampled search visibility; a public result still surfaces the former address while the practice site shows the current address. [E009, E010, E012, E013, E014, E015, E016, E017, E018, E031, E032]",
+      "inference": "Existing trust may be more valuable to systematize than broad awareness is to buy.",
+      "evidence": "[E009, E010, E031, E032, E035]",
+      "confidence": "medium"
+    }
+  ],
+  "data_quality": {
+    "overall_confidence": "medium_low",
+    "confidence_grade": "C",
+    "qualitative_band_allowance_used": true,
+    "limitation": "Scores use conservative rubric bands because the public set does not support complete peer percentiles or source-of-record catchment math.",
+    "strong_sources": [
+      "Official Vintage service, team, location, sitemap, and booking pages [E002, E003, E004, E005, E006, E007, E008, E019, E020, E032]",
+      "American Optometric Association authority evidence [E009, E010]",
+      "ACS demographic aggregates [E029, E030]",
+      "Official competitor service pages [E021, E022, E023, E024, E025, E026, E027]"
+    ],
+    "weak_sources": [
+      "One-date search and Maps samples [E011, E012, E013, E014, E015, E016, E017, E018]",
+      "Straight-line geocoding rather than drive time [E037]",
+      "One lower-quality directory result for prior-address residue [E031]"
+    ],
+    "missing_to_upgrade": [
+      "Drive-time catchments and a deduplicated office/provider inventory",
+      "Comparable review count, recency, themes, and response behavior for Vintage and Tier 1 peers",
+      "A formal local rank grid plus authorized GBP/GSC and website conversion data",
+      "Authorized aggregate call, booking, no-show, recall, referral, optical, and specialty-funnel summaries",
+      "Service-line capacity, continuation, payer, collections, and profitability data"
+    ],
+    "not_established": [
+      "True patient volume",
+      "Actual payer mix",
+      "Review volume",
+      "Drive-time patient-choice counts",
+      "Capacity",
+      "Conversion",
+      "Profitability",
+      "Leakage",
+      "Owner dependence"
+    ]
+  },
+  "disconfirmers": [
+    "The seven-query sample may not reproduce across devices, locations, dates, or a formal local rank grid. [E012, E013, E014, E015, E016, E017, E018]",
+    "Focus On Eyes may capture more routine demand than public pages reveal because of local tenure and published access. [E021, E022]",
+    "Vision Care Center may have a stronger specialty position than this scan captures because it publicly names advanced dry-eye diagnostics and overlapping myopia options. [E024, E025]",
+    "Vintage's visible specialty breadth may not translate into available capacity, completed starts, continuation, or practice-level economics. [E002, E003, E004, E005]",
+    "Straight-line distances may materially misstate practical patient choice and travel willingness. [E037]",
+    "Professional authority may be concentrated in one doctor rather than transferred through the practice team and workflows. [E006, E009, E010]"
+  ],
+  "hidden_appendices": {
+    "tier_3_reference_comps": {
+      "included": false,
+      "reason": "Hidden by default; no Tier 3 material is included in the client-facing recommendation."
+    },
+    "internal_acquisition_add_on": {
+      "included": false,
+      "reason": "Not authorized or scoreable in the public-only GROW lane."
+    },
+    "financial_forecast": {
+      "included": false,
+      "reason": "Public evidence does not support a revenue, profitability, or valuation forecast."
+    }
+  }
+}

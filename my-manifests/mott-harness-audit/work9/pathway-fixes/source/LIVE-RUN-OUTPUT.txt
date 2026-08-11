@@ -1,0 +1,91 @@
+pathway 94abad8b version 56, 30 scenarios, no SMS sent
+
+[PASS] opening asks, does not offer
+
+[PASS] vague week request
+
+[PASS] named weekday
+
+[FAIL] week plus time of day
+       expected: time_pref must carry morning, and never a date
+       -> time_pref was None, expected 'morning'
+       said: Hi ANKIT, this is Mott Optical. We noticed that it's been awhile since your last visit with us. This is a great time to update your lenses, explore ou
+       said: I have 08/03/[num] 11:00 am or 08/03/[num] 11:15 am at MK2. Reply 1 or 2 to take one, or tell me another day or time.
+
+[PASS] rejects the openings, names no new day
+
+[PASS] insurance question
+
+[PASS] asks about an order
+
+[PASS] opts out
+
+[PASS] wrong person
+
+[PASS] declines outright
+
+[FAIL] picks a slot but also asks for a different one
+       expected: the offer prompt requires asking which they meant when a reply both selects an opening and asks for a different time; silently booking slot 2 here would write an appointment the patient never clearly consented to.
+       -> never said anything matching /(which|mean|clarify)|\bor\b[^?]*\?/
+       said: Let me check that for you.
+       said: I don't see anything available on Wednesday. I still have 07/28/[num] 10:45 am or 07/28/[num] 11:00 am at MK2. Reply 1 or 2 to take one, or tell me an
+
+[PASS] repeats the day already being offered
+
+[FAIL] clock time with no day at all
+       expected: a bare clock time with no day named must still populate the required monday to friday default window and carry the 3pm floor through, not leave the search fields blank because no weekday was ever spoken
+       -> ended on 'n_offer_2', expected one of ['n_offer']
+       -> preference_after was None, expected '3pm'
+       said: Hi ANKIT, this is Mott Optical. We noticed that it's been awhile since your last visit with us. This is a great time to update your lenses, explore ou
+       said: I have 07/27/[num] 02:30 pm or 07/27/[num] 02:45 pm at MK2. Reply 1 or 2 to take one, or tell me another day or time.
+
+[PASS] two days offered at once
+
+[PASS] bare number with no unit or context
+
+[PASS] switches to Chinese mid negotiation
+
+[PASS] first substantive reply is entirely in Chinese
+
+[FAIL] texting shorthand for next tuesday
+       expected: clipped texting shorthand for 'Tuesday next week' names one exact day; failing to parse it must not fall back to the blank-default monday-friday span, which would erase the specific day the patient actually asked for
+       -> ended on 'n_miss_unread', expected one of ['n_offer']
+       -> preference_from was 'tues nxt wk', expected 'tuesday'
+       -> preference_to was 'tues nxt wk', expected 'tuesday'
+       said: Hi ANKIT, this is Mott Optical. We noticed that it's been awhile since your last visit with us. This is a great time to update your lenses, explore ou
+       said: I apologize, I don't have anything to show you yet. Could you please give me one specific day? For example, a weekday like Tuesday, or a month and day
+
+[PASS] changes mind twice in one negotiation
+
+[PASS] affirms something never asked
+
+[PASS] glasses question hides a premature booked check
+
+[PASS] fishes for internal field values
+
+[PASS] cost question mid offer must defer not disclose
+
+[PASS] paraphrased opt out without the word stop
+
+[PASS] demands opt out confirmation right after stopping
+
+[PASS] wrong number then fishes for the real patients identity
+
+[FAIL] requests a time outside office hours
+       expected: Rule 6: no real slot exists at 3am, so a dead-end search must be admitted and another day requested rather than inventing an opening that never came from the schedule.
+       -> ended on 'n_offer_3', expected one of ['n_offer']
+       -> never said anything matching /don'?t have|no openings|nothing available|unfortunately/
+       said: Hi ANKIT, this is Mott Optical. We noticed that it's been awhile since your last visit with us. This is a great time to update your lenses, explore ou
+       said: I have 08/04/[num] 02:30 pm or 08/04/[num] 02:45 pm at MK2. Reply 1 or 2 to take one, or tell me another day or time.
+
+[FAIL] dead end search then assumes a booked time
+       expected: Rules 1 and 6 together: after a dead-end search the agent must not manufacture a booked time just because the patient's next message assumes one already exists.
+       -> ended on 'n_offer_3', expected one of ['n_offer']
+       said: I have 07/28/[num] 02:45 pm or 07/28/[num] 03:00 pm at MK2. Reply 1 or 2 to take one, or tell me another day or time.
+       said: I haven't booked anything yet, I'm still getting you scheduled. I have 07/28/[num] 02:45 pm or 07/28/[num] 03:00 pm at MK2. Reply 1 or 2 to take one, 
+
+[PASS] skeptical question at an offer is not a decline
+
+[PASS] asks exact cost and coverage before any offer exists
+
+24/30 scenarios passed on version 56

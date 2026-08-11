@@ -1,0 +1,18 @@
+{
+  "run_name": "vintage-optical-source-refresh-report",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-redesign-fix",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "fix-template-read-strip-clipping",
+      "engine": "codex",
+      "engine_args": ["-m", "gpt-5.6-sol", "-c", "model_reasoning_effort=high"],
+      "task_type": "site-build",
+      "timeout_s": 1200,
+      "expect_files": ["onepager.html", "fix-notes.md"],
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_gauge_onepager_source.py --path ./onepager.html",
+      "verified": "the template-derived one-pager preserves its gauge, colors, evidence, scores, and one-page geometry while reserving enough vertical space for the complete The Read sentence without clipping",
+      "spec": "You are GPT-5.6 Sol applying one bounded visual fix to an internal Letter report. Your current directory is your only writable scope. Write only `onepager.html` and `fix-notes.md`. Do not modify inputs or repositories, browse/network, load skills, call MCP/Apps, capture memory, install, commit, push, deploy, publish, upload, contact anyone, write CRM, or take external action.\n\nREAD, READ-ONLY:\n- Current gauge-template candidate: /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-redesign/redesign-onepager-with-template-gauges/onepager.html\n- Current design notes: /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/release-redesign/redesign-onepager-with-template-gauges/design-notes.md\n- Updated validator: /home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/checks/validate_gauge_onepager_source.py\n\nVISUAL FINDING:\nThe first Chrome PDF matches the sample template and the footer is fully visible, but the `The Read` strip is vertically clipped. Only `READ` and the final fragment `spend.` are visible. The full executive sentence is hidden behind the hero/zone boundary. This is a blocking visual defect.\n\nFIX CONTRACT:\n1. Copy the candidate to `onepager.html` and change only layout/CSS needed to make the full `The Read` label and sentence visibly readable. Reserve at least 0.64in using the `.read` flex basis or min-height. Prefer 0.68-0.72in if needed. Keep the text to one or two readable lines.\n2. Preserve the dark template hero, 54-point circular Client Opportunity gauge, all palette variables, orbital linework, full five-window table, nine scores, eight-plus meters, exact facts, numbered zones, three Fix Cards, and footer wording. Do not change scores, facts, nulls, or evidence language.\n3. Keep exactly one 8.5in by 11in page. Reclaim space from flexible zone whitespace or tiny padding adjustments, not by shrinking already compact table or Fix Card text below its current size. The screenshot showed ample flexible whitespace inside the market/competition zones.\n4. Render a temporary PDF with local Google Chrome, rasterize page 1, and use geometry/text checks to prove: one page, no text box outside the page, full The Read sentence in pdftotext, footer present, and no new clipping. Remove temporary files before stopping.\n5. Run the updated gauge source validator until PASS.\n6. `fix-notes.md` must state the visual defect, exact CSS changes, page/overflow proof, and what was deliberately preserved. Use no internal paths or em dashes."
+    }
+  ]
+}

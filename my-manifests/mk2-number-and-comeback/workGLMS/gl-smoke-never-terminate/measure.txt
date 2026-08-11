@@ -1,0 +1,6 @@
+CANDIDATE=0
+CREATE_KEYS=['chat_id', 'message', 'variables']
+TURN=1 WALL_MS=1874 N_MSGS=1 NODE=e_close SAID={{close_text}}
+TURN=2 WALL_MS=1379 N_MSGS=1 NODE=e_close SAID={{close_text}}
+TURN=3 WALL_MS=1406 N_MSGS=1 NODE=e_close SAID={{close_text}}
+RESULT label=gl-never-term turns=3 total_wall_ms=4659 filler_hits=0 candidate=0

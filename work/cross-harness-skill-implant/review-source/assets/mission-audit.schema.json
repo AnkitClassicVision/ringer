@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Clean My AI Harness Mission Fit Audit",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "generated_at",
+    "surface",
+    "coverage",
+    "cleaner_install",
+    "missions",
+    "recommendations",
+    "overall_status",
+    "limits"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "generated_at": { "type": "string", "minLength": 1 },
+    "surface": {
+      "type": "object",
+      "required": ["name", "model", "evidence_status"],
+      "properties": {
+        "name": { "enum": ["codex", "claude-code", "claude-ai", "other"] },
+        "model": { "type": "string" },
+        "evidence_status": { "$ref": "#/$defs/evidenceStatus" }
+      },
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["target", "sources", "excluded", "inaccessible"],
+      "properties": {
+        "target": { "type": "string", "minLength": 1 },
+        "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+        "excluded": { "type": "array", "items": { "type": "string" } },
+        "inaccessible": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "cleaner_install": {
+      "type": "object",
+      "required": ["status", "edition", "evidence_status"],
+      "properties": {
+        "status": { "enum": ["FOUND", "NOT_FOUND", "INACCESSIBLE", "USER_REPORTED"] },
+        "edition": { "type": "string" },
+        "evidence_status": { "$ref": "#/$defs/evidenceStatus" }
+      },
+      "additionalProperties": false
+    },
+    "missions": { "type": "array", "items": { "$ref": "#/$defs/mission" } },
+    "recommendations": { "type": "array", "items": { "$ref": "#/$defs/recommendation" } },
+    "overall_status": { "enum": ["REVIEW_REQUIRED", "NEEDS_INPUT", "NO_SAFE_CHANGE"] },
+    "limits": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "evidenceStatus": {
+      "enum": ["VERIFIED", "USER_REPORTED", "INFERRED", "INACCESSIBLE", "NOT_APPLICABLE"]
+    },
+    "source": {
+      "type": "object",
+      "required": ["id", "label", "type", "evidence_status"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "evidence_status": { "$ref": "#/$defs/evidenceStatus" }
+      },
+      "additionalProperties": false
+    },
+    "check": {
+      "type": "object",
+      "required": ["summary", "verdict", "evidence_ids"],
+      "properties": {
+        "summary": { "type": "string", "minLength": 1 },
+        "verdict": { "enum": ["READY", "GAP", "BLOCKED", "INACCESSIBLE"] },
+        "evidence_ids": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "runFinding": {
+      "type": "object",
+      "required": ["run_id", "result", "summary", "evidence_ids"],
+      "properties": {
+        "run_id": { "type": "string", "minLength": 1 },
+        "result": { "enum": ["USED", "CHANGED", "DROPPED", "UNKNOWN"] },
+        "summary": { "type": "string", "minLength": 1 },
+        "evidence_ids": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "pattern": {
+      "type": "object",
+      "required": ["pattern", "count", "failure_mode", "evidence_ids"],
+      "properties": {
+        "pattern": { "type": "string", "minLength": 1 },
+        "count": { "type": "integer", "minimum": 3 },
+        "failure_mode": { "type": "string", "minLength": 1 },
+        "evidence_ids": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "replayCase": {
+      "type": "object",
+      "required": ["case_id", "name", "expected_outcome", "pass_criteria"],
+      "properties": {
+        "case_id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "expected_outcome": { "type": "string", "minLength": 1 },
+        "pass_criteria": { "type": "array", "minItems": 1, "items": { "type": "string" } }
+      },
+      "additionalProperties": false
+    },
+    "mission": {
+      "type": "object",
+      "required": [
+        "mission_id",
+        "name",
+        "job",
+        "run_count",
+        "outcome",
+        "access",
+        "quality",
+        "evidence",
+        "supervision",
+        "run_findings",
+        "repeated_patterns",
+        "replay_cases",
+        "verdict"
+      ],
+      "properties": {
+        "mission_id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string", "minLength": 1 },
+        "job": { "type": "string", "minLength": 1 },
+        "run_count": { "type": "integer", "minimum": 0 },
+        "outcome": { "$ref": "#/$defs/check" },
+        "access": { "$ref": "#/$defs/check" },
+        "quality": { "$ref": "#/$defs/check" },
+        "evidence": { "$ref": "#/$defs/check" },
+        "supervision": { "$ref": "#/$defs/check" },
+        "run_findings": { "type": "array", "items": { "$ref": "#/$defs/runFinding" } },
+        "repeated_patterns": { "type": "array", "items": { "$ref": "#/$defs/pattern" } },
+        "replay_cases": { "type": "array", "items": { "$ref": "#/$defs/replayCase" } },
+        "verdict": { "enum": ["READY", "NEEDS_CHANGE", "BLOCKED", "INACCESSIBLE"] }
+      },
+      "additionalProperties": false
+    },
+    "recommendation": {
+      "type": "object",
+      "required": ["number", "action", "title", "why", "evidence_ids", "risk", "approver", "rollback", "status"],
+      "properties": {
+        "number": { "type": "integer", "minimum": 1 },
+        "action": { "enum": ["KEEP", "CONNECT", "NARROW", "CORRECT_SOURCE", "ADD_REVIEW", "MAKE_A_CHECK", "ADD_SKILL", "PROBATION", "RETIRE"] },
+        "title": { "type": "string", "minLength": 1 },
+        "why": { "type": "string", "minLength": 1 },
+        "evidence_ids": { "type": "array", "items": { "type": "string" } },
+        "risk": { "type": "string", "minLength": 1 },
+        "approver": { "type": "string", "minLength": 1 },
+        "rollback": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["PROPOSED", "APPROVED", "REJECTED", "APPLIED"] }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

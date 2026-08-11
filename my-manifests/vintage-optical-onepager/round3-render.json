@@ -1,0 +1,22 @@
+{
+  "run_name": "vintage-optical-onepager",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/work-render",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "render-and-technical-qa",
+      "engine": "local-shell",
+      "task_type": "site-build",
+      "timeout_s": 300,
+      "expect_files": [
+        "onepager.pdf",
+        "onepager-qa.png",
+        "onepager-text.txt",
+        "runlog.md"
+      ],
+      "spec": "set -euo pipefail; DEST=/mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/checks/finalize_render.py --dest \"$DEST\"; cp \"$DEST/onepager.pdf\" ./onepager.pdf; cp \"$DEST/onepager-qa.png\" ./onepager-qa.png; cp \"$DEST/data/onepager-text.txt\" ./onepager-text.txt; cp \"$DEST/runlog.md\" ./runlog.md",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/checks/validate_pdf.py --dest /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29 && cmp onepager.pdf /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29/onepager.pdf && cmp onepager-qa.png /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-29/onepager-qa.png && echo 'PASS: Ringer artifacts match canonical outputs'",
+      "verified": "headless Chromium rendered exactly one Letter page, PDF text and links passed, the QA image is full-page, and artifact copies match the canonical report folder"
+    }
+  ]
+}

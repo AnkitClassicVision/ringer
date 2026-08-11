@@ -1,0 +1,15 @@
+2026-08-03 19:30:34,474 INFO Found credentials in shared credentials file: ~/.aws/credentials
+MODEL_USED=us.anthropic.claude-sonnet-4-6
+CASE=1 mode=llm ctx=corr got=NONE want=08/13/2026 ok=0 lat_ms=1078 phrase=No the following Thursday
+CASE=2 mode=llm ctx=plain got=NONE want=08/13/2026 ok=0 lat_ms=939 phrase=the following Thursday
+CASE=3 mode=llm ctx=plain got=NONE want=08/13/2026 ok=0 lat_ms=1208 phrase=following Thursday
+CASE=4 mode=llm ctx=plain got=NONE want=08/10/2026 ok=0 lat_ms=1149 phrase=the following Monday
+CASE=5 mode=llm ctx=plain got=NONE want=08/11/2026 ok=0 lat_ms=1106 phrase=following Tuesday
+CASE=6 mode=llm ctx=plain got=NONE want=08/14/2026 ok=0 lat_ms=1878 phrase=the following Friday
+CASE=7 mode=llm ctx=plain got=NONE want=08/12/2026 ok=0 lat_ms=1140 phrase=following Wednesday
+CASE=8 mode=llm ctx=corr got=NONE want=08/10/2026 ok=0 lat_ms=967 phrase=No, the following Monday
+CASE=9 mode=llm ctx=corr got=NONE want=08/11/2026 ok=0 lat_ms=982 phrase=No the following Tuesday
+CASE=10 mode=llm ctx=corr got=NONE want=08/14/2026 ok=0 lat_ms=1007 phrase=No, following Friday
+CASE=11 mode=llm ctx=plain got=NONE want=08/16/2026 ok=0 lat_ms=1827 phrase=the following Sunday
+CASE=12 mode=llm ctx=plain got=NONE want=08/15/2026 ok=0 lat_ms=955 phrase=following Saturday
+TOTAL mode=llm model=us.anthropic.claude-sonnet-4-6 ok=0/12 median_lat_ms=1092

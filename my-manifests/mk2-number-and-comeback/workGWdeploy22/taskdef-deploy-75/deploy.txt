@@ -1,0 +1,4 @@
+GUARD_OK image verified in-task before service update
+Traceback (most recent call last):
+  File "<stdin>", line 23, in <module>
+AssertionError: rev 67 image unexpectedly 533267039664.dkr.ecr.us-east-1.amazonaws.com/eyecloud-fargate-runner:mott-lane-56

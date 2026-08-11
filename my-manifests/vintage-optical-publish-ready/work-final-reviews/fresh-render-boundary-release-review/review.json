@@ -1,0 +1,86 @@
+{
+  "verdict": "FAIL",
+  "readiness": "NOT_READY_FOR_PROJECT_ROOM_REVIEW",
+  "external_use_authorized": false,
+  "project_room_status": "inventory_review_required",
+  "fatal_issues": [],
+  "material_issues": [],
+  "minor_issues": [
+    {
+      "id": "MINOR-001",
+      "artifact": "README.md",
+      "issue": "The data inventory line repeats the phrase \"24-record\" three times.",
+      "evidence": "- `data/`: 24-record 24-record 24-record source registry, evidence, peer tiers, routes, market inputs, and notes",
+      "required_fix": "Reduce the repeated phrase to one \"24-record\" before release review is rerun."
+    }
+  ],
+  "checks": {
+    "onepager_one_letter": "PASS",
+    "explainer_letter_pages": "PASS",
+    "links_valid": "PASS",
+    "visual_qa": "PASS",
+    "no_internal_paths": "PASS",
+    "no_clipping": "PASS",
+    "room_boundary": "PASS",
+    "hashes_match": "PASS",
+    "external_actions_none": "PASS",
+    "packet_copy_integrity": "FAIL"
+  },
+  "evidence": {
+    "onepager_pdf": {
+      "pages": 1,
+      "page_size_points": [
+        612.0,
+        792.0
+      ],
+      "text_span_overflows": 0,
+      "html_anchor_count": 81,
+      "pdf_uri_annotation_count": 81,
+      "unique_html_uris": 22,
+      "unique_pdf_uris": 22
+    },
+    "explainer_pdf": {
+      "pages": 11,
+      "all_page_sizes_points": [
+        612.0,
+        792.0
+      ],
+      "text_span_overflows": 0,
+      "empty_pages": 0,
+      "html_anchor_count": 198,
+      "pdf_uri_annotation_count": 198,
+      "unique_html_uris": 24,
+      "unique_pdf_uris": 24,
+      "room_to_win_page": 4,
+      "repeated_source_table_header_pages": [
+        10,
+        11
+      ],
+      "final_page_extracted_characters": 3149,
+      "final_page_extracted_words": 454
+    },
+    "visuals": {
+      "onepager_qa_matches_pdf_pixels_percent": 100.0,
+      "explainer_page_images_matching_pdf_pixels": 11,
+      "explainer_page_images_expected": 11,
+      "contact_sheet_matches_reconstruction_percent": 100.0,
+      "contact_sheet_size_pixels": [
+        1080,
+        4200
+      ],
+      "recorded_visual_qa": "PASS"
+    },
+    "hashes": {
+      "onepager_pdf_sha256": "b6e18c05cf73987772436ba80c4a9eeb0a3643058f3ddf8b20d41ad6ec789b05",
+      "explainer_pdf_sha256": "3c7b1b92c5089654f39c035c3e228bf4349b9c5e34b14c7a7b12555c0abb5158",
+      "runlog_matches": true
+    },
+    "boundary": {
+      "room_status": "inventory_review_required",
+      "room_last_reviewed_at": null,
+      "room_stale_reasons": [],
+      "room_sources_pending_human_review": 4,
+      "external_actions": "none"
+    }
+  }
+}

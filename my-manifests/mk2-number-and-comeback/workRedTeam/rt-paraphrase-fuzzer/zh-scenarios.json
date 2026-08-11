@@ -1,0 +1,86 @@
+[
+ {
+  "name": "zh-thursday-morning",
+  "turns": [
+   "hi",
+   "星期四早上"
+  ],
+  "expect": {
+   "must_contain": [
+    "我这里有",
+    "am"
+   ],
+   "must_not_contain": [
+    "pm"
+   ]
+  }
+ },
+ {
+  "name": "zh-afternoon-refine",
+  "turns": [
+   "hi",
+   "星期四早上",
+   "下午"
+  ],
+  "expect": {
+   "must_contain": [
+    "我这里有",
+    "pm"
+   ],
+   "must_not_contain": [
+    "am"
+   ]
+  }
+ },
+ {
+  "name": "zh-later-refine",
+  "turns": [
+   "hi",
+   "星期四早上",
+   "晚一点"
+  ],
+  "expect": {
+   "must_not_contain": [
+    "10:30 am"
+   ]
+  }
+ },
+ {
+  "name": "zh-weekend-closed",
+  "turns": [
+   "hi",
+   "星期六"
+  ],
+  "expect": {
+   "must_not_contain": [
+    "回复1或2",
+    "Reply 1 or 2"
+   ]
+  }
+ },
+ {
+  "name": "zh-codeswitch-refine",
+  "turns": [
+   "hi",
+   "Thursday morning",
+   "下午"
+  ],
+  "expect": {
+   "must_contain": [
+    "pm"
+   ]
+  }
+ },
+ {
+  "name": "zh-named-time",
+  "turns": [
+   "hi",
+   "星期四下午3点"
+  ],
+  "expect": {
+   "must_contain": [
+    "03:00 pm"
+   ]
+  }
+ }
+]

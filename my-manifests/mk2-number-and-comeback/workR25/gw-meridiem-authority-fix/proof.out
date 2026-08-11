@@ -1,0 +1,7 @@
+CASE=strip-invented-am ANCHOR=15:00
+CASE=keep-stated-pm ANCHOR=15:00
+CASE=keep-stated-morning ANCHOR=09:00
+CASE=spelled-hour-strip ANCHOR=16:00
+CASE=bare-inference-unchanged ANCHOR=17:00
+CASE=closed-day-weekend CLOSED=true
+CASE=open-day-not-closed CLOSED=false

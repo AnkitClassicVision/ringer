@@ -1,0 +1,76 @@
+{
+  "created_at_utc": "2026-07-30T15:11:29Z",
+  "folder": "/home/ankit114/Vintage-Optical-Competitive-Analysis-2026-07-30",
+  "status": "RENDERED_QA_PASSED_HUMAN_PROJECT_ROOM_REQUIRED",
+  "external_delivery_authorized": false,
+  "design": {
+    "template": "MyBCAT sample one-pager gauge and color system",
+    "main_gauge": "Client Opportunity 54 / 100",
+    "features": [
+      "dark navy hero",
+      "circular SVG score gauge",
+      "aqua teal gold palette",
+      "numbered evidence zones",
+      "colored score meters",
+      "three Fix Card strip",
+      "internal Project Room footer"
+    ]
+  },
+  "deliverables": [
+    {
+      "file": "Vintage-Optical-One-Pager.pdf",
+      "pages": 1,
+      "page_size": "Letter",
+      "sha256": "0ad82c2597c2594131bf9650bd3d45c718db6a8a2000256b2bbb9504f64ce349"
+    },
+    {
+      "file": "Vintage-Optical-Number-Explainer.pdf",
+      "pages": 25,
+      "page_size": "Letter",
+      "sha256": "4c544174cc06b7c5075cfce1865f6ab25cff24b6e385ec0e5ca9f7a9b8f58b2e"
+    }
+  ],
+  "source_hashes": {
+    "Vintage-Optical-One-Pager.html": "e5649f3ea910fa97af760dcd03848fc5503f7fa68874426cac67c46e8570c7a4",
+    "Vintage-Optical-Number-Explainer.html": "84bd9cb4fdb9adb9dba60842af20eae50098d44017a50f7557cc23a3344277a9",
+    "Vintage-Optical-Number-Explainer.md": "7b514851cb1ccfb7661d11f9693605ef405267a96ed2b0b87be8176229628d40",
+    "scores.json": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c",
+    "sources.json": "c54beaa3f81ad905bc70bb34d82baefaf3a43d63dbf58d519f912165190d9135"
+  },
+  "review_hashes": {
+    "Visual-QA.json": "737ace5c2738f1e2a3be5edc2fc43f661b9f260b83a6fd52131497bf4fd24a11",
+    "Numeric-Review.json": "8a204154d69163cb7068ca1ca4e575c3d1ca56a684c5378d9fc61ef85b8a2506",
+    "Logic-Review.json": "9d5d7592fa8d59378cf7045a655b5609ddfeeee13ca2eeaa305006fab2383c8a",
+    "Technical-Review.json": "4d0a38dddf32a81e937ea3150adb7ff8756c22acbafe021da9ec3d81f3d20bf1"
+  },
+  "gates": {
+    "gauge_template_source": "PASS",
+    "source_and_scoring": "PASS",
+    "chrome_render": "PASS",
+    "visual_qa_26_pages": "PASS",
+    "fresh_numeric_review": "PASS",
+    "fresh_logic_review": "PASS",
+    "fresh_technical_review": "PASS",
+    "human_project_room": "REQUIRED"
+  },
+  "quality_evidence": {
+    "substantive_number_lineage_percent": 100,
+    "unexplained_substantive_numbers": 0,
+    "blocking_findings": 0,
+    "internal_path_leaks": 0,
+    "stale_route_values": 0,
+    "fix_card_count": 3
+  },
+  "score_displays": {
+    "market_demand_supply": 61,
+    "competitive_pressure_index": 57,
+    "room_to_win": 43,
+    "practice_competitiveness": 61,
+    "client_opportunity": 54,
+    "digital_presence": 60,
+    "dry_eye": 53,
+    "myopia_management": 53,
+    "specialty_contact_lenses": 51
+  },
+  "external_actions_taken": "none"
+}

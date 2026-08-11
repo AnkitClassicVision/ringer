@@ -1,0 +1,75 @@
+{
+  "packet_date": "2026-07-30",
+  "receipts": [
+    {
+      "aggregation_status": "not_an_office_count_or_supply_census",
+      "authority_status": "authoritative public registry for represented provider registration fields only",
+      "captured_at": "2026-07-30",
+      "captured_at_basis": "source_metadata",
+      "limitation": "Public NPPES queries by named city and taxonomy. NPPES is a provider registry, not proof of active office capacity, patient draw, or a complete drive-time catchment supply census. Raw NPI and phone identifiers are intentionally omitted from this sanitized receipt.",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/nppes-provider-roster-sanitized.json",
+      "query_urls": [
+        "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Morton&state=IL&taxonomy_description=Optometrist&limit=200",
+        "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Morton&state=IL&taxonomy_description=Ophthalmology&limit=200",
+        "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Washington&state=IL&taxonomy_description=Optometrist&limit=200",
+        "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Washington&state=IL&taxonomy_description=Ophthalmology&limit=200",
+        "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=East+Peoria&state=IL&taxonomy_description=Optometrist&limit=200",
+        "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=East+Peoria&state=IL&taxonomy_description=Ophthalmology&limit=200",
+        "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Pekin&state=IL&taxonomy_description=Optometrist&limit=200",
+        "https://npiregistry.cms.hhs.gov/api/?version=2.1&city=Pekin&state=IL&taxonomy_description=Ophthalmology&limit=200"
+      ],
+      "sha256": "c53c847d05ff99fb673aa8bafde18e3e6ee31d19bb834c8f79a8ec1778a53e23",
+      "source_id": "NPPES_CURRENT_20260730",
+      "source_type": "sanitized_public_provider_registry_query_receipt",
+      "source_url": "https://npiregistry.cms.hhs.gov/api/"
+    },
+    {
+      "aggregation_status": "not_an_aggregator_and_not_a_rank_grid",
+      "authority_status": "direct_platform_observation",
+      "captured_at": "2026-07-30T12:54:08.602Z",
+      "captured_at_basis": "source_metadata",
+      "limitation": "Google displayed a limited public view without a review count. This is one dated direct observation, not a rank grid or complete query set. The rating is platform-specific and cannot be combined with aggregator counts without a documented deduplication method. The map pin is used as the public routing origin for the listed street address, not as patient-origin evidence.",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/google-maps-vintage-20260730.json",
+      "sha256": "ff0b01b4642535487a7d3fcf494b151b8490d564a517e4e5c58da007ec449616",
+      "source_id": "GOOGLE_MAPS_SAMPLE_20260730",
+      "source_type": "direct_public_google_maps_observation",
+      "source_url": "https://www.google.com/maps/place/Vintage+Optical/@40.6049094,-89.467024,17z/"
+    },
+    {
+      "aggregation_status": "no_request_and_no_rank_evidence",
+      "authority_status": "authoritative_for_this_preflight_state_only",
+      "captured_at": "2026-07-30T11:54:00Z",
+      "captured_at_basis": "source_metadata",
+      "limitation": "DataForSEO credentials were not configured in the active environment, so no paid API request or rank grid ran.",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/dataforseo-preflight-20260730.json",
+      "sha256": "2a1bcc852acd43a0a5f2cb3c924c5defb9c2eeab293c37a2cf3cfb1c4e31dcab",
+      "source_id": "DATAFORSEO_PREFLIGHT_20260730",
+      "source_type": "local_api_availability_preflight_receipt",
+      "source_url": "https://api.dataforseo.com/v3/appendix/user_data"
+    },
+    {
+      "aggregation_status": "aggregated_multi_platform_display",
+      "authority_status": "aggregator_observation_not_direct_platform_count",
+      "captured_at": "2026-07-30",
+      "captured_at_basis": "frozen_packet_date_and_declared_source_id",
+      "limitation": "The displayed 413 total and Google 398 component are Birdeye observations, not a direct current Google count.",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/birdeye-vintage.json",
+      "sha256": "d365aad9b4ba5fd3314402c86c73cf1a1296cebb7bf45f7289d90f874ad1ee34",
+      "source_id": "BIRDEYE_AGGREGATOR_20260730",
+      "source_type": "third_party_review_aggregator_page_capture",
+      "source_url": "https://reviews.birdeye.com/vintage-optical-155768435564188"
+    },
+    {
+      "aggregation_status": "aggregated_multi_platform_display",
+      "authority_status": "aggregator_observation_not_direct_platform_count",
+      "captured_at": "2026-07-30",
+      "captured_at_basis": "frozen_packet_date_and_declared_source_id",
+      "limitation": "The displayed 217 total and its platform components are Birdeye observations with unknown cross-entity recency and collection-method comparability.",
+      "path": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-publish-ready/source-refresh/birdeye-focus-on-eyes.json",
+      "sha256": "4fc44053abac59f875bf6cf6e541e69beba44079f28cfc9207aab6354eb4985c",
+      "source_id": "BIRDEYE_AGGREGATOR_20260730",
+      "source_type": "third_party_review_aggregator_page_capture",
+      "source_url": "https://reviews.birdeye.com/focus-on-eyes-pc-155729242849867"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-canonical-grow",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/work-render",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "assemble-and-render-canonical-packet",
+      "engine": "local-shell",
+      "task_type": "site-build",
+      "timeout_s": 300,
+      "expect_files": ["render_receipt.json"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/checks/assemble_and_render.py --evidence /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/work-evidence/build-canonical-evidence-pack --scores /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/work-scoring/score-position-and-fix --html /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/work-build-sol/build-onepager-with-sol --routes /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/work-routes/collect-public-routes --dest /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30 --receipt render_receipt.json",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/checks/validate_rendered_packet.py --dest /mnt/d_drive/repos/optometry-competition-analyzer-rubric/reports/vintage-optical-morton/2026-07-30",
+      "verified": "the verified evidence, scores, Sol HTML, logo, route receipts, process log, and Chrome-rendered PDF are assembled in the canonical dated report folder, with exactly one Letter page and no external action"
+    }
+  ]
+}

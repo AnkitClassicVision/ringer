@@ -1,0 +1,17 @@
+{
+  "run_name": "vintage-optical-canonical-grow",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/work-routes",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "collect-public-routes",
+      "engine": "local-shell",
+      "task_type": "data-pipeline",
+      "timeout_s": 300,
+      "expect_files": ["route_receipts.json", "routing_summary.json"],
+      "spec": "set -euo pipefail; python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/checks/collect_routes.py",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-canonical-redo/checks/validate_routes.py --receipts route_receipts.json --summary routing_summary.json",
+      "verified": "the exact Vintage origin and at least five named candidate peers have public geocoding and point-to-point OSRM receipts, with isochrone and traffic limitations explicit"
+    }
+  ]
+}

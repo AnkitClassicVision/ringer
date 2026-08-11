@@ -1,0 +1,25 @@
+{
+  "run_name": "ringer-model-routing-fresh-review-v3",
+  "workdir": "/tmp/ringer-model-routing-fresh-review-v3",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "luna-routing-patch-review",
+      "engine": "codex",
+      "engine_args": [
+        "-m",
+        "gpt-5.6-luna",
+        "-c",
+        "model_reasoning_effort=high"
+      ],
+      "task_type": "code-review",
+      "spec": "Perform a fresh, report-only code review of /tmp/ringer-model-routing-final.patch. The current source tree is available read-only at /home/ankit114/repos/ringer for surrounding context; do not modify it. Do not edit the patch, configuration, logs, or any external state. Write only ./review.md. The orchestrator has already run 56 focused tests successfully, but independently inspect the implementation and tests. Review the patch against these contracts: engines with a model placeholder use task.model before engine.model_default and reject any engine_args model selector; engines without a model placeholder, including Codex, reject task.model and attribute the last valid engine_args model selector before engine.model_default and unpinned; recognized selectors include -m, --model, --model=, and -c model=; incomplete -c, -c model without equals, empty, option-like, and valid-then-malformed model selectors must be rejected for every engine and must never fall through to a default; unrelated configuration such as -c model_reasoning_effort=high must remain valid; retries must keep identical attribution; OpenRouter tested and catalog slugs must normalize only for comparison and must not rewrite runtime routes; the identity registry must label historical/unpinned Codex rows honestly while preserving explicitly pinned GPT-5.5; Postgres payload compatibility must remain intact; tests must cover these seams without weakening production behavior. Look specifically for precedence errors, malformed selector handling, logging/database regressions, accidental route mutation, backward compatibility breaks, and inadequate tests. The first non-empty line must be exactly 'VERDICT: PASS' if there are no BLOCK or HIGH findings, otherwise 'VERDICT: FAIL'. For each finding use 'SEVERITY: BLOCK', 'SEVERITY: HIGH', 'SEVERITY: MEDIUM', or 'SEVERITY: LOW', cite the file and behavior, and explain the smallest fix. Include sections for effective model, retry behavior, OpenRouter normalization, registry identity, database compatibility, tests, and residual risk. Do not claim the unrelated missing external design-reference fixture was caused by this patch.",
+      "check": "/usr/bin/python3 /home/ankit114/repos/ringer/my-manifests/model-routing-attribution-fix/checks/check_fresh_review.py",
+      "expect_files": [
+        "review.md"
+      ],
+      "timeout_s": 900,
+      "verified": "A fresh GPT-5.6 Luna reviewer returns a structured PASS with no BLOCK/HIGH findings across model attribution, retry, normalization, registry, database, and test seams"
+    }
+  ]
+}

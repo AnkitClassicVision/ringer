@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD14",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "gl-round11-fix",
+      "engine": "codex",
+      "task_type": "code-fix",
+      "timeout_s": 1800,
+      "expect_files": ["build_goalloop.py", "check_goalloop_graph.py", "pathway-goalloop-draft.json", "frozen-extractors.json", "DEBUG.md"],
+      "spec": "ROLE: fix worker for the Mott goal-loop Bland pathway, round 11 - a strictly label-scoped routing fix. Work entirely inside your CWD; never modify anything outside it; no network, no git, no MCP/Apps/skills; do not mint, attach, deploy, or call any API. CONTEXT - measured live on v106: the message '3pm works for me' (a clock-only preference phrased as agreement, sent before any offer exists) fired NO edge from n_goal_response - the raw envelope shows empty extraction and an untouched BlandStatusCode, and the node then either asked for a day or fabricated 2024 dates. Diagnosis: with four overlapping time-flavored labels and no standing offer, Bland's semantic router abstains on agreement-phrased time statements; the two offered-date edges also read as candidates pre-offer even though they are meaningless without an offer. Every other route is proven working (9/10 smoke green on v106, including the mixed-intent clarify and out-of-hours honesty). THE FIX - copy every artifact from /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD12/gl-round10-fix/ into CWD and change ONLY the following: (1) The n_goal_response edge to n_goal_search: append to its label the text ' - including agreement-phrased times like 3pm works for me when no opening has been offered yet'. (2) The n_goal_response edge to n_goal_search_offered_time: prefix its label with 'after an opening has been offered, '. (3) The n_goal_response edge to n_goal_search_offered_latest: prefix its label with 'after an opening has been offered, '. Edge descriptions should mirror their labels as the existing convention does. No node, prompt, extractor, body, or other edge changes of any kind. (4) VALIDATOR: add ASSERTION 11 to check_goalloop_graph.py keeping 1-10 intact: the none-search edge label contains the agreement-phrased example ('works for me'); both offered-date edge labels begin with the offered-condition prefix. Structured FAIL citing 'assertion 11'; must PASS your draft and FAIL the untouched round-10 draft at /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD12/gl-round10-fix/pathway-goalloop-draft.json citing assertion 11. (5) build_goalloop.py regenerates deterministically; fixture-conformant.json updated. (6) DEBUG.md: the measured no-edge evidence, the three label changes verbatim, regeneration command.",
+      "check": "PYTHONDONTWRITEBYTECODE=1 python3 /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/checks/check_round11_fix.py ./check_goalloop_graph.py ./pathway-goalloop-draft.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD12/gl-round10-fix/pathway-goalloop-draft.json /home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workGLD4/capture-v96/graph.json ./frozen-extractors.json ./DEBUG.md",
+      "verified": "Round 11 changes exactly three edge labels - the agreement-phrased time example on the none-search route and offer-conditioning on both offered-date routes - with assertion 11 pinning them, the round-10 draft rejected, and every earlier structural floor untouched."
+    }
+  ]
+}

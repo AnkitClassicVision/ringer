@@ -1,0 +1,81 @@
+{
+  "run_name": "sales-ops-live-operator-v2-claude-retry",
+  "workdir": "/tmp/sales-ops-live-operator-v2-claude-retry",
+  "max_parallel": 2,
+  "tasks": [
+    {
+      "key": "operator-contract",
+      "task_type": "docs",
+      "spec": "You are building the full Sales Ops Live Operator, not a tiny component. Work only in this task directory. Do not send messages. Do not write HubSpot or any CRM. Create operator_contract.md and operator_policy_v2.json. The contract must name the full path: HubSpot live read enrichment, candidate ranking, send_queue v2, draft worker, context QA, copy QA, live boundary, pilot send adapter, HubSpot logger, ledger writer, daily summary, optimizer note, and e2e fixture runner. Preserve current approved lane: PracticeOS stale active deals, email only, pilot cap 3/day, no SMS, no LinkedIn, no postcards, no sequence enrollment, no stage moves, send_enabled false, hubspot_write_enabled false. Use no em dash. Use Ringer-native terms only.",
+      "check": "test -s operator_contract.md || { echo 'WHY: operator_contract.md missing'; exit 1; }; test -s operator_policy_v2.json || { echo 'WHY: operator_policy_v2.json missing'; exit 1; }; grep -qi 'HubSpot live read' operator_contract.md || { echo 'WHY: contract missing HubSpot live read'; exit 1; }; grep -qi 'pilot send adapter' operator_contract.md || { echo 'WHY: contract missing pilot send adapter'; exit 1; }; grep -qi 'hubspot_write_enabled' operator_policy_v2.json || { echo 'WHY: policy missing hubspot_write_enabled'; exit 1; }",
+      "expect_files": [
+        "operator_contract.md",
+        "operator_policy_v2.json"
+      ],
+      "timeout_s": 600,
+      "verified": "the operator contract names the whole sales-ops live path and preserves the approved-lane boundaries",
+      "engine": "claude",
+      "model": "sonnet",
+      "engine_args": [
+        "--effort",
+        "medium"
+      ]
+    },
+    {
+      "key": "copy-qa-worker",
+      "task_type": "test-hardening",
+      "spec": "Build copy QA as part of the full operator. Work only in this task directory. Create copy_qa.py, copy_qa_cases.json, and copy_qa_report.json. Reject fake familiarity, unsupported claims, banned phrases, em dash, too much length, missing specific ask, and wrong voice. Pass a short grounded Ankit-voice draft. Include fixture cases for pass and reject. No sends. No writes. Use no em dash.",
+      "check": "test -s copy_qa.py || { echo 'WHY: copy QA missing'; exit 1; }; test -s copy_qa_cases.json || { echo 'WHY: copy QA cases missing'; exit 1; }; test -s copy_qa_report.json || { echo 'WHY: copy QA report missing'; exit 1; }; grep -qi 'unsupported' copy_qa.py || { echo 'WHY: copy QA missing unsupported claim check'; exit 1; }; grep -qi 'specific ask' copy_qa.py || { echo 'WHY: copy QA missing specific ask'; exit 1; }; grep -qi 'banned' copy_qa.py || { echo 'WHY: copy QA missing banned phrase check'; exit 1; }",
+      "expect_files": [
+        "copy_qa.py",
+        "copy_qa_cases.json",
+        "copy_qa_report.json"
+      ],
+      "timeout_s": 600,
+      "verified": "copy QA rejects bad drafts and passes grounded short drafts",
+      "engine": "claude",
+      "model": "sonnet",
+      "engine_args": [
+        "--effort",
+        "medium"
+      ]
+    },
+    {
+      "key": "live-boundary-and-approval-worker",
+      "task_type": "probe",
+      "spec": "Build live boundary v2 as part of the full operator. Work only in this task directory. Create live_boundary_v2.py, approval_file.schema.json, and boundary_probe.json. Boundary must block by default unless all are true: env flag enabled, approval file names run_id, candidate_id, sender, channel, cap, approver, row approval_state approved_to_send, all QA pass, email channel only, daily cap available, business day ok, kill switch absent, idempotency key unused, and HubSpot logging preflight configured. This task probes block mode only. No sends. No writes. Use no em dash.",
+      "check": "test -s live_boundary_v2.py || { echo 'WHY: live boundary missing'; exit 1; }; test -s approval_file.schema.json || { echo 'WHY: approval schema missing'; exit 1; }; test -s boundary_probe.json || { echo 'WHY: boundary probe missing'; exit 1; }; grep -q 'RINGER_SALES_OPS_ALLOW_LIVE_SEND' live_boundary_v2.py || { echo 'WHY: boundary missing env flag'; exit 1; }; grep -qi 'idempotency' live_boundary_v2.py || { echo 'WHY: boundary missing idempotency'; exit 1; }; grep -qi 'kill' live_boundary_v2.py || { echo 'WHY: boundary missing kill switch'; exit 1; }; grep -qi 'block' boundary_probe.json || { echo 'WHY: boundary probe did not block'; exit 1; }",
+      "expect_files": [
+        "live_boundary_v2.py",
+        "approval_file.schema.json",
+        "boundary_probe.json"
+      ],
+      "timeout_s": 600,
+      "verified": "live boundary blocks without explicit approval, env flag, passing QA, cap, idempotency, and logging preflight",
+      "engine": "claude",
+      "model": "sonnet",
+      "engine_args": [
+        "--effort",
+        "medium"
+      ]
+    },
+    {
+      "key": "optimizer-worker",
+      "task_type": "docs",
+      "spec": "Build optimizer output as part of the full operator. Work only in this task directory. Create optimizer_note.md and routing_policy_update.json. Optimizer reads Ringer receipts and eval log shape and recommends model, prompt, check, retry, ranking, and cheap-lane audition changes only inside the approved lane. It must not expand cohort, channel, sender, cap, suppression policy, live activation, or CRM stage moves. No sends. No writes. Use no em dash.",
+      "check": "test -s optimizer_note.md || { echo 'WHY: optimizer note missing'; exit 1; }; test -s routing_policy_update.json || { echo 'WHY: routing policy update missing'; exit 1; }; grep -qi 'model' optimizer_note.md || { echo 'WHY: optimizer note missing model'; exit 1; }; grep -qi 'prompt' optimizer_note.md || { echo 'WHY: optimizer note missing prompt'; exit 1; }; grep -qi 'approved lane' optimizer_note.md || { echo 'WHY: optimizer note missing approved lane'; exit 1; }; grep -qi 'task_type' routing_policy_update.json || { echo 'WHY: routing update missing task_type'; exit 1; }",
+      "expect_files": [
+        "optimizer_note.md",
+        "routing_policy_update.json"
+      ],
+      "timeout_s": 600,
+      "verified": "optimizer recommendations stay inside approved boundaries and focus on model, prompt, check, retry, and routing improvements",
+      "engine": "claude",
+      "model": "sonnet",
+      "engine_args": [
+        "--effort",
+        "low"
+      ]
+    }
+  ]
+}

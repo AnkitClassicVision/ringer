@@ -1,0 +1,26 @@
+{
+  "run_name": "charles-env-delivery",
+  "workdir": "/mnt/d_drive/ringer-work/charles-env-delivery/plan-round-v3",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "delivery-plan",
+      "task_type": "probe",
+      "engine": "codex",
+      "timeout_s": 1200,
+      "engine_args": [
+        "-c",
+        "model_reasoning_effort=high",
+        "-m",
+        "gpt-5.6-terra",
+        "--add-dir=/mnt/d_drive/repos/ringer/work/charles-env-delivery/plan-round"
+      ],
+      "spec": "You are the plan-only worker for a one-time, secret-free setup-direction delivery. Boundary first: do not send email, call Gmail, call AWS, call Google Chat, call Passbolt, modify IAM or any AWS resource, read any credential, access any external API, load skills, call MCP or Apps, or write outside your current task directory. Never run git. You own exactly one file: delivery-plan.md. Ringer creates worker.log; do not edit it.\n\nRead the two supplied source files as sanitized current evidence only:\n- /mnt/d_drive/repos/ringer/work/charles-env-delivery/plan-round/source-evidence.json\n- /mnt/d_drive/repos/ringer/work/charles-env-delivery/plan-round/locked_email_body.txt\nDo not look for other source files. Do not add identifiers that are absent from those files.\n\nWrite delivery-plan.md in the current task directory. It must be a self-contained operator plan that records the evidence booleans and the exact controls for the next coordinator step. Include these headings: Evidence, Route Decision, Authorization Boundary, Exact Dedupe Method, Locked Email, Gmail Source-of-Truth Verification, Stop and Rollback, Downstream Acceptance Boundary, and Acceptance Gate.\n\nThe plan must establish: the existing AWS Secrets Manager metadata is present in us-east-1 without retrieving a value; the v5 package is already present; Passbolt and Google Chat were attempted routes with no sent receipt; Gmail is the selected one-time route; no IAM or AWS mutation is permitted; exact dedupe logic is a fresh Gmail Sent search for the exact subject plus stable secret name plus target path, where count 1 means do not duplicate, count 0 means send once, and ambiguous or greater than 1 means stop and block; the exact plain-text subject and body from locked_email_body.txt; exact Gmail source-of-truth checks for sender, verified recipient, exact subject/body, SENT label, zero attachments, secret-free content, exact Sent count 1, and iam_changes_count=0; and stopping/rollback behavior that never retries an external send without a fresh dedupe read, never changes IAM/AWS, and leaves machine installation pending. State that the recipient is resolved and verified from current Gmail/Workspace context but do not write the address.\n\nPreserve the downstream acceptance boundary: `downstream_acceptance_pending: true`, `privacy_safe_events_verified: false`, `approved_ob_company_access_verified: false`, `open_skills_access_verified: false`, and `full_onboarding_complete: false`. State that delivery is only the handoff stage; do not claim full onboarding. The parent-gated follow-up owns proof of privacy-safe Charles events in `ob_company`, approved `ob_company` access, and working Open Skills access.\n\nCopy the locked body verbatim under the Locked Email heading, with the exact subject line `Finish your Claude Code capture setup`. Use booleans/counts and stable names only. Do not write any email address, account ID, message ID, ARN, token, secret value, or raw credential. Do not claim Charles has installed anything. The plan is an executable pre-send gate, not a send receipt.\n\nFinish with `PLAN VERDICT: PASS` only when every required invariant is explicitly present. If source evidence is incomplete, write `PLAN VERDICT: BLOCK` instead; never invent missing facts.",
+      "check": "python3 /mnt/d_drive/repos/ringer/work/charles-env-delivery/plan-round/checks/validate_delivery_plan.py --plan delivery-plan.md --evidence /mnt/d_drive/repos/ringer/work/charles-env-delivery/plan-round/source-evidence.json --body /mnt/d_drive/repos/ringer/work/charles-env-delivery/plan-round/locked_email_body.txt",
+      "expect_files": [
+        "delivery-plan.md"
+      ],
+      "verified": "the worker produced a self-contained, current-evidence, secret-free plan whose validator enforces the locked body, exact dedupe, source-of-truth checks, no-mutation boundary, and stop behavior"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "run_name": "sales-ops-live-operator-level1",
+  "workdir": "/tmp/sales-ops-live-operator-level1",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "send-queue-v1",
+      "task_type": "data-pipeline",
+      "engine_args": [
+        "-c",
+        "model_reasoning_effort=low"
+      ],
+      "spec": "You are a Ringer worker for Ankit's Sales Ops Live Operator Level 1. Work only in this task directory. Do not call HubSpot, Gmail, LinkedIn, Sakari, Thanks.io, AWS, or any external API. Do not send messages. Do not create or update CRM records. Create operator-run-note.md explaining that this task delegates the deterministic queue build to the repo scripts and that no live actions are allowed in this policy. The check will build and validate the queue from /tmp/ringer-sales-ops-input/live_practiceos_snapshot.json using /home/ankit114/repos/ringer/local-sales-ops/live-operator/policy.json. Use no em dash. Do not mention outside readiness frameworks. Ringer is the swarm operator/router and the check is the executable contract.",
+      "check": "python3 - <<'PY'\nfrom pathlib import Path\nimport subprocess, sys\nroot = Path('/home/ankit114/repos/ringer')\ntask = Path('.')\nnote = task / 'operator-run-note.md'\nif not note.exists() or note.stat().st_size == 0:\n    print('WHY: operator-run-note.md missing or empty')\n    sys.exit(1)\ntext = note.read_text(encoding='utf-8', errors='ignore')\nfor banned in ['—', 'A' + 'AC', 'a' + 'ac', 'rub' + 'ric']:\n    if banned in text:\n        print('WHY: operator note contains banned framework or punctuation marker', banned)\n        sys.exit(1)\ncmd = [sys.executable, str(root/'local-sales-ops/live-operator/build_send_queue.py'), '--snapshot', '/tmp/ringer-sales-ops-input/live_practiceos_snapshot.json', '--policy', str(root/'local-sales-ops/live-operator/policy.json'), '--out-dir', str(task), '--limit', '5']\nproc = subprocess.run(cmd, text=True, capture_output=True, timeout=30)\nif proc.returncode != 0:\n    print('WHY: build_send_queue.py failed')\n    print(proc.stdout)\n    print(proc.stderr)\n    sys.exit(1)\ncmd = [sys.executable, str(root/'local-sales-ops/live-operator/qa_send_queue.py'), '--queue', str(task/'send_queue.jsonl'), '--policy', str(root/'local-sales-ops/live-operator/policy.json'), '--min-rows', '5']\nproc = subprocess.run(cmd, text=True, capture_output=True, timeout=30)\nif proc.returncode != 0:\n    print('WHY: qa_send_queue.py failed')\n    print(proc.stdout)\n    print(proc.stderr)\n    sys.exit(1)\nfor required in ['send_queue.jsonl', 'approval_table.md', 'qa_report.md']:\n    p = task / required\n    if not p.exists() or p.stat().st_size == 0:\n        print('WHY:', required, 'missing or empty')\n        sys.exit(1)\ncombined = ''.join((task / p).read_text(encoding='utf-8', errors='ignore') for p in ['send_queue.jsonl', 'approval_table.md', 'qa_report.md'])\nif 'send_receipt' not in combined or 'hubspot_receipt' not in combined:\n    print('WHY: queue is missing receipt fields')\n    sys.exit(1)\nif 'sent_and_logged' in combined:\n    print('WHY: Level 1 queue should not mark anything sent')\n    sys.exit(1)\ncmd = [sys.executable, str(root/'local-sales-ops/live-operator/check_live_boundary.py'), '--boundary', str(root/'local-sales-ops/live-operator/boundary/live_send_boundary.py'), '--queue', str(task/'send_queue.jsonl'), '--out', str(task/'live_boundary_probe.json')]\nproc = subprocess.run(cmd, text=True, capture_output=True, timeout=30)\nif proc.returncode != 0:\n    print('WHY: live boundary check failed')\n    print(proc.stdout)\n    print(proc.stderr)\n    sys.exit(1)\nprint('PASS: Ringer Level 1 sales-ops send queue produced 5 candidates, QA report, approval table, live boundary block, and no live actions')\nPY",
+      "expect_files": [
+        "operator-run-note.md",
+        "send_queue.jsonl",
+        "approval_table.md",
+        "qa_report.md",
+        "live_boundary_probe.json"
+      ],
+      "timeout_s": 900,
+      "verified": "executing the queue builder, QA checker, and live boundary probe proves Ringer can convert the PracticeOS snapshot into a send queue with holds, drafts, receipt fields, a hard send block, and no live actions"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "<stdin>", line 13, in <module>
+  File "<stdin>", line 7, in load
+IndexError: list index out of range

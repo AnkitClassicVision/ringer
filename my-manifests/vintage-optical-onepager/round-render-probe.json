@@ -1,0 +1,20 @@
+{
+  "run_name": "vintage-optical-onepager",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/work-render-probe",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "chromium-render-probe",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 300,
+      "expect_files": [
+        "probe.html",
+        "probe.pdf"
+      ],
+      "spec": "set -euo pipefail; cp /mnt/d_drive/repos/optometry-competition-analyzer-rubric/client-onepager/sample-onepager-b.html ./probe.html; mkdir -p ./assets; cp /mnt/d_drive/repos/optometry-competition-analyzer-rubric/client-onepager/assets/mybcat-logo.png ./assets/mybcat-logo.png; /usr/bin/google-chrome --headless=new --no-sandbox --disable-gpu --allow-file-access-from-files --no-pdf-header-footer --print-to-pdf=\"$(pwd)/probe.pdf\" \"file://$(pwd)/probe.html\"; pdfinfo ./probe.pdf | sed -n '1,20p'",
+      "check": "python3 /home/ankit114/repos/ringer/my-manifests/vintage-optical-onepager/checks/validate_render_probe.py --pdf probe.pdf --html probe.html",
+      "verified": "the canonical headless-Chromium path renders the approved template as exactly one parseable PDF page"
+    }
+  ]
+}

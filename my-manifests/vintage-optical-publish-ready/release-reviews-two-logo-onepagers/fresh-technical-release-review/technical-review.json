@@ -1,0 +1,297 @@
+{
+  "review_type": "technical",
+  "verdict": "PASS",
+  "reviewed_at_utc": "2026-07-30T17:03:59.000913+00:00",
+  "external_actions_taken": "none",
+  "blocking_findings": [],
+  "reviewed_artifact_hashes": {
+    "onepager_pdf": "e72e6ba5d230e70ad831d0e6d27e1cf4bdc7e1a22f89785b82969375b19e4d70",
+    "template_framed_onepager_pdf": "ecd9f8c1725b1fafc203cc9c334bdb0102a1cc9775256f060d568048e39856a3",
+    "number_explainer_pdf": "1e98ba54b64aa0d1042d006dd87458b318320ac9c1333f3219337349ec079b0f",
+    "scores_json": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c"
+  },
+  "highest_truthful_state": "RENDERED_QA_PASSED_HUMAN_PROJECT_ROOM_REQUIRED",
+  "external_delivery_authorized": false,
+  "onepager_pages": 1,
+  "template_framed_onepager_pages": 1,
+  "explainer_pages": 25,
+  "approved_logo_sha256": "1e969dcafdefe20f809f4a393b6be0ca41a226ad5efeaa207d683a6c0fa36942",
+  "embedded_logo_byte_match": true,
+  "embedded_logo_checks": {
+    "onepager_html_embedded_png_count": 1,
+    "onepager_html_decoded_sha256": "1e969dcafdefe20f809f4a393b6be0ca41a226ad5efeaa207d683a6c0fa36942",
+    "template_framed_onepager_html_embedded_png_count": 1,
+    "template_framed_onepager_html_decoded_sha256": "1e969dcafdefe20f809f4a393b6be0ca41a226ad5efeaa207d683a6c0fa36942"
+  },
+  "internal_path_leak_count": 0,
+  "stale_route_value_count": 0,
+  "client_visible_raw_receipt_path_check": "PASS",
+  "client_visible_raw_receipt_path_count": 0,
+  "client_visible_receipt_reference_boundary": {
+    "raw_absolute_or_upstream_receipt_paths": 0,
+    "approved_package_relative_audit_rows_per_format": 50,
+    "approved_package_relative_unique_receipt_files": 33,
+    "contract_status": "REQUIRED_APPROVED",
+    "note": "The approved contract requires package-relative audit references in the explainer. These references contain no raw internal, absolute, or upstream receipt location."
+  },
+  "receipt_integrity": "PASS",
+  "receipt_integrity_checks": {
+    "manifest_rows": 50,
+    "unique_receipt_files": 33,
+    "missing_receipt_files": 0,
+    "sha256_mismatches": 0,
+    "unsafe_manifest_paths": 0,
+    "external_render_receipt_byte_match": true,
+    "external_template_render_receipt_byte_match": true,
+    "approved_report_contract_byte_match": true,
+    "approved_report_contract_sha256": "0023999f4370e0c2484dd245b84db779e61796636bfb28149f389cc9bb803960"
+  },
+  "visual_qa": "PASS",
+  "page_image_checks": {
+    "expected_pages": 27,
+    "visual_qa_recorded_pages_inspected": 27,
+    "page_images_found": 27,
+    "onepager_images": 1,
+    "template_framed_onepager_images": 1,
+    "explainer_images": 25,
+    "all_images_dimensions_pixels": [
+      1275,
+      1650
+    ],
+    "unique_page_image_hashes": 27,
+    "minimum_page_image_bytes": 100279,
+    "minimum_channel_variance": 916.8644126243623,
+    "blank_or_near_blank_page_images": 0,
+    "independent_visual_inspection": "PASS",
+    "independent_visual_inspection_scopes": [
+      "onepager page 1",
+      "template-framed onepager page 1",
+      "explainer pages 1-5",
+      "explainer pages 6-10",
+      "explainer pages 11-15",
+      "explainer pages 16-20",
+      "explainer pages 21-25"
+    ],
+    "visual_qa_artifact_hashes_match_current_pdfs": true,
+    "all_page_images_newer_than_corresponding_pdf": true,
+    "page_image_timestamp_ranges_utc": {
+      "onepager": [
+        "2026-07-30T16:45:09.208201+00:00",
+        "2026-07-30T16:45:09.208201+00:00"
+      ],
+      "template_framed_onepager": [
+        "2026-07-30T16:47:14.001900+00:00",
+        "2026-07-30T16:47:14.001900+00:00"
+      ],
+      "number_explainer": [
+        "2026-07-30T16:45:09.342203+00:00",
+        "2026-07-30T16:45:13.746702+00:00"
+      ]
+    },
+    "page_image_sha256": {
+      "onepager": [
+        "68d75aca7d136f67c0bde8e449778a613dc7a942b62687c763618595aadb6113"
+      ],
+      "template_framed_onepager": [
+        "587dc67265a4f22e58e82694b2ecb991502c287e485f4c8f008e42e72032d5e6"
+      ],
+      "number_explainer": [
+        "881becd94863a981f0d71773794d898dffdd4815ba765f56384f26df011e2cda",
+        "914fab828e4e5122bac57ae47cb5c109aefaf2a090b3e1466dcd2ead4598e336",
+        "815934b832b27bd3e0e5be83166dc9ef4e8d3b954ef30ab47a624b070238c600",
+        "6373aa10c471aa2cfc93d2bf58a90afc5062afa9f5e0fda4fd72195248edc3ec",
+        "ff7b17be72754a7141ccf71e9fc6dc45cd77124cc4b114eefc0a5876c00cf7d0",
+        "8d30cc1f4cc4144d347a109c63481f96ab3a48551fcbf2a26e546b0270a116ff",
+        "b0de95e74ce6e6707564376db9a7d1c02359305a684973d8d7a167af40ff12f0",
+        "062d34de8a1a6b7b9b5f6b03314dbb5adcb94871f0e3aa7df2fe050231abdfa5",
+        "7709da0d1192d46ca016bef5aa61f908e2ded3fe1e611d3b4a209aa2e45f72d9",
+        "dc73778eab62f624fe5c69670763f5de12a93147b6a72836231bb297f33b7820",
+        "78000ddbd2b24681a56f48c35ea1456ed43d2005fb21c5fbc8cb307fe494426d",
+        "c7a326f5f8b80207d1ccd59cb92c9748bd54d9e7eaaeda985fa9d92a234cdf15",
+        "aa5b733b2fb839bc10dad5fa721972d44fbc5e645509dafe0ca9b7a8c885d40f",
+        "35eceea57733d645e48f6c43e713da529cd5a996fa91aac6fd4f6a6376a56a79",
+        "6a1ac9a351970019b94fc1134f2ed4b150cff0c92d9132078755f5e77f07becd",
+        "4d200dcdaff45b1641a5a6b961bae1760a24b71f06661e40888210297e4231cc",
+        "3d5cea0c2661bb9a5809ff605717699175676c869cb14f2a4cf339d2e362d5b2",
+        "22cc09218395d644f47365edb7d9f37b73ebf3a0c8677ac7cc644521e4c001c2",
+        "b7c07f022916d6696e6952a7109dc2f225ebab65c17ce219dfa8ace91e185dee",
+        "c2aa6b055fc146d2a7254cb26eecd74541c00ac99514eab253205024e229644c",
+        "b7ba03348ecb0414c789414796b4b8a7b13b9bc364734d857fae7f3256ccff52",
+        "0d361ef4c1983fdb8591f58c229b7a9c19bf70cab1644c33d0fb5a9af7f8dd07",
+        "392b0e1adf1379047a69eefc98d968722ae7242d89959f4098a920d2eff24c1d",
+        "e2fb1445532ce51f88fca05dadde6c2e8d8f92a70d70e15b21c7cefc21217d7e",
+        "a693a1073a1ea637fd1d7b7acd2307b28e9cbd98be902736cec134268ee2698b"
+      ]
+    }
+  },
+  "pdf_checks": {
+    "onepager_pdf": {
+      "pages": 1,
+      "page_size_points": [
+        612,
+        792
+      ],
+      "letter_size": true,
+      "fresh_against_html": true,
+      "text_extraction": "PASS",
+      "extracted_nonspace_characters": 3226,
+      "blank_or_near_blank_pages": []
+    },
+    "template_framed_onepager_pdf": {
+      "pages": 1,
+      "page_size_points": [
+        612,
+        792
+      ],
+      "letter_size": true,
+      "fresh_against_html": true,
+      "text_extraction": "PASS",
+      "extracted_nonspace_characters": 3677,
+      "blank_or_near_blank_pages": []
+    },
+    "number_explainer_pdf": {
+      "pages": 25,
+      "page_size_points": [
+        612,
+        792
+      ],
+      "letter_size": true,
+      "fresh_against_html": true,
+      "text_extraction": "PASS",
+      "extracted_nonspace_characters": 65519,
+      "minimum_nonspace_characters_on_any_page": 676,
+      "blank_or_near_blank_pages": []
+    }
+  },
+  "template_render_receipt_binding": {
+    "status": "PASS",
+    "final_source_sha256_matches": true,
+    "final_pdf_sha256_matches": true,
+    "page_count_matches": true,
+    "letter_dimensions_match": true
+  },
+  "validator_results": {
+    "build_validator": "PASS",
+    "render_validator": "PASS"
+  },
+  "package_read_checks": {
+    "files_read": 103,
+    "bytes_streamed": 311145130,
+    "json_files_parsed": 33,
+    "zip_files_integrity_tested": 1,
+    "zip_integrity_failures": 0
+  },
+  "required_files_verified": [
+    "onepager.html",
+    "onepager.pdf",
+    "template-framed-onepager.html",
+    "template-framed-onepager.pdf",
+    "template-render-receipt.json",
+    "number-explainer.md",
+    "number-explainer.html",
+    "number-explainer.pdf",
+    "scores.json",
+    "sources.json",
+    "source_inventory.json",
+    "missing_evidence.json",
+    "receipt_manifest.json",
+    "number_inventory.json",
+    "runlog.md",
+    "render_receipt.json",
+    "visual-qa.json"
+  ],
+  "required_file_details": {
+    "onepager.html": {
+      "sha256": "db33166e8f3fd5a468ed5b0cbfb90ebd617ba1b58d8cd2c7d86e8b1360fce868",
+      "modified_at_utc": "2026-07-30T16:44:18.300510+00:00",
+      "bytes": 165222
+    },
+    "onepager.pdf": {
+      "sha256": "e72e6ba5d230e70ad831d0e6d27e1cf4bdc7e1a22f89785b82969375b19e4d70",
+      "modified_at_utc": "2026-07-30T16:45:08.248724+00:00",
+      "bytes": 301148
+    },
+    "template-framed-onepager.html": {
+      "sha256": "d4bb364978fa6d468ae8eb6aa9989adad4fca69260fbcbb5d43d4918dbfa492c",
+      "modified_at_utc": "2026-07-30T16:47:13.014886+00:00",
+      "bytes": 164049
+    },
+    "template-framed-onepager.pdf": {
+      "sha256": "ecd9f8c1725b1fafc203cc9c334bdb0102a1cc9775256f060d568048e39856a3",
+      "modified_at_utc": "2026-07-30T16:47:13.627895+00:00",
+      "bytes": 325407
+    },
+    "template-render-receipt.json": {
+      "sha256": "59105e0189216249a0ff4eaf32e040c8225bf04c6ede02d18d118a71b0afc6a5",
+      "modified_at_utc": "2026-07-30T16:47:14.028625+00:00",
+      "bytes": 470
+    },
+    "number-explainer.md": {
+      "sha256": "7b514851cb1ccfb7661d11f9693605ef405267a96ed2b0b87be8176229628d40",
+      "modified_at_utc": "2026-07-30T14:02:30.600742+00:00",
+      "bytes": 76080
+    },
+    "number-explainer.html": {
+      "sha256": "84bd9cb4fdb9adb9dba60842af20eae50098d44017a50f7557cc23a3344277a9",
+      "modified_at_utc": "2026-07-30T14:02:30.602042+00:00",
+      "bytes": 94462
+    },
+    "number-explainer.pdf": {
+      "sha256": "1e98ba54b64aa0d1042d006dd87458b318320ac9c1333f3219337349ec079b0f",
+      "modified_at_utc": "2026-07-30T16:45:08.848196+00:00",
+      "bytes": 662414
+    },
+    "scores.json": {
+      "sha256": "e5083cf48b3374555c44e3190cd11eedd560c0380ae8e033526551505dbd637c",
+      "modified_at_utc": "2026-07-30T13:55:37.490638+00:00",
+      "bytes": 45317
+    },
+    "sources.json": {
+      "sha256": "c54beaa3f81ad905bc70bb34d82baefaf3a43d63dbf58d519f912165190d9135",
+      "modified_at_utc": "2026-07-30T13:55:37.491263+00:00",
+      "bytes": 18353
+    },
+    "source_inventory.json": {
+      "sha256": "fed269940d49701e374ab8782d784b1ce0046f7097c34b99ef62cc238b01fd18",
+      "modified_at_utc": "2026-07-30T13:55:37.491573+00:00",
+      "bytes": 31279
+    },
+    "missing_evidence.json": {
+      "sha256": "0334e77fba1059c73c39ac1320c05d2e9172ecf581a444dcf938c561854acb1d",
+      "modified_at_utc": "2026-07-30T13:55:37.491796+00:00",
+      "bytes": 4946
+    },
+    "receipt_manifest.json": {
+      "sha256": "743c347135b58960c4454d7b6ef1a474ca0d740a5af03cd06b2b1cdbce5d398b",
+      "modified_at_utc": "2026-07-30T13:55:37.489961+00:00",
+      "bytes": 35991
+    },
+    "number_inventory.json": {
+      "sha256": "394c86456429863da760c490f54a8f6dc02477e95ee954ee822176b038147cf3",
+      "modified_at_utc": "2026-07-30T16:45:07.139173+00:00",
+      "bytes": 2648181
+    },
+    "runlog.md": {
+      "sha256": "f5407319de00f41ce88cfc21b1e7d98e398dad281b3296199ce4f31142ac5aaa",
+      "modified_at_utc": "2026-07-30T16:49:40.600282+00:00",
+      "bytes": 6830
+    },
+    "render_receipt.json": {
+      "sha256": "82f66ac2d3e05839ed8edbf36621a2c2aea42a865be02e31798c8175b8927525",
+      "modified_at_utc": "2026-07-30T16:45:13.851834+00:00",
+      "bytes": 499
+    },
+    "visual-qa.json": {
+      "sha256": "9ba334ad329af8fe5d3f1a079449002817cd3889a7ea083e4ea8caab65cd9667",
+      "modified_at_utc": "2026-07-30T16:49:00.764357+00:00",
+      "bytes": 3937
+    }
+  },
+  "render_timestamps": {
+    "onepager_and_explainer_rendered_at_utc": "2026-07-30T16:45:13.850413+00:00",
+    "template_framed_onepager_rendered_at_utc": "2026-07-30T16:47:14.027828+00:00",
+    "visual_qa_inspected_at_utc": "2026-07-30T16:47:52Z"
+  },
+  "remaining_human_gate": "Human Project Room approval of the exact reviewed package remains required before external delivery.",
+  "external_boundary": "No external delivery, publishing, upload, outreach, CRM write, or other external action is authorized."
+}

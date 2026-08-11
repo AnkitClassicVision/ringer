@@ -1,0 +1,17 @@
+{
+  "run_name": "mk2-number-and-comeback",
+  "workdir": "/home/ankit114/repos/ringer/my-manifests/mk2-number-and-comeback/workConv7379",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "conv7379-state",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 300,
+      "expect_files": ["state.txt"],
+      "spec": "python3 /home/ankit114/repos/paid_ads_mybcat/scripts/secret_exec.py --secret-env BLAND_API_KEY=mybcat/ai/api-keys/bland -- python3 -u - <<'PY' > state.txt 2>&1\nimport json, os, re, urllib.request, urllib.error\nraw = os.environ[\"BLAND_API_KEY\"].strip()\nif raw.startswith(\"{\"):\n    p = json.loads(raw); raw = next((p[k] for k in (\"api_key\", \"key\", \"value\") if p.get(k)), raw)\nCID = \"7379f05b-b7a8-409c-8b0e-f6ca0c34bca4\"\nmask = lambda s: re.sub(r\"\\d{5,}\", lambda m: \"***\" + m.group(0)[-4:], str(s))\nreq = urllib.request.Request(\"https://api.bland.ai/v1/sms/conversations/\" + CID, headers={\"Authorization\": raw, \"Content-Type\": \"application/json\", \"User-Agent\": \"mybcat-cli\"})\ntry:\n    with urllib.request.urlopen(req, timeout=60) as r:\n        detail = json.loads(r.read().decode() or \"{}\")\n    d = detail.get(\"data\") if isinstance(detail.get(\"data\"), dict) else detail\n    msgs = d.get(\"messages\") or []\n    agent_msgs = [m for m in msgs if isinstance(m, dict) and m.get(\"sender\") == \"AGENT\"]\n    print(\"HTTP 200 node=%s active=%s MESSAGES=%d AGENT_MSGS=%d\" % (d.get(\"current_node_id\"), d.get(\"is_active\"), len(msgs), len(agent_msgs)))\n    for m in msgs:\n        if isinstance(m, dict):\n            print(\"  [%s] %s (%s): %s\" % (str(m.get(\"created_at\", \"\"))[:19], m.get(\"sender\", \"?\"), m.get(\"status\", \"?\"), mask(str(m.get(\"message\", \"\"))[:400])))\nexcept urllib.error.HTTPError as e:\n    print(\"HTTP %s %s\" % (e.code, e.read().decode(errors=\"replace\")[:200]))\nprint(\"STATE_DONE\")\nPY\nrc=$?\ncat state.txt\nexit $rc",
+      "check": "grep -q 'STATE_DONE' state.txt || { echo 'FAIL: probe did not finish'; tail -3 state.txt; exit 1; }; grep -q 'HTTP 200' state.txt || { echo 'FAIL: conversation fetch failed'; grep HTTP state.txt; exit 1; }; grep -qE 'AGENT_MSGS=[0-9]+' state.txt || { echo 'FAIL: no agent message count'; exit 1; }; echo \"MEASURED: $(grep -m1 'AGENT_MSGS=' state.txt | head -c 120)\"",
+      "verified": "Live state of Ankit's in-flight welcome-retest conversation (7379f05b) on the userWait-flipped graph: current node, active flag, and the full message list, proving whether the opener auto-advanced or double-sent without patient input."
+    }
+  ]
+}

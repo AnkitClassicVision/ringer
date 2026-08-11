@@ -1,0 +1,19 @@
+{
+  "run_name": "charles-env-delivery",
+  "workdir": "/mnt/d_drive/ringer-work/charles-env-delivery/post-review",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "post-send-review",
+      "task_type": "probe",
+      "engine": "local-shell",
+      "timeout_s": 300,
+      "spec": "set -euo pipefail; cp /mnt/d_drive/ringer-work/charles-env-delivery/plan-verify/delivery-plan-verify/delivery-plan.md ./delivery-plan.md; cp /mnt/d_drive/ringer-work/charles-env-delivery/send-round/send-receipt.json ./send-receipt.json; python3 /mnt/d_drive/repos/ringer/work/charles-env-delivery/post-review/post_review.py --plan ./delivery-plan.md --receipt ./send-receipt.json --output ./post-send-review.md",
+      "check": "python3 /mnt/d_drive/repos/ringer/work/charles-env-delivery/post-review/post_review.py --plan ./delivery-plan.md --receipt ./send-receipt.json --check && python3 -c \"from pathlib import Path; text=Path('post-send-review.md').read_text(); assert text.startswith('POST-SEND RINGER REVIEW: PASS\\n'); assert 'external_send_this_round: false' in text; print('PASS: executable post-send review gate is green')\"",
+      "expect_files": [
+        "post-send-review.md"
+      ],
+      "verified": "the same-name Ringer review validates the sanitized existing Sent receipt, confirms no duplicate send occurred this round, and preserves machine installation and downstream acceptance as pending"
+    }
+  ]
+}
