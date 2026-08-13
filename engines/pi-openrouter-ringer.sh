@@ -153,7 +153,7 @@ umask "$old_umask"
 cleanup() {
   rm -f -- "$tmpfile" "$statusfile"
   chmod u+w -- "$runtime_agent_dir" 2>/dev/null || true
-  chmod u+w -- "$runtime_agent_dir/models-store.json" 2>/dev/null || true
+  chmod u+w -- "$runtime_agent_dir/models.json" 2>/dev/null || true
   rm -rf -- "$runtime_agent_dir"
 }
 trap cleanup EXIT
@@ -324,14 +324,18 @@ if [[ -d /usr/share/crypto-policies ]]; then
   ca_trust_mount_args+=(--ro-bind /usr/share/crypto-policies /usr/share/crypto-policies)
 fi
 
-# models.json is deliberately ignored. Only the exact cached OpenRouter model
-# and pinned endpoint are copied into the isolated runtime agent directory.
+# The caller's models.json is deliberately ignored. Only the exact cached
+# OpenRouter model and pinned endpoint are rendered as a one-model models.json
+# in the isolated runtime agent directory. Pi's dynamic models-store reader
+# requires a writable sibling lock, which cannot work under the load-bearing
+# read-only /agent mount; the immutable generated config avoids that lock path.
 # auth.json is never copied or mounted. The launch supervisor below is its
 # only reader, pinning the validated key in memory for launch and redaction.
 if python3 - "$canonical_agent_dir/models-store.json" \
-  "$runtime_agent_dir/models-store.json" \
+  "$runtime_agent_dir/models.json" \
   "${requested_model#openrouter/}" <<'PY'
 import json
+import math
 import os
 import sys
 
@@ -353,25 +357,163 @@ matches = [
 if len(matches) != 1:
     raise SystemExit(2)
 model = matches[0]
-if model.get("provider") != "openrouter" or model.get("baseUrl") != endpoint:
+if (
+    model.get("provider") != "openrouter"
+    or model.get("baseUrl") != endpoint
+    or model.get("api") != "openai-completions"
+):
     raise SystemExit(2)
 
-# Keep Pi's documented model fields, but discard routing-capable headers and
-# every unknown cache field. JSON round-tripping also rejects non-JSON data.
-allowed = (
-    "id", "name", "api", "provider", "baseUrl", "reasoning", "input",
-    "cost", "contextWindow", "maxTokens", "compat",
+# Keep only documented non-routing fields, validating every retained value
+# before pinning the request protocol and endpoint. Nested routing, arbitrary
+# headers, chat-template parameters, and every unknown cache field are
+# discarded.
+def finite_nonnegative(value):
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+        and value >= 0
+    )
+
+
+sanitized = {
+    "id": requested_id,
+    "api": "openai-completions",
+    "baseUrl": endpoint,
+}
+name = model.get("name")
+if name is not None:
+    if not isinstance(name, str) or not name:
+        raise SystemExit(2)
+    sanitized["name"] = name
+reasoning = model.get("reasoning")
+if reasoning is not None:
+    if type(reasoning) is not bool:
+        raise SystemExit(2)
+    sanitized["reasoning"] = reasoning
+inputs = model.get("input")
+if inputs is not None:
+    if (
+        not isinstance(inputs, list)
+        or not inputs
+        or "text" not in inputs
+        or len(set(inputs)) != len(inputs)
+        or any(value not in ("text", "image") for value in inputs)
+    ):
+        raise SystemExit(2)
+    sanitized["input"] = inputs
+
+context_window = model.get("contextWindow")
+max_tokens = model.get("maxTokens")
+if (
+    type(context_window) is not int
+    or context_window <= 0
+    or type(max_tokens) is not int
+    or max_tokens <= 0
+    or max_tokens > context_window
+):
+    raise SystemExit(2)
+sanitized["contextWindow"] = context_window
+sanitized["maxTokens"] = max_tokens
+
+cost_source = model.get("cost")
+cost_fields = ("input", "output", "cacheRead", "cacheWrite")
+if not isinstance(cost_source, dict):
+    raise SystemExit(2)
+if any(not finite_nonnegative(cost_source.get(key)) for key in cost_fields):
+    raise SystemExit(2)
+cost = {key: cost_source[key] for key in cost_fields}
+tiers_source = cost_source.get("tiers")
+if tiers_source is not None:
+    if not isinstance(tiers_source, list):
+        raise SystemExit(2)
+    tiers = []
+    previous_threshold = -1
+    for tier_source in tiers_source:
+        if not isinstance(tier_source, dict):
+            raise SystemExit(2)
+        threshold = tier_source.get("inputTokensAbove")
+        if (
+            not finite_nonnegative(threshold)
+            or threshold <= previous_threshold
+            or any(not finite_nonnegative(tier_source.get(key)) for key in cost_fields)
+        ):
+            raise SystemExit(2)
+        tiers.append(
+            {
+                "inputTokensAbove": threshold,
+                **{key: tier_source[key] for key in cost_fields},
+            }
+        )
+        previous_threshold = threshold
+    cost["tiers"] = tiers
+sanitized["cost"] = cost
+
+# Compatibility overrides may adjust serialization, but they must not inject
+# OpenRouter provider routing, gateway routing, headers, or arbitrary template
+# fields. Pi auto-detects omitted compatibility values from the pinned URL.
+compat_source = model.get("compat")
+if compat_source is not None and not isinstance(compat_source, dict):
+    raise SystemExit(2)
+compat_bool_fields = (
+    "supportsStore",
+    "supportsDeveloperRole",
+    "supportsReasoningEffort",
+    "supportsUsageInStreaming",
+    "requiresToolResultName",
+    "requiresAssistantAfterToolResult",
+    "requiresThinkingAsText",
+    "requiresReasoningContentOnAssistantMessages",
+    "supportsOpenAIGrammarTools",
+    "supportsStrictMode",
+    "supportsLongCacheRetention",
 )
-sanitized = {key: model[key] for key in allowed if key in model}
+compat_enum_fields = {
+    "maxTokensField": ("max_completion_tokens", "max_tokens"),
+    "thinkingFormat": (
+        "openai",
+        "openrouter",
+        "together",
+        "deepseek",
+        "zai",
+        "qwen",
+        "chat-template",
+        "qwen-chat-template",
+        "string-thinking",
+        "ant-ling",
+    ),
+    "cacheControlFormat": ("anthropic",),
+}
+if compat_source:
+    compat = {}
+    for key in compat_bool_fields:
+        if key in compat_source:
+            if type(compat_source[key]) is not bool:
+                raise SystemExit(2)
+            compat[key] = compat_source[key]
+    for key, choices in compat_enum_fields.items():
+        if key in compat_source:
+            if compat_source[key] not in choices:
+                raise SystemExit(2)
+            compat[key] = compat_source[key]
+    if compat:
+        sanitized["compat"] = compat
 if sanitized.get("id") != requested_id:
     raise SystemExit(2)
-if sanitized.get("provider") != "openrouter":
-    raise SystemExit(2)
-if sanitized.get("baseUrl") != endpoint:
+if sanitized.get("api") != "openai-completions" or sanitized.get("baseUrl") != endpoint:
     raise SystemExit(2)
 try:
     encoded_models = json.dumps(
-        {"openrouter": {"models": [sanitized]}},
+        {
+            "providers": {
+                "openrouter": {
+                    "api": "openai-completions",
+                    "baseUrl": endpoint,
+                    "models": [sanitized],
+                }
+            }
+        },
         separators=(",", ":"),
         allow_nan=False,
     )
@@ -418,6 +560,9 @@ bwrap_argv=(
     --dev /dev \
     --tmpfs /tmp \
     --dir /tmp/home \
+    --dir /tmp/home/.pi \
+    --dir /tmp/home/.pi/agent \
+    --ro-bind "$runtime_agent_dir/models.json" /tmp/home/.pi/agent/models.json \
     --dir /opt \
     --ro-bind "$pi_mount_source" "$pi_mount_target" \
     --bind "$canonical_taskdir" /workspace \
@@ -477,7 +622,7 @@ try:
         "HOME": "/tmp/home",
         "PATH": "/runtime/bin",
         "LD_LIBRARY_PATH": "/runtime/lib",
-        "PI_CODING_AGENT_DIR": "/agent",
+        "PI_CODING_AGENT_DIR": "/tmp/home/.pi/agent",
         "PI_OFFLINE": "1",
         "OPENROUTER_API_KEY": key,
     }

@@ -1,0 +1,17 @@
+{
+  "run_name": "pi-openrouter-keyfix",
+  "workdir": "/mnt/d_drive/repos/ringer/my-manifests/pi-openrouter-keyfix/work-verify",
+  "max_parallel": 1,
+  "tasks": [
+    {
+      "key": "verify-wrapper-live",
+      "engine": "local-shell",
+      "task_type": "probe",
+      "timeout_s": 300,
+      "expect_files": ["probe-output.txt"],
+      "spec": "set -o pipefail; bash /mnt/d_drive/repos/ringer/my-manifests/pi-openrouter-keyfix/checks/probe.sh 2>&1 | tee ./probe-output.txt",
+      "check": "sh -c 'grep -q \"CHECK PASS\" probe-output.txt || { echo \"CHECK FAIL: no CHECK PASS line in probe-output.txt\"; exit 1; }; grep -q \"RINGER_PI_IDENTITY.*x-ai/grok-4.5\" probe-output.txt || { echo \"CHECK FAIL: no verified grok-4.5 identity line in probe-output.txt\"; exit 1; }; echo \"CHECK PASS: live wrapper probe green with verified grok-4.5 identity\"'",
+      "verified": "probe-output.txt contains the corrected gate's CHECK PASS and the verified grok-4.5 identity line from a live wrapper execution"
+    }
+  ]
+}

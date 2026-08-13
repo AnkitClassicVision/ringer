@@ -493,6 +493,14 @@ checks and raw logs support — no vibes, no worker self-reports.
   Fable remains a strong owner-level decision lane, but repeat exact schema
   invariants in correction prompts and trust the executed validator over its
   completion summary.
+- 2026-08-11 — extend-the-pipe (code-review, sonnet): FAIL x2 in 30s total —
+  worker asked for approval to run read-only `git show/diff` against a repo
+  OUTSIDE its task directory and exited rc=0 without writing report.md; headless
+  safe-mode has no approver, same class as the 2026-07-12 Bash-denial note.
+  Round 2 with the material STAGED INSIDE the task dir (source packet: commit
+  patch, working-tree diff, full files) passed attempt 1 in 258s with a
+  substantive evidence-cited P2 catch. Rule: claude-lean review lanes must
+  never require reads outside the task dir — always stage a source packet.
 - 2026-07-12 — mybcat-seo go-live rounds (user-requested Fable engine): split
   verdict by TASK SHAPE, not model quality. Writing-shaped work passed:
   canary approval packet (docs, attempt 1, judgment call flagged instead of
@@ -990,6 +998,30 @@ checks and raw logs support — no vibes, no worker self-reports.
 
 ## Process lessons (cross-model)
 
+- 2026-08-13 — xai lane (pi-openrouter wrapper, grok-4.5) HARNESS_FAIL, not a
+  model failure: both attempts of eyedeal-next-step-audit died in ~1s with
+  "Credential store read failed for openrouter: EROFS /agent/auth.json"
+  before any tokens. Do NOT count against grok on the scoreboard. Same run:
+  codex + kimi OAuth lanes both PASS attempt 1 on research-audit tasks.
+  RESOLVED same day (run pi-openrouter-keyfix): root cause was the Pi
+  package update to 0.84.1 that morning — startup now unconditionally lists
+  the credential store at $PI_CODING_AGENT_DIR/auth.json BEFORE env auth,
+  and a store I/O error is fatal (evidence: dist/core/agent-session-services.js
+  refresh path; pi-ai models.js wraps the read error as fatal). Fix (codex
+  worker, coordinator-reviewed, uncommitted in engines/pi-openrouter-ringer.sh):
+  give Pi a writable, EMPTY, key-free store dir on sandbox tmpfs
+  (/tmp/home/.pi/agent), ro-bind the generated models.json into it, point
+  PI_CODING_AGENT_DIR there; key still arrives only via the supervisor's
+  in-memory OPENROUTER_API_KEY env injection, /agent unchanged, no
+  credential ever on disk or mount. Proven by executed gate: live grok-4.5
+  probe through the real wrapper, verified RINGER_PI_IDENTITY, green Ringer
+  receipt (verify-wrapper-live PASS attempt 1). Two process lessons:
+  (a) a codex task owning a file OUTSIDE its task dir needs an explicit
+  engine_args writable_roots grant on the smallest parent directory — round
+  1 wasted a worker run on that; (b) the probe's ownership guard must
+  compare TRACKED modifications only, or pre-existing untracked files (the
+  never-committed engines/kimi-oauth.sh) falsely fail honest work.
+
 - 2026-07-06 — the orchestrator's CHECKS were the day's top failure source:
   three check bugs (fixture newline join, first-occurrence ordering vs the
   watchlist strip, claim-prefix split on '.' instead of ':') each produced
@@ -1434,3 +1466,29 @@ land — audition it again only where a mid-run death costs nothing.
 - 2026-08-11 (code-feature, mybcat_brain repo-feature): Codex default PASS on attempt 2, 109k tokens, 258s. Attempt 1 failed only the git-status allowlist: worker wrote its own scratch resume.md into the repo root, then removed it on retry. Lesson: for direct-repo repo-feature runs, either add resume.md to --allowed-status or tell the spec "no scratch files in the repo". Work itself was correct on attempt 1.
 
 - 2026-08-11 (claude engine, code-fix, harness notes x2 — discount the scoreboard FAILs): loop-drive-contract r32. (1) ERROR 0.0s run: stale worktree collision — the prior codex attempt FAILed and left its worktree; _prepare_taskdir refuses an existing taskdir (ringer.py ~7173) before any spawn, so same-manifest reruns after a FAIL need the old worktree removed first. (2) FAIL 589.8s run: the engine template ships --permission-mode acceptEdits, which auto-approves EDITS but not BASH — a headless -p worker can never answer the approval prompt, so it cannot run pytest/checks on its own work. Sonnet behaved WELL: wrote the full correct fix (patch later reviewed, hand-applied, all checks green at repo), refused to fabricate a "How I verified" section it could not execute, and asked for approval instead. Fix pending owner approval: acceptEdits -> bypassPermissions in [engines.claude]/[engines.claude-lean] args_template. Until then the claude lane cannot verify anything it builds; do not route execute-and-verify work to it.
+
+- 2026-08-11 (claude engine post-bypassPermissions fix, code-fix + code-feature): 4/4 PASS attempt 1 same evening — r33 bio-length (102s) and all three one-card-slice lanes (129s/232s/317s), every check self-executed by the worker (pytest + gate scripts). The acceptEdits wall was the whole story; sonnet under the fixed template is first-try reliable on bounded single-module lanes with pinned contracts. Claude lane promoted to the default podcast code lane while Codex is locked out (until Aug 17).
+
+## 2026-08-12 catalog auditions through pi-openrouter
+
+- `openrouter/nvidia/nemotron-3.5-lightning:free`, probe: the generated Python artifact passed the deterministic valid-input, invalid-input, ownership, and external execution checks in one Ringer attempt (62.7s, 12,098 recorded Ringer tokens). OpenRouter generation readback confirmed $0 charged. The worker made three write calls to the same requested file despite the exact one-write rule. Verdict: artifact-capable challenger only, not instruction-clean and not eligible for default promotion.
+- `openrouter/meta/muse-glimmer-30b`, probe: eventual artifact PASS after one Ringer retry (15.6s, 10,033 recorded Ringer tokens). Attempt 1 consumed its 1,024-token output cap in reasoning and created no file; attempt 2 made one write and passed. Authoritative OpenRouter charge was $0.004401837. Verdict: retry-only challenger for tightly checked mechanical work; no default promotion.
+- `openrouter/sakana/sakana-namazu`, probe: eventual artifact PASS after one Ringer retry (9.4s, 8,415 recorded Ringer tokens). Attempt 1 consumed its 1,024-token output cap in reasoning and created no file; attempt 2 made one write and passed. Authoritative OpenRouter charge was $0.012570376. Verdict: retry-only challenger, materially more expensive than Muse and Solar on this probe; no default promotion.
+- `openrouter/upstage/solar-pro4`, probe: the final Python artifact passed the deterministic checks in one Ringer attempt (37.5s, 14,107 recorded Ringer tokens), and authoritative OpenRouter charge was $0.000403057. The worker first targeted a read-only root path, then made four additional writes, including repeated writes after success, despite the exact one-write and stop rules. Verdict: cheapest paid artifact PASS, but instruction-following failure keeps it out of recurring work until a stricter replay is clean.
+- Shared audition spend: $0.017375270 total against the purpose-bound $0.03 ceiling. This was one short mechanical sample per model. It supports only challenger-level routing judgments, not broad capability or default status.
+
+- 2026-08-12 (run ga-two-practice-acquisition, round-3 memo review; identity claude-fable-coordinator) — grok-4.5 (xai, code-review): HARNESS_FAIL by SPEC DEFECT, not model. Spec pointed the reviewer at absolute /mnt/d_drive repo paths; the bwrap Pi lane mounts only the task dir at /workspace, so every input returned ENOENT and the worker reviewed BLIND from the charter text — 2 attempts, 2.77M recorded output units, 39 min, and the shape-only check (VERDICT line + min length) PASSED on a review that never read the memo. Two lessons: (1) any pi-openrouter/xai review task needs its inputs STAGED (copy sources into the task dir via a pre-task or make the check stage them; absolute host paths are dead on this lane — codex and claude-lean read the same paths fine in the same round); (2) a review-packet check that validates only VERDICT+length cannot see blindness — add a check grep for at least one verbatim quote/anchor from the reviewed artifact. Credit where due: the blind charter-level output still surfaced two challenges worth adjudicating (rent-step-in-trailing-basis treatment, exception-sequencing discipline). Not a capability demotion; do not log against grok-4.5 capability.
+- Same run — codex (code-review, arithmetic lane): PASS attempt 1, 114s, ~80k output units; recomputed every memo figure against receipts with python, caught a MATERIAL evidence-grade error (memo called a rent step "contracted" while the receipt showed the landlord signature blank) plus two precision fixes. claude-lean sonnet (consistency lane): PASS attempt 1, 294s; five real findings including a structured-output-vs-narrative divergence (underwriting_block stating an inference as fact) and a walk-away-trigger omission. Both read /mnt/d_drive absolute paths without issue.
+- Same run, earlier task newdocs-recompute (codex, research): PASS attempt 2, ~114k output units. Attempt-1 red was a coordinator SPEC/CHECK SEAM defect: spec said "round all floats to 2 decimals" while the check asserted share identities at 0.001 tolerance — impossible jointly for ratios. Worker adapted by storing ratios at 5dp. Rule: when a check asserts derived-ratio identities, the spec must exempt ratios from display rounding (or the check must tolerate the rounding step).
+
+- 2026-08-12 (run email-backfill-6mo, new task_type email-triage; identity fable-coordinator) — claude sonnet 3/3 PASS attempt 1 (170-254s each) and claude-lean haiku 1/1 PASS attempt 1 (147s) on schema-locked email disposition (58-76 items/task, executed validator: coverage + enum + roster + staleness + PHI regexes). Haiku's judgment quality matched sonnet on spot-review (sensible do/review calls on school forms, bank alerts, security notices) — promote haiku to the default email-triage lane; sonnet reserve for chunks with business-thread ambiguity. Data-boundary note: this job routed to Claude OAuth lanes deliberately (business + family email content; OpenRouter/xAI would be a new third-party exposure) — engine choice was a privacy call, not a scoreboard call.
+- 2026-08-12 (run email-lane-hardening, code-fix) — codex PASS (my manual re-run of the check; wrapper verdict pending at write time): per-account exception boundary + atomic incremental --out writes + UA header, 2 mandated tests added, 53-test suite green, correct root-cause narrative in fix-summary.md. CHECKER LESSON (repeat of 2026-08-11 resume.md note, now from the OTHER side): a scope check hashing "all non-owned dirty files" fails on resume.md because the ORCHESTRATOR's own Stop hook rewrites it on a 4-min idle timer — session-harness-owned files (resume.md, worker.log) must be allowlisted in any repo-scope check on this machine.
+
+## nvidia/nemotron-3.5-lightning:free (pi-openrouter)
+- 2026-08-12 site-build (wave24 digest-renderer): PASS attempt 1 on a stdlib HTML renderer with a strict executed check (parse + content + ordering + self-contained). Free promo, cost $0. Quirk: tried to call a nonexistent `bash` tool once mid-run, recovered on its own. Worth a second audition on similar small render/docs tasks.
+
+## codex (default, gpt-5.6-sol resolved)
+- 2026-08-12 code-feature (wave24 gmail-backfill tool): PASS attempt 2. Attempt-1 failure was ORCHESTRATOR spec ambiguity, not model: spec said "aggregate per SENDER domain" while the fixture expected counterparty-domain aggregation for SENT mail; executed check caught it, retry prompt fixed it. Lesson: when aggregating mail by domain, always define the SENT-direction rule explicitly.
+
+## kimi-code/k3 via kimi OAuth (`engine: kimi`, `engines/kimi-oauth.sh`)
+- 2026-08-13 (run kimi-oauth-lane-proof, probe) — new OAuth-primary lane: K3 through the Kimi Code CLI `kimi login` credential, PASS attempt 1 (21s) on a one-file smoke with executed grep check. Wrapper fails closed on OpenRouter selectors and API-key env overrides; `kimi-api` (pi-openrouter, `openrouter/moonshotai/kimi-k3`) is the explicit backup lane, never automatic. Note: `kimi -p` headless runs tools without `--yolo`/`--auto` (both flags are rejected in prompt mode). Needs a real batch before any routing promotion; one smoke proves the lane, not the model.
