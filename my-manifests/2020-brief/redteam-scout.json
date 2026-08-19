@@ -1,0 +1,57 @@
+{
+  "run_name": "2020-brief-redteam-scout",
+  "workdir": "/tmp/ringer-2020-brief-redteam",
+  "max_parallel": 5,
+  "tasks": [
+    {
+      "key": "judge-industry-fyi",
+      "engine": "codex",
+      "task_type": "review",
+      "timeout_s": 1800,
+      "expect_files": ["verdict.json", "findings.md"],
+      "check": "python3 /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/check_verdict.py verdict.json",
+      "verified": "verdict.json parses with a valid verdict, and the wrapper fetched the judge's spot-check URLs and confirmed the claimed figures appear verbatim on those pages.",
+      "spec": "ROLE: You are the red-team reviewer for The 20/20 Brief topic scouts. The producer never saw your criteria. Your job is to kill weak candidates before they cost production time.\n\nINPUTS:\n- Candidate file to judge: /tmp/ringer-2020-brief-scout/scout-industry-fyi/industry-fyi-candidates.md\n- Your rubric (holdout criteria): /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/holdout-criteria-scout.md\n\nRead both files fully before judging.\n\nTASK: Run every test in the rubric against every candidate. Execute the math audit yourself. Choose the load-bearing spot checks; the wrapper will fetch those URLs and verify your claimed figures appear verbatim on the page, so quote figure text exactly as it appears in the candidate file's source list.\n\nBOUNDARY: Write only ./verdict.json and ./findings.md in your current working directory. Do not modify anything else. Do not edit the candidate file.\n\nOUTPUT CONTRACT: ./verdict.json exactly per the schema in the rubric; ./findings.md with one paragraph per candidate plus your math recomputations.\n\nHARD RULES: no invented spot checks; claimed_figure must be exact text; if you cannot verify something, that is a finding, not a guess; be willing to kill; plain language."
+    },
+    {
+      "key": "judge-data-insight",
+      "engine": "codex",
+      "task_type": "review",
+      "timeout_s": 1800,
+      "expect_files": ["verdict.json", "findings.md"],
+      "check": "python3 /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/check_verdict.py verdict.json",
+      "verified": "verdict.json parses with a valid verdict, and the wrapper fetched the judge's spot-check URLs and confirmed the claimed figures appear verbatim on those pages.",
+      "spec": "ROLE: You are the red-team reviewer for The 20/20 Brief topic scouts. The producer never saw your criteria. Your job is to kill weak candidates before they cost production time.\n\nINPUTS:\n- Candidate file to judge: /tmp/ringer-2020-brief-scout/scout-data-insight/data-insight-candidates.md\n- Your rubric (holdout criteria): /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/holdout-criteria-scout.md\n\nRead both files fully before judging.\n\nTASK: Run every test in the rubric against every candidate. Execute the math audit yourself. Choose the load-bearing spot checks; the wrapper will fetch those URLs and verify your claimed figures appear verbatim on the page, so quote figure text exactly as it appears in the candidate file's source list.\n\nBOUNDARY: Write only ./verdict.json and ./findings.md in your current working directory. Do not modify anything else. Do not edit the candidate file.\n\nOUTPUT CONTRACT: ./verdict.json exactly per the schema in the rubric; ./findings.md with one paragraph per candidate plus your math recomputations.\n\nHARD RULES: no invented spot checks; claimed_figure must be exact text; if you cannot verify something, that is a finding, not a guess; be willing to kill; plain language."
+    },
+    {
+      "key": "judge-obe-mashup",
+      "engine": "codex",
+      "task_type": "review",
+      "timeout_s": 1800,
+      "expect_files": ["verdict.json", "findings.md"],
+      "check": "python3 /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/check_verdict.py verdict.json",
+      "verified": "verdict.json parses with a valid verdict, and the wrapper fetched the judge's spot-check URLs and confirmed the claimed figures appear verbatim on those pages.",
+      "spec": "ROLE: You are the red-team reviewer for The 20/20 Brief topic scouts. The producer never saw your criteria. Your job is to kill weak candidates before they cost production time.\n\nINPUTS:\n- Candidate file to judge: /tmp/ringer-2020-brief-scout/scout-obe-mashup/obe-mashup-candidates.md\n- Your rubric (holdout criteria): /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/holdout-criteria-scout.md\n\nRead both files fully before judging.\n\nTASK: Run every test in the rubric against every candidate. Execute the math audit yourself. Choose the load-bearing spot checks; the wrapper will fetch those URLs and verify your claimed figures appear verbatim on the page, so quote figure text exactly as it appears in the candidate file's source list.\n\nBOUNDARY: Write only ./verdict.json and ./findings.md in your current working directory. Do not modify anything else. Do not edit the candidate file.\n\nOUTPUT CONTRACT: ./verdict.json exactly per the schema in the rubric; ./findings.md with one paragraph per candidate plus your math recomputations.\n\nHARD RULES: no invented spot checks; claimed_figure must be exact text; if you cannot verify something, that is a finding, not a guess; be willing to kill; plain language."
+    },
+    {
+      "key": "judge-myth-bust",
+      "engine": "codex",
+      "task_type": "review",
+      "timeout_s": 1800,
+      "expect_files": ["verdict.json", "findings.md"],
+      "check": "python3 /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/check_verdict.py verdict.json",
+      "verified": "verdict.json parses with a valid verdict, and the wrapper fetched the judge's spot-check URLs and confirmed the claimed figures appear verbatim on those pages.",
+      "spec": "ROLE: You are the red-team reviewer for The 20/20 Brief topic scouts. The producer never saw your criteria. Your job is to kill weak candidates before they cost production time.\n\nINPUTS:\n- Candidate file to judge: /tmp/ringer-2020-brief-scout/scout-myth-bust/myth-bust-candidates.md\n- Your rubric (holdout criteria): /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/holdout-criteria-scout.md\n\nRead both files fully before judging.\n\nTASK: Run every test in the rubric against every candidate. Execute the math audit yourself. Choose the load-bearing spot checks; the wrapper will fetch those URLs and verify your claimed figures appear verbatim on the page, so quote figure text exactly as it appears in the candidate file's source list.\n\nBOUNDARY: Write only ./verdict.json and ./findings.md in your current working directory. Do not modify anything else. Do not edit the candidate file.\n\nOUTPUT CONTRACT: ./verdict.json exactly per the schema in the rubric; ./findings.md with one paragraph per candidate plus your math recomputations.\n\nHARD RULES: no invented spot checks; claimed_figure must be exact text; if you cannot verify something, that is a finding, not a guess; be willing to kill; plain language."
+    },
+    {
+      "key": "judge-finance-od",
+      "engine": "codex",
+      "task_type": "review",
+      "timeout_s": 1800,
+      "expect_files": ["verdict.json", "findings.md"],
+      "check": "python3 /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/check_verdict.py verdict.json",
+      "verified": "verdict.json parses with a valid verdict, and the wrapper fetched the judge's spot-check URLs and confirmed the claimed figures appear verbatim on those pages.",
+      "spec": "ROLE: You are the red-team reviewer for The 20/20 Brief topic scouts. The producer never saw your criteria. Your job is to kill weak candidates before they cost production time.\n\nINPUTS:\n- Candidate file to judge: /tmp/ringer-2020-brief-scout/scout-finance-od/finance-od-candidates.md\n- Your rubric (holdout criteria): /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/holdout-criteria-scout.md\n\nRead both files fully before judging.\n\nTASK: Run every test in the rubric against every candidate. Execute the math audit yourself. Choose the load-bearing spot checks; the wrapper will fetch those URLs and verify your claimed figures appear verbatim on the page, so quote figure text exactly as it appears in the candidate file's source list.\n\nBOUNDARY: Write only ./verdict.json and ./findings.md in your current working directory. Do not modify anything else. Do not edit the candidate file.\n\nOUTPUT CONTRACT: ./verdict.json exactly per the schema in the rubric; ./findings.md with one paragraph per candidate plus your math recomputations.\n\nHARD RULES: no invented spot checks; claimed_figure must be exact text; if you cannot verify something, that is a finding, not a guess; be willing to kill; plain language."
+    }
+  ]
+}

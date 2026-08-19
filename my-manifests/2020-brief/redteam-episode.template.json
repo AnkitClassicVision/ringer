@@ -1,0 +1,27 @@
+{
+  "run_name": "2020-brief-redteam-episode",
+  "workdir": "/tmp/ringer-2020-brief-redteam-ep",
+  "max_parallel": 2,
+  "tasks": [
+    {
+      "key": "judge-episode",
+      "engine": "codex",
+      "task_type": "review",
+      "timeout_s": 1800,
+      "expect_files": ["verdict.json", "findings.md"],
+      "check": "python3 /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/check_verdict.py verdict.json",
+      "verified": "verdict.json parses with a valid verdict, and the wrapper fetched the judge's spot-check URLs and confirmed the claimed figures appear verbatim on those pages.",
+      "spec": "ROLE: You are the red-team reviewer for a staged episode of The 20/20 Brief. Your job is to catch what a structure-checker cannot: bad math, unsourced claims, trade-press voice, weak teasers.\n\nINPUTS (read all fully before judging):\n- {{EPISODE_DIR}}/article.md\n- {{EPISODE_DIR}}/research.md\n- {{EPISODE_DIR}}/teaser-pack.md\n- {{EPISODE_DIR}}/images/cards.txt\n- The producer voice standard (judge against it rule by rule): /mnt/d_drive/repos/icargrow/content/20-20-brief/voice/voice-pack.md\n- Your rubric (holdout criteria): /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/holdout-criteria-episode.md\n\nTASK: Run every test in the rubric. For the voice-pack test, render a per-rule-family verdict (hard bans / cadence / register / claims / structure), each pass or fail with quoted evidence, one quote per failure. Execute the math audit yourself and show recomputations in findings.md. Quote problem sentences verbatim. Choose load-bearing spot checks (url + exact figure text from the cited source); the wrapper will fetch those URLs and verify the figures appear verbatim on the page.\n\nBOUNDARY: Write only ./verdict.json and ./findings.md in your current working directory. Do not modify anything else. Do not edit the episode files.\n\nOUTPUT CONTRACT: ./verdict.json exactly per the schema in the rubric; ./findings.md with recomputations, quoted problem sentences, the per-rule voice verdicts, and reasoning per test.\n\nHARD RULES: no invented spot checks; claimed_figure must be exact text as shown on the cited page; if you cannot verify something, that is a finding, not a guess; be willing to fail the episode; plain language."
+    },
+    {
+      "key": "owner-forward-test",
+      "engine": "grok",
+      "task_type": "review",
+      "timeout_s": 1800,
+      "expect_files": ["report.md", "findings.json"],
+      "check": "python3 /mnt/d_drive/repos/ringer/my-manifests/2020-brief/checks/check_owner_forward.py findings.json",
+      "verified": "report.md answers the forward question and all five structural checks with quoted evidence; findings.json parses.",
+      "spec": "ROLE: You are a 47-year-old optometrist who owns four locations. You are reading a staged issue of The 20/20 Brief on your phone between patients. You are not an editor. You are a busy owner.\n\nINPUTS (read fully):\n- {{EPISODE_DIR}}/article.md\n- {{EPISODE_DIR}}/teaser-pack.md\n\nTHE ONE QUESTION: Would you forward this to another owner? Answer yes or no, first line of report.md, then say exactly where you stopped reading or what made you send it.\n\nFIVE STRUCTURAL CHECKS (answer each with quoted evidence from the text):\n1. Second telling: is any story, stat, or myth-bust told twice in the article, or repeated across channels? Quote both tellings.\n2. Detour: does any block leave your world (academic clinics, VA systems, hospital systems, generic US healthcare) without the difference labeled in the same sentence?\n3. Vendor-math feel: does any extrapolation, inflation adjustment, or unnumbered lifetime-value claim read like the pitch the piece is busting?\n4. Talks down: does any sentence explain your own world to you, or translate its own joke?\n5. Share killer: does any teaser stack two asks, bolt on a webinar PS, or show pipeline machinery that would stop you from forwarding?\n\nALSO: List every passage that already sounds like a real operator (quote verbatim). These are keepers. Then write the 100-word version you WOULD forward.\n\nSCORES in findings.json: ai_tell_density_per_1000w, human_read_score_1_5, taste_compliance_pct, would_forward (true/false), per-check pass/fail.\n\nBOUNDARY: Write only ./report.md and ./findings.json in your current working directory. Do not edit the episode files. Plain language. Quote, never paraphrase, when you flag a sentence."
+    }
+  ]
+}
