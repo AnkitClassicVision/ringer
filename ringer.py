@@ -7595,6 +7595,7 @@ def build_worker_command(
 
 ENGINE_INSTALL_HINTS = {
     "codex": "install it with `npm install -g @openai/codex` (or `brew install --cask codex`), then run `codex login`",
+    "kimi": "install Kimi Code CLI, then run `kimi login` (device-code OAuth)",
     "opencode": "install it with `curl -fsSL https://opencode.ai/install | bash`, then run `opencode auth login`",
 }
 
@@ -7651,6 +7652,11 @@ def restricted_model_family(model: str) -> str | None:
         for segment in segments
     ):
         return "google"
+    if "moonshot" in segments or "moonshotai" in segments or any(
+        re.fullmatch(r"(?:kimi|k3)(?:[.-].*)?", segment)
+        for segment in segments
+    ):
+        return "kimi"
     return None
 
 
@@ -7671,8 +7677,8 @@ def validate_auth_first_model_route(
     trusted_wrapper = (
         engine_path.parent == trusted_dir
         and engine_path.name in {
-            "codex-oauth.sh", "claude-oauth.sh", "gemini-oauth.sh", "opencode-auth-policy.sh",
-            "pi-openrouter-ringer.sh",
+            "codex-oauth.sh", "claude-oauth.sh", "gemini-oauth.sh", "kimi-oauth.sh",
+            "opencode-auth-policy.sh", "pi-openrouter-ringer.sh",
         }
     )
     takes_model = engine_uses_model_placeholder(engine)
@@ -7741,6 +7747,7 @@ def validate_auth_first_model_route(
         "anthropic": "claude-oauth.sh",
         "openai": "codex-oauth.sh",
         "google": "gemini-oauth.sh",
+        "kimi": "kimi-oauth.sh",
     }
     candidates: list[str] = []
     for candidate in (
@@ -7793,7 +7800,8 @@ def validate_auth_first_model_route(
                 f"the trusted engines/{wrapper} wrapper"
             )
     if enforce_generic_controls and not trusted_wrapper and engine_path.name.lower() in {
-        "opencode", "opencode.exe", "claude", "claude.exe", "codex", "codex.exe"
+        "opencode", "opencode.exe", "claude", "claude.exe", "codex", "codex.exe",
+        "kimi", "kimi.exe", "kimi-code", "kimi-code.exe"
     }:
         raise ValueError(
             f"task {task.key}: direct model harness {engine_path.name!r} requires its trusted auth-policy wrapper"
@@ -7808,8 +7816,8 @@ def validate_manifest_engines(manifest: Manifest, config: AppConfig) -> None:
     auth_routing_enabled = any(
         Path(candidate.bin).expanduser().resolve().parent == trusted_dir
         and Path(candidate.bin).name in {
-            "codex-oauth.sh", "claude-oauth.sh", "gemini-oauth.sh", "opencode-auth-policy.sh",
-            "pi-openrouter-ringer.sh",
+            "codex-oauth.sh", "claude-oauth.sh", "gemini-oauth.sh", "kimi-oauth.sh",
+            "opencode-auth-policy.sh", "pi-openrouter-ringer.sh",
         }
         for candidate in config.engines.values()
     )
