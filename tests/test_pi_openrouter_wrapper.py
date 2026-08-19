@@ -48,8 +48,8 @@ const authReadBlocked = blocked(() => fs.readFileSync(path.join(agent, "auth.jso
 const procEnvironReadBlocked = blocked(() => fs.readFileSync("/proc/self/environ"));
 const procCmdlineReadBlocked = blocked(() => fs.readFileSync("/proc/self/cmdline"));
 const agentWriteBlocked = blocked(() => fs.writeFileSync(path.join(agent, "created-by-pi"), "escape"));
-const agentEditBlocked = blocked(() => fs.writeFileSync(path.join(agent, "models-store.json"), "escape"));
-const modelsStore = JSON.parse(fs.readFileSync(path.join(agent, "models-store.json"), "utf8"));
+const agentEditBlocked = blocked(() => fs.writeFileSync(path.join(agent, "models.json"), "escape"));
+const modelsConfig = JSON.parse(fs.readFileSync(path.join(agent, "models.json"), "utf8"));
 const envNames = ["HOME", "PATH", "PI_CODING_AGENT_DIR", "PI_OFFLINE", "PWD"];
 const safeEnvironment = Object.fromEntries(envNames.map((name) => [name, process.env[name]]));
 const ambientNames = [
@@ -61,7 +61,7 @@ fs.writeFileSync("invocation.json", JSON.stringify({
   safe_environment: safeEnvironment,
   openrouter_key_present: Boolean(process.env.OPENROUTER_API_KEY),
   ambient_variables_present: ambientNames.some((name) => name in process.env),
-  visible_agent_files: visibleAgentFiles, models_store: modelsStore,
+  visible_agent_files: visibleAgentFiles, models_config: modelsConfig,
   auth_read_blocked: authReadBlocked,
   proc_environ_read_blocked: procEnvironReadBlocked,
   proc_cmdline_read_blocked: procCmdlineReadBlocked,
@@ -110,20 +110,34 @@ else {
         *,
         provider: str = "openrouter",
         base_url: str = OPENROUTER_ENDPOINT,
+        api: str = "openai-completions",
     ) -> dict[str, object]:
         return {
             "id": model_id,
             "name": f"Fake {model_id}",
-            "api": "openai-completions",
+            "api": api,
             "provider": provider,
             "baseUrl": base_url,
             "reasoning": True,
             "input": ["text"],
-            "cost": {"input": 1, "output": 2},
+            "cost": {
+                "input": 1,
+                "output": 2,
+                "cacheRead": 0,
+                "cacheWrite": 0,
+            },
             "contextWindow": 1000,
             "maxTokens": 100,
             "headers": {"X-Secret-Routing": "must-be-stripped"},
             "unknownRoutingField": "must-be-stripped",
+            "compat": {
+                "supportsDeveloperRole": False,
+                "thinkingFormat": "openrouter",
+                "openRouterRouting": {"only": ["attacker-controlled-route"]},
+                "vercelGatewayRouting": {"only": ["attacker-controlled-route"]},
+                "chatTemplateKwargs": {"attacker": "must-be-stripped"},
+                "sendSessionAffinityHeaders": True,
+            },
         }
 
     def write_model_cache(
@@ -132,6 +146,7 @@ else {
         *,
         provider: str = "openrouter",
         base_url: str = OPENROUTER_ENDPOINT,
+        api: str = "openai-completions",
     ) -> None:
         (self.agent_dir / "models-store.json").write_text(
             json.dumps(
@@ -139,7 +154,10 @@ else {
                     "openrouter": {
                         "models": [
                             self.model_record(
-                                model_id, provider=provider, base_url=base_url
+                                model_id,
+                                provider=provider,
+                                base_url=base_url,
+                                api=api,
                             ),
                             self.model_record("other/model"),
                         ],
@@ -217,7 +235,7 @@ else {
                 self.assertTrue(invocation["openrouter_key_present"])
                 self.assertFalse(invocation["ambient_variables_present"])
                 self.assertEqual(
-                    ["models-store.json"],
+                    ["models.json"],
                     invocation["visible_agent_files"],
                 )
                 self.assertTrue(invocation["auth_read_blocked"])
@@ -225,17 +243,33 @@ else {
                 self.assertTrue(invocation["proc_cmdline_read_blocked"])
                 self.assertTrue(invocation["agent_write_blocked"])
                 self.assertTrue(invocation["agent_edit_blocked"])
-                runtime_models = invocation["models_store"]
-                self.assertEqual(["openrouter"], list(runtime_models))
-                self.assertEqual(1, len(runtime_models["openrouter"]["models"]))
-                runtime_model = runtime_models["openrouter"]["models"][0]
+                runtime_models = invocation["models_config"]
+                self.assertEqual(["openrouter"], list(runtime_models["providers"]))
+                provider = runtime_models["providers"]["openrouter"]
+                self.assertEqual("openai-completions", provider["api"])
+                self.assertEqual(OPENROUTER_ENDPOINT, provider["baseUrl"])
+                self.assertEqual(1, len(provider["models"]))
+                self.assertNotIn("checkedAt", provider)
+                self.assertNotIn("etag", provider)
+                runtime_model = provider["models"][0]
                 self.assertEqual(
                     model.removeprefix("openrouter/"), runtime_model["id"]
                 )
-                self.assertEqual("openrouter", runtime_model["provider"])
+                self.assertNotIn("provider", runtime_model)
                 self.assertEqual(OPENROUTER_ENDPOINT, runtime_model["baseUrl"])
                 self.assertNotIn("headers", runtime_model)
                 self.assertNotIn("unknownRoutingField", runtime_model)
+                self.assertEqual(
+                    {
+                        "supportsDeveloperRole": False,
+                        "thinkingFormat": "openrouter",
+                    },
+                    runtime_model["compat"],
+                )
+                self.assertNotIn("openRouterRouting", runtime_model["compat"])
+                self.assertNotIn("vercelGatewayRouting", runtime_model["compat"])
+                self.assertNotIn("chatTemplateKwargs", runtime_model["compat"])
+                self.assertNotIn("sendSessionAffinityHeaders", runtime_model["compat"])
                 self.assertTrue(invocation["read_blocked"])
                 self.assertTrue(invocation["write_blocked"])
                 self.assertTrue(invocation["edit_blocked"])
@@ -296,8 +330,8 @@ else {
         result = self.run_wrapper(DEFAULT_MODEL)
         self.assertEqual(0, result.returncode, result.stderr)
         invocation = json.loads((self.taskdir / "invocation.json").read_text())
-        self.assertNotIn("models.json", invocation["visible_agent_files"])
-        model = invocation["models_store"]["openrouter"]["models"][0]
+        self.assertEqual(["models.json"], invocation["visible_agent_files"])
+        model = invocation["models_config"]["providers"]["openrouter"]["models"][0]
         self.assertEqual(OPENROUTER_ENDPOINT, model["baseUrl"])
         self.assertNotIn("attacker.invalid", json.dumps(invocation))
 
@@ -308,6 +342,7 @@ else {
             ("wrong-provider", None, "other", OPENROUTER_ENDPOINT),
             ("wrong-id", None, "openrouter", OPENROUTER_ENDPOINT),
             ("wrong-base-url", None, "openrouter", "https://proxy.invalid/v1"),
+            ("wrong-api", None, "openrouter", OPENROUTER_ENDPOINT),
         )
         for name, raw, provider, base_url in cases:
             with self.subTest(name=name):
@@ -324,6 +359,11 @@ else {
                         provider=provider or "openrouter",
                         base_url=base_url or OPENROUTER_ENDPOINT,
                     )
+                elif name == "wrong-api":
+                    self.write_model_cache(
+                        "x-ai/grok-4.5",
+                        api="openai-responses",
+                    )
                 else:
                     self.write_model_cache(
                         "x-ai/grok-4.5",
@@ -338,6 +378,66 @@ else {
                 self.assertEqual([], list(self.root.glob("pi-openrouter-agent.*")))
                 self.assertEqual([], list(self.root.glob("pi-openrouter-ringer.*")))
                 self.write_model_cache("x-ai/grok-4.5")
+
+    def test_rejects_malformed_retained_model_fields_before_invocation(self) -> None:
+        cases = (
+            ("name-type", ("name",), 1, False),
+            ("reasoning-type", ("reasoning",), "true", False),
+            ("input-modality", ("input",), ["text", "audio"], False),
+            ("input-duplicate", ("input",), ["text", "text"], False),
+            ("cost-type", ("cost", "input"), "1", False),
+            ("cost-missing", ("cost", "cacheRead"), None, True),
+            ("context-bool", ("contextWindow",), True, False),
+            ("max-zero", ("maxTokens",), 0, False),
+            ("max-over-context", ("maxTokens",), 1001, False),
+            ("compat-not-object", ("compat",), [], False),
+            (
+                "compat-bool-type",
+                ("compat", "supportsDeveloperRole"),
+                "false",
+                False,
+            ),
+            (
+                "compat-max-field",
+                ("compat", "maxTokensField"),
+                "attacker_field",
+                False,
+            ),
+            (
+                "compat-thinking-format",
+                ("compat", "thinkingFormat"),
+                "attacker_format",
+                False,
+            ),
+            (
+                "compat-cache-control",
+                ("compat", "cacheControlFormat"),
+                "attacker_format",
+                False,
+            ),
+        )
+        for name, path, value, delete in cases:
+            with self.subTest(name=name):
+                invocation = self.taskdir / "invocation.json"
+                invocation.unlink(missing_ok=True)
+                self.write_model_cache("x-ai/grok-4.5")
+                cache_path = self.agent_dir / "models-store.json"
+                cache = json.loads(cache_path.read_text(encoding="utf-8"))
+                parent = cache["openrouter"]["models"][0]
+                for key in path[:-1]:
+                    parent = parent[key]
+                if delete:
+                    del parent[path[-1]]
+                else:
+                    parent[path[-1]] = value
+                cache_path.write_text(json.dumps(cache), encoding="utf-8")
+                result = self.run_wrapper(DEFAULT_MODEL)
+                self.assertNotEqual(0, result.returncode)
+                self.assertIn("cache is missing or malformed", result.stderr)
+                self.assertFalse(invocation.exists())
+                self.assertEqual([], list(self.root.glob("pi-openrouter-agent.*")))
+                self.assertEqual([], list(self.root.glob("pi-openrouter-ringer.*")))
+
 
     def test_rejects_symlink_and_unsafe_root_taskdirs(self) -> None:
         link = self.root / "task-link"

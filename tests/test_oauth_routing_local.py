@@ -287,6 +287,8 @@ class AuthFirstRoutingLocalTests(unittest.TestCase):
             ("openai/gpt-5.6", "restricted openai"),
             ("anthropic/claude-sonnet-5", "restricted anthropic"),
             ("google/gemini-3.6-flash", "restricted google"),
+            ("kimi-code/k3", "restricted kimi"),
+            ("moonshotai/kimi-k3", "restricted kimi"),
             ("zai-coding-plan/glm-5.2", "restricted glm"),
         ):
             with self.subTest(model=model):
@@ -303,8 +305,42 @@ class AuthFirstRoutingLocalTests(unittest.TestCase):
         self.assertEqual("glm", ringer.restricted_model_family("glm"))
         self.assertEqual("glm", ringer.restricted_model_family("ollama/GLM"))
         self.assertEqual("google", ringer.restricted_model_family("gemini-2.5-pro"))
+        self.assertEqual("kimi", ringer.restricted_model_family("kimi-code/k3"))
+        self.assertEqual("kimi", ringer.restricted_model_family("kimi-k3"))
+        self.assertEqual("kimi", ringer.restricted_model_family("moonshotai/kimi-k3"))
+        self.assertEqual("kimi", ringer.restricted_model_family("k3-256k"))
         self.assertIsNone(ringer.restricted_model_family("example/octopus-1"))
         self.assertIsNone(ringer.restricted_model_family("example/sonneteer"))
+        self.assertIsNone(ringer.restricted_model_family("example/k3s-inference"))
+
+    def test_kimi_oauth_wrapper_satisfies_kimi_family(self) -> None:
+        kimi = ringer.EngineConfig(
+            name="kimi",
+            bin=str(ENGINES / "kimi-oauth.sh"),
+            model_default="kimi-code/k3",
+            args_template=("-m", "{model}", "{engine_args}", "-p", "{spec}"),
+            sandbox_args=(),
+            full_access_args=(),
+            token_regex=None,
+            auth_routing_trusted=True,
+        )
+        config = SimpleNamespace(engines={"kimi": kimi})
+        ringer.validate_manifest_engines(self.manifest("kimi", "kimi-code/k3"), config)
+        ringer.validate_manifest_engines(self.manifest("kimi"), config)
+
+    def test_kimi_openrouter_backup_stays_on_pi_wrapper(self) -> None:
+        kimi_api = ringer.EngineConfig(
+            name="kimi-api",
+            bin=str(ENGINES / "pi-openrouter-ringer.sh"),
+            model_default="openrouter/moonshotai/kimi-k3",
+            args_template=("{taskdir}", "{model}", "{spec}"),
+            sandbox_args=(),
+            full_access_args=(),
+            token_regex=None,
+            auth_routing_trusted=True,
+        )
+        config = SimpleNamespace(engines={"kimi-api": kimi_api})
+        ringer.validate_manifest_engines(self.manifest("kimi-api"), config)
 
 
 if __name__ == "__main__":

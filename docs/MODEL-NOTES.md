@@ -7,6 +7,12 @@ to print the per-model, per-task_type scoreboard (tasks, attempts,
 pass_rate, first_try_pass_rate, median duration/tokens, last_seen). This
 file remains the judgment layer on top of those numbers.
 
+## qwen3.8:27b via pi-ollama-d (local Ollama 11435)
+
+- 2026-08-16 — probe, first-try PASS in 23.3s. Pi wrapper wrote `lane_probe.py` (`print("LOCAL_LANE_OK")`); executed check printed `LOCAL_LANE_OK`. Tokens uncounted. Earlier same-day Ollama generate on the 3090 returned exact `QWEN38_OK` at 100% GPU / ~21 GiB VRAM. One plumbing sample only; do not promote to default.
+- 2026-08-16 — promotion pack via pi-ollama-d, 4/4 first-try PASS (correct-stop 29.7s, ugly exact-source 12.7s, route-normalizer 33.5s, docs brief 21.1s). Spot-checked artifacts: stop_probe.py prints STOP_OK with no extra files; ugly_probe.py bytes are exact; normalize_route.py passes all eight cases; brief.md has Goal/Evidence/Next and QWEN38_DOCS. Scoreboard now: proven for probe (3/3 first-try); probation for code-feature (1/1) and docs (1/1). Not a default. Next evidence: bakeoff vs gemma4:31b; two more code-feature and docs tasks before those types can go proven.
+- 2026-08-16 — bakeoff route-normalizer, same spec/check, Pi only. qwen3.8:27b PASS 82.0s; gemma4:31b PASS 107.9s. Both artifacts re-ran the eight-case checker. Times are not a clean latency contest: one GPU, models swapped. code-feature now probation 2/2 first-try for qwen3.8:27b. Still not default. One more distinct code-feature needed for proven.
+
 **How to add a row:** after reviewing a run (post-run ritual step 5 in the
 ringer skill), append one dated line under the model. Say the task type,
 what happened, and what you'd do differently. Only write what the executed
@@ -640,6 +646,13 @@ checks and raw logs support — no vibes, no worker self-reports.
 
 ## gpt-5.6-sol (Codex CLI)
 
+- 2026-08-16 - idoc/odof landing mockups (task_type=site-build, 2 parallel
+  worktrees): PASS on attempt 2 both lanes. Attempt 1 failed a source-window
+  phone-digit check and a shared read-only `node_modules/.vite` cache
+  (EROFS). Retry patched the contract markers and used an isolated writable
+  Vite cache. Good on branded Astro landings when the check prints WHY and
+  the worktree does not share a read-only Vite cache with another tree.
+
 - 2026-08-08 - podcast standing-FYI lifecycle (task_type=code-fix): repeated
   bounded passes landed clean first-attempt patches and executed external,
   focused, and canonical checks. Fresh reviewers still found defects between
@@ -948,6 +961,20 @@ checks and raw logs support — no vibes, no worker self-reports.
   shallow engagement with the actual code, 212k tokens burned. Don't re-run
   this audition on long structured code review; if it gets another slot,
   try a shorter, more mechanical task first.
+
+## nemotron-3.5-lightning (via pi-openrouter, `openrouter/nvidia/nemotron-3.5-lightning:free`)
+
+- 2026-08-14 — AUDITION PASS, first try, $0 (free lane). Task: short
+  mechanical probe, write and self-run a stdlib Python script printing the
+  first 20 Fibonacci numbers. Passed the executed checker on attempt 1 with
+  no hardcoding (checker verified against known-good and known-bad fixtures
+  before the run). Receipt: 45,750 total tokens, 520.6 s elapsed, cost
+  $0.00, run nemotron-lightning-audition-20260814T121533Z-p1553335. Notes:
+  slow for the task size (free-lane queueing likely) and token-heavy for a
+  one-file script (visible thinking blocks in the trace). Verdict:
+  probation for short mechanical probe work with a strong executed check;
+  do not scale to batches until a second probe confirms latency is
+  acceptable. Watch retry counts before anything multi-turn.
 
 ## llama-3.3-70b-instruct (via opencode, `openrouter/meta-llama/llama-3.3-70b-instruct:free`)
 
@@ -1492,3 +1519,28 @@ land — audition it again only where a mid-run death costs nothing.
 
 ## kimi-code/k3 via kimi OAuth (`engine: kimi`, `engines/kimi-oauth.sh`)
 - 2026-08-13 (run kimi-oauth-lane-proof, probe) — new OAuth-primary lane: K3 through the Kimi Code CLI `kimi login` credential, PASS attempt 1 (21s) on a one-file smoke with executed grep check. Wrapper fails closed on OpenRouter selectors and API-key env overrides; `kimi-api` (pi-openrouter, `openrouter/moonshotai/kimi-k3`) is the explicit backup lane, never automatic. Note: `kimi -p` headless runs tools without `--yolo`/`--auto` (both flags are rejected in prompt mode). Needs a real batch before any routing promotion; one smoke proves the lane, not the model.
+
+## 2026-08-13 shorten-the-edit (research, 4-lane adversarial analysis)
+- kimi (kimi-code/k3): research, 1-try PASS, 663s. Read a 15-file code+ledger packet and produced a line-level grounded critical-path analysis; 5 novel findings all survived coordinator code verification. Promote confidence for evidence-heavy research on OAuth lane (filesystem access is the differentiator vs confined lanes).
+- x-ai/grok-4.5 (xai/Pi bwrap): 1-try PASS but packet-blind (bwrap mounts task dir only; packet was at workdir root — ORCHESTRATOR STAGING ERROR, not model failure). Refused to fabricate; enumerated its ENOENT probes. Honest under missing evidence.
+- codex: PASS on attempt 2; sandbox likewise couldn't see workdir-root packet; hedged all quantitative claims as unknown. Honest.
+- z-ai/glm-5.2 (Pi bwrap): 1-try PASS, packet-blind, tagged every claim [BRIEF]/[ARITH]/[INDUSTRY]. Honest.
+- LESSON (orchestrator): confined lanes (Pi bwrap, codex sandbox) see ONLY their task dir. Stage shared source packets INSIDE each task dir, not at workdir root. A citation-requiring check can be passed honestly by disclosure — verify grounding by reading, not by check exit code.
+
+- 2026-08-13 (cvc-recall-app, code-feature/code-fix x6 rounds): Codex CLI default (unpinned) carried a full greenfield Next.js+Prisma+Auth.js app build across 6 serial manifests — scaffold, import/sweep, caller UI port, durable store + docker seam, SSO, two targeted fixes — 6/6 PASS, 5 first-try, ~850k tokens total. Two lessons. (1) The one retry was my contract's fault, not the model's: I locked package.json while requiring a new npm script in the check; the retry prompt named the conflict and the worker fixed it minimally. Lock fewer files or whitelist script entries when the check needs a new command. (2) Both real defects of the day were invisible to green checks and found only by browser-driving the built app: a validation-by-mutating-verb bug (recheck via serveNextPatient — specs must name the read-only primitive) and a release-redraw no-op (queue semantics gap in the spec itself). Executed checks prove the code does what the spec says; only driving the UI proves the spec said the right thing.
+
+## dots-studio/dots-3-note-preview:free (pi-openrouter)
+
+- 2026-08-15 — HARNESS_FAIL, not a model result. Catalog digest asked for one short mechanical probe. OpenRouter snapshot has `dots-studio/dots-3-note-preview:free` at $0 / 512k / text+image->text. Official `pi update --models` failed closed on a Kimi 403. An OpenRouter-only Pi refresh then completed with 0 errors and 346 cached OpenRouter models, but the exact id was still absent from `models-store.json` and from the bundled pi-ai catalog. Trusted wrapper exited rc=64 twice in 0.3s with "exact OpenRouter model cache is missing or malformed"; 0 tokens, no artifact, $0. Run `dots-3-note-preview-audition-20260815T130832Z-p428283`. Do not demote the model. Do not inject a handmade cache record. Replay the same frozen probe only after the exact id is present in the Pi OpenRouter cache.
+- 2026-08-15 retry — same HARNESS_FAIL after a forced OpenRouter-only Pi refresh. Overlay etag unchanged (`W/"9e43f66edcc5bd1fb4f7f6cbcc972447"`), lastModified stayed 2026-08-14T12:32:13Z, exact id still absent. Second run `dots-3-note-preview-audition-20260815T131609Z-p445782` exited rc=64 twice in 0.3s, 0 tokens, $0. Still not a model demotion.
+
+- 2026-08-17 (cvc-recall-app, recall-sync-never-again, code-review panel + code-fix guards): (1) REPEATED the 2026-08-13 staging mistake — pointed pi-openrouter (glm-5.2) and xai (grok-4.5) reviewers at absolute /mnt paths; both honest-BLOCKed on ENOENT, one wasted round. The lesson was already in these notes; read MODEL-NOTES before designing a run, not after it fails. (2) Re-run with material staged in-taskdir: grok-4.5 delivered the round-winning review — caught a real P0 the Fable coordinator and Codex both missed (runtime image lacked src/, sweep would die module-not-found post-fix), 2 attempts. glm-5.2 wrote a substantive REVISE (hang-guard finding was real and shipped) but failed the review-swarm 1200-word/file:line contract twice — treat its lane as advisory unless the contract is loosened. Codex review: solid REVISE, confirmed root cause, 1-try. (3) gpt-5.6-sol workers 4/4 good products (regression test with honest RED canary proof, Dockerfile edits, clean HCL, exact script edits); ALL recorded fails were an orchestrator checker defect — gitignore "node_modules/" does not match a node_modules SYMLINK, so the ownership gate flagged the sanctioned symlink. Allow harness-owned and spec-sanctioned untracked paths explicitly.
+
+- 2026-08-17 (recall-gauge-numbers, research x2): codex 1-try PASS, 37 unique file:line citations, all 3 spot-checked citations verbatim-correct — strong default for repo-grounded data-path tracing. kimi OAuth lane: HARNESS_FAIL not model — 403 billing-cycle quota exhausted on both attempts, 0 output; do not demote; check kimi quota before assigning until cycle resets.
+
+- 2026-08-18 (fable-chief, reactivation-center): codex lanes with writable_roots on a repo + specs saying "run from repo root" write ./notes.md into the REPO, not the task dir; expect_files then fails a green product and burns a retry (3 occurrences: parity-fix, workflow-edits, engine-lambda; one overwrote a tracked repo notes.md). Fix: specs must name the ABSOLUTE task-dir path for notes.md, or drop it from expect_files and let the check gate.
+
+## z-ai/glm-5.2:free (pi-openrouter)
+
+- 2026-08-19 — PROVIDER_RATE_LIMIT, not a model-quality result. Catalog digest asked for one short mechanical probe. OpenRouter lists `z-ai/glm-5.2:free` at $0 / 256k. Official `pi update --models` failed closed on a Kimi 400. OpenRouter-only Pi refresh found the exact id already present with a valid wrapper-shaped record. Run `glm-5-2-free-audition-20260819T121926Z-p2407688` reached OpenRouter, then Decart returned upstream 429 on the shared pool (retry-after 5s). Ringer 2 attempts, 0 tokens, no artifact, $0. Do not promote. Do not demote the model. Replay the same frozen probe later if the shared pool is no longer 429.
+
