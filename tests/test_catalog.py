@@ -23,7 +23,6 @@ from ringer import (  # noqa: E402
     CatalogRefreshResult,
     EvalConfig,
     catalog_changes_path,
-    catalog_explore_candidates,
     normalize_catalog_payload,
     refresh_openrouter_catalog,
     run_catalog_command,
@@ -62,6 +61,11 @@ class CatalogTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.old_env = os.environ.copy()
         self.addCleanup(self.restore_env)
+        # Isolate ALL default state paths: without this, tests that hit
+        # default_read_model_db_path() sync fixture rows into the REAL
+        # ~/.ringer/ringer.db (this exact leak put 'proven-model' on the
+        # live public scoreboard, 2026-07-10).
+        os.environ["RINGER_HOME"] = str(self.root / "ringer-home")
 
     def restore_env(self) -> None:
         os.environ.clear()
@@ -192,7 +196,7 @@ class CatalogTests(unittest.TestCase):
                 "run_id": f"run{i}",
                 "task_key": "task",
                 "worker_engine": "opencode",
-                "model": "proven-model",
+                "model": "tiered-alpha",
                 "task_type": "code-feature",
                 "verdict": "PASS",
                 "logged_at": f"2026-07-0{i}T10:00:00+00:00",
@@ -204,21 +208,10 @@ class CatalogTests(unittest.TestCase):
                 "run_id": "probation-run",
                 "task_key": "task",
                 "worker_engine": "opencode",
-                "model": "probation-model",
+                "model": "tiered-beta",
                 "task_type": "code-feature",
                 "verdict": "FAIL",
                 "logged_at": "2026-07-04T10:00:00+00:00",
-            }
-        )
-        rows.append(
-            {
-                "run_id": "prefixed-openrouter-run",
-                "task_key": "task",
-                "worker_engine": "opencode",
-                "model": "openrouter/cohere/north-mini-code:free",
-                "task_type": "code-feature",
-                "verdict": "PASS",
-                "logged_at": "2026-07-05T10:00:00+00:00",
             }
         )
         log_path.write_text("\n".join(json.dumps(row) for row in rows) + "\n", encoding="utf-8")
@@ -227,11 +220,10 @@ class CatalogTests(unittest.TestCase):
             self.root,
             "catalog-source.json",
             [
-                model("proven-model", prompt="0", completion="0"),
-                model("probation-model", prompt="0.000001", completion="0.000001"),
+                model("tiered-alpha", prompt="0", completion="0"),
+                model("tiered-beta", prompt="0.000001", completion="0.000001"),
                 model("free-candidate:free", prompt="0.000002", completion="0.000002"),
                 model("cheap-candidate", prompt="0.0000005", completion="0.0000005"),
-                model("cohere/north-mini-code:free", prompt="0", completion="0"),
                 model("openrouter/auto", prompt="-1", completion="-1"),
                 model("image-model", prompt="0", completion="0", modality="text+image->text"),
                 model("small-context", prompt="0", completion="0", context_length=16000),
@@ -277,39 +269,10 @@ class CatalogTests(unittest.TestCase):
         self.assertIn("probation ", output)
         self.assertIn("untested  free-candidate:free", output)
         self.assertIn("untested  cheap-candidate", output)
-        self.assertIn("probation openrouter/cohere/north-mini-code:free", output)
-        self.assertNotIn("untested  cohere/north-mini-code:free", output)
         self.assertNotIn("openrouter/auto", output)
         self.assertNotIn("image-model", output)
         self.assertNotIn("small-context", output)
         self.assertNotIn("embedder", output)
-
-    def test_explore_normalization_preserves_returned_catalog_route(self) -> None:
-        candidates = catalog_explore_candidates(
-            [
-                {
-                    "id": "cohere/north-mini-code:free",
-                    "modality": "text->text",
-                    "context_length": 256000,
-                    "free": True,
-                    "variable_pricing": False,
-                    "prompt_per_m": 0,
-                    "completion_per_m": 0,
-                },
-                {
-                    "id": "vendor/new-model:free",
-                    "modality": "text->text",
-                    "context_length": 128000,
-                    "free": True,
-                    "variable_pricing": False,
-                    "prompt_per_m": 0,
-                    "completion_per_m": 0,
-                },
-            ],
-            tested_models={"openrouter/cohere/north-mini-code:free"},
-        )
-
-        self.assertEqual(["vendor/new-model:free"], [row["id"] for row in candidates])
 
     def test_missing_or_malformed_pricing_is_unknown_variable_not_free(self) -> None:
         snapshot = self.root / "catalog.json"

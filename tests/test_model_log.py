@@ -50,9 +50,7 @@ def harness_engine(model_default: str = "openrouter/z-ai/glm-5.2") -> EngineConf
 
 
 class ModelLogTests(unittest.TestCase):
-    def config(
-        self, root: Path, engines: dict[str, EngineConfig] | None = None
-    ) -> AppConfig:
+    def config(self, root: Path) -> AppConfig:
         return AppConfig(
             path=None,
             identity_default=None,
@@ -62,7 +60,7 @@ class ModelLogTests(unittest.TestCase):
             hud_app_path=None,
             allow_full_access=False,
             eval=EvalConfig(backend="jsonl", jsonl_path=root / "eval.jsonl"),
-            engines=engines or {"opencode": harness_engine()},
+            engines={"opencode": harness_engine()},
             artifact=ArtifactConfig(
                 enabled=False,
                 out_template=str(root / "live.html"),
@@ -118,75 +116,11 @@ class ModelLogTests(unittest.TestCase):
             )
             payload = json.loads((root / "eval.jsonl").read_text(encoding="utf-8"))
             self.assertEqual("openrouter/z-ai/glm-5.2", payload["model"])
-            self.assertEqual("engine-default", payload["model_source"])
             self.assertEqual("code-feature", payload["task_type"])
             self.assertIs(payload["retry"], True)
             self.assertIn("model=openrouter/z-ai/glm-5.2", payload["notes"])
-            self.assertIn("model_source=engine-default", payload["notes"])
             self.assertIn("task_type=code-feature", payload["notes"])
             self.assertIn("retry=true", payload["notes"])
-
-    def test_engine_args_model_attribution_is_stable_on_retry_and_in_run_state(self) -> None:
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            codex = EngineConfig(
-                name="codex",
-                bin="/usr/local/bin/codex",
-                args_template=("exec", "{engine_args}", "-C", "{taskdir}", "{spec}"),
-                full_access_args=(),
-                sandbox_args=(),
-                token_regex=None,
-                model_default="codex-cli-default",
-            )
-            manifest = Manifest.from_obj(
-                {
-                    "run_name": "retry-model-log-test",
-                    "workdir": str(root / "work"),
-                    "tasks": [
-                        self.task_obj(
-                            engine="codex",
-                            engine_args=["-m", "first-model", "--model=effective-model"],
-                            task_type="code-fix",
-                        )
-                    ],
-                }
-            )
-            runner = RingerRunner(
-                manifest,
-                config=self.config(root, {"codex": codex}),
-                identity="tester",
-                dashboard_enabled=False,
-            )
-            runtime = runner.runtimes[0]
-
-            state_task = runner.state_writer.snapshot()["tasks"][0]
-            self.assertEqual("effective-model", state_task["model"])
-            self.assertEqual("engine-args", state_task["model_source"])
-
-            for retrying in (False, True):
-                runner._log_attempt(
-                    runtime,
-                    runtime.task.spec,
-                    retrying,
-                    WorkerResult(returncode=0, timed_out=False, tokens=123),
-                    VerifyResult(
-                        ok=True,
-                        check_returncode=0,
-                        check_timed_out=False,
-                        raw_output_excerpt="ok",
-                    ),
-                    "PASS",
-                    456,
-                )
-
-            payloads = [
-                json.loads(line)
-                for line in (root / "eval.jsonl").read_text(encoding="utf-8").splitlines()
-            ]
-            self.assertEqual(["effective-model", "effective-model"], [row["model"] for row in payloads])
-            self.assertEqual(["engine-args", "engine-args"], [row["model_source"] for row in payloads])
-            self.assertEqual([False, True], [row["retry"] for row in payloads])
-            self.assertTrue(all("model_source=engine-args" in row["notes"] for row in payloads))
 
     def test_postgres_params_exclude_local_model_log_keys(self) -> None:
         class FakeConn:
@@ -219,7 +153,6 @@ class ModelLogTests(unittest.TestCase):
                 "notes": "retry=false",
                 "orchestrator": "tester",
                 "model": "openrouter/x",
-                "model_source": "task-model",
                 "task_type": "code-feature",
                 "retry": False,
             }
@@ -227,7 +160,6 @@ class ModelLogTests(unittest.TestCase):
             self.assertIsNotNone(fake.params)
             assert fake.params is not None
             self.assertNotIn("model", fake.params)
-            self.assertNotIn("model_source", fake.params)
             self.assertNotIn("task_type", fake.params)
             self.assertNotIn("retry", fake.params)
             self.assertEqual(

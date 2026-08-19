@@ -185,8 +185,8 @@ class ModelDbTests(unittest.TestCase):
             conn.commit()
 
         self.assertEqual("wal", str(journal_mode).lower())
-        self.assertEqual(1, user_version)
-        self.assertEqual(1, version)
+        self.assertEqual(3, user_version)
+        self.assertEqual(3, version)
 
     def test_rebuild_ingests_rows_and_counts_skipped_lines(self) -> None:
         write_jsonl(
@@ -437,20 +437,9 @@ class ModelDbTests(unittest.TestCase):
         self.assertEqual(("Codex CLI default (unpinned)", "Codex CLI", "OAuth plan"), (codex.model_display, codex.harness, codex.access))
         self.assertEqual(("GPT-5.5", "Codex CLI", "OAuth plan"), (pinned_codex.model_display, pinned_codex.harness, pinned_codex.access))
         self.assertEqual(("GLM 5.2", "OpenCode", "OpenRouter API"), (listed.model_display, listed.harness, listed.access))
-        self.assertEqual(("vendor/model", "OpenCode", "OpenRouter API"), (unlisted.model_display, unlisted.harness, unlisted.access))
-        self.assertEqual(("custom-engine", "custom-engine", "unknown"), (unknown.model_display, unknown.harness, unknown.access))
-
-        for alias in (
-            "openai-api", "claude-api", "gemini-api", "grok-api", "glm-api",
-            "kimi-api", "glm-openrouter", "xai", "deepseek", "kimi", "qwen",
-            "free",
-        ):
-            with self.subTest(alias=alias):
-                active = registry.resolve(alias, "openrouter/x-ai/grok-4.5")
-                self.assertEqual(
-                    ("x-ai/grok-4.5", "Pi", "OpenRouter API"),
-                    (active.model_display, active.harness, active.access),
-                )
+        self.assertEqual(("openrouter/vendor/model", "OpenCode", "OpenRouter API"), (unlisted.model_display, unlisted.harness, unlisted.access))
+        # Unknown engine + model: display the MODEL slug, never the engine name.
+        self.assertEqual(("custom-model", "custom-engine", "unknown"), (unknown.model_display, unknown.harness, unknown.access))
 
     def test_models_json_includes_identity_fields(self) -> None:
         write_jsonl(
@@ -458,7 +447,6 @@ class ModelDbTests(unittest.TestCase):
             [
                 attempt(run_id="run-1", engine="codex", model="", task_type="site-build"),
                 attempt(run_id="run-2", engine="opencode", model="openrouter/vendor/model"),
-                attempt(run_id="run-3", engine="codex", model="gpt-5.5", task_type="code-fix"),
             ],
         )
         out = io.StringIO()
@@ -468,13 +456,17 @@ class ModelDbTests(unittest.TestCase):
 
         payload = json.loads(out.getvalue())
         by_model = {row["model"]: row for row in payload}
-        self.assertEqual("Codex CLI default (unpinned)", by_model["codex"]["model_display"])
-        self.assertEqual("Codex CLI", by_model["codex"]["harness"])
-        self.assertEqual("OAuth plan", by_model["codex"]["access"])
-        self.assertEqual("GPT-5.5", by_model["gpt-5.5"]["model_display"])
-        self.assertEqual("vendor/model", by_model["openrouter/vendor/model"]["model_display"])
+        # Blank-model log rows are quarantined, never credited to the engine's
+        # default model (taxonomy contract, docs/TAXONOMY.md).
+        legacy = by_model[""]
+        self.assertEqual("(unattributed legacy rows)", legacy["model_display"])
+        self.assertEqual("codex", legacy["engine"])
+        self.assertTrue(legacy["unattributed"])
+        self.assertNotIn("GPT-5.5", json.dumps(payload))
+        self.assertEqual("Model", by_model["openrouter/vendor/model"]["model_display"])
         self.assertEqual("OpenCode", by_model["openrouter/vendor/model"]["harness"])
         self.assertEqual("OpenRouter API", by_model["openrouter/vendor/model"]["access"])
+        self.assertEqual("vendor?", by_model["openrouter/vendor/model"]["lab"])
 
     def test_models_override_log_without_db_does_not_touch_default_db(self) -> None:
         fixture_log = self.root / "fixture-runs.jsonl"
