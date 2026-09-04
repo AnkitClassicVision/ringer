@@ -10184,6 +10184,12 @@ def record_blocked_launch(
     append_text(BLOCKED_LAUNCHES_PATH, json.dumps(receipt, sort_keys=True) + "\n")
 
 
+def _headroom_probe_path(path: Path) -> Path:
+    while not path.exists() and path != path.parent:
+        path = path.parent
+    return path
+
+
 def preflight_disk_headroom(
     manifest: Manifest,
     *,
@@ -10191,8 +10197,19 @@ def preflight_disk_headroom(
     projected_bytes: int | None = None,
     pressure_marker: Path | None = None,
     record_block: bool = True,
-) -> dict[str, int | float | bool]:
-    usage = disk_usage or shutil.disk_usage("/")
+) -> dict[str, int | float | bool | str]:
+    if disk_usage is None:
+        targets = [manifest.workdir]
+        if manifest.worktrees and manifest.repo is not None:
+            targets.append(manifest.repo)
+        probe_paths = [_headroom_probe_path(path) for path in targets]
+        usages = [shutil.disk_usage(path) for path in probe_paths]
+        probe_index = min(range(len(usages)), key=lambda index: usages[index].free)
+        usage = usages[probe_index]
+        probe_path = str(probe_paths[probe_index])
+    else:
+        usage = disk_usage
+        probe_path = "injected"
     projection = (
         projected_worktree_bytes(manifest)
         if projected_bytes is None
@@ -10229,6 +10246,7 @@ def preflight_disk_headroom(
         "required_headroom_bytes": required,
         "remaining_bytes": remaining,
         "pressure_marker_active": marker_active,
+        "probe_path": probe_path,
     }
 
 
