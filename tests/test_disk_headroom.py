@@ -9,6 +9,8 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
+import pytest
+
 import ringer
 
 
@@ -159,6 +161,95 @@ class DiskHeadroomTests(unittest.TestCase):
                 ["git", "-C", str(repo), "worktree", "remove", "--force", str(runtime.taskdir)],
                 check=True,
             )
+
+
+def test_existing_worktree_lfs_defaults_and_validation() -> None:
+    DiskHeadroomTests().test_worktree_lfs_defaults_and_validation()
+
+
+def test_existing_projection_uses_repository_size_and_task_count() -> None:
+    DiskHeadroomTests().test_projection_uses_repository_size_and_task_count()
+
+
+def test_existing_low_headroom_blocks_before_workdir_creation() -> None:
+    DiskHeadroomTests().test_low_headroom_blocks_before_workdir_creation()
+
+
+def test_existing_projection_and_marker_are_independent_blocks() -> None:
+    DiskHeadroomTests().test_projection_and_marker_are_independent_blocks()
+
+
+def test_existing_sufficient_headroom_passes() -> None:
+    DiskHeadroomTests().test_sufficient_headroom_passes()
+
+
+@pytest.mark.skipif(shutil.which("git-lfs") is None, reason="git-lfs is not installed")
+def test_existing_worktree_lfs_skip_leaves_pointer_in_real_worktree() -> None:
+    DiskHeadroomTests().test_worktree_lfs_skip_leaves_pointer_in_real_worktree()
+
+
+def test_default_usage_probes_nearest_existing_workdir_ancestor(
+    tmp_path: Path,
+) -> None:
+    manifest = DiskHeadroomTests().manifest(tmp_path)
+    calls: list[Path] = []
+    usage = ringer.shutil._ntuple_diskusage(500 * GIB, 300 * GIB, 200 * GIB)
+
+    def fake_disk_usage(path: Path) -> shutil._ntuple_diskusage:
+        calls.append(Path(path))
+        return usage
+
+    with mock.patch.object(ringer.shutil, "disk_usage", side_effect=fake_disk_usage):
+        receipt = ringer.preflight_disk_headroom(
+            manifest,
+            projected_bytes=0,
+            pressure_marker=tmp_path / "missing-marker",
+            record_block=False,
+        )
+
+    assert tmp_path in calls
+    assert Path("/") not in calls
+    assert receipt["probe_path"] == str(tmp_path)
+
+
+def test_worktree_repo_with_less_free_space_is_selected(
+    tmp_path: Path, tmp_path_factory: pytest.TempPathFactory
+) -> None:
+    repo_root = tmp_path_factory.mktemp("repo-volume")
+    repo = repo_root / "repo"
+    repo.mkdir()
+    manifest = DiskHeadroomTests().manifest(tmp_path, repo=str(repo), worktrees=True)
+    workdir_usage = ringer.shutil._ntuple_diskusage(500 * GIB, 300 * GIB, 200 * GIB)
+    repo_usage = ringer.shutil._ntuple_diskusage(500 * GIB, 350 * GIB, 150 * GIB)
+
+    def fake_disk_usage(path: Path) -> shutil._ntuple_diskusage:
+        return repo_usage if Path(path) == repo else workdir_usage
+
+    with mock.patch.object(ringer.shutil, "disk_usage", side_effect=fake_disk_usage):
+        receipt = ringer.preflight_disk_headroom(
+            manifest,
+            projected_bytes=0,
+            pressure_marker=tmp_path / "missing-marker",
+            record_block=False,
+        )
+
+    assert receipt["probe_path"] == str(repo)
+    assert receipt["free_bytes"] == 150 * GIB
+
+
+def test_injected_usage_reports_injected_probe_path(tmp_path: Path) -> None:
+    manifest = DiskHeadroomTests().manifest(tmp_path)
+    usage = ringer.shutil._ntuple_diskusage(400 * GIB, 280 * GIB, 120 * GIB)
+    receipt = ringer.preflight_disk_headroom(
+        manifest,
+        disk_usage=usage,
+        projected_bytes=20 * GIB,
+        pressure_marker=tmp_path / "missing-marker",
+        record_block=False,
+    )
+
+    assert receipt["probe_path"] == "injected"
+    assert receipt["remaining_bytes"] == 100 * GIB
 
 
 if __name__ == "__main__":

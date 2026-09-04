@@ -1040,6 +1040,50 @@ checks and raw logs support — no vibes, no worker self-reports.
 
 ## Process lessons (cross-model)
 
+- 2026-08-20 — revolution-cli-v8-qa, the single most expensive orchestrator mistake
+  of the session and it is a one-liner: **workers write INSIDE the taskdir, checks
+  export outward.** A 4-lane review swarm declared `expect_files` at an absolute
+  out-dir OUTSIDE the worktree and told each worker to write its report there.
+  Only the unsandboxed lane could. Codex runs under `--sandbox workspace-write`
+  and reported the out-dir as a read-only mount (`ntfs3 ro`), then saved to /tmp;
+  the Pi/bubblewrap lane has no `/mnt` at all and burned most of a 25-minute run
+  probing for a writable path before giving up. Both had produced complete,
+  high-quality reports. 3 of 4 lanes scored `fail` for zero worker fault. The
+  docs round earlier the same day had it right — worker edits the worktree, the
+  check exports the diff — and I broke the pattern when I switched from fix lanes
+  to review lanes. Rule: in worktrees mode `expect_files` must be absolute (lint
+  enforces this, deliverables die with the worktree) but the WORKER must be told
+  to write a relative path inside its taskdir, and the CHECK, which runs outside
+  the sandbox, does the copy. Add an `--export-to` to the validator rather than
+  asking the model to reach out of its jail.
+- 2026-08-20 — corollary: a sandboxed lane that produced good work but could not
+  land it is recoverable, do not pay for a re-run. Codex's report was sitting at
+  /tmp. Grok's never hit disk at all but was fully present in the streaming
+  transcript as the argument of its failed write call: reassemble from
+  `assistantMessageEvent.toolcall_end.toolCall.arguments` (this stream shape uses
+  `toolcall_delta`/`toolcall_end`, NOT `input_json_delta`). Both artifacts then
+  passed the corrected gate, 49 and 17 resolving citations respectively.
+- 2026-08-20 — validator defect that punishes honest work: a citation checker that
+  resolves every cited `path:line` against the worktree will fail any lane whose
+  brief deliberately points it at files OUTSIDE the repo. Two further traps in the
+  same checker: `\b` cannot match between a space and `/`, so the anchor silently
+  ate the leading slash of every absolute path and turned `/mnt/...` into `mnt/...`;
+  and reviewers legitimately give the full path once then use the basename after,
+  so resolution needs a unique-basename index over `git ls-files` (unique only —
+  an ambiguous basename must stay unresolved rather than guess). Classify a red
+  check before spending the retry: all three of these looked like fabricated
+  evidence and were not.
+- 2026-08-20 — gate design that actually held: for a HIPAA sensitivity-labelling
+  fix, assert in BOTH directions. Under-labelling is the visible bug, but a worker
+  can silence it by marking everything sensitive, which destroys the column and is
+  arguably worse. The gate carried an explicit control set of unambiguously
+  operational fields and failed on over-labelling with the same severity. Proved
+  it three ways before any worker ran: red on the current defect, red on a
+  deliberately lazy "label everything" fixture, green on a candidate correct fix
+  so the contract was known satisfiable. Worker passed first try and the control
+  held (11/11 still operational). Cheap, and it is the difference between a fix
+  and a cover-up.
+
 - 2026-08-13 — xai lane (pi-openrouter wrapper, grok-4.5) HARNESS_FAIL, not a
   model failure: both attempts of eyedeal-next-step-audit died in ~1s with
   "Credential store read failed for openrouter: EROFS /agent/auth.json"
@@ -1063,6 +1107,18 @@ checks and raw logs support — no vibes, no worker self-reports.
   1 wasted a worker run on that; (b) the probe's ownership guard must
   compare TRACKED modifications only, or pre-existing untracked files (the
   never-committed engines/kimi-oauth.sh) falsely fail honest work.
+
+- 2026-08-20 — kimi OAuth lane (`kimi` engine, kimi-code/k3) HARNESS_FAIL on
+  a code-review task (reactivation-entitlements review-r2): both attempts
+  died in ~7s with `provider.auth_error: 403 You've reached your usage limit
+  for this billing cycle`. Zero tokens, zero work; do NOT count against the
+  model. Until the Kimi billing cycle resets, route review lanes that want
+  model diversity to `claude` / `claude-lean` (or an explicit pi-openrouter
+  selector) and keep kimi off manifests. Same day: codex OAuth was also
+  dead (refresh token already used; needs a human `codex logout && codex
+  login`); every entitlements lane ran on claude-lean and passed first try
+  except one checker-defect retry, 9 for 9 on code-feature/code-fix/research
+  gates that execute real tests.
 
 - 2026-07-06 — the orchestrator's CHECKS were the day's top failure source:
   three check bugs (fixture newline join, first-occurrence ordering vs the
@@ -1176,6 +1232,7 @@ checks and raw logs support — no vibes, no worker self-reports.
 ## cohere/north-mini-code:free
 - 2026-07-12 research (practice-os-approach-research): FAIL 2/2 attempts on sourced-research task with executed check (report structure + >=6 citations). Free 256k-ctx audition; do not route research here again without new evidence.
 - 2026-07-13 code-fix (finance-portal-automation, systemd units): FAIL 2/2. Task was 3 trivial static systemd files with a clear spec; model produced an EMPTY .timer, skipped the required install .md entirely, and hardcoded the scratch worktree path + a hallucinated uv binary into the .service ExecStart. Demotion: do not route even mechanical multi-file config generation here — it does not reliably produce all named output files or copy paths faithfully. Codex redo needed. Confirms the earlier "cheap models transcribe instead of copy" lesson extends to "cheap models drop whole files."
+- 2026-08-20 docs (revolution-cli-v8-docs, GAPS.md v7->v8 sweep): PASS attempt 1. First pass for this model after 0/3. Read carefully before promoting: the surface was ONE already-existing markdown file, edits were mechanical, and the check asserted that the invariant counts (1374 paths, 34 routes) and the bucket table survived, which is exactly the "transcribe instead of copy" guard the earlier notes asked for. It also got the judgment call right unprompted, flipping the current-state version reference to v8 while leaving the historical "v5/v6/v7 added route X" attributions alone. Weaker on house style than Codex on the sibling lanes (left a route path unbackticked in prose). Verdict: untested -> probation for SINGLE-FILE mechanical doc edits behind a strict invariant check. This does NOT reverse the research or multi-file config demotions above; both prior failure modes were about producing several files from scratch, which this task never asked for.
 
 ## codex (2026-07-12, practice-os-nervous-build)
 - code-feature: PASS attempt 1, 7.5 min, ~107k tokens, 83/83 tests green in one shot on a 6-task TDD plan (5th first-try practice-os build today). Verified flagged interfaces itself (ledger.stream vs plan's assumed .events) and documented deviations in notes.md — spec pattern "verify these interfaces by grep before coding, code is source of truth" continues to pay for itself.
@@ -1586,3 +1643,16 @@ land — audition it again only where a mid-run death costs nothing.
 ## z-ai/glm-5.2:free (pi-openrouter)
 
 - 2026-08-19 — PROVIDER_RATE_LIMIT, not a model-quality result. Catalog digest asked for one short mechanical probe. OpenRouter lists `z-ai/glm-5.2:free` at $0 / 256k. Official `pi update --models` failed closed on a Kimi 400. OpenRouter-only Pi refresh found the exact id already present with a valid wrapper-shaped record. Run `glm-5-2-free-audition-20260819T121926Z-p2407688` reached OpenRouter, then Decart returned upstream 429 on the shared pool (retry-after 5s). Ringer 2 attempts, 0 tokens, no artifact, $0. Do not promote. Do not demote the model. Replay the same frozen probe later if the shared pool is no longer 429.
+
+## claude-lean Sonnet (`engine: claude-lean`, `model: sonnet`)
+
+- 2026-08-20 (revolution_CLI, revolution-cli-handoff-gaps, code-fix x2): 2/2 first-try PASS, ~93-96s each. Lane B: replaced a 5-site endswith write-gate with one exact-match helper plus 6 synthetic tests (29 green); lane C: rewrote a gateway route to send "Last, First" EHR queries with a scripted-runner fallback plus 5 tests (34 green). Both passed an independent coordinator seam probe, not just their own tests. Specs were fully self-contained (owned files, exact run command, boundary list, ROLE: EXECUTOR prefix); ownership verified by a pre-launch md5 tree snapshot because the repo's working files were untracked and worktrees mode was impossible. Good default for scoped Python fixes when Codex OAuth is down.
+- 2026-08-20 same job, codex lanes: HARNESS_FAIL, not a model result. Codex OAuth session refresh failed on both runs ("already used" refresh grant, 401 on the responses websocket) while `codex login status` still said logged in; 0 work in ~6s across 2 attempts x 2 runs. Human re-login needed. Do not demote gpt-5.6-sol on this.
+- 2026-08-20 local-shell evidence lanes: a vendor CLI's `--agent` redaction masked names/DOB/email but NOT phone numbers; raw payload in a task dir tripped the lane's own leak scan. Fixed by piping CLI stdout through a count-only reducer so the payload never lands. Rule: measure what a redaction flag masks before its output touches disk; keep a leak scan in every live-data lane.
+- 2026-08-20 (revolution_CLI v8 rollout, codex apply lane): HARNESS_FAIL at launch, rc=64 in 0.1s x2, zero effect. The trusted engines/codex-oauth.sh wrapper allowlists only `-c model_reasoning_effort` and `-c sandbox_workspace_write.writable_roots`; `-c sandbox_workspace_write.network_access=true` is rejected fail-closed. Consequence: a sandboxed Codex worker has NO network under this wrapper, so terraform/aws/live-HTTP tasks cannot run on codex unless the task is `full_access: true`. Probe any new engine_args key with those exact args before a production lane. The same day, a second session had two live codex workers; expect OAuth refresh races whenever two Codex processes share ~/.codex/auth.json. Apply lane moved to claude-lean sonnet.
+- 2026-08-20 (revolution_CLI v8 rollout, claude-lean sonnet as PRODUCTION apply worker): PASS, 2 attempts, ~584s. Attempt 1 gate failed only because the ECS deployment record read IN_PROGRESS one beat after `aws ecs wait services-stable` returned. On the "Fix it" retry the worker did NOT re-run the script: it recognized the apply had landed, re-read the service once (read-only), and wrote honest notes. Artifacts confirm a single terraform apply. Good judgment under a retry that could have been dangerous; the orchestrator lesson is to split mutate and verify into separate lanes so a verification flake never re-prompts a mutation. Codex could not take this lane (wrapper rejects network_access; see above).
+- 2026-08-20 (reactivation entitlements, author-proof-receipts, claude-lean sonnet, code-feature): PASS first try, 309 s. Five-file ops-tooling brief (CloudWatch collector, readonly DB collector, bastion tunnel helper, checker with RED/GREEN selftest, two-task local-shell manifest) behind a ~30-assertion offline gate that the coordinator watched go RED on an empty dir before launch. The worker ran the full gate itself before finishing and its notes listed only executed steps. What carried it: every log emitter was quoted from the real handler (file and exact message), every path absolute, the gate script named as source material so the contract was readable, and the brief stated what the feature does NOT log so the worker did not invent a marker. One coordinator hardening after review (instance-id count by words, since `--output text` joins ids on one line). Keep claude-lean sonnet as the default for multi-file ops tooling when an executable gate exists.
+- 2026-08-20 (reactivation entitlements V2, author-vet-recall-gate, claude-lean sonnet, code-feature): PASS first try, 611 s. Wrote a 370-line bash build gate (backend import-based semantics with stubs, frontend static wiring checks, tsc filtered to owned files because the checkout carries ~150 baseline TS errors, vitest on three files, ownership regex) and extended four existing Python gates to six product keys without weakening anything. It discovered the tsc baseline problem itself and reused the sibling gate's owned-file filter instead of asking. The brief named the grading gate as source material and required the gate to go RED on the unmodified repo with a product-key WHY as its FIRST failure; the worker pasted that exact RED line into notes. Pattern worth keeping: make the author prove its own gate RED before the build lane exists.
+- 2026-08-20 (reactivation entitlements V2 round, build-vet-recall, claude-lean sonnet, code-feature, 11 owned files across backend and React/TS frontend with three test files): product complete on attempt 1 (267+/57-, 24 tests green, tsc clean on owned files) but the task scored FAIL because the coordinator's gate had a pipe+heredoc defect in its tsc step. The worker reproduced the defect in isolation five times, named the mechanism correctly (heredoc overrides the pipe, printf SIGPIPE under pipefail), and wrote honest notes instead of editing files it did not own or faking a PASS. Scoreboard row is a HARNESS/CHECKER FAIL, not a model result; the product passed the corrected gate through a local-shell verify lane 13 minutes later. Lesson for orchestrators: RED-prove every executed stage of a gate with a synthetic input, not just the first assertion.
+- 2026-08-20 same round, review swarm (claude on security-gate, claude-lean x2 on contract-seams and frontend-ux-tests): 3/3 first-try PASS on the review-swarm validator, 97-191 s. Findings were four P3s, all real and all non-functional (stale docstring count, unrestored window.open spy, missing badge test for the new key, comment wording). The frontend reviewer ran tsc and vitest itself as allowed and quoted result lines. Good calibration: no invented severity, clean sections, both sides of each seam cited. claude-lean is adequate for seam and frontend review when the brief enumerates the surface points; keep claude on the security surface.
+- 2026-08-20 same round, fix-vet-recall-review (claude-lean, code-fix, three P3 findings across backend docstring and two test files): PASS first try, 64 s, delta exactly the three findings and nothing else; ran the full round gate itself before finishing.
