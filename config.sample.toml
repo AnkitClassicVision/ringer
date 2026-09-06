@@ -193,6 +193,33 @@ args_template = [
 sandbox_args = []
 full_access_args = []
 
+# Hermes agent wrapper. macOS only unless run with --no-sandbox. Cloud-admission
+# env vars are required only when a task pins an ollama-cloud route.
+# [engines.hermes]
+# bin = "/absolute/path/to/ringer/engines/hermes-sandboxed.sh"
+# args_template = ["{taskdir}", "{spec}"]
+# sandbox_args = []
+# full_access_args = ["--no-sandbox"]
+# token_regex = ""
+# [engines.hermes.env]
+# HERMES_HOME = "~/.hermes"
+# HERMES_STATE = "~/.local/state/hermes"
+# PAPERCLIP_OLLAMA_CLOUD_ADMISSION_BIN = "/path/to/ollama_cloud_admission.py"
+# PAPERCLIP_OLLAMA_CLOUD_ADMISSION_POLICY = "/path/to/cloud-admission-policy.v1.json"
+# PAPERCLIP_OLLAMA_CLOUD_ADMISSION_STATE_DIR = "/path/to/ollama-cloud-admission"
+
+# Omnigent session-driven wrapper. Requires OMNIGENT_AGENT_ID.
+# [engines.omnigent]
+# bin = "/absolute/path/to/ringer/engines/omnigent-sandboxed.sh"
+# args_template = ["{taskdir}", "{access_args}", "-z", "{spec}", "-m", "{model}", "{engine_args}"]
+# sandbox_args = []
+# full_access_args = []
+# token_regex = ""
+# [engines.omnigent.env]
+# OMNIGENT_SERVER = "http://127.0.0.1:6767"
+# OMNIGENT_AGENT_ID = "your-agent-id-here"
+# OMNIGENT_DEFAULT_MODEL = "ollama-cloud/deepseek-v4-pro"
+
 [artifact]
 # Zero-LLM, self-contained HTML artifacts rendered directly from state — no model calls, no
 # network. Three files per config, all pure stdlib templates:

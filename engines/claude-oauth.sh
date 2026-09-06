@@ -93,4 +93,8 @@ raise SystemExit(0 if valid else 1)
 unset auth_status
 # Safe mode disables customizations; an empty source list disables the normal
 # user, project, and local settings files. Callers cannot replace either flag.
-exec "$claude_bin" --safe-mode --setting-sources "" "${args[@]}"
+if (( ${#args[@]} )); then
+  exec "$claude_bin" --safe-mode --setting-sources "" "${args[@]}"
+else
+  exec "$claude_bin" --safe-mode --setting-sources ""
+fi

@@ -13,7 +13,7 @@
       "expect_files": [
         "review.json"
       ],
-      "spec": "{{FABLE_REVIEW_PROMPT}}",
+      "spec": "You are the Fable reviewer for round three of a four-round Fable-to-Sol Ringer loop. Use the operator-filled prompt block below plus the staged decision packet, Sol status packet, notes, diff summary, and verification evidence as the review brief. Preserve role boundaries: judge whether Sol followed the approved decisions, owned paths, output contracts, and verification plan; do not implement fixes; do not accept Sol's self-assessment without evidence; and route exactly one blocking ambiguity as the controlled QUESTION shape only when review cannot proceed safely. Write only review.json. The verdict must be APPROVE, REVISE, or ESCALATE, with every finding tied to staged round-two artifacts and concrete remediation criteria for Sol. Placeholder-driven job brief follows: {{FABLE_REVIEW_PROMPT}}",
       "check": "python3 {{KIT_DIR_SHELL}}/checks/validate_fable_review.py --packet review.json --status sources/status.json --decision sources/decision-packet.json --evidence-root sources",
       "verified": "The conditional Fable verdict follows APPROVE, REVISE, or single-QUESTION ESCALATE semantics and every finding points to a staged round-two artifact."
     }

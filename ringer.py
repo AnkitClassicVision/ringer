@@ -53,7 +53,7 @@ DEFAULT_ENGINE_NAME = "codex"
 DEFAULT_TIMEOUT_S = 900
 CHECK_TIMEOUT_S = int(os.environ.get("RINGER_CHECK_TIMEOUT_S", "60"))
 DISK_PRESSURE_STATE_DIR = Path(
-    os.environ.get("RINGER_DISK_GUARD_STATE_DIR", "/home/ankit114/.local/state/disk-guard")
+    os.environ.get("RINGER_DISK_GUARD_STATE_DIR", Path.home() / ".local/state/disk-guard")
 )
 DISK_PRESSURE_MARKER = DISK_PRESSURE_STATE_DIR / "DISK_PRESSURE"
 BLOCKED_LAUNCHES_PATH = DISK_PRESSURE_STATE_DIR / "blocked-launches.jsonl"
@@ -127,6 +127,10 @@ class EngineConfig:
     # Explicit capability gate for custom model harnesses under auth-first routing.
     # Restricted Anthropic/OpenAI/GLM families still require their trusted wrappers.
     auth_routing_trusted: bool = False
+    # Per-engine environment variables injected into the worker subprocess.
+    # Values set here take precedence over inherited process env vars. Use for
+    # engine wrapper configuration (agent IDs, API endpoints, admission paths).
+    env: dict[str, str] | None = None
     # Fills the {model} placeholder in args_template when a task does not set
     # its own "model" — this is what makes a harness engine (OpenCode) model
     # agnostic instead of hard-coding one model into the command line.
@@ -1009,6 +1013,18 @@ def load_engines(raw: Any) -> dict[str, EngineConfig]:
         model_default = str(
             section.get("model_default", base.model_default if base else "")
         ).strip()
+        env_raw = section.get("env")
+        if env_raw is not None:
+            if not isinstance(env_raw, dict) or any(
+                not isinstance(k, str) or not isinstance(v, str)
+                for k, v in env_raw.items()
+            ):
+                raise ValueError(
+                    f"engines.{clean_name}.env must be a table of string keys to string values"
+                )
+            env: dict[str, str] | None = dict(env_raw)
+        else:
+            env = None
         auth_routing_trusted_raw = section.get(
             "auth_routing_trusted",
             base.auth_routing_trusted if base else False,
@@ -1027,6 +1043,7 @@ def load_engines(raw: Any) -> dict[str, EngineConfig]:
             token_regex=token_regex,
             model_report_regex=model_report_regex,
             auth_routing_trusted=auth_routing_trusted,
+            env=env,
             model_default=model_default,
         )
     return engines
@@ -1773,9 +1790,7 @@ class StateWriter:
     def flush(self) -> dict[str, Any]:
         state = self.snapshot()
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        tmp = self.path.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps(state, indent=2, sort_keys=True), encoding="utf-8")
-        os.replace(tmp, self.path)
+        atomic_write_run_state_json(self.path, state)
         if self.artifact.enabled:
             self._write_status_artifact_safe(state)
             self._write_index_safe()
@@ -1919,11 +1934,9 @@ class StateWriter:
             self._append_library_version_safe(state)
             # Re-flush the plain state JSON so report_ready/report_path are accurate for
             # anything (Ringside) polling the state file right after the run ends.
-            tmp = self.path.with_suffix(".json.tmp")
             state = dict(state)
             state["report_ready"] = True
-            tmp.write_text(json.dumps(state, indent=2, sort_keys=True), encoding="utf-8")
-            os.replace(tmp, self.path)
+            atomic_write_run_state_json(self.path, state)
         except Exception as exc:
             print(f"artifact render error (final report, non-fatal): {exc}", file=sys.stderr)
 
@@ -2019,6 +2032,50 @@ def atomic_write_text(path: Path, text: str) -> None:
 
 def atomic_write_json(path: Path, data: dict[str, Any]) -> None:
     atomic_write_text(path, json.dumps(data, indent=2, sort_keys=True) + "\n")
+
+
+def atomic_write_run_state_json(path: Path, data: dict[str, Any]) -> None:
+    atomic_write_run_state_text(path, json.dumps(data, indent=2, sort_keys=True))
+
+
+def atomic_write_run_state_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd: int | None = None
+    tmp_path: Path | None = None
+    existing_mode: int | None = None
+    try:
+        existing_mode = path.stat().st_mode & 0o7777
+    except FileNotFoundError:
+        pass
+
+    try:
+        for _ in range(100):
+            candidate = path.with_name(
+                f".{path.name}.{os.getpid()}.{threading.get_ident()}.{time.monotonic_ns()}.tmp"
+            )
+            try:
+                fd = os.open(candidate, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o666)
+            except FileExistsError:
+                continue
+            tmp_path = candidate
+            break
+        if fd is None or tmp_path is None:
+            raise FileExistsError(f"could not create unique temporary file for {path}")
+        if existing_mode is not None:
+            os.chmod(tmp_path, existing_mode)
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fd = None
+            fh.write(text)
+            fh.flush()
+        os.replace(tmp_path, path)
+        tmp_path = None
+    finally:
+        if fd is not None:
+            with contextlib.suppress(OSError):
+                os.close(fd)
+        if tmp_path is not None:
+            with contextlib.suppress(OSError):
+                tmp_path.unlink()
 
 
 def ringer_home() -> Path:
@@ -8596,11 +8653,15 @@ class RingerRunner:
             log_fh = log_path.open("ab")
         except OSError as exc:
             return WorkerResult(returncode=None, timed_out=False, tokens=None, error=str(exc))
+        worker_env = dict(os.environ)
+        if engine.env:
+            worker_env.update(engine.env)
         async with AsyncFileCloser(log_fh):
             try:
                 proc = await asyncio.create_subprocess_exec(
                     *cmd,
                     cwd=str(runtime.taskdir),
+                    env=worker_env,
                     stdin=asyncio.subprocess.DEVNULL,
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.STDOUT,

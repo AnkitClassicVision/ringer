@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from datetime import datetime, timezone
 import importlib.util
 import json
 import os
@@ -8,6 +9,7 @@ import signal
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 import unittest
 from pathlib import Path
@@ -240,6 +242,49 @@ class RingerCliTests(unittest.TestCase):
         self.assertEqual([row["verdict"] for row in rows], ["TIMEOUT", "TIMEOUT"])
         self.assertIn("retry=true", rows[1]["notes"])
         self.assertIn("worker_returncode=-15", rows[0]["notes"])
+
+    def test_concurrent_state_flushes_use_independent_temp_files(self) -> None:
+        writer = ringer.StateWriter(
+            run_id="race",
+            run_name="race",
+            identity="test-runner",
+            state_dir=self.state_dir,
+            engines={},
+            started_at=datetime.now(timezone.utc),
+            runtimes=[],
+            lock=threading.RLock(),
+        )
+        writer.path.parent.mkdir(parents=True, exist_ok=True)
+        replace_barrier = threading.Barrier(2)
+        errors: list[BaseException] = []
+        original_replace = ringer.os.replace
+
+        def contended_replace(src: object, dst: object) -> None:
+            replace_barrier.wait(timeout=5)
+            original_replace(src, dst)
+
+        def flush_writer() -> None:
+            try:
+                writer.flush()
+            except BaseException as exc:
+                errors.append(exc)
+
+        try:
+            ringer.os.replace = contended_replace
+            threads = [threading.Thread(target=flush_writer) for _ in range(2)]
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join(timeout=5)
+        finally:
+            ringer.os.replace = original_replace
+
+        self.assertFalse(any(thread.is_alive() for thread in threads))
+        self.assertEqual([], errors)
+        state = json.loads(writer.path.read_text(encoding="utf-8"))
+        self.assertEqual("race", state["run_id"])
+        self.assertEqual([], list(writer.path.parent.glob("*.tmp")))
+        self.assertEqual([], list(writer.path.parent.glob(".*.tmp")))
 
     def test_sigterm_cleans_up_active_worker_and_finishes_state(self) -> None:
         manifest = self.write_manifest(
