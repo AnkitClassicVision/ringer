@@ -127,6 +127,10 @@ class EngineConfig:
     # Explicit capability gate for custom model harnesses under auth-first routing.
     # Restricted Anthropic/OpenAI/GLM families still require their trusted wrappers.
     auth_routing_trusted: bool = False
+    # Per-engine environment variables injected into the worker subprocess.
+    # Values set here take precedence over inherited process env vars. Use for
+    # engine wrapper configuration (agent IDs, API endpoints, admission paths).
+    env: dict[str, str] | None = None
     # Fills the {model} placeholder in args_template when a task does not set
     # its own "model" — this is what makes a harness engine (OpenCode) model
     # agnostic instead of hard-coding one model into the command line.
@@ -1009,6 +1013,18 @@ def load_engines(raw: Any) -> dict[str, EngineConfig]:
         model_default = str(
             section.get("model_default", base.model_default if base else "")
         ).strip()
+        env_raw = section.get("env")
+        if env_raw is not None:
+            if not isinstance(env_raw, dict) or any(
+                not isinstance(k, str) or not isinstance(v, str)
+                for k, v in env_raw.items()
+            ):
+                raise ValueError(
+                    f"engines.{clean_name}.env must be a table of string keys to string values"
+                )
+            env: dict[str, str] | None = dict(env_raw)
+        else:
+            env = None
         auth_routing_trusted_raw = section.get(
             "auth_routing_trusted",
             base.auth_routing_trusted if base else False,
@@ -1027,6 +1043,7 @@ def load_engines(raw: Any) -> dict[str, EngineConfig]:
             token_regex=token_regex,
             model_report_regex=model_report_regex,
             auth_routing_trusted=auth_routing_trusted,
+            env=env,
             model_default=model_default,
         )
     return engines
@@ -8596,11 +8613,15 @@ class RingerRunner:
             log_fh = log_path.open("ab")
         except OSError as exc:
             return WorkerResult(returncode=None, timed_out=False, tokens=None, error=str(exc))
+        worker_env = dict(os.environ)
+        if engine.env:
+            worker_env.update(engine.env)
         async with AsyncFileCloser(log_fh):
             try:
                 proc = await asyncio.create_subprocess_exec(
                     *cmd,
                     cwd=str(runtime.taskdir),
+                    env=worker_env,
                     stdin=asyncio.subprocess.DEVNULL,
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.STDOUT,
