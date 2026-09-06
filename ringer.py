@@ -1790,9 +1790,7 @@ class StateWriter:
     def flush(self) -> dict[str, Any]:
         state = self.snapshot()
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        tmp = self.path.with_suffix(".json.tmp")
-        tmp.write_text(json.dumps(state, indent=2, sort_keys=True), encoding="utf-8")
-        os.replace(tmp, self.path)
+        atomic_write_run_state_json(self.path, state)
         if self.artifact.enabled:
             self._write_status_artifact_safe(state)
             self._write_index_safe()
@@ -1936,11 +1934,9 @@ class StateWriter:
             self._append_library_version_safe(state)
             # Re-flush the plain state JSON so report_ready/report_path are accurate for
             # anything (Ringside) polling the state file right after the run ends.
-            tmp = self.path.with_suffix(".json.tmp")
             state = dict(state)
             state["report_ready"] = True
-            tmp.write_text(json.dumps(state, indent=2, sort_keys=True), encoding="utf-8")
-            os.replace(tmp, self.path)
+            atomic_write_run_state_json(self.path, state)
         except Exception as exc:
             print(f"artifact render error (final report, non-fatal): {exc}", file=sys.stderr)
 
@@ -2036,6 +2032,50 @@ def atomic_write_text(path: Path, text: str) -> None:
 
 def atomic_write_json(path: Path, data: dict[str, Any]) -> None:
     atomic_write_text(path, json.dumps(data, indent=2, sort_keys=True) + "\n")
+
+
+def atomic_write_run_state_json(path: Path, data: dict[str, Any]) -> None:
+    atomic_write_run_state_text(path, json.dumps(data, indent=2, sort_keys=True))
+
+
+def atomic_write_run_state_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd: int | None = None
+    tmp_path: Path | None = None
+    existing_mode: int | None = None
+    try:
+        existing_mode = path.stat().st_mode & 0o7777
+    except FileNotFoundError:
+        pass
+
+    try:
+        for _ in range(100):
+            candidate = path.with_name(
+                f".{path.name}.{os.getpid()}.{threading.get_ident()}.{time.monotonic_ns()}.tmp"
+            )
+            try:
+                fd = os.open(candidate, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o666)
+            except FileExistsError:
+                continue
+            tmp_path = candidate
+            break
+        if fd is None or tmp_path is None:
+            raise FileExistsError(f"could not create unique temporary file for {path}")
+        if existing_mode is not None:
+            os.chmod(tmp_path, existing_mode)
+        with os.fdopen(fd, "w", encoding="utf-8") as fh:
+            fd = None
+            fh.write(text)
+            fh.flush()
+        os.replace(tmp_path, path)
+        tmp_path = None
+    finally:
+        if fd is not None:
+            with contextlib.suppress(OSError):
+                os.close(fd)
+        if tmp_path is not None:
+            with contextlib.suppress(OSError):
+                tmp_path.unlink()
 
 
 def ringer_home() -> Path:
