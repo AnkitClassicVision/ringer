@@ -53,7 +53,7 @@ DEFAULT_ENGINE_NAME = "codex"
 DEFAULT_TIMEOUT_S = 900
 CHECK_TIMEOUT_S = int(os.environ.get("RINGER_CHECK_TIMEOUT_S", "60"))
 DISK_PRESSURE_STATE_DIR = Path(
-    os.environ.get("RINGER_DISK_GUARD_STATE_DIR", "/home/ankit114/.local/state/disk-guard")
+    os.environ.get("RINGER_DISK_GUARD_STATE_DIR", Path.home() / ".local/state/disk-guard")
 )
 DISK_PRESSURE_MARKER = DISK_PRESSURE_STATE_DIR / "DISK_PRESSURE"
 BLOCKED_LAUNCHES_PATH = DISK_PRESSURE_STATE_DIR / "blocked-launches.jsonl"
